@@ -1,0 +1,87 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "This file is @generated automatically"
+    ],
+    "hash": "b822a80e7e678431ecc2ae4acc3ac3c4",
+    "content-hash": "bad5ec79f601059ae55ac7667a8f2adf",
+    "packages": [
+        {
+            "name": "pagekit/blog",
+            "version": "1.0.6",
+            "dist": {
+                "type": "zip",
+                "url": "https://pagekit.com/package/pagekit/blog/1.0.6.zip",
+                "reference": null,
+                "shasum": "7ef5297116a4bba1fe738b2f6997d667ed04dbff"
+            },
+            "archive": {
+                "exclude": [
+                    "node_modules",
+                    "!/app"
+                ]
+            },
+            "type": "pagekit-extension",
+            "extra": {
+                "icon": "icon.svg",
+                "scripts": "scripts.php"
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pagekit",
+                    "email": "info@pagekit.com",
+                    "homepage": "http://pagekit.com"
+                }
+            ],
+            "description": "A blog extensions with a built-in comment system."
+        },
+        {
+            "name": "pagekit/theme-one",
+            "version": "1.0.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://pagekit.com/package/pagekit/theme-one/1.0.0.zip",
+                "reference": null,
+                "shasum": "6d49b3cbb1de15b4a3947890e7935b13de76f7f8"
+            },
+            "archive": {
+                "exclude": [
+                    "node_modules",
+                    "!/app",
+                    "!/css",
+                    "/app/assets",
+                    "gulpfile.js",
+                    "bower.js",
+                    "package.js"
+                ]
+            },
+            "type": "pagekit-theme",
+            "extra": {
+                "image": "image.jpg"
+            },
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Pagekit",
+                    "email": "info@pagekit.com",
+                    "homepage": "http://pagekit.com"
+                }
+            ],
+            "description": "Pagekit's default theme."
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

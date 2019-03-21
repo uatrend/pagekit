@@ -1,0 +1,58 @@
+//
+// Core
+//
+
+@import "../../../../assets/uikit/src/less/components/_import.less";
+
+//
+// Theme
+//
+
+@import "theme/_import.less";
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100% !important;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.tm-header-transparent {
+    position: absolute;
+    z-index: 980;
+    left: 0;
+    right: 0
+}
+
+.uk-navbar-container:not(.uk-navbar-transparent) {
+  background: #fff;
+}
+
+.tm-hero-height {
+    min-height: calc(100vh - 81px)
+}
+
+.tm-hero-padding > * {
+    padding-top: 81px
+}
+
+@media (min-width: 768px) {
+    .uk-sticky-fixed>.uk-navbar-container:not(.uk-navbar-transparent) {
+        box-shadow: 0 1px 10px rgba(0, 0, 0, 0.1);
+    }
+}
+
+.tm-container-small {
+    max-width: 800px;
+    margin: auto
+}
+
+.uk-article-title {
+    font-size: 42px;
+    line-height: 48px;
+    font-weight: 300;
+    text-transform: none
+}
+.uk-article-title a {
+    color: inherit;
+    text-decoration: none
+}

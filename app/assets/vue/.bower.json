@@ -1,0 +1,14 @@
+{
+  "name": "vue",
+  "homepage": "https://github.com/vuejs/vue",
+  "version": "2.6.9",
+  "_release": "2.6.9",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.6.9",
+    "commit": "0c5ab9951eb0ae7b3d91d66a5aa945e0bcaf18b6"
+  },
+  "_source": "https://github.com/vuejs/vue.git",
+  "_target": "~2.6.2",
+  "_originalSource": "vue"
+}

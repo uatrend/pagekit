@@ -1,0 +1,141 @@
+<template>
+    <div>
+        <div ref="input" class="package-upload">
+            <div uk-form-custom>
+                <input type="file" name="file">
+                <button class="uk-button uk-button-primary" type="button" tabindex="-1">
+                    <span v-if="!progress">{{ 'Upload' | trans }}</span>
+                    <span v-else><i uk-spinner /> {{ progress }}</span>
+                </button>
+            </div>
+        </div>
+
+        <div ref="modal" uk-modal>
+            <div class="uk-modal-dialog">
+                <package-details :api="api" :package="package" />
+
+                <div class="uk-modal-footer uk-text-right">
+                    <button class="uk-button uk-button-default uk-modal-close" type="button">
+                        {{ 'Cancel' | trans }}
+                    </button>
+                    <button class="uk-button uk-button-primary" @click.prevent="doInstall">
+                        {{ 'Install' | trans }}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+
+// import Package from '../lib/package';
+
+module.exports = {
+
+    mixins: [
+        // Package
+        require('../lib/package'),
+    ],
+
+    props: {
+        api: { type: String, default: '' },
+        packages: Array,
+        type: String,
+    },
+
+    data() {
+        return {
+            package: {},
+            upload: null,
+            progress: '',
+        };
+    },
+
+    mounted() {
+        const { type } = this;
+        const settings = {
+            url: this.$url.route('admin/system/package/upload'),
+            dataType: 'json',
+            name: 'file',
+            beforeAll(options) {
+                console.log(options);
+                _.merge(options.params, { _csrf: $pagekit.csrf, type });
+            },
+            loadStart: this.onStart,
+            progress: this.onProgress,
+            completeAll: this.onComplete,
+        };
+
+        UIkit.upload(this.$refs.input, settings);
+        this.modal = UIkit.modal(this.$refs.modal);
+    },
+
+    methods: {
+
+        onStart() {
+            this.progress = '1%';
+        },
+
+        onProgress(percent) {
+            this.progress = `${Math.ceil(percent.loaded / percent.total * 100)}%`;
+        },
+
+        onComplete(data) {
+            try {
+                // var data = $.parseJSON(data.responseText);
+                var data = JSON.parse(data.responseText);
+            } catch (e) {
+                try {
+                    var data = JSON.parse(data.responseText.substring(data.responseText.lastIndexOf('{'), data.responseText.lastIndexOf('}') + 1));
+                    var { message } = data;
+                } catch (e) {
+                    var message = 'Unable load package.';
+                }
+                this.progress = '';
+                this.$notify(message, 'danger');
+                return;
+            }
+
+            const vm = this;
+
+            this.progress = '100%';
+
+            setTimeout(() => {
+                vm.progress = '';
+            }, 250);
+
+            if (!data.package) {
+                this.$notify(data, 'danger');
+                return;
+            }
+
+            this.$set(this, 'upload', data);
+            this.$set(this, 'package', data.package);
+
+            this.modal.show();
+        },
+
+        doInstall() {
+            this.modal.hide();
+
+            this.install(this.upload.package, this.packages,
+                (output) => {
+                    if (output.status === 'success') {
+                        setTimeout(() => {
+                            location.reload();
+                        }, 300);
+                    }
+                }, true);
+        },
+
+    },
+
+    components: {
+
+        'package-details': require('./package-details.vue').default,
+
+    },
+};
+
+</script>

@@ -1,0 +1,8 @@
+<div>
+
+    <div v-for="field in fields">
+        <label v-if="field.type != 'checkbox'">{{ field.label }}</label>
+        <component :is="field.type" :field="field"></component>
+    </div>
+
+</div>

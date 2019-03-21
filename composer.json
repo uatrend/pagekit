@@ -1,0 +1,50 @@
+{
+    "name": "pagekit/pagekit",
+    "type": "project",
+    "description": "The Pagekit CMS",
+    "keywords": ["cms", "pagekit"],
+    "homepage": "http://pagekit.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pagekit Team",
+            "email": "info@pagekit.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.5.9",
+        "composer/composer": "dev-master#7a9eb02190d334513e99a479510f87eed18cf958",
+        "doctrine/annotations": "~1.6.0",
+        "doctrine/dbal": "~2.8.0",
+        "ircmaxell/random-lib": "~1.0.0",
+        "maximebf/debugbar": "~1.14.0",
+        "monolog/monolog": "~1.13",
+        "nikic/php-parser": "~3.0.0",
+        "psr/log": "~1.0.0",
+        "swiftmailer/swiftmailer": "~5.4.5",
+        "symfony/debug": "~4.2.0",
+        "symfony/finder": "~4.2.0",
+        "symfony/http-foundation": "~4.2.0",
+        "symfony/routing": "~4.2.0",
+        "symfony/stopwatch": "~4.2.0",
+        "symfony/templating": "~4.2.0",
+        "symfony/translation": "~4.2.0",
+        "twig/twig": "^1.22"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~4.7.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Pagekit\\": "app/modules/application/src",
+            "Pagekit\\Installer\\": "app/installer/src",
+            "Pagekit\\System\\": "app/system/src",
+            "Pagekit\\Config\\": "app/modules/config/src",
+            "Pagekit\\Console\\": "app/console/src",
+            "Pagekit\\Migration\\": "app/modules/migration/src"
+        }
+    },
+    "config": {
+        "vendor-dir": "app/vendor"
+    }
+}

@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Storage.js - Testsuite</title>
+    <link rel="stylesheet" href="http://code.jquery.com/qunit/qunit-1.10.0.css">
+    <script src="http://code.jquery.com/qunit/qunit-1.10.0.js"></script>
+    <script src="../storage.js"></script>
+
+    <script>
+
+        var db = Storage.select("testdb");
+
+        test("Test set/get", function(){
+            db.set("test", "test");
+            equal(db.get('test'), "test", "db.get('test') should return 'test'");
+        });
+
+
+        test("Test sessionStorage as container", function(){
+            
+            var db = Storage.select("testdb", "session");
+
+            db.set("test", "test");
+            equal(db.get('test'), "test", "db.get('test') should return 'test'");
+
+            sessionStorage.removeItem("storage:testdb");
+
+            db = Storage.select("testdb", "session");
+
+            equal(db.get('test', false), false, "db.get('test') should return false");
+        });
+
+    </script>
+</head>
+<body>
+    <div id="qunit"></div>
+    <div id="qunit-fixture"></div>
+</body>
+</html>

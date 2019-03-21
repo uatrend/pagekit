@@ -1,0 +1,7 @@
+/app/bundle/*
+/app/assets/*
+/css
+/node_modules
+.DS_Store
+.idea
+*.zip

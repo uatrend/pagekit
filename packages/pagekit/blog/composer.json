@@ -1,0 +1,22 @@
+{
+    "name": "pagekit/blog",
+    "type": "pagekit-extension",
+    "version": "1.0.6",
+    "title": "Blog",
+    "description": "A blog extensions with a built-in comment system.",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Pagekit",
+            "email": "info@pagekit.com",
+            "homepage": "http://pagekit.com"
+        }
+    ],
+    "extra": {
+        "icon": "icon.svg",
+        "scripts": "scripts.php"
+    },
+    "archive": {
+        "exclude": ["node_modules", "!/app"]
+    }
+}
