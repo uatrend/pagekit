@@ -1,6 +1,6 @@
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr bgcolor="#ffffff">
-    <td width="50%" height="200">
+    <td width="50%">
       <img src="https://cloud.githubusercontent.com/assets/1716665/14317675/ba034b8c-fc09-11e5-81ed-f10f37d86ea5.png" width="100%" title="hover text">
     </td>
     <td width="50%">
