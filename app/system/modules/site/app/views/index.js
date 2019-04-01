@@ -160,11 +160,11 @@ Vue.ready({
             this.$session.set('site.menu', menu);
         },
 
-        removeMenu(menu) {
+        removeMenu(e, menu) {
             this.Menus.delete({ id: menu.id }).finally(this.load);
         },
 
-        editMenu(menu) {
+        editMenu(e, menu) {
             if (!menu) {
                 menu = {
                     id: '',
@@ -173,7 +173,6 @@ Vue.ready({
             }
 
             this.$set(this, 'edit', _.merge({ positions: [] }, menu));
-
             this.$refs.modal.open();
         },
 
@@ -234,7 +233,7 @@ Vue.ready({
                     menu: _.find(this.menus.concat({
                         id: 'trash',
                         label: this.$trans('Trash'),
-                    }), 'id', menu).label,
+                    }), { 'id': menu}).label,
                 }));
             });
         },

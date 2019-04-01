@@ -11,8 +11,8 @@
                     <li class="uk-visible-toggle uk-flex uk-flex-between" :class="{'uk-active': isActive(menu), 'uk-nav-divider': menu.divider}" v-for="menu in divided(menus)">
                         <a class="uk-text-nowrap uk-text-truncate" @click.prevent="selectMenu(menu, false)" v-if="!menu.divider">{{ menu.label }}</a>
                         <ul class="uk-iconnav uk-hidden-hover uk-flex-middle uk-margin-small-right" v-if="!menu.fixed && !menu.divider">
-                            <li><a uk-icon="file-edit" :uk-tooltip="'Edit' | trans" delay="500" @click.prevent="editMenu(menu)"></a></li>
-                            <li><a uk-icon="trash" :uk-tooltip="'Delete' | trans" delay="500" @click.prevent="removeMenu(menu)" v-confirm="'Delete menu?'"></a></li>
+                            <li><a uk-icon="file-edit" :uk-tooltip="'Edit' | trans" delay="500" @click.prevent="editMenu($event, menu)"></a></li>
+                            <li><a uk-icon="trash" :uk-tooltip="'Delete' | trans" delay="500" @click.prevent="removeMenu($event, menu)" v-confirm="'Delete menu?'"></a></li>
                         </ul>
                     </li>
                 </ul>
