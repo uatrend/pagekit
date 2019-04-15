@@ -14,6 +14,7 @@ namespace Composer\Config;
 
 use Composer\Json\JsonFile;
 use Composer\Json\JsonManipulator;
+use Composer\Util\Silencer;
 
 /**
  * JSON Configuration Source
@@ -24,7 +25,7 @@ use Composer\Json\JsonManipulator;
 class JsonConfigSource implements ConfigSourceInterface
 {
     /**
-     * @var \Composer\Json\JsonFile
+     * @var JsonFile
      */
     private $file;
 
@@ -59,6 +60,21 @@ class JsonConfigSource implements ConfigSourceInterface
     public function addRepository($name, $config)
     {
         $this->manipulateJson('addRepository', $name, $config, function (&$config, $repo, $repoConfig) {
+            // if converting from an array format to hashmap format, and there is a {"packagist.org":false} repo, we have
+            // to convert it to "packagist.org": false key on the hashmap otherwise it fails schema validation
+            if (isset($config['repositories'])) {
+                foreach ($config['repositories'] as $index => $val) {
+                    if ($index === $repo) {
+                        continue;
+                    }
+                    if (is_numeric($index) && ($val === array('packagist' => false) || $val === array('packagist.org' => false))) {
+                        unset($config['repositories'][$index]);
+                        $config['repositories']['packagist.org'] = false;
+                        break;
+                    }
+                }
+            }
+
             $config['repositories'][$repo] = $repoConfig;
         });
     }
@@ -78,10 +94,11 @@ class JsonConfigSource implements ConfigSourceInterface
      */
     public function addConfigSetting($name, $value)
     {
-        $this->manipulateJson('addConfigSetting', $name, $value, function (&$config, $key, $val) {
-            if (preg_match('{^(github-oauth|http-basic|platform)\.}', $key)) {
+        $authConfig = $this->authConfig;
+        $this->manipulateJson('addConfigSetting', $name, $value, function (&$config, $key, $val) use ($authConfig) {
+            if (preg_match('{^(bitbucket-oauth|github-oauth|gitlab-oauth|gitlab-token|http-basic|platform)\.}', $key)) {
                 list($key, $host) = explode('.', $key, 2);
-                if ($this->authConfig) {
+                if ($authConfig) {
                     $config[$key][$host] = $val;
                 } else {
                     $config['config'][$key][$host] = $val;
@@ -97,16 +114,64 @@ class JsonConfigSource implements ConfigSourceInterface
      */
     public function removeConfigSetting($name)
     {
-        $this->manipulateJson('removeConfigSetting', $name, function (&$config, $key) {
-            if (preg_match('{^(github-oauth|http-basic|platform)\.}', $key)) {
+        $authConfig = $this->authConfig;
+        $this->manipulateJson('removeConfigSetting', $name, function (&$config, $key) use ($authConfig) {
+            if (preg_match('{^(bitbucket-oauth|github-oauth|gitlab-oauth|gitlab-token|http-basic|platform)\.}', $key)) {
                 list($key, $host) = explode('.', $key, 2);
-                if ($this->authConfig) {
+                if ($authConfig) {
                     unset($config[$key][$host]);
                 } else {
                     unset($config['config'][$key][$host]);
                 }
             } else {
                 unset($config['config'][$key]);
+            }
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addProperty($name, $value)
+    {
+        $this->manipulateJson('addProperty', $name, $value, function (&$config, $key, $val) {
+            if (substr($key, 0, 6) === 'extra.' || substr($key, 0, 8) === 'scripts.') {
+                $bits = explode('.', $key);
+                $last = array_pop($bits);
+                $arr = &$config[reset($bits)];
+                foreach ($bits as $bit) {
+                    if (!isset($arr[$bit])) {
+                        $arr[$bit] = array();
+                    }
+                    $arr = &$arr[$bit];
+                }
+                $arr[$last] = $val;
+            } else {
+                $config[$key] = $val;
+            }
+        });
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeProperty($name)
+    {
+        $authConfig = $this->authConfig;
+        $this->manipulateJson('removeProperty', $name, function (&$config, $key) {
+            if (substr($key, 0, 6) === 'extra.' || substr($key, 0, 8) === 'scripts.') {
+                $bits = explode('.', $key);
+                $last = array_pop($bits);
+                $arr = &$config[reset($bits)];
+                foreach ($bits as $bit) {
+                    if (!isset($arr[$bit])) {
+                        return;
+                    }
+                    $arr = &$arr[$bit];
+                }
+                unset($arr[$last]);
+            } else {
+                unset($config[$key]);
             }
         });
     }
@@ -139,6 +204,14 @@ class JsonConfigSource implements ConfigSourceInterface
         $fallback = array_pop($args);
 
         if ($this->file->exists()) {
+            if (!is_writable($this->file->getPath())) {
+                throw new \RuntimeException(sprintf('The file "%s" is not writable.', $this->file->getPath()));
+            }
+
+            if (!is_readable($this->file->getPath())) {
+                throw new \RuntimeException(sprintf('The file "%s" is not readable.', $this->file->getPath()));
+            }
+
             $contents = file_get_contents($this->file->getPath());
         } elseif ($this->authConfig) {
             $contents = "{\n}\n";
@@ -173,7 +246,7 @@ class JsonConfigSource implements ConfigSourceInterface
         }
 
         if ($newFile) {
-            @chmod($this->file->getPath(), 0600);
+            Silencer::call('chmod', $this->file->getPath(), 0600);
         }
     }
 

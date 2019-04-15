@@ -15,8 +15,13 @@ namespace Composer\Downloader;
 use Composer\Config;
 use Composer\Cache;
 use Composer\EventDispatcher\EventDispatcher;
+use Composer\Package\PackageInterface;
+use Composer\Util\IniHelper;
+use Composer\Util\Platform;
 use Composer\Util\ProcessExecutor;
+use Composer\Util\RemoteFilesystem;
 use Composer\IO\IOInterface;
+use Symfony\Component\Process\ExecutableFinder;
 use ZipArchive;
 
 /**
@@ -24,63 +29,170 @@ use ZipArchive;
  */
 class ZipDownloader extends ArchiveDownloader
 {
-    protected $process;
+    protected static $hasSystemUnzip;
+    private static $hasZipArchive;
+    private static $isWindows;
 
-    public function __construct(IOInterface $io, Config $config, EventDispatcher $eventDispatcher = null, Cache $cache = null, ProcessExecutor $process = null)
+    protected $process;
+    private $zipArchiveObject;
+
+    public function __construct(IOInterface $io, Config $config, EventDispatcher $eventDispatcher = null, Cache $cache = null, ProcessExecutor $process = null, RemoteFilesystem $rfs = null)
     {
         $this->process = $process ?: new ProcessExecutor($io);
-        parent::__construct($io, $config, $eventDispatcher, $cache);
+        parent::__construct($io, $config, $eventDispatcher, $cache, $rfs);
     }
 
-    protected function extract($file, $path)
+    /**
+     * {@inheritDoc}
+     */
+    public function download(PackageInterface $package, $path, $output = true)
     {
-        $processError = null;
-
-        // try to use unzip on *nix
-        if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-            $command = 'unzip '.ProcessExecutor::escape($file).' -d '.ProcessExecutor::escape($path) . ' && chmod -R u+w ' . ProcessExecutor::escape($path);
-            try {
-                if (0 === $this->process->execute($command, $ignoredOutput)) {
-                    return;
-                }
-
-                $processError = 'Failed to execute ' . $command . "\n\n" . $this->process->getErrorOutput();
-            } catch (\Exception $e) {
-                $processError = 'Failed to execute ' . $command . "\n\n" . $e->getMessage();
-            }
+        if (null === self::$hasSystemUnzip) {
+            $finder = new ExecutableFinder;
+            self::$hasSystemUnzip = (bool) $finder->find('unzip');
         }
 
-        if (!class_exists('ZipArchive')) {
+        if (null === self::$hasZipArchive) {
+            self::$hasZipArchive = class_exists('ZipArchive');
+        }
+
+        if (!self::$hasZipArchive && !self::$hasSystemUnzip) {
             // php.ini path is added to the error message to help users find the correct file
-            $iniPath = php_ini_loaded_file();
-
-            if ($iniPath) {
-                $iniMessage = 'The php.ini used by your command-line PHP is: ' . $iniPath;
-            } else {
-                $iniMessage = 'A php.ini file does not exist. You will have to create one.';
-            }
-
-            $error = "Could not decompress the archive, enable the PHP zip extension or install unzip.\n"
-                . $iniMessage . "\n" . $processError;
-
-            if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-                $error = "Could not decompress the archive, enable the PHP zip extension.\n" . $iniMessage;
-            }
+            $iniMessage = IniHelper::getMessage();
+            $error = "The zip extension and unzip command are both missing, skipping.\n" . $iniMessage;
 
             throw new \RuntimeException($error);
         }
 
-        $zipArchive = new ZipArchive();
+        if (null === self::$isWindows) {
+            self::$isWindows = Platform::isWindows();
 
-        if (true !== ($retval = $zipArchive->open($file))) {
-            throw new \UnexpectedValueException($this->getErrorMessage($retval, $file), $retval);
+            if (!self::$isWindows && !self::$hasSystemUnzip) {
+                $this->io->writeError("<warning>As there is no 'unzip' command installed zip files are being unpacked using the PHP zip extension.</warning>");
+                $this->io->writeError("<warning>This may cause invalid reports of corrupted archives. Besides, any UNIX permissions (e.g. executable) defined in the archives will be lost.</warning>");
+                $this->io->writeError("<warning>Installing 'unzip' may remediate them.</warning>");
+            }
         }
 
-        if (true !== $zipArchive->extractTo($path)) {
-            throw new \RuntimeException("There was an error extracting the ZIP file. Corrupt file?");
+        return parent::download($package, $path, $output);
+    }
+
+    /**
+     * extract $file to $path with "unzip" command
+     *
+     * @param  string $file         File to extract
+     * @param  string $path         Path where to extract file
+     * @param  bool   $isLastChance If true it is called as a fallback and should throw an exception
+     * @return bool   Success status
+     */
+    protected function extractWithSystemUnzip($file, $path, $isLastChance)
+    {
+        if (!self::$hasZipArchive) {
+            // Force Exception throwing if the Other alternative is not available
+            $isLastChance = true;
         }
 
-        $zipArchive->close();
+        if (!self::$hasSystemUnzip && !$isLastChance) {
+            // This was call as the favorite extract way, but is not available
+            // We switch to the alternative
+            return $this->extractWithZipArchive($file, $path, true);
+        }
+
+        $processError = null;
+        // When called after a ZipArchive failed, perhaps there is some files to overwrite
+        $overwrite = $isLastChance ? '-o' : '';
+
+        $command = 'unzip -qq '.$overwrite.' '.ProcessExecutor::escape($file).' -d '.ProcessExecutor::escape($path);
+
+        try {
+            if (0 === $this->process->execute($command, $ignoredOutput)) {
+                return true;
+            }
+
+            $processError = new \RuntimeException('Failed to execute ' . $command . "\n\n" . $this->process->getErrorOutput());
+        } catch (\Exception $e) {
+            $processError = $e;
+        }
+
+        if ($isLastChance) {
+            throw $processError;
+        }
+
+        $this->io->writeError('    '.$processError->getMessage());
+        $this->io->writeError('    The archive may contain identical file names with different capitalization (which fails on case insensitive filesystems)');
+        $this->io->writeError('    Unzip with unzip command failed, falling back to ZipArchive class');
+
+        return $this->extractWithZipArchive($file, $path, true);
+    }
+
+    /**
+     * extract $file to $path with ZipArchive
+     *
+     * @param  string $file         File to extract
+     * @param  string $path         Path where to extract file
+     * @param  bool   $isLastChance If true it is called as a fallback and should throw an exception
+     * @return bool   Success status
+     */
+    protected function extractWithZipArchive($file, $path, $isLastChance)
+    {
+        if (!self::$hasSystemUnzip) {
+            // Force Exception throwing if the Other alternative is not available
+            $isLastChance = true;
+        }
+
+        if (!self::$hasZipArchive && !$isLastChance) {
+            // This was call as the favorite extract way, but is not available
+            // We switch to the alternative
+            return $this->extractWithSystemUnzip($file, $path, true);
+        }
+
+        $processError = null;
+        $zipArchive = $this->zipArchiveObject ?: new ZipArchive();
+
+        try {
+            if (true === ($retval = $zipArchive->open($file))) {
+                $extractResult = $zipArchive->extractTo($path);
+
+                if (true === $extractResult) {
+                    $zipArchive->close();
+
+                    return true;
+                }
+
+                $processError = new \RuntimeException(rtrim("There was an error extracting the ZIP file, it is either corrupted or using an invalid format.\n"));
+            } else {
+                $processError = new \UnexpectedValueException(rtrim($this->getErrorMessage($retval, $file)."\n"), $retval);
+            }
+        } catch (\ErrorException $e) {
+            $processError = new \RuntimeException('The archive may contain identical file names with different capitalization (which fails on case insensitive filesystems): '.$e->getMessage(), 0, $e);
+        } catch (\Exception $e) {
+            $processError = $e;
+        }
+
+        if ($isLastChance) {
+            throw $processError;
+        }
+
+        $this->io->writeError('    '.$processError->getMessage());
+        $this->io->writeError('    Unzip with ZipArchive class failed, falling back to unzip command');
+
+        return $this->extractWithSystemUnzip($file, $path, true);
+    }
+
+    /**
+     * extract $file to $path
+     *
+     * @param string $file File to extract
+     * @param string $path Path where to extract file
+     */
+    public function extract($file, $path)
+    {
+        // Each extract calls its alternative if not available or fails
+        if (self::$isWindows) {
+            $this->extractWithZipArchive($file, $path, false);
+        } else {
+            $this->extractWithSystemUnzip($file, $path, false);
+        }
     }
 
     /**

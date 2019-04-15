@@ -1,12 +1,44 @@
 [
     {
+        "name": "pagekit/blog",
+        "version": "1.0.6",
+        "version_normalized": "1.0.6.0",
+        "dist": {
+            "type": "zip",
+            "url": "https://pagekit.com/package/pagekit/blog/1.0.6.zip",
+            "shasum": "7ef5297116a4bba1fe738b2f6997d667ed04dbff"
+        },
+        "archive": {
+            "exclude": [
+                "node_modules",
+                "!/app"
+            ]
+        },
+        "type": "pagekit-extension",
+        "extra": {
+            "icon": "icon.svg",
+            "scripts": "scripts.php"
+        },
+        "installation-source": "dist",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "Pagekit",
+                "email": "info@pagekit.com",
+                "homepage": "http://pagekit.com"
+            }
+        ],
+        "description": "A blog extensions with a built-in comment system."
+    },
+    {
         "name": "pagekit/theme-one",
         "version": "1.0.0",
         "version_normalized": "1.0.0.0",
         "dist": {
             "type": "zip",
             "url": "https://pagekit.com/package/pagekit/theme-one/1.0.0.zip",
-            "reference": null,
             "shasum": "6d49b3cbb1de15b4a3947890e7935b13de76f7f8"
         },
         "archive": {
@@ -36,39 +68,5 @@
             }
         ],
         "description": "Pagekit's default theme."
-    },
-    {
-        "name": "pagekit/blog",
-        "version": "1.0.6",
-        "version_normalized": "1.0.6.0",
-        "dist": {
-            "type": "zip",
-            "url": "https://pagekit.com/package/pagekit/blog/1.0.6.zip",
-            "reference": null,
-            "shasum": "7ef5297116a4bba1fe738b2f6997d667ed04dbff"
-        },
-        "archive": {
-            "exclude": [
-                "node_modules",
-                "!/app"
-            ]
-        },
-        "type": "pagekit-extension",
-        "extra": {
-            "icon": "icon.svg",
-            "scripts": "scripts.php"
-        },
-        "installation-source": "dist",
-        "license": [
-            "MIT"
-        ],
-        "authors": [
-            {
-                "name": "Pagekit",
-                "email": "info@pagekit.com",
-                "homepage": "http://pagekit.com"
-            }
-        ],
-        "description": "A blog extensions with a built-in comment system."
     }
 ]

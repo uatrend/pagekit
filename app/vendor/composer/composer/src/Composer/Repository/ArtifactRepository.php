@@ -20,15 +20,18 @@ use Composer\Package\Loader\LoaderInterface;
 /**
  * @author Serge Smertin <serg.smertin@gmail.com>
  */
-class ArtifactRepository extends ArrayRepository
+class ArtifactRepository extends ArrayRepository implements ConfigurableRepositoryInterface
 {
     /** @var LoaderInterface */
     protected $loader;
 
     protected $lookup;
+    protected $repoConfig;
+    private $io;
 
     public function __construct(array $repoConfig, IOInterface $io)
     {
+        parent::__construct();
         if (!extension_loaded('zip')) {
             throw new \RuntimeException('The artifact repository requires PHP\'s zip extension');
         }
@@ -36,6 +39,12 @@ class ArtifactRepository extends ArrayRepository
         $this->loader = new ArrayLoader();
         $this->lookup = $repoConfig['url'];
         $this->io = $io;
+        $this->repoConfig = $repoConfig;
+    }
+
+    public function getRepoConfig()
+    {
+        return $this->repoConfig;
     }
 
     protected function initialize()
@@ -60,16 +69,12 @@ class ArtifactRepository extends ArrayRepository
 
             $package = $this->getComposerInformation($file);
             if (!$package) {
-                if ($io->isVerbose()) {
-                    $io->writeError("File <comment>{$file->getBasename()}</comment> doesn't seem to hold a package");
-                }
+                $io->writeError("File <comment>{$file->getBasename()}</comment> doesn't seem to hold a package", true, IOInterface::VERBOSE);
                 continue;
             }
 
-            if ($io->isVerbose()) {
-                $template = 'Found package <info>%s</info> (<comment>%s</comment>) in file <info>%s</info>';
-                $io->writeError(sprintf($template, $package->getName(), $package->getPrettyVersion(), $file->getBasename()));
-            }
+            $template = 'Found package <info>%s</info> (<comment>%s</comment>) in file <info>%s</info>';
+            $io->writeError(sprintf($template, $package->getName(), $package->getPrettyVersion(), $file->getBasename()), true, IOInterface::VERBOSE);
 
             $this->addPackage($package);
         }
@@ -79,7 +84,7 @@ class ArtifactRepository extends ArrayRepository
      * Find a file by name, returning the one that has the shortest path.
      *
      * @param \ZipArchive $zip
-     * @param $filename
+     * @param string $filename
      * @return bool|int
      */
     private function locateFile(\ZipArchive $zip, $filename)
@@ -104,7 +109,7 @@ class ArtifactRepository extends ArrayRepository
                 }
 
                 $length = strlen($stat['name']);
-                if ($indexOfShortestMatch == false || $length < $lengthOfShortestMatch) {
+                if ($indexOfShortestMatch === false || $length < $lengthOfShortestMatch) {
                     //Check it's not a directory.
                     $contents = $zip->getFromIndex($i);
                     if ($contents !== false) {
@@ -121,18 +126,25 @@ class ArtifactRepository extends ArrayRepository
     private function getComposerInformation(\SplFileInfo $file)
     {
         $zip = new \ZipArchive();
-        $zip->open($file->getPathname());
+        if ($zip->open($file->getPathname()) !== true) {
+            return false;
+        }
 
         if (0 == $zip->numFiles) {
+            $zip->close();
+
             return false;
         }
 
         $foundFileIndex = $this->locateFile($zip, 'composer.json');
         if (false === $foundFileIndex) {
+            $zip->close();
+
             return false;
         }
 
         $configurationFileName = $zip->getNameIndex($foundFileIndex);
+        $zip->close();
 
         $composerFile = "zip://{$file->getPathname()}#$configurationFileName";
         $json = file_get_contents($composerFile);
@@ -140,11 +152,15 @@ class ArtifactRepository extends ArrayRepository
         $package = JsonFile::parseJson($json, $composerFile);
         $package['dist'] = array(
             'type' => 'zip',
-            'url' => $file->getPathname(),
+            'url' => strtr($file->getPathname(), '\\', '/'),
             'shasum' => sha1_file($file->getRealPath()),
         );
 
-        $package = $this->loader->load($package);
+        try {
+            $package = $this->loader->load($package);
+        } catch (\UnexpectedValueException $e) {
+            throw new \UnexpectedValueException('Failed loading package in '.$file.': '.$e->getMessage(), 0, $e);
+        }
 
         return $package;
     }

@@ -15,9 +15,11 @@ namespace Composer\Package\Loader;
 use Composer\Package\BasePackage;
 use Composer\Package\AliasPackage;
 use Composer\Config;
-use Composer\Factory;
+use Composer\IO\IOInterface;
+use Composer\Package\RootPackageInterface;
+use Composer\Repository\RepositoryFactory;
 use Composer\Package\Version\VersionGuesser;
-use Composer\Semver\VersionParser;
+use Composer\Package\Version\VersionParser;
 use Composer\Repository\RepositoryManager;
 use Composer\Util\ProcessExecutor;
 
@@ -45,35 +47,69 @@ class RootPackageLoader extends ArrayLoader
      */
     private $versionGuesser;
 
-    public function __construct(RepositoryManager $manager, Config $config, VersionParser $parser = null, VersionGuesser $versionGuesser = null)
+    /**
+     * @var IOInterface
+     */
+    private $io;
+
+    public function __construct(RepositoryManager $manager, Config $config, VersionParser $parser = null, VersionGuesser $versionGuesser = null, IOInterface $io = null)
     {
         parent::__construct($parser);
 
         $this->manager = $manager;
         $this->config = $config;
         $this->versionGuesser = $versionGuesser ?: new VersionGuesser($config, new ProcessExecutor(), $this->versionParser);
+        $this->io = $io;
     }
 
-    public function load(array $config, $class = 'Composer\Package\RootPackage')
+    /**
+     * @param  array                $config package data
+     * @param  string               $class  FQCN to be instantiated
+     * @param  string               $cwd    cwd of the root package to be used to guess the version if it is not provided
+     * @return RootPackageInterface
+     */
+    public function load(array $config, $class = 'Composer\Package\RootPackage', $cwd = null)
     {
         if (!isset($config['name'])) {
             $config['name'] = '__root__';
+        } elseif ($this->io) {
+            if ($err = ValidatingArrayLoader::hasPackageNamingError($config['name'])) {
+                $this->io->writeError('<warning>Deprecation warning: Your package name '.$err.' Make sure you fix this as Composer 2.0 will error.</warning>');
+            }
         }
         $autoVersioned = false;
         if (!isset($config['version'])) {
+            $commit = null;
+
             // override with env var if available
             if (getenv('COMPOSER_ROOT_VERSION')) {
-                $version = getenv('COMPOSER_ROOT_VERSION');
+                $config['version'] = getenv('COMPOSER_ROOT_VERSION');
             } else {
-                $version = $this->versionGuesser->guessVersion($config, getcwd());
+                $versionData = $this->versionGuesser->guessVersion($config, $cwd ?: getcwd());
+                if ($versionData) {
+                    $config['version'] = $versionData['pretty_version'];
+                    $config['version_normalized'] = $versionData['version'];
+                    $commit = $versionData['commit'];
+                }
             }
 
-            if (!$version) {
-                $version = '1.0.0';
+            if (!isset($config['version'])) {
+                $config['version'] = '1.0.0';
                 $autoVersioned = true;
             }
 
-            $config['version'] = $version;
+            if ($commit) {
+                $config['source'] = array(
+                    'type' => '',
+                    'url' => '',
+                    'reference' => $commit,
+                );
+                $config['dist'] = array(
+                    'type' => '',
+                    'url' => '',
+                    'reference' => $commit,
+                );
+            }
         }
 
         $realPackage = $package = parent::load($config, $class);
@@ -106,6 +142,23 @@ class RootPackageLoader extends ArrayLoader
             }
         }
 
+        if ($this->io) {
+            foreach (array_keys(BasePackage::$supportedLinkTypes) as $linkType) {
+                if (isset($config[$linkType])) {
+                    foreach ($config[$linkType] as $linkName => $constraint) {
+                        if ($err = ValidatingArrayLoader::hasPackageNamingError($linkName, true)) {
+                            $this->io->writeError('<warning>Deprecation warning: '.$linkType.'.'.$err.' Make sure you fix this as Composer 2.0 will error.</warning>');
+                        }
+                    }
+                }
+            }
+        }
+
+        if (isset($links[$config['name']])) {
+            throw new \InvalidArgumentException(sprintf('Root package \'%s\' cannot require itself in its composer.json' . PHP_EOL .
+                        'Did you accidentally name your root package after an external package?', $config['name']));
+        }
+
         $realPackage->setAliases($aliases);
         $realPackage->setStabilityFlags($stabilityFlags);
         $realPackage->setReferences($references);
@@ -114,7 +167,11 @@ class RootPackageLoader extends ArrayLoader
             $realPackage->setPreferStable((bool) $config['prefer-stable']);
         }
 
-        $repos = Factory::createDefaultRepositories(null, $this->config, $this->manager);
+        if (isset($config['config'])) {
+            $realPackage->setConfig($config['config']);
+        }
+
+        $repos = RepositoryFactory::defaultRepos(null, $this->config, $this->manager);
         foreach ($repos as $repo) {
             $this->manager->addRepository($repo);
         }
@@ -144,29 +201,48 @@ class RootPackageLoader extends ArrayLoader
         $stabilities = BasePackage::$stabilities;
         $minimumStability = $stabilities[$minimumStability];
         foreach ($requires as $reqName => $reqVersion) {
-            // parse explicit stability flags to the most unstable
-            if (preg_match('{^[^@]*?@('.implode('|', array_keys($stabilities)).')$}i', $reqVersion, $match)) {
-                $name = strtolower($reqName);
-                $stability = $stabilities[VersionParser::normalizeStability($match[1])];
+            $constraints = array();
 
-                if (isset($stabilityFlags[$name]) && $stabilityFlags[$name] > $stability) {
-                    continue;
+            // extract all sub-constraints in case it is an OR/AND multi-constraint
+            $orSplit = preg_split('{\s*\|\|?\s*}', trim($reqVersion));
+            foreach ($orSplit as $orConstraint) {
+                $andSplit = preg_split('{(?<!^|as|[=>< ,]) *(?<!-)[, ](?!-) *(?!,|as|$)}', $orConstraint);
+                foreach ($andSplit as $andConstraint) {
+                    $constraints[] = $andConstraint;
                 }
-                $stabilityFlags[$name] = $stability;
+            }
 
+            // parse explicit stability flags to the most unstable
+            $match = false;
+            foreach ($constraints as $constraint) {
+                if (preg_match('{^[^@]*?@('.implode('|', array_keys($stabilities)).')$}i', $constraint, $match)) {
+                    $name = strtolower($reqName);
+                    $stability = $stabilities[VersionParser::normalizeStability($match[1])];
+
+                    if (isset($stabilityFlags[$name]) && $stabilityFlags[$name] > $stability) {
+                        continue;
+                    }
+                    $stabilityFlags[$name] = $stability;
+                    $match = true;
+                }
+            }
+
+            if ($match) {
                 continue;
             }
 
-            // infer flags for requirements that have an explicit -dev or -beta version specified but only
-            // for those that are more unstable than the minimumStability or existing flags
-            $reqVersion = preg_replace('{^([^,\s@]+) as .+$}', '$1', $reqVersion);
-            if (preg_match('{^[^,\s@]+$}', $reqVersion) && 'stable' !== ($stabilityName = VersionParser::parseStability($reqVersion))) {
-                $name = strtolower($reqName);
-                $stability = $stabilities[$stabilityName];
-                if ((isset($stabilityFlags[$name]) && $stabilityFlags[$name] > $stability) || ($minimumStability > $stability)) {
-                    continue;
+            foreach ($constraints as $constraint) {
+                // infer flags for requirements that have an explicit -dev or -beta version specified but only
+                // for those that are more unstable than the minimumStability or existing flags
+                $reqVersion = preg_replace('{^([^,\s@]+) as .+$}', '$1', $constraint);
+                if (preg_match('{^[^,\s@]+$}', $reqVersion) && 'stable' !== ($stabilityName = VersionParser::parseStability($reqVersion))) {
+                    $name = strtolower($reqName);
+                    $stability = $stabilities[$stabilityName];
+                    if ((isset($stabilityFlags[$name]) && $stabilityFlags[$name] > $stability) || ($minimumStability > $stability)) {
+                        continue;
+                    }
+                    $stabilityFlags[$name] = $stability;
                 }
-                $stabilityFlags[$name] = $stability;
             }
         }
 
@@ -177,7 +253,7 @@ class RootPackageLoader extends ArrayLoader
     {
         foreach ($requires as $reqName => $reqVersion) {
             $reqVersion = preg_replace('{^([^,\s@]+) as .+$}', '$1', $reqVersion);
-            if (preg_match('{^[^,\s@]+?#([a-f0-9]+)$}', $reqVersion, $match) && 'dev' === ($stabilityName = VersionParser::parseStability($reqVersion))) {
+            if (preg_match('{^[^,\s@]+?#([a-f0-9]+)$}', $reqVersion, $match) && 'dev' === VersionParser::parseStability($reqVersion)) {
                 $name = strtolower($reqName);
                 $references[$name] = $match[1];
             }

@@ -15,7 +15,9 @@ namespace Composer\Command;
 use Composer\Factory;
 use Composer\IO\IOInterface;
 use Composer\Config;
+use Composer\Composer;
 use Composer\Repository\CompositeRepository;
+use Composer\Repository\RepositoryFactory;
 use Composer\Script\ScriptEvents;
 use Composer\Plugin\CommandEvent;
 use Composer\Plugin\PluginEvents;
@@ -30,26 +32,31 @@ use Symfony\Component\Console\Output\OutputInterface;
  *
  * @author Nils Adermann <naderman@naderman.de>
  */
-class ArchiveCommand extends Command
+class ArchiveCommand extends BaseCommand
 {
     protected function configure()
     {
         $this
             ->setName('archive')
-            ->setDescription('Create an archive of this composer package')
+            ->setDescription('Creates an archive of this composer package.')
             ->setDefinition(array(
                 new InputArgument('package', InputArgument::OPTIONAL, 'The package to archive instead of the current project'),
                 new InputArgument('version', InputArgument::OPTIONAL, 'A version constraint to find the package to archive'),
-                new InputOption('format', 'f', InputOption::VALUE_OPTIONAL, 'Format of the resulting archive: tar or zip'),
-                new InputOption('dir', false, InputOption::VALUE_OPTIONAL, 'Write the archive to this directory'),
+                new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Format of the resulting archive: tar or zip'),
+                new InputOption('dir', null, InputOption::VALUE_REQUIRED, 'Write the archive to this directory'),
+                new InputOption('file', null, InputOption::VALUE_REQUIRED, 'Write the archive with the given file name.'
+                    .' Note that the format will be appended.'),
+                new InputOption('ignore-filters', false, InputOption::VALUE_NONE, 'Ignore filters when saving package'),
             ))
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 The <info>archive</info> command creates an archive of the specified format
 containing the files and directories of the Composer project or the specified
 package in the specified version and writes it to the specified directory.
 
 <info>php composer.phar archive [--format=zip] [--dir=/foo] [package [version]]</info>
 
+Read more at https://getcomposer.org/doc/03-cli.md#archive
 EOT
             )
         ;
@@ -61,8 +68,9 @@ EOT
         $composer = $this->getComposer(false);
         if ($composer) {
             $commandEvent = new CommandEvent(PluginEvents::COMMAND, 'archive', $input, $output);
-            $composer->getEventDispatcher()->dispatch($commandEvent->getName(), $commandEvent);
-            $composer->getEventDispatcher()->dispatchScript(ScriptEvents::PRE_ARCHIVE_CMD);
+            $eventDispatcher = $composer->getEventDispatcher();
+            $eventDispatcher->dispatch($commandEvent->getName(), $commandEvent);
+            $eventDispatcher->dispatchScript(ScriptEvents::PRE_ARCHIVE_CMD);
         }
 
         if (null === $input->getOption('format')) {
@@ -78,7 +86,10 @@ EOT
             $input->getArgument('package'),
             $input->getArgument('version'),
             $input->getOption('format'),
-            $input->getOption('dir')
+            $input->getOption('dir'),
+            $input->getOption('file'),
+            $input->getOption('ignore-filters'),
+            $composer
         );
 
         if (0 === $returnCode && $composer) {
@@ -88,11 +99,15 @@ EOT
         return $returnCode;
     }
 
-    protected function archive(IOInterface $io, Config $config, $packageName = null, $version = null, $format = 'tar', $dest = '.')
+    protected function archive(IOInterface $io, Config $config, $packageName = null, $version = null, $format = 'tar', $dest = '.', $fileName = null, $ignoreFilters = false, Composer $composer = null)
     {
-        $factory = new Factory;
-        $downloadManager = $factory->createDownloadManager($io, $config);
-        $archiveManager = $factory->createArchiveManager($config, $downloadManager);
+        if ($composer) {
+            $archiveManager = $composer->getArchiveManager();
+        } else {
+            $factory = new Factory;
+            $downloadManager = $factory->createDownloadManager($io, $config);
+            $archiveManager = $factory->createArchiveManager($config, $downloadManager);
+        }
 
         if ($packageName) {
             $package = $this->selectPackage($io, $packageName, $version);
@@ -105,7 +120,7 @@ EOT
         }
 
         $io->writeError('<info>Creating the archive into "'.$dest.'".</info>');
-        $packagePath = $archiveManager->archive($package, $format, $dest);
+        $packagePath = $archiveManager->archive($package, $format, $dest, $fileName, $ignoreFilters);
         $fs = new Filesystem;
         $shortPath = $fs->findShortestPath(getcwd(), $packagePath, true);
 
@@ -123,7 +138,7 @@ EOT
             $localRepo = $composer->getRepositoryManager()->getLocalRepository();
             $repo = new CompositeRepository(array_merge(array($localRepo), $composer->getRepositoryManager()->getRepositories()));
         } else {
-            $defaultRepos = Factory::createDefaultRepositories($this->getIO());
+            $defaultRepos = RepositoryFactory::defaultRepos($this->getIO());
             $io->writeError('No composer.json found in the current directory, searching packages from ' . implode(', ', array_keys($defaultRepos)));
             $repo = new CompositeRepository($defaultRepos);
         }
@@ -133,7 +148,9 @@ EOT
         if (count($packages) > 1) {
             $package = reset($packages);
             $io->writeError('<info>Found multiple matches, selected '.$package->getPrettyString().'.</info>');
-            $io->writeError('Alternatives were '.implode(', ', array_map(function ($p) { return $p->getPrettyString(); }, $packages)).'.');
+            $io->writeError('Alternatives were '.implode(', ', array_map(function ($p) {
+                return $p->getPrettyString();
+            }, $packages)).'.');
             $io->writeError('<comment>Please use a more specific constraint to pick a different package.</comment>');
         } elseif ($packages) {
             $package = reset($packages);

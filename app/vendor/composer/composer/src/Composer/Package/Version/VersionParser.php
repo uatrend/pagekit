@@ -12,10 +12,26 @@
 
 namespace Composer\Package\Version;
 
+use Composer\Repository\PlatformRepository;
 use Composer\Semver\VersionParser as SemverVersionParser;
+use Composer\Semver\Semver;
 
 class VersionParser extends SemverVersionParser
 {
+    private static $constraints = array();
+
+    /**
+     * {@inheritDoc}
+     */
+    public function parseConstraints($constraints)
+    {
+        if (!isset(self::$constraints[$constraints])) {
+            self::$constraints[$constraints] = parent::parseConstraints($constraints);
+        }
+
+        return self::$constraints[$constraints];
+    }
+
     /**
      * Parses an array of strings representing package/version pairs.
      *
@@ -33,13 +49,13 @@ class VersionParser extends SemverVersionParser
 
         for ($i = 0, $count = count($pairs); $i < $count; $i++) {
             $pair = preg_replace('{^([^=: ]+)[=: ](.*)$}', '$1 $2', trim($pairs[$i]));
-            if (false === strpos($pair, ' ') && isset($pairs[$i + 1]) && false === strpos($pairs[$i + 1], '/')) {
+            if (false === strpos($pair, ' ') && isset($pairs[$i + 1]) && false === strpos($pairs[$i + 1], '/') && !preg_match(PlatformRepository::PLATFORM_PACKAGE_REGEX, $pairs[$i + 1])) {
                 $pair .= ' '.$pairs[$i + 1];
                 $i++;
             }
 
             if (strpos($pair, ' ')) {
-                list($name, $version) = explode(" ", $pair, 2);
+                list($name, $version) = explode(' ', $pair, 2);
                 $result[] = array('name' => $name, 'version' => $version);
             } else {
                 $result[] = array('name' => $pair);
@@ -47,5 +63,19 @@ class VersionParser extends SemverVersionParser
         }
 
         return $result;
+    }
+
+    /**
+     * @return bool
+     */
+    public static function isUpgrade($normalizedFrom, $normalizedTo)
+    {
+        if (substr($normalizedFrom, 0, 4) === 'dev-' || substr($normalizedTo, 0, 4) === 'dev-') {
+            return true;
+        }
+
+        $sorted = Semver::sort(array($normalizedTo, $normalizedFrom));
+
+        return $sorted[0] === $normalizedFrom;
     }
 }

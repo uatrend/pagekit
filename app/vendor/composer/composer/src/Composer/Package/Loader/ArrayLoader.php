@@ -17,7 +17,8 @@ use Composer\Package\AliasPackage;
 use Composer\Package\Link;
 use Composer\Package\RootAliasPackage;
 use Composer\Package\RootPackageInterface;
-use Composer\Semver\VersionParser;
+use Composer\Package\Version\VersionParser;
+use Composer\Semver\VersionParser as SemverVersionParser;
 
 /**
  * @author Konstantin Kudryashiv <ever.zet@gmail.com>
@@ -28,7 +29,7 @@ class ArrayLoader implements LoaderInterface
     protected $versionParser;
     protected $loadOptions;
 
-    public function __construct(VersionParser $parser = null, $loadOptions = false)
+    public function __construct(SemverVersionParser $parser = null, $loadOptions = false)
     {
         if (!$parser) {
             $parser = new VersionParser;
@@ -64,13 +65,10 @@ class ArrayLoader implements LoaderInterface
         }
 
         if (isset($config['bin'])) {
-            if (!is_array($config['bin'])) {
-                throw new \UnexpectedValueException('Package '.$config['name'].'\'s bin key should be an array, '.gettype($config['bin']).' given.');
-            }
-            foreach ($config['bin'] as $key => $bin) {
+            foreach ((array) $config['bin'] as $key => $bin) {
                 $config['bin'][$key] = ltrim($bin, '/');
             }
-            $package->setBinaries($config['bin']);
+            $package->setBinaries((array) $config['bin']);
         }
 
         if (isset($config['installation-source'])) {
@@ -87,7 +85,7 @@ class ArrayLoader implements LoaderInterface
             }
             $package->setSourceType($config['source']['type']);
             $package->setSourceUrl($config['source']['url']);
-            $package->setSourceReference($config['source']['reference']);
+            $package->setSourceReference(isset($config['source']['reference']) ? $config['source']['reference'] : null);
             if (isset($config['source']['mirrors'])) {
                 $package->setSourceMirrors($config['source']['mirrors']);
             }
@@ -170,6 +168,9 @@ class ArrayLoader implements LoaderInterface
                 foreach ($config['scripts'] as $event => $listeners) {
                     $config['scripts'][$event] = (array) $listeners;
                 }
+                if (isset($config['scripts']['composer'])) {
+                    trigger_error('The `composer` script name is reserved for internal use, please avoid defining it', E_USER_DEPRECATED);
+                }
                 $package->setScripts($config['scripts']);
             }
 
@@ -228,6 +229,9 @@ class ArrayLoader implements LoaderInterface
     {
         $res = array();
         foreach ($links as $target => $constraint) {
+            if (!is_string($constraint)) {
+                throw new \UnexpectedValueException('Link constraint in '.$source.' '.$description.' > '.$target.' should be a string, got '.gettype($constraint) . ' (' . var_export($constraint, true) . ')');
+            }
             if ('self.version' === $constraint) {
                 $parsedConstraint = $this->versionParser->parseConstraints($sourceVersion);
             } else {

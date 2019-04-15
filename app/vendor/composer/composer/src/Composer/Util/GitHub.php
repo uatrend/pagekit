@@ -12,6 +12,7 @@
 
 namespace Composer\Util;
 
+use Composer\Factory;
 use Composer\IO\IOInterface;
 use Composer\Config;
 use Composer\Downloader\TransportException;
@@ -38,8 +39,8 @@ class GitHub
     {
         $this->io = $io;
         $this->config = $config;
-        $this->process = $process ?: new ProcessExecutor;
-        $this->remoteFilesystem = $remoteFilesystem ?: new RemoteFilesystem($io, $config);
+        $this->process = $process ?: new ProcessExecutor($io);
+        $this->remoteFilesystem = $remoteFilesystem ?: Factory::createRemoteFilesystem($this->io, $config);
     }
 
     /**
@@ -93,7 +94,7 @@ class GitHub
 
         if (!$token) {
             $this->io->writeError('<warning>No token given, aborting.</warning>');
-            $this->io->writeError('You can also add it manually later by using "composer config github-oauth.github.com <token>"');
+            $this->io->writeError('You can also add it manually later by using "composer config --global --auth github-oauth.github.com <token>"');
 
             return false;
         }
@@ -101,15 +102,15 @@ class GitHub
         $this->io->setAuthentication($originUrl, $token, 'x-oauth-basic');
 
         try {
-            $apiUrl = ('github.com' === $originUrl) ? 'api.github.com' : $originUrl . '/api/v3';
+            $apiUrl = ('github.com' === $originUrl) ? 'api.github.com/' : $originUrl . '/api/v3/';
 
-            $this->remoteFilesystem->getContents($originUrl, 'https://'. $apiUrl . '/rate_limit', false, array(
+            $this->remoteFilesystem->getContents($originUrl, 'https://'. $apiUrl, false, array(
                 'retry-auth-failure' => false,
             ));
         } catch (TransportException $e) {
             if (in_array($e->getCode(), array(403, 401))) {
                 $this->io->writeError('<error>Invalid token provided.</error>');
-                $this->io->writeError('You can also add it manually later by using "composer config github-oauth.github.com <token>"');
+                $this->io->writeError('You can also add it manually later by using "composer config --global --auth github-oauth.github.com <token>"');
 
                 return false;
             }
@@ -124,5 +125,56 @@ class GitHub
         $this->io->writeError('<info>Token stored successfully.</info>');
 
         return true;
+    }
+
+    /**
+     * Extract ratelimit from response.
+     *
+     * @param array $headers Headers from Composer\Downloader\TransportException.
+     *
+     * @return array Associative array with the keys limit and reset.
+     */
+    public function getRateLimit(array $headers)
+    {
+        $rateLimit = array(
+            'limit' => '?',
+            'reset' => '?',
+        );
+
+        foreach ($headers as $header) {
+            $header = trim($header);
+            if (false === strpos($header, 'X-RateLimit-')) {
+                continue;
+            }
+            list($type, $value) = explode(':', $header, 2);
+            switch ($type) {
+                case 'X-RateLimit-Limit':
+                    $rateLimit['limit'] = (int) trim($value);
+                    break;
+                case 'X-RateLimit-Reset':
+                    $rateLimit['reset'] = date('Y-m-d H:i:s', (int) trim($value));
+                    break;
+            }
+        }
+
+        return $rateLimit;
+    }
+
+    /**
+     * Finds whether a request failed due to rate limiting
+     *
+     * @param array $headers Headers from Composer\Downloader\TransportException.
+     *
+     * @return bool
+     */
+    public function isRateLimited(array $headers)
+    {
+        foreach ($headers as $header) {
+            if (preg_match('{^X-RateLimit-Remaining: *0$}i', trim($header))) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

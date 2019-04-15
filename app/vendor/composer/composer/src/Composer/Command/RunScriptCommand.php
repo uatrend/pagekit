@@ -12,17 +12,19 @@
 
 namespace Composer\Command;
 
-use Composer\Script\CommandEvent;
+use Composer\Script\Event as ScriptEvent;
 use Composer\Script\ScriptEvents;
+use Composer\Util\ProcessExecutor;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
 
 /**
  * @author Fabien Potencier <fabien.potencier@gmail.com>
  */
-class RunScriptCommand extends Command
+class RunScriptCommand extends BaseCommand
 {
     /**
      * @var array Array with command events
@@ -46,18 +48,22 @@ class RunScriptCommand extends Command
     {
         $this
             ->setName('run-script')
-            ->setDescription('Run the scripts defined in composer.json.')
+            ->setDescription('Runs the scripts defined in composer.json.')
             ->setDefinition(array(
                 new InputArgument('script', InputArgument::OPTIONAL, 'Script name to run.'),
                 new InputArgument('args', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, ''),
+                new InputOption('timeout', null, InputOption::VALUE_REQUIRED, 'Sets script timeout in seconds, or 0 for never.'),
                 new InputOption('dev', null, InputOption::VALUE_NONE, 'Sets the dev mode.'),
                 new InputOption('no-dev', null, InputOption::VALUE_NONE, 'Disables the dev mode.'),
                 new InputOption('list', 'l', InputOption::VALUE_NONE, 'List scripts.'),
             ))
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 The <info>run-script</info> command runs scripts defined in composer.json:
 
 <info>php composer.phar run-script post-update-cmd</info>
+
+Read more at https://getcomposer.org/doc/03-cli.md#run-script
 EOT
             )
         ;
@@ -66,9 +72,9 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if ($input->getOption('list')) {
-            return $this->listScripts();
+            return $this->listScripts($output);
         } elseif (!$input->getArgument('script')) {
-            throw new \RunTimeException('Missing required argument "script"');
+            throw new \RuntimeException('Missing required argument "script"');
         }
 
         $script = $input->getArgument('script');
@@ -79,24 +85,27 @@ EOT
         }
 
         $composer = $this->getComposer();
-        $hasListeners = $composer->getEventDispatcher()->hasEventListeners(new CommandEvent($script, $composer, $this->getIO()));
+        $devMode = $input->getOption('dev') || !$input->getOption('no-dev');
+        $event = new ScriptEvent($script, $composer, $this->getIO(), $devMode);
+        $hasListeners = $composer->getEventDispatcher()->hasEventListeners($event);
         if (!$hasListeners) {
             throw new \InvalidArgumentException(sprintf('Script "%s" is not defined in this package', $script));
         }
 
-        // add the bin dir to the PATH to make local binaries of deps usable in scripts
-        $binDir = $composer->getConfig()->get('bin-dir');
-        if (is_dir($binDir)) {
-            $_SERVER['PATH'] = realpath($binDir).PATH_SEPARATOR.getenv('PATH');
-            putenv('PATH='.$_SERVER['PATH']);
-        }
-
         $args = $input->getArgument('args');
 
-        return $composer->getEventDispatcher()->dispatchScript($script, $input->getOption('dev') || !$input->getOption('no-dev'), $args);
+        if (null !== $timeout = $input->getOption('timeout')) {
+            if (!ctype_digit($timeout)) {
+                throw new \RuntimeException('Timeout value must be numeric and positive if defined, or 0 for forever');
+            }
+            // Override global timeout set before in Composer by environment or config
+            ProcessExecutor::setTimeout((int) $timeout);
+        }
+
+        return $composer->getEventDispatcher()->dispatchScript($script, $devMode, $args);
     }
 
-    protected function listScripts()
+    protected function listScripts(OutputInterface $output)
     {
         $scripts = $this->getComposer()->getPackage()->getScripts();
 
@@ -106,9 +115,26 @@ EOT
 
         $io = $this->getIO();
         $io->writeError('<info>scripts:</info>');
+        $table = array();
         foreach ($scripts as $name => $script) {
-            $io->write('  ' . $name);
+            $description = '';
+            try {
+                $cmd = $this->getApplication()->find($name);
+                if ($cmd instanceof ScriptAliasCommand) {
+                    $description = $cmd->getDescription();
+                }
+            } catch (\Symfony\Component\Console\Exception\CommandNotFoundException $e) {
+                // ignore scripts that have no command associated, like native Composer script listeners
+            }
+            $table[] = array('  '.$name, $description);
         }
+
+        $renderer = new Table($output);
+        $renderer->setStyle('compact');
+        $rendererStyle = $renderer->getStyle();
+        $rendererStyle->setVerticalBorderChar('');
+        $rendererStyle->setCellRowContentFormat('%s  ');
+        $renderer->setRows($table)->render();
 
         return 0;
     }

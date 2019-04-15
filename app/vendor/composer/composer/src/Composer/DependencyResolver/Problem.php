@@ -12,6 +12,8 @@
 
 namespace Composer\DependencyResolver;
 
+use Composer\Package\CompletePackageInterface;
+
 /**
  * Represents a problem detected while solving dependencies
  *
@@ -90,14 +92,25 @@ class Problem
 
                 // handle php/hhvm
                 if ($job['packageName'] === 'php' || $job['packageName'] === 'php-64bit' || $job['packageName'] === 'hhvm') {
+                    $version = phpversion();
                     $available = $this->pool->whatProvides($job['packageName']);
-                    $version = count($available) ? $available[0]->getPrettyVersion() : phpversion();
+
+                    if (count($available)) {
+                        $firstAvailable = reset($available);
+                        $version = $firstAvailable->getPrettyVersion();
+                        $extra = $firstAvailable->getExtra();
+                        if ($firstAvailable instanceof CompletePackageInterface && isset($extra['config.platform']) && $extra['config.platform'] === true) {
+                            $version .= '; ' . $firstAvailable->getDescription();
+                        }
+                    }
 
                     $msg = "\n    - This package requires ".$job['packageName'].$this->constraintToText($job['constraint']).' but ';
 
-                    if (defined('HHVM_VERSION')) {
+                    if (defined('HHVM_VERSION') || count($available)) {
                         return $msg . 'your HHVM version does not satisfy that requirement.';
-                    } elseif ($job['packageName'] === 'hhvm') {
+                    }
+
+                    if ($job['packageName'] === 'hhvm') {
                         return $msg . 'you are running this with PHP and not HHVM.';
                     }
 
@@ -106,10 +119,14 @@ class Problem
 
                 // handle php extensions
                 if (0 === stripos($job['packageName'], 'ext-')) {
+                    if (false !== strpos($job['packageName'], ' ')) {
+                        return "\n    - The requested PHP extension ".$job['packageName'].' should be required as '.str_replace(' ', '-', $job['packageName']).'.';
+                    }
+
                     $ext = substr($job['packageName'], 4);
                     $error = extension_loaded($ext) ? 'has the wrong version ('.(phpversion($ext) ?: '0').') installed' : 'is missing from your system';
 
-                    return "\n    - The requested PHP extension ".$job['packageName'].$this->constraintToText($job['constraint']).' '.$error.'.';
+                    return "\n    - The requested PHP extension ".$job['packageName'].$this->constraintToText($job['constraint']).' '.$error.'. Install or enable PHP\'s '.$ext.' extension.';
                 }
 
                 // handle linked libs
@@ -129,11 +146,15 @@ class Problem
                     return "\n    - The requested package ".$job['packageName'].' could not be found, it looks like its name is invalid, "'.$illegalChars.'" is not allowed in package names.';
                 }
 
-                if (!$this->pool->whatProvides($job['packageName'])) {
-                    return "\n    - The requested package ".$job['packageName'].' could not be found in any version, there may be a typo in the package name.';
+                if ($providers = $this->pool->whatProvides($job['packageName'], $job['constraint'], true, true)) {
+                    return "\n    - The requested package ".$job['packageName'].$this->constraintToText($job['constraint']).' is satisfiable by '.$this->getPackageList($providers).' but these conflict with your requirements or minimum-stability.';
                 }
 
-                return "\n    - The requested package ".$job['packageName'].$this->constraintToText($job['constraint']).' could not be found.';
+                if ($providers = $this->pool->whatProvides($job['packageName'], null, true, true)) {
+                    return "\n    - The requested package ".$job['packageName'].$this->constraintToText($job['constraint']).' exists as '.$this->getPackageList($providers).' but these are rejected by your constraint.';
+                }
+
+                return "\n    - The requested package ".$job['packageName'].' could not be found in any version, there may be a typo in the package name.';
             }
         }
 
@@ -227,6 +248,6 @@ class Problem
      */
     protected function constraintToText($constraint)
     {
-        return ($constraint) ? ' '.$constraint->getPrettyString() : '';
+        return $constraint ? ' '.$constraint->getPrettyString() : '';
     }
 }

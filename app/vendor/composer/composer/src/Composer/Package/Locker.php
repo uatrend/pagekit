@@ -56,14 +56,53 @@ class Locker
         $this->repositoryManager = $repositoryManager;
         $this->installationManager = $installationManager;
         $this->hash = md5($composerFileContents);
-        $this->contentHash = $this->getContentHash($composerFileContents);
+        $this->contentHash = self::getContentHash($composerFileContents);
         $this->loader = new ArrayLoader(null, true);
         $this->dumper = new ArrayDumper();
         $this->process = new ProcessExecutor($io);
     }
 
     /**
-     * Checks whether locker were been locked (lockfile found).
+     * Returns the md5 hash of the sorted content of the composer file.
+     *
+     * @param string $composerFileContents The contents of the composer file.
+     *
+     * @return string
+     */
+    public static function getContentHash($composerFileContents)
+    {
+        $content = json_decode($composerFileContents, true);
+
+        $relevantKeys = array(
+            'name',
+            'version',
+            'require',
+            'require-dev',
+            'conflict',
+            'replace',
+            'provide',
+            'minimum-stability',
+            'prefer-stable',
+            'repositories',
+            'extra',
+        );
+
+        $relevantContent = array();
+
+        foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
+            $relevantContent[$key] = $content[$key];
+        }
+        if (isset($content['config']['platform'])) {
+            $relevantContent['config']['platform'] = $content['config']['platform'];
+        }
+
+        ksort($relevantContent);
+
+        return md5(json_encode($relevantContent));
+    }
+
+    /**
+     * Checks whether locker has been locked (lockfile found).
      *
      * @return bool
      */
@@ -92,7 +131,13 @@ class Locker
             return $this->contentHash === $lock['content-hash'];
         }
 
-        return $this->hash === $lock['hash'];
+        // BC support for old lock files without content-hash
+        if (!empty($lock['hash'])) {
+            return $this->hash === $lock['hash'];
+        }
+
+        // should not be reached unless the lock file is corrupted, so assume it's out of date
+        return false;
     }
 
     /**
@@ -244,9 +289,8 @@ class Locker
     {
         $lock = array(
             '_readme' => array('This file locks the dependencies of your project to a known state',
-                               'Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file',
+                               'Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies',
                                'This file is @gener'.'ated automatically', ),
-            'hash' => $this->hash,
             'content-hash' => $this->contentHash,
             'packages' => null,
             'packages-dev' => null,
@@ -311,12 +355,13 @@ class Locker
                 continue;
             }
 
-            $name    = $package->getPrettyName();
+            $name = $package->getPrettyName();
             $version = $package->getPrettyVersion();
 
             if (!$name || !$version) {
                 throw new \LogicException(sprintf(
-                    'Package "%s" has no version or name and can not be locked', $package
+                    'Package "%s" has no version or name and can not be locked',
+                    $package
                 ));
             }
 
@@ -388,45 +433,6 @@ class Locker
             }
         }
 
-        return $datetime ? $datetime->format('Y-m-d H:i:s') : null;
-    }
-
-    /**
-     * Returns the md5 hash of the sorted content of the composer file.
-     *
-     * @param string $composerFileContents The contents of the composer file.
-     *
-     * @return string
-     */
-    private function getContentHash($composerFileContents)
-    {
-        $content = json_decode($composerFileContents, true);
-
-        $relevantKeys = array(
-            'name',
-            'version',
-            'require',
-            'require-dev',
-            'conflict',
-            'replace',
-            'provide',
-            'minimum-stability',
-            'prefer-stable',
-            'repositories',
-            'extra',
-        );
-
-        $relevantContent = array();
-
-        foreach (array_intersect($relevantKeys, array_keys($content)) as $key) {
-            $relevantContent[$key] = $content[$key];
-        }
-        if (isset($content['config']['platform'])) {
-            $relevantContent['config']['platform'] = $content['config']['platform'];
-        }
-
-        ksort($relevantContent);
-
-        return md5(json_encode($relevantContent));
+        return $datetime ? $datetime->format(DATE_RFC3339) : null;
     }
 }

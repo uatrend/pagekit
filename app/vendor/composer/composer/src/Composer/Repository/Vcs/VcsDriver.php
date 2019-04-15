@@ -12,9 +12,12 @@
 
 namespace Composer\Repository\Vcs;
 
+use Composer\Cache;
 use Composer\Downloader\TransportException;
 use Composer\Config;
+use Composer\Factory;
 use Composer\IO\IOInterface;
+use Composer\Json\JsonFile;
 use Composer\Util\ProcessExecutor;
 use Composer\Util\RemoteFilesystem;
 use Composer\Util\Filesystem;
@@ -26,13 +29,24 @@ use Composer\Util\Filesystem;
  */
 abstract class VcsDriver implements VcsDriverInterface
 {
+    /** @var string */
     protected $url;
+    /** @var string */
     protected $originUrl;
+    /** @var array */
     protected $repoConfig;
+    /** @var IOInterface */
     protected $io;
+    /** @var Config */
     protected $config;
+    /** @var ProcessExecutor */
     protected $process;
+    /** @var RemoteFilesystem */
     protected $remoteFilesystem;
+    /** @var array */
+    protected $infoCache = array();
+    /** @var Cache */
+    protected $cache;
 
     /**
      * Constructor.
@@ -55,7 +69,57 @@ abstract class VcsDriver implements VcsDriverInterface
         $this->io = $io;
         $this->config = $config;
         $this->process = $process ?: new ProcessExecutor($io);
-        $this->remoteFilesystem = $remoteFilesystem ?: new RemoteFilesystem($io, $config);
+        $this->remoteFilesystem = $remoteFilesystem ?: Factory::createRemoteFilesystem($this->io, $config);
+    }
+
+    /**
+     * Returns whether or not the given $identifier should be cached or not.
+     *
+     * @param  string $identifier
+     * @return bool
+     */
+    protected function shouldCache($identifier)
+    {
+        return $this->cache && preg_match('{[a-f0-9]{40}}i', $identifier);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getComposerInformation($identifier)
+    {
+        if (!isset($this->infoCache[$identifier])) {
+            if ($this->shouldCache($identifier) && $res = $this->cache->read($identifier)) {
+                return $this->infoCache[$identifier] = JsonFile::parseJson($res);
+            }
+
+            $composer = $this->getBaseComposerInformation($identifier);
+
+            if ($this->shouldCache($identifier)) {
+                $this->cache->write($identifier, json_encode($composer));
+            }
+
+            $this->infoCache[$identifier] = $composer;
+        }
+
+        return $this->infoCache[$identifier];
+    }
+
+    protected function getBaseComposerInformation($identifier)
+    {
+        $composerFileContent = $this->getFileContent('composer.json', $identifier);
+
+        if (!$composerFileContent) {
+            return null;
+        }
+
+        $composer = JsonFile::parseJson($composerFileContent, $identifier . ':composer.json');
+
+        if (empty($composer['time']) && $changeDate = $this->getChangeDate($identifier)) {
+            $composer['time'] = $changeDate->format(DATE_RFC3339);
+        }
+
+        return $composer;
     }
 
     /**
@@ -96,7 +160,9 @@ abstract class VcsDriver implements VcsDriverInterface
      */
     protected function getContents($url)
     {
-        return $this->remoteFilesystem->getContents($this->originUrl, $url, false);
+        $options = isset($this->repoConfig['options']) ? $this->repoConfig['options'] : array();
+
+        return $this->remoteFilesystem->getContents($this->originUrl, $url, false, $options);
     }
 
     /**

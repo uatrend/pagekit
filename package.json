@@ -1,8 +1,7 @@
 {
     "name": "pagekit",
     "scripts": {
-      "install": "bower install && webpack && gulp",
-      "watch": "./node_modules/.bin/webpack --progress --colors --watch"
+        "watch": "./node_modules/.bin/webpack --progress --colors --watch"
     },
     "devDependencies": {
         "@babel/core": "^7.3.4",

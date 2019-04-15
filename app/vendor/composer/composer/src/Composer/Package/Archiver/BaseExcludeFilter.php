@@ -71,7 +71,7 @@ abstract class BaseExcludeFilter
      * Processes a file containing exclude rules of different formats per line
      *
      * @param array    $lines      A set of lines to be parsed
-     * @param callback $lineParser The parser to be used on each line
+     * @param callable $lineParser The parser to be used on each line
      *
      * @return array Exclude patterns to be used in filter()
      */
@@ -83,7 +83,7 @@ abstract class BaseExcludeFilter
                     $line = trim($line);
 
                     if (!$line || 0 === strpos($line, '#')) {
-                        return;
+                        return null;
                     }
 
                     return call_user_func($lineParser, $line);

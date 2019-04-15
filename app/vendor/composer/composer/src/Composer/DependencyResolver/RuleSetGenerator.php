@@ -28,6 +28,9 @@ class RuleSetGenerator
     protected $installedMap;
     protected $whitelistedMap;
     protected $addedMap;
+    protected $conflictAddedMap;
+    protected $addedPackages;
+    protected $addedPackagesByNames;
 
     public function __construct(PolicyInterface $policy, Pool $pool)
     {
@@ -47,7 +50,7 @@ class RuleSetGenerator
      *                                      reason for generating this rule
      * @param  mixed            $reasonData Any data, e.g. the requirement name,
      *                                      that goes with the reason
-     * @return Rule             The generated rule or null if tautological
+     * @return Rule|null             The generated rule or null if tautological
      */
     protected function createRequireRule(PackageInterface $package, array $providers, $reason, $reasonData = null)
     {
@@ -61,7 +64,7 @@ class RuleSetGenerator
             $literals[] = $provider->id;
         }
 
-        return new Rule($literals, $reason, $reasonData);
+        return new GenericRule($literals, $reason, $reasonData);
     }
 
     /**
@@ -83,7 +86,7 @@ class RuleSetGenerator
             $literals[] = $package->id;
         }
 
-        return new Rule($literals, $reason, $job['packageName'], $job);
+        return new GenericRule($literals, $reason, $job['packageName'], $job);
     }
 
     /**
@@ -99,7 +102,7 @@ class RuleSetGenerator
      */
     protected function createRemoveRule(PackageInterface $package, $reason, $job)
     {
-        return new Rule(array(-$package->id), $reason, $job['packageName'], $job);
+        return new GenericRule(array(-$package->id), $reason, $job['packageName'], $job);
     }
 
     /**
@@ -114,16 +117,16 @@ class RuleSetGenerator
      *                                      reason for generating this rule
      * @param  mixed            $reasonData Any data, e.g. the package name, that
      *                                      goes with the reason
-     * @return Rule             The generated rule
+     * @return Rule|null             The generated rule
      */
-    protected function createConflictRule(PackageInterface $issuer, PackageInterface $provider, $reason, $reasonData = null)
+    protected function createRule2Literals(PackageInterface $issuer, PackageInterface $provider, $reason, $reasonData = null)
     {
         // ignore self conflict
         if ($issuer === $provider) {
             return null;
         }
 
-        return new Rule(array(-$issuer->id, -$provider->id), $reason, $reasonData);
+        return new Rule2Literals(-$issuer->id, -$provider->id, $reason, $reasonData);
     }
 
     /**
@@ -137,7 +140,7 @@ class RuleSetGenerator
      */
     private function addRule($type, Rule $newRule = null)
     {
-        if (!$newRule || $this->rules->containsEqual($newRule)) {
+        if (!$newRule) {
             return;
         }
 
@@ -185,12 +188,18 @@ class RuleSetGenerator
         $workQueue->enqueue($package);
 
         while (!$workQueue->isEmpty()) {
+            /** @var PackageInterface $package */
             $package = $workQueue->dequeue();
             if (isset($this->addedMap[$package->id])) {
                 continue;
             }
 
             $this->addedMap[$package->id] = true;
+
+            $this->addedPackages[] = $package;
+            foreach ($package->getNames() as $name) {
+                $this->addedPackagesByNames[$name][] = $package;
+            }
 
             foreach ($package->getRequires() as $link) {
                 if ($ignorePlatformReqs && preg_match(PlatformRepository::PLATFORM_PACKAGE_REGEX, $link->getTarget())) {
@@ -199,40 +208,15 @@ class RuleSetGenerator
 
                 $possibleRequires = $this->pool->whatProvides($link->getTarget(), $link->getConstraint());
 
-                $this->addRule(RuleSet::TYPE_PACKAGE, $rule = $this->createRequireRule($package, $possibleRequires, Rule::RULE_PACKAGE_REQUIRES, $link));
+                $this->addRule(RuleSet::TYPE_PACKAGE, $this->createRequireRule($package, $possibleRequires, Rule::RULE_PACKAGE_REQUIRES, $link));
 
                 foreach ($possibleRequires as $require) {
                     $workQueue->enqueue($require);
                 }
             }
 
-            foreach ($package->getConflicts() as $link) {
-                $possibleConflicts = $this->pool->whatProvides($link->getTarget(), $link->getConstraint());
-
-                foreach ($possibleConflicts as $conflict) {
-                    $this->addRule(RuleSet::TYPE_PACKAGE, $this->createConflictRule($package, $conflict, Rule::RULE_PACKAGE_CONFLICT, $link));
-                }
-            }
-
-            // check obsoletes and implicit obsoletes of a package
-            $isInstalled = (isset($this->installedMap[$package->id]));
-
-            foreach ($package->getReplaces() as $link) {
-                $obsoleteProviders = $this->pool->whatProvides($link->getTarget(), $link->getConstraint());
-
-                foreach ($obsoleteProviders as $provider) {
-                    if ($provider === $package) {
-                        continue;
-                    }
-
-                    if (!$this->obsoleteImpossibleForAlias($package, $provider)) {
-                        $reason = ($isInstalled) ? Rule::RULE_INSTALLED_PACKAGE_OBSOLETES : Rule::RULE_PACKAGE_OBSOLETES;
-                        $this->addRule(RuleSet::TYPE_PACKAGE, $this->createConflictRule($package, $provider, $reason, $link));
-                    }
-                }
-            }
-
-            $obsoleteProviders = $this->pool->whatProvides($package->getName(), null);
+            $packageName = $package->getName();
+            $obsoleteProviders = $this->pool->whatProvides($packageName, null);
 
             foreach ($obsoleteProviders as $provider) {
                 if ($provider === $package) {
@@ -240,10 +224,53 @@ class RuleSetGenerator
                 }
 
                 if (($package instanceof AliasPackage) && $package->getAliasOf() === $provider) {
-                    $this->addRule(RuleSet::TYPE_PACKAGE, $rule = $this->createRequireRule($package, array($provider), Rule::RULE_PACKAGE_ALIAS, $package));
+                    $this->addRule(RuleSet::TYPE_PACKAGE, $this->createRequireRule($package, array($provider), Rule::RULE_PACKAGE_ALIAS, $package));
                 } elseif (!$this->obsoleteImpossibleForAlias($package, $provider)) {
-                    $reason = ($package->getName() == $provider->getName()) ? Rule::RULE_PACKAGE_SAME_NAME : Rule::RULE_PACKAGE_IMPLICIT_OBSOLETES;
-                    $this->addRule(RuleSet::TYPE_PACKAGE, $rule = $this->createConflictRule($package, $provider, $reason, $package));
+                    $reason = ($packageName == $provider->getName()) ? Rule::RULE_PACKAGE_SAME_NAME : Rule::RULE_PACKAGE_IMPLICIT_OBSOLETES;
+                    $this->addRule(RuleSet::TYPE_PACKAGE, $this->createRule2Literals($package, $provider, $reason, $package));
+                }
+            }
+        }
+    }
+
+    protected function addConflictRules()
+    {
+        /** @var PackageInterface $package */
+        foreach ($this->addedPackages as $package) {
+            foreach ($package->getConflicts() as $link) {
+                if (!isset($this->addedPackagesByNames[$link->getTarget()])) {
+                    continue;
+                }
+
+                /** @var PackageInterface $possibleConflict */
+                foreach ($this->addedPackagesByNames[$link->getTarget()] as $possibleConflict) {
+                    $conflictMatch = $this->pool->match($possibleConflict, $link->getTarget(), $link->getConstraint(), true);
+
+                    if ($conflictMatch === Pool::MATCH || $conflictMatch === Pool::MATCH_REPLACE) {
+                        $this->addRule(RuleSet::TYPE_PACKAGE, $this->createRule2Literals($package, $possibleConflict, Rule::RULE_PACKAGE_CONFLICT, $link));
+                    }
+
+                }
+            }
+
+            // check obsoletes and implicit obsoletes of a package
+            $isInstalled = isset($this->installedMap[$package->id]);
+
+            foreach ($package->getReplaces() as $link) {
+                if (!isset($this->addedPackagesByNames[$link->getTarget()])) {
+                    continue;
+                }
+
+                /** @var PackageInterface $possibleConflict */
+                foreach ($this->addedPackagesByNames[$link->getTarget()] as $provider) {
+                    if ($provider === $package) {
+                        continue;
+                    }
+
+                    if (!$this->obsoleteImpossibleForAlias($package, $provider)) {
+                        $reason = $isInstalled ? Rule::RULE_INSTALLED_PACKAGE_OBSOLETES : Rule::RULE_PACKAGE_OBSOLETES;
+                        $this->addRule(RuleSet::TYPE_PACKAGE, $this->createRule2Literals($package, $provider, $reason, $link));
+                    }
                 }
             }
         }
@@ -283,7 +310,7 @@ class RuleSetGenerator
             switch ($job['cmd']) {
                 case 'install':
                     if (!$job['fixed'] && $ignorePlatformReqs && preg_match(PlatformRepository::PLATFORM_PACKAGE_REGEX, $job['packageName'])) {
-                        continue;
+                        break;
                     }
 
                     $packages = $this->pool->whatProvides($job['packageName'], $job['constraint']);
@@ -326,11 +353,19 @@ class RuleSetGenerator
         $this->pool->setWhitelist($this->whitelistedMap);
 
         $this->addedMap = array();
+        $this->conflictAddedMap = array();
+        $this->addedPackages = array();
+        $this->addedPackagesByNames = array();
         foreach ($this->installedMap as $package) {
             $this->addRulesForPackage($package, $ignorePlatformReqs);
         }
 
         $this->addRulesForJobs($ignorePlatformReqs);
+
+        $this->addConflictRules();
+
+        // Remove references to packages
+        $this->addedPackages = $this->addedPackagesByNames = null;
 
         return $this->rules;
     }

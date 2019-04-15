@@ -33,6 +33,7 @@ class FilesystemRepository extends WritableArrayRepository
      */
     public function __construct(JsonFile $repositoryFile)
     {
+        parent::__construct();
         $this->file = $repositoryFile;
     }
 
@@ -49,6 +50,11 @@ class FilesystemRepository extends WritableArrayRepository
 
         try {
             $packages = $this->file->read();
+
+            // forward compatibility for composer v2 installed.json
+            if (isset($packages['packages'])) {
+                $packages = $packages['packages'];
+            }
 
             if (!is_array($packages)) {
                 throw new \UnexpectedValueException('Could not parse package list from the repository');
@@ -81,6 +87,10 @@ class FilesystemRepository extends WritableArrayRepository
         foreach ($this->getCanonicalPackages() as $package) {
             $data[] = $dumper->dump($package);
         }
+
+        usort($data, function ($a, $b) {
+            return strcmp($a['name'], $b['name']);
+        });
 
         $this->file->write($data);
     }

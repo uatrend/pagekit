@@ -33,7 +33,7 @@ class InstallerIO extends ConsoleIO
     /**
      * {@inheritdoc}
      */
-    public function writeError($messages, $newline = true)
+    public function writeError($messages, $newline = true, $verbosity = parent::NORMAL)
     {
         foreach ((array)$messages as $message) {
             if (preg_match(self::REGEX, $message, $matches)) {
@@ -41,6 +41,6 @@ class InstallerIO extends ConsoleIO
             }
         }
 
-        parent::writeError($messages, $newline);
+        parent::writeError($messages, $newline, $verbosity);
     }
 }

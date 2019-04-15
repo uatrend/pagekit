@@ -37,10 +37,10 @@ class SvnDriver extends VcsDriver
     protected $rootIdentifier;
     protected $infoCache = array();
 
-    protected $trunkPath    = 'trunk';
+    protected $trunkPath = 'trunk';
     protected $branchesPath = 'branches';
-    protected $tagsPath     = 'tags';
-    protected $packagePath   = '';
+    protected $tagsPath = 'tags';
+    protected $packagePath = '';
     protected $cacheCredentials = true;
 
     /**
@@ -116,54 +116,98 @@ class SvnDriver extends VcsDriver
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
+     */
+    protected function shouldCache($identifier)
+    {
+        return $this->cache && preg_match('{@\d+$}', $identifier);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     public function getComposerInformation($identifier)
     {
-        $identifier = '/' . trim($identifier, '/') . '/';
-
-        if ($res = $this->cache->read($identifier.'.json')) {
-            $this->infoCache[$identifier] = JsonFile::parseJson($res);
-        }
-
         if (!isset($this->infoCache[$identifier])) {
-            preg_match('{^(.+?)(@\d+)?/$}', $identifier, $match);
-            if (!empty($match[2])) {
-                $path = $match[1];
-                $rev = $match[2];
-            } else {
-                $path = $identifier;
-                $rev = '';
+            if ($this->shouldCache($identifier) && $res = $this->cache->read($identifier.'.json')) {
+                return $this->infoCache[$identifier] = JsonFile::parseJson($res);
             }
 
             try {
-                $resource = $path.'composer.json';
-                $output = $this->execute('svn cat', $this->baseUrl . $resource . $rev);
-                if (!trim($output)) {
-                    return;
+                $composer = $this->getBaseComposerInformation($identifier);
+            } catch (TransportException $e) {
+                $message = $e->getMessage();
+                if (stripos($message, 'path not found') === false && stripos($message, 'svn: warning: W160013') === false) {
+                    throw $e;
                 }
-            } catch (\RuntimeException $e) {
-                throw new TransportException($e->getMessage());
+                // remember a not-existent composer.json
+                $composer = '';
             }
 
-            $composer = JsonFile::parseJson($output, $this->baseUrl . $resource . $rev);
-
-            if (empty($composer['time'])) {
-                $output = $this->execute('svn info', $this->baseUrl . $path . $rev);
-                foreach ($this->process->splitLines($output) as $line) {
-                    if ($line && preg_match('{^Last Changed Date: ([^(]+)}', $line, $match)) {
-                        $date = new \DateTime($match[1], new \DateTimeZone('UTC'));
-                        $composer['time'] = $date->format('Y-m-d H:i:s');
-                        break;
-                    }
-                }
+            if ($this->shouldCache($identifier)) {
+                $this->cache->write($identifier.'.json', json_encode($composer));
             }
 
-            $this->cache->write($identifier.'.json', json_encode($composer));
             $this->infoCache[$identifier] = $composer;
         }
 
         return $this->infoCache[$identifier];
+    }
+
+    /**
+     * @param string $file
+     * @param string $identifier
+     */
+    public function getFileContent($file, $identifier)
+    {
+        $identifier = '/' . trim($identifier, '/') . '/';
+
+        preg_match('{^(.+?)(@\d+)?/$}', $identifier, $match);
+        if (!empty($match[2])) {
+            $path = $match[1];
+            $rev = $match[2];
+        } else {
+            $path = $identifier;
+            $rev = '';
+        }
+
+        try {
+            $resource = $path.$file;
+            $output = $this->execute('svn cat', $this->baseUrl . $resource . $rev);
+            if (!trim($output)) {
+                return null;
+            }
+        } catch (\RuntimeException $e) {
+            throw new TransportException($e->getMessage());
+        }
+
+        return $output;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getChangeDate($identifier)
+    {
+        $identifier = '/' . trim($identifier, '/') . '/';
+
+        preg_match('{^(.+?)(@\d+)?/$}', $identifier, $match);
+        if (!empty($match[2])) {
+            $path = $match[1];
+            $rev = $match[2];
+        } else {
+            $path = $identifier;
+            $rev = '';
+        }
+
+        $output = $this->execute('svn info', $this->baseUrl . $path . $rev);
+        foreach ($this->process->splitLines($output) as $line) {
+            if ($line && preg_match('{^Last Changed Date: ([^(]+)}', $line, $match)) {
+                return new \DateTime($match[1], new \DateTimeZone('UTC'));
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -263,10 +307,10 @@ class SvnDriver extends VcsDriver
             return false;
         }
 
-        $processExecutor = new ProcessExecutor();
+        $processExecutor = new ProcessExecutor($io);
 
         $exit = $processExecutor->execute(
-            "svn info --non-interactive {$url}",
+            "svn info --non-interactive ".ProcessExecutor::escape($url),
             $ignoredOutput
         );
 
@@ -275,8 +319,16 @@ class SvnDriver extends VcsDriver
             return true;
         }
 
+        // Subversion client 1.7 and older
         if (false !== stripos($processExecutor->getErrorOutput(), 'authorization failed:')) {
             // This is likely a remote Subversion repository that requires
+            // authentication. We will handle actual authentication later.
+            return true;
+        }
+
+        // Subversion client 1.8 and newer
+        if (false !== stripos($processExecutor->getErrorOutput(), 'Authentication failed')) {
+            // This is likely a remote Subversion or newer repository that requires
             // authentication. We will handle actual authentication later.
             return true;
         }
@@ -320,7 +372,7 @@ class SvnDriver extends VcsDriver
         try {
             return $this->util->execute($command, $url);
         } catch (\RuntimeException $e) {
-            if (0 !== $this->process->execute('svn --version', $ignoredOutput)) {
+            if (null === $this->util->binaryVersion()) {
                 throw new \RuntimeException('Failed to load '.$this->url.', svn was not found, check that it is installed and in your PATH env.' . "\n\n" . $this->process->getErrorOutput());
             }
 

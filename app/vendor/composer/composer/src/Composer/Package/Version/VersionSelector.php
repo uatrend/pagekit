@@ -13,10 +13,11 @@
 namespace Composer\Package\Version;
 
 use Composer\DependencyResolver\Pool;
+use Composer\Package\BasePackage;
 use Composer\Package\PackageInterface;
 use Composer\Package\Loader\ArrayLoader;
 use Composer\Package\Dumper\ArrayDumper;
-use Composer\Semver\VersionParser as SemverVersionParser;
+use Composer\Semver\Constraint\Constraint;
 
 /**
  * Selects the best possible version for a package
@@ -41,12 +42,23 @@ class VersionSelector
      *
      * @param  string                $packageName
      * @param  string                $targetPackageVersion
+     * @param  string                $targetPhpVersion
+     * @param  string                $preferredStability
      * @return PackageInterface|bool
      */
-    public function findBestCandidate($packageName, $targetPackageVersion = null)
+    public function findBestCandidate($packageName, $targetPackageVersion = null, $targetPhpVersion = null, $preferredStability = 'stable')
     {
         $constraint = $targetPackageVersion ? $this->getParser()->parseConstraints($targetPackageVersion) : null;
         $candidates = $this->pool->whatProvides(strtolower($packageName), $constraint, true);
+
+        if ($targetPhpVersion) {
+            $phpConstraint = new Constraint('==', $this->getParser()->normalize($targetPhpVersion));
+            $candidates = array_filter($candidates, function ($pkg) use ($phpConstraint) {
+                $reqs = $pkg->getRequires();
+
+                return !isset($reqs['php']) || $reqs['php']->getConstraint()->matches($phpConstraint);
+            });
+        }
 
         if (!$candidates) {
             return false;
@@ -54,7 +66,32 @@ class VersionSelector
 
         // select highest version if we have many
         $package = reset($candidates);
+        $minPriority = BasePackage::$stabilities[$preferredStability];
         foreach ($candidates as $candidate) {
+            $candidatePriority = $candidate->getStabilityPriority();
+            $currentPriority = $package->getStabilityPriority();
+
+            // candidate is less stable than our preferred stability,
+            // and current package is more stable than candidate, skip it
+            if ($minPriority < $candidatePriority && $currentPriority < $candidatePriority) {
+                continue;
+            }
+
+            // candidate is less stable than our preferred stability,
+            // and current package is less stable than candidate, select candidate
+            if ($minPriority < $candidatePriority && $candidatePriority < $currentPriority) {
+                $package = $candidate;
+                continue;
+            }
+
+            // candidate is more stable than our preferred stability,
+            // and current package is less stable than preferred stability, select candidate
+            if ($minPriority >= $candidatePriority && $minPriority < $currentPriority) {
+                $package = $candidate;
+                continue;
+            }
+
+            // select highest version of the two
             if (version_compare($package->getVersion(), $candidate->getVersion(), '<')) {
                 $package = $candidate;
             }
@@ -131,7 +168,7 @@ class VersionSelector
     private function getParser()
     {
         if ($this->parser === null) {
-            $this->parser = new SemverVersionParser();
+            $this->parser = new VersionParser();
         }
 
         return $this->parser;

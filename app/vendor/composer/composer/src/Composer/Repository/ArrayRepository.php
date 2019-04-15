@@ -15,7 +15,7 @@ namespace Composer\Repository;
 use Composer\Package\AliasPackage;
 use Composer\Package\PackageInterface;
 use Composer\Package\CompletePackageInterface;
-use Composer\Semver\VersionParser;
+use Composer\Package\Version\VersionParser;
 use Composer\Semver\Constraint\ConstraintInterface;
 use Composer\Semver\Constraint\Constraint;
 
@@ -24,7 +24,7 @@ use Composer\Semver\Constraint\Constraint;
  *
  * @author Nils Adermann <naderman@naderman.de>
  */
-class ArrayRepository implements RepositoryInterface
+class ArrayRepository extends BaseRepository
 {
     /** @var PackageInterface[] */
     protected $packages;
@@ -56,6 +56,8 @@ class ArrayRepository implements RepositoryInterface
                 }
             }
         }
+
+        return null;
     }
 
     /**
@@ -87,7 +89,7 @@ class ArrayRepository implements RepositoryInterface
     /**
      * {@inheritDoc}
      */
-    public function search($query, $mode = 0)
+    public function search($query, $mode = 0, $type = null)
     {
         $regex = '{(?:'.implode('|', preg_split('{\s+}', $query)).')}i';
 
@@ -100,9 +102,13 @@ class ArrayRepository implements RepositoryInterface
             if (preg_match($regex, $name)
                 || ($mode === self::SEARCH_FULLTEXT && $package instanceof CompletePackageInterface && preg_match($regex, implode(' ', (array) $package->getKeywords()) . ' ' . $package->getDescription()))
             ) {
+                if (null !== $type && $package->getType() !== $type) {
+                    continue;
+                }
+
                 $matches[$name] = array(
                     'name' => $package->getPrettyName(),
-                    'description' => $package->getDescription(),
+                    'description' => $package instanceof CompletePackageInterface ? $package->getDescription() : null,
                 );
             }
         }

@@ -20,13 +20,15 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @author Jordi Boggiano <j.boggiano@seld.be>
  */
-class ScriptAliasCommand extends Command
+class ScriptAliasCommand extends BaseCommand
 {
     private $script;
+    private $description;
 
-    public function __construct($script)
+    public function __construct($script, $description)
     {
         $this->script = $script;
+        $this->description = empty($description) ? 'Runs the '.$script.' script as defined in composer.json.' : $description;
 
         parent::__construct();
     }
@@ -35,16 +37,19 @@ class ScriptAliasCommand extends Command
     {
         $this
             ->setName($this->script)
-            ->setDescription('Run the '.$this->script.' script as defined in composer.json.')
+            ->setDescription($this->description)
             ->setDefinition(array(
                 new InputOption('dev', null, InputOption::VALUE_NONE, 'Sets the dev mode.'),
                 new InputOption('no-dev', null, InputOption::VALUE_NONE, 'Disables the dev mode.'),
                 new InputArgument('args', InputArgument::IS_ARRAY | InputArgument::OPTIONAL, ''),
             ))
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 The <info>run-script</info> command runs scripts defined in composer.json:
 
 <info>php composer.phar run-script post-update-cmd</info>
+
+Read more at https://getcomposer.org/doc/03-cli.md#run-script
 EOT
             )
         ;
@@ -53,13 +58,6 @@ EOT
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $composer = $this->getComposer();
-
-        // add the bin dir to the PATH to make local binaries of deps usable in scripts
-        $binDir = $composer->getConfig()->get('bin-dir');
-        if (is_dir($binDir)) {
-            $_SERVER['PATH'] = realpath($binDir).PATH_SEPARATOR.getenv('PATH');
-            putenv('PATH='.$_SERVER['PATH']);
-        }
 
         $args = $input->getArguments();
 

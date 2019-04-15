@@ -25,21 +25,23 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  * @author Benoît Merlet <benoit.merlet@gmail.com>
  */
-class LicensesCommand extends Command
+class LicensesCommand extends BaseCommand
 {
     protected function configure()
     {
         $this
             ->setName('licenses')
-            ->setDescription('Show information about licenses of dependencies')
+            ->setDescription('Shows information about licenses of dependencies.')
             ->setDefinition(array(
                 new InputOption('format', 'f', InputOption::VALUE_REQUIRED, 'Format of the output: text or json', 'text'),
                 new InputOption('no-dev', null, InputOption::VALUE_NONE, 'Disables search in require-dev packages.'),
             ))
-            ->setHelp(<<<EOT
+            ->setHelp(
+                <<<EOT
 The license command displays detailed information about the licenses of
 the installed dependencies.
 
+Read more at https://getcomposer.org/doc/03-cli.md#licenses
 EOT
             )
         ;
@@ -74,8 +76,9 @@ EOT
 
                 $table = new Table($output);
                 $table->setStyle('compact');
-                $table->getStyle()->setVerticalBorderChar('');
-                $table->getStyle()->setCellRowContentFormat('%s  ');
+                $tableStyle = $table->getStyle();
+                $tableStyle->setVerticalBorderChar('');
+                $tableStyle->setCellRowContentFormat('%s  ');
                 $table->setHeaders(array('Name', 'Version', 'License'));
                 foreach ($packages as $package) {
                     $table->addRow(array(
@@ -88,6 +91,7 @@ EOT
                 break;
 
             case 'json':
+                $dependencies = array();
                 foreach ($packages as $package) {
                     $dependencies[$package->getPrettyName()] = array(
                         'version' => $package->getFullPrettyVersion(),
@@ -96,9 +100,9 @@ EOT
                 }
 
                 $io->write(JsonFile::encode(array(
-                    'name'         => $root->getPrettyName(),
-                    'version'      => $root->getFullPrettyVersion(),
-                    'license'      => $root->getLicense(),
+                    'name' => $root->getPrettyName(),
+                    'version' => $root->getFullPrettyVersion(),
+                    'license' => $root->getLicense(),
                     'dependencies' => $dependencies,
                 )));
                 break;
@@ -111,8 +115,10 @@ EOT
     /**
      * Find package requires and child requires
      *
-     * @param RepositoryInterface $repo
-     * @param PackageInterface    $package
+     * @param  RepositoryInterface $repo
+     * @param  PackageInterface    $package
+     * @param  array               $bucket
+     * @return array
      */
     private function filterRequiredPackages(RepositoryInterface $repo, PackageInterface $package, $bucket = array())
     {

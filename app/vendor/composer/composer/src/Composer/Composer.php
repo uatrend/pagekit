@@ -20,6 +20,7 @@ use Composer\Plugin\PluginManager;
 use Composer\Downloader\DownloadManager;
 use Composer\EventDispatcher\EventDispatcher;
 use Composer\Autoload\AutoloadGenerator;
+use Composer\Package\Archiver\ArchiveManager;
 
 /**
  * @author Jordi Boggiano <j.boggiano@seld.be>
@@ -28,9 +29,46 @@ use Composer\Autoload\AutoloadGenerator;
  */
 class Composer
 {
-    const VERSION = '@package_version@';
-    const BRANCH_ALIAS_VERSION = '@package_branch_alias_version@';
-    const RELEASE_DATE = '@release_date@';
+    /*
+     * Examples of the following constants in the various configurations they can be in
+     *
+     * releases (phar):
+     * const VERSION = '1.8.2';
+     * const BRANCH_ALIAS_VERSION = '';
+     * const RELEASE_DATE = '2019-01-29 15:00:53';
+     * const SOURCE_VERSION = '';
+     *
+     * snapshot builds (phar):
+     * const VERSION = 'd3873a05650e168251067d9648845c220c50e2d7';
+     * const BRANCH_ALIAS_VERSION = '1.9-dev';
+     * const RELEASE_DATE = '2019-02-20 07:43:56';
+     * const SOURCE_VERSION = '';
+     *
+     * source (git clone):
+     * const VERSION = '1.8.5';
+     * const BRANCH_ALIAS_VERSION = '';
+     * const RELEASE_DATE = '2019-04-09 17:46:47';
+     * const SOURCE_VERSION = '1.8-dev+source';
+     */
+    const VERSION = '1.8.5';
+    const BRANCH_ALIAS_VERSION = '';
+    const RELEASE_DATE = '2019-04-09 17:46:47';
+    const SOURCE_VERSION = '1.8-dev+source';
+
+    public static function getVersion()
+    {
+        // no replacement done, this must be a source checkout
+        if (self::VERSION === '@package_version'.'@') {
+            return self::SOURCE_VERSION;
+        }
+
+        // we have a branch alias and version is a commit id, this must be a snapshot build
+        if (self::BRANCH_ALIAS_VERSION !== '' && preg_match('{^[a-f0-9]{40}$}', self::VERSION)) {
+            return self::BRANCH_ALIAS_VERSION.'+'.self::VERSION;
+        }
+
+        return self::VERSION;
+    }
 
     /**
      * @var Package\RootPackageInterface
@@ -76,6 +114,11 @@ class Composer
      * @var Autoload\AutoloadGenerator
      */
     private $autoloadGenerator;
+
+    /**
+     * @var ArchiveManager
+     */
+    private $archiveManager;
 
     /**
      * @param  Package\RootPackageInterface $package
@@ -156,6 +199,22 @@ class Composer
     public function getDownloadManager()
     {
         return $this->downloadManager;
+    }
+
+    /**
+     * @param ArchiveManager $manager
+     */
+    public function setArchiveManager(ArchiveManager $manager)
+    {
+        $this->archiveManager = $manager;
+    }
+
+    /**
+     * @return ArchiveManager
+     */
+    public function getArchiveManager()
+    {
+        return $this->archiveManager;
     }
 
     /**

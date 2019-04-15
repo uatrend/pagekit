@@ -44,7 +44,7 @@ class ChannelReader extends BaseChannelReader
     /**
      * Reads PEAR channel through REST interface and builds list of packages
      *
-     * @param $url string PEAR Channel url
+     * @param string $url PEAR Channel url
      * @throws \UnexpectedValueException
      * @return ChannelInfo
      */
@@ -53,7 +53,6 @@ class ChannelReader extends BaseChannelReader
         $xml = $this->requestXml($url, "/channel.xml");
 
         $channelName = (string) $xml->name;
-        $channelSummary = (string) $xml->summary;
         $channelAlias = (string) $xml->suggestedalias;
 
         $supportedVersions = array_keys($this->readerMap);
@@ -71,8 +70,8 @@ class ChannelReader extends BaseChannelReader
     /**
      * Reads channel supported REST interfaces and selects one of them
      *
-     * @param $channelXml \SimpleXMLElement
-     * @param $supportedVersions string[] supported PEAR REST protocols
+     * @param \SimpleXMLElement $channelXml
+     * @param string[] $supportedVersions supported PEAR REST protocols
      * @return array|null hash with selected version and baseUrl
      */
     private function selectRestVersion($channelXml, $supportedVersions)
@@ -80,8 +79,18 @@ class ChannelReader extends BaseChannelReader
         $channelXml->registerXPathNamespace('ns', self::CHANNEL_NS);
 
         foreach ($supportedVersions as $version) {
-            $xpathTest = "ns:servers/ns:primary/ns:rest/ns:baseurl[@type='{$version}']";
+            $xpathTest = "ns:servers/ns:*/ns:rest/ns:baseurl[@type='{$version}']";
             $testResult = $channelXml->xpath($xpathTest);
+
+            foreach ($testResult as $result) {
+                // Choose first https:// option.
+                $result = (string) $result;
+                if (preg_match('{^https://}i', $result)) {
+                    return array('version' => $version, 'baseUrl' => $result);
+                }
+            }
+
+            // Fallback to non-https if it does not exist.
             if (count($testResult) > 0) {
                 return array('version' => $version, 'baseUrl' => (string) $testResult[0]);
             }

@@ -52,7 +52,7 @@ class ConfigValidator
         // validate json schema
         $laxValid = false;
         try {
-            $json = new JsonFile($file, new RemoteFilesystem($this->io));
+            $json = new JsonFile($file, null, $this->io);
             $manifest = $json->read();
 
             $json->validateSchema(JsonFile::LAX_SCHEMA);
@@ -73,26 +73,40 @@ class ConfigValidator
         }
 
         // validate actual data
-        if (!empty($manifest['license'])) {
+        if (empty($manifest['license'])) {
+            $warnings[] = 'No license specified, it is recommended to do so. For closed-source software you may use "proprietary" as license.';
+        } else {
+            $licenses = (array) $manifest['license'];
+
             // strip proprietary since it's not a valid SPDX identifier, but is accepted by composer
-            if (is_array($manifest['license'])) {
-                foreach ($manifest['license'] as $key => $license) {
-                    if ('proprietary' === $license) {
-                        unset($manifest['license'][$key]);
-                    }
+            foreach ($licenses as $key => $license) {
+                if ('proprietary' === $license) {
+                    unset($licenses[$key]);
                 }
             }
 
             $licenseValidator = new SpdxLicenses();
-            if ('proprietary' !== $manifest['license'] && array() !== $manifest['license'] && !$licenseValidator->validate($manifest['license'])) {
-                $warnings[] = sprintf(
-                    'License %s is not a valid SPDX license identifier, see http://www.spdx.org/licenses/ if you use an open license.'
-                    ."\nIf the software is closed-source, you may use \"proprietary\" as license.",
-                    json_encode($manifest['license'])
-                );
+            foreach ($licenses as $license) {
+                $spdxLicense = $licenseValidator->getLicenseByIdentifier($license);
+                if ($spdxLicense && $spdxLicense[3]) {
+                    if (preg_match('{^[AL]?GPL-[123](\.[01])?\+$}i', $license)) {
+                        $warnings[] = sprintf(
+                            'License "%s" is a deprecated SPDX license identifier, use "'.str_replace('+', '', $license).'-or-later" instead',
+                            $license
+                        );
+                    } elseif (preg_match('{^[AL]?GPL-[123](\.[01])?$}i', $license)) {
+                        $warnings[] = sprintf(
+                            'License "%s" is a deprecated SPDX license identifier, use "'.$license.'-only" or "'.$license.'-or-later" instead',
+                            $license
+                        );
+                    } else {
+                        $warnings[] = sprintf(
+                            'License "%s" is a deprecated SPDX license identifier, see https://spdx.org/licenses/',
+                            $license
+                        );
+                    }
+                }
             }
-        } else {
-            $warnings[] = 'No license specified, it is recommended to do so. For closed-source software you may use "proprietary" as license.';
         }
 
         if (isset($manifest['version'])) {
@@ -111,7 +125,7 @@ class ConfigValidator
         }
 
         if (!empty($manifest['type']) && $manifest['type'] == 'composer-installer') {
-            $warnings[] = "The package type 'composer-installer' is deprecated. Please distribute your custom installers as plugins from now on. See http://getcomposer.org/doc/articles/plugins.md for plugin documentation.";
+            $warnings[] = "The package type 'composer-installer' is deprecated. Please distribute your custom installers as plugins from now on. See https://getcomposer.org/doc/articles/plugins.md for plugin documentation.";
         }
 
         // check for require-dev overrides
@@ -121,6 +135,31 @@ class ConfigValidator
             if (!empty($requireOverrides)) {
                 $plural = (count($requireOverrides) > 1) ? 'are' : 'is';
                 $warnings[] = implode(', ', array_keys($requireOverrides)). " {$plural} required both in require and require-dev, this can lead to unexpected behavior";
+            }
+        }
+
+        // check for commit references
+        $require = isset($manifest['require']) ? $manifest['require'] : array();
+        $requireDev = isset($manifest['require-dev']) ? $manifest['require-dev'] : array();
+        $packages = array_merge($require, $requireDev);
+        foreach ($packages as $package => $version) {
+            if (preg_match('/#/', $version) === 1) {
+                $warnings[] = sprintf(
+                    'The package "%s" is pointing to a commit-ref, this is bad practice and can cause unforeseen issues.',
+                    $package
+                );
+            }
+        }
+
+        // report scripts-descriptions for non-existent scripts
+        $scriptsDescriptions = isset($manifest['scripts-descriptions']) ? $manifest['scripts-descriptions'] : array();
+        $scripts = isset($manifest['scripts']) ? $manifest['scripts'] : array();
+        foreach ($scriptsDescriptions as $scriptName => $scriptDescription) {
+            if (!array_key_exists($scriptName, $scripts)) {
+                $warnings[] = sprintf(
+                    'Description for non-existent script "%s" found in "scripts-descriptions"',
+                    $scriptName
+                );
             }
         }
 
