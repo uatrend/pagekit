@@ -4,7 +4,7 @@ const path            = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
 
 const mode    = (process.argv.indexOf('-p') !== -1) ? 'production' : 'development';
-const skip    = ['coverkit/theme-abz1', 'coverkit/tinymce'];
+const skip    = []; // example - 'pagekit/blog'
 const ignore  = ['packages/**/node_modules/**', 'packages/**/app/assets/**', 'packages/**/app/vendor/**'];
 
 var exports = [];

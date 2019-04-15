@@ -29,13 +29,13 @@ Build based on Pagekit CMS 1.0.16
 
 ---
 
-#### What updated?
+#### Updated
 
 Javascript Frameworks: Vue, UIkit, Lodash. Removed all jQuery dependencies (No jQuery).
 
 Vue components: Vue-resource
 
-PHP Framework: Symfony Foundation Framework 4.2
+PHP Frameworks: Symfony Foundation Framework, Composer
 
 Building environment: Webpack, Babel, Gulp, style and script loaders.
 
@@ -45,7 +45,7 @@ Javascript code of all components (the code is very close to the original for un
 
 ---
 
-#### What added?
+#### Added
 
 Vue components: vue-event-manager, vue-nestable, vee-validate, vue2-filters.
 
@@ -55,17 +55,7 @@ Javascript libraries: Flatpickr (for input-date component).
 
 ---
 
-##### Notes before work or update Symfony Framework.
-
-To make this version (4.2) workable - was added to ``Pagekit\Site\Event\PageListener  -  $route->setOption('utf8', true);``  and ``Symfony\Component\Process\ProcessUtils - function escapeArgument($argument)``. Need help from official developers for cleaner inclusion and updates in the future.
-
-
-
 Thanks to Yootheme and developers!
 
-
-
-Feel free to ask any questions - I will answer as much as possible. 
-
-If this help you and you like it - [donate! :)](https://www.paypal.me/3nw)
+Feel free to ask any questions - I will answer as much as possible.
 
