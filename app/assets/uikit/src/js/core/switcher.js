@@ -1,5 +1,5 @@
 import Togglable from '../mixin/togglable';
-import {$$, addClass, attr, data, filter, getIndex, hasClass, index, isTouch, matches, queryAll, removeClass, toNodes, within} from 'uikit-util';
+import {$$, addClass, attr, data, endsWith, filter, getIndex, hasClass, index, isEmpty, matches, queryAll, removeClass, toNodes, within} from 'uikit-util';
 
 export default {
 
@@ -82,15 +82,8 @@ export default {
                 return this.connects;
             },
 
-            handler(e) {
-                if (!isTouch(e)) {
-                    return;
-                }
-
-                e.preventDefault();
-                if (!window.getSelection().toString()) {
-                    this.show(e.type === 'swipeLeft' ? 'next' : 'previous');
-                }
+            handler({type}) {
+                this.show(endsWith(type, 'Left') ? 'next' : 'previous');
             }
         }
 
@@ -107,7 +100,7 @@ export default {
     methods: {
 
         index() {
-            return !!this.connects.length && index(filter(this.connects[0].children, `.${this.cls}`)[0]);
+            return !isEmpty(this.connects) && index(filter(this.connects[0].children, `.${this.cls}`)[0]);
         },
 
         show(item) {

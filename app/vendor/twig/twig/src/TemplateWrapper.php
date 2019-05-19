@@ -96,7 +96,7 @@ final class TemplateWrapper
     {
         $context = $this->env->mergeGlobals($context);
         $level = ob_get_level();
-        ob_start();
+        ob_start(function () { return ''; });
         try {
             $this->template->displayBlock($name, $context);
         } catch (\Exception $e) {
@@ -138,9 +138,19 @@ final class TemplateWrapper
     /**
      * @return string
      */
-    public function getTemplatename()
+    public function getTemplateName()
     {
         return $this->template->getTemplateName();
+    }
+
+    /**
+     * @internal
+     *
+     * @return Template
+     */
+    public function unwrap()
+    {
+        return $this->template;
     }
 }
 

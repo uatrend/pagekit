@@ -3,7 +3,7 @@ import Container from '../mixin/container';
 import Modal from '../mixin/modal';
 import Slideshow from '../mixin/slideshow';
 import Togglable from '../mixin/togglable';
-import {$, addClass, ajax, append, assign, attr, css, getImage, html, index, once, pointerDown, pointerMove, pointerUp, removeClass, Transition, trigger} from 'uikit-util';
+import {$, addClass, ajax, append, assign, attr, css, getImage, html, index, once, pointerDown, pointerMove, removeClass, Transition, trigger} from 'uikit-util';
 
 export default {
 
@@ -64,7 +64,7 @@ export default {
 
         {
 
-            name: pointerUp,
+            name: 'click',
 
             self: true,
 
@@ -73,7 +73,11 @@ export default {
             },
 
             handler(e) {
-                e.preventDefault();
+
+                if (e.defaultPrevented) {
+                    return;
+                }
+
                 this.hide();
             }
 
@@ -86,7 +90,6 @@ export default {
             self: true,
 
             handler() {
-                this.startAutoplay();
                 this.showControls();
             }
 
@@ -100,7 +103,6 @@ export default {
 
             handler() {
 
-                this.stopAutoplay();
                 this.hideControls();
 
                 removeClass(this.slides, this.clsActive);
@@ -216,7 +218,7 @@ export default {
                 let matches;
 
                 // Image
-                if (type === 'image' || source.match(/\.(jp(e)?g|png|gif|svg)($|\?)/i)) {
+                if (type === 'image' || source.match(/\.(jp(e)?g|png|gif|svg|webp)($|\?)/i)) {
 
                     getImage(source).then(
                         img => this.setItem(item, `<img width="${img.width}" height="${img.height}" src="${source}" alt="${alt ? alt : ''}">`),

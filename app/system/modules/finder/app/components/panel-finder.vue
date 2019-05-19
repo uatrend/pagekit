@@ -39,7 +39,7 @@
                             <a class="files-upload uk-icon uk-flex uk-flex-middle" :title="'Upload' | trans" uk-tooltip="delay: 500">
                                 <div uk-form-custom>
                                     <input type="file" name="files[]" multiple="multiple">
-                                    <span uk-icon="cloud-upload" />
+                                    <span uk-icon="upload" />
                                 </div>
                             </a>
                         </li>
@@ -49,7 +49,7 @@
 
             <div class="uk-flex uk-flex-middle">
                 <i uk-icon="icon: database; ratio: 1.25" class="uk-margin-small-right" />
-                <ul class="uk-breadcrumb">
+                <ul class="uk-breadcrumb uk-margin-small">
                     <li v-for="(bc, key) in breadcrumbs" :key="key" :class="{'uk-active': bc.current}">
                         <span v-if="bc.current">{{ bc.title }}</span>
                         <a v-else @click.prevent="setPath(bc.path)">{{ bc.title }}</a>
@@ -60,31 +60,13 @@
             <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden />
 
             <div class="uk-overflow-auto tm-overflow-container">
-                <table v-if="view == 'template-table'" class="uk-table uk-table-middle uk-margin-remove">
-                    <thead>
-                        <tr>
-                            <th class="pk-table-width-minimum">
-                                <input v-check-all:selected="{ selector: 'input[name=name]' }" class="uk-checkbox" type="checkbox">
-                            </th>
-                            <th colspan="2">
-                                {{ 'Name' | trans }}
-                            </th>
-                            <th class="pk-table-width-100 uk-text-right">
-                                {{ 'Size' | trans }}
-                            </th>
-                            <th class="pk-table-width-150">
-                                {{ 'Modified' | trans }}
-                            </th>
-                        </tr>
-                    </thead>
-                </table>
                 <component :is="view" v-show="count" />
                 <h3 v-show="!count" class="uk-h1 uk-text-muted uk-text-center">
                     {{ 'No files found.' | trans }}
                 </h3>
             </div>
 
-            <div class="uk-panel">
+            <div class="uk-panel uk-margin-small-top">
                 <span v-if="!selected.length" class="uk-text-meta">{{ '{0} %count% Files|{1} %count% File|]1,Inf[ %count% Files' | transChoice(count, {count:count}) }}</span>
                 <span v-else class="uk-text-meta">{{ '{1} %count% File selected|]1,Inf[ %count% Files selected' | transChoice(selected.length,{count:selected.length}) }}</span>
             </div>
@@ -135,32 +117,21 @@
                 <progress v-show="upload.running" id="progressbar" class="uk-progress" value="0" max="100" />
             </div>
 
-            <table v-if="view == 'template-table'" class="uk-table uk-table-middle uk-margin-remove">
-                <thead>
-                    <tr>
-                        <th class="pk-table-width-minimum">
-                            <input v-check-all:selected="{ selector: 'input[name=name]' }" class="uk-checkbox" type="checkbox">
-                        </th>
-                        <th colspan="2">
-                            {{ 'Name' | trans }}
-                        </th>
-                        <th class="pk-table-width-100 uk-text-right">
-                            {{ 'Size' | trans }}
-                        </th>
-                        <th class="pk-table-width-150">
-                            {{ 'Modified' | trans }}
-                        </th>
-                    </tr>
-                </thead>
-            </table>
+            <div class="uk-modal-body uk-padding-remove-vertical">
 
-            <div class="uk-modal-body uk-overflow-auto" uk-overflow-auto :class="{'uk-flex uk-flex-center uk-flex-middle': !count}">
-                <div class="tm-overflow-container">
-                    <component :is="view" v-show="count" />
-                    <h3 v-show="!count" class="uk-h1 uk-text-muted uk-text-center">
-                        {{ 'No files found.' | trans }}
-                    </h3>
+                <div class="tm-finder-modal-container">
+
+                    <div class="uk-overflow-auto" uk-overflow-auto :class="{'uk-flex uk-flex-center uk-flex-middle': !count}">
+                        <div class="tm-overflow-container">
+                            <component :is="view" v-show="count" />
+                            <h3 v-show="!count" class="uk-h1 uk-text-muted uk-text-center">
+                                {{ 'No files found.' | trans }}
+                            </h3>
+                        </div>
+                    </div>
+
                 </div>
+
             </div>
         </template>
     </div>
@@ -269,10 +240,9 @@ module.exports = {
     },
 
     methods: {
-
         /**
-             * API
-             */
+         * API
+        */
 
         setPath(path) {
             this.$set(this, 'path', path);

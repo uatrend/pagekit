@@ -161,7 +161,7 @@
 
             <main class="tm-main">
                 <div class="uk-container">
-                    <div class="tm-content">
+                    <div class="tm-content" uk-height-viewport="expand: true">
                         <?= $view->render('content') ?>
                     </div>
                 </div>

@@ -1,12 +1,12 @@
 {
   "name": "uikit",
   "homepage": "https://github.com/uikit/uikit",
-  "version": "3.0.3",
-  "_release": "3.0.3",
+  "version": "3.1.5",
+  "_release": "3.1.5",
   "_resolution": {
     "type": "version",
-    "tag": "v3.0.3",
-    "commit": "3a74a0374f8e3ab152165048a8b5d6e95109e535"
+    "tag": "v3.1.5",
+    "commit": "411188c6d6ab757fc9aabe86caa5c2d32cb1054b"
   },
   "_source": "https://github.com/uikit/uikit.git",
   "_target": "^3.0.0",

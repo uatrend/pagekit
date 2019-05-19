@@ -1,5 +1,5 @@
 import Modal from '../mixin/modal';
-import {$, addClass, append, css, hasClass, height, isTouch, removeClass, trigger, unwrap, wrapAll} from 'uikit-util';
+import {$, addClass, append, css, endsWith, hasClass, height, removeClass, trigger, unwrap, wrapAll} from 'uikit-util';
 
 export default {
 
@@ -77,6 +77,8 @@ export default {
         {
             name: 'touchstart',
 
+            passive: true,
+
             el() {
                 return this.panel;
             },
@@ -102,7 +104,7 @@ export default {
             },
 
             handler(e) {
-                e.preventDefault();
+                e.cancelable && e.preventDefault();
             }
 
         },
@@ -129,7 +131,7 @@ export default {
                     || scrollTop === 0 && clientY > 0
                     || scrollHeight - scrollTop <= clientHeight && clientY < 0
                 ) {
-                    e.preventDefault();
+                    e.cancelable && e.preventDefault();
                 }
 
             }
@@ -205,7 +207,7 @@ export default {
 
             handler(e) {
 
-                if (this.isToggled() && isTouch(e) && e.type === 'swipeLeft' ^ this.flip) {
+                if (this.isToggled() && endsWith(e.type, 'Left') ^ this.flip) {
                     this.hide();
                 }
 

@@ -68,8 +68,10 @@ module.exports = {
                 this.$nextTick(() => {
                     const anchor = window.location.hash;
 
-                    if ($(anchor)) {
-                        UIkit.scroll('#comments').scrollTo(anchor);
+                    if (anchor) {
+                        document.querySelector(anchor).scrollIntoView({
+                            behavior: 'smooth'
+                        });
                     }
                 });
 

@@ -1,6 +1,6 @@
 import Animate from '../mixin/animate';
 import Class from '../mixin/class';
-import {$$, addClass, after, assign, append, attr, before, css, height, getPos, includes, index, isInput, offset, off, on, pointerDown, pointerMove, pointerUp, preventClick, remove, removeClass, scrollTop, toggleClass, toNodes, trigger, within} from 'uikit-util';
+import {$$, addClass, after, assign, append, attr, before, css, getEventPos, height, includes, index, isEmpty, isInput, offset, off, on, pointerDown, pointerMove, pointerUp, remove, removeClass, scrollTop, toggleClass, toNodes, trigger, within} from 'uikit-util';
 
 export default {
 
@@ -39,7 +39,7 @@ export default {
             const fn = this[key];
             this[key] = e => {
                 this.scrollY = window.pageYOffset;
-                const {x, y} = getPos(e, 'page');
+                const {x, y} = getEventPos(e, 'page');
                 this.pos = {x, y};
 
                 fn(e);
@@ -60,10 +60,10 @@ export default {
         write() {
 
             if (this.clsEmpty) {
-                toggleClass(this.$el, this.clsEmpty, !this.$el.children.length);
+                toggleClass(this.$el, this.clsEmpty, isEmpty(this.$el.children));
             }
 
-            css(this.handle ? $$(this.handle, this.$el) : this.$el.children, 'touchAction', 'none');
+            css(this.handle ? $$(this.handle, this.$el) : this.$el.children, {touchAction: 'none', userSelect: 'none'});
 
             if (!this.drag) {
                 return;
@@ -94,11 +94,11 @@ export default {
             const [placeholder] = toNodes(this.$el.children).filter(el => within(target, el));
 
             if (!placeholder
-                || isInput(target)
-                || this.handle && !within(target, this.handle)
-                || button > 0
-                || within(target, `.${this.clsNoDrag}`)
                 || defaultPrevented
+                || button > 0
+                || isInput(target)
+                || within(target, `.${this.clsNoDrag}`)
+                || this.handle && !within(target, this.handle)
             ) {
                 return;
             }
@@ -198,8 +198,6 @@ export default {
                 return;
             }
 
-            preventClick();
-
             const sortable = this.getSortable(this.placeholder);
 
             if (this === sortable) {
@@ -265,6 +263,8 @@ export default {
             if (!within(element, this.$el)) {
                 return;
             }
+
+            css(this.handle ? $$(this.handle, element) : element, {touchAction: '', userSelect: ''});
 
             if (this.animation) {
                 this.animate(() => remove(element));

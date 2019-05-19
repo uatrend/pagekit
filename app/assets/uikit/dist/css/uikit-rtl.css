@@ -1,4 +1,4 @@
-/*! UIkit 3.0.3 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
+/*! UIkit 3.1.5 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
 /* ========================================================================
    Component: Base
  ========================================================================== */
@@ -51,7 +51,9 @@ a,
   cursor: pointer;
 }
 a:hover,
-.uk-link:hover {
+.uk-link:hover,
+.uk-link-toggle:hover .uk-link,
+.uk-link-toggle:focus .uk-link {
   color: #0f6ecd;
   text-decoration: underline;
 }
@@ -238,7 +240,12 @@ h4,
 h5,
 .uk-h5,
 h6,
-.uk-h6 {
+.uk-h6,
+.uk-heading-small,
+.uk-heading-medium,
+.uk-heading-large,
+.uk-heading-xlarge,
+.uk-heading-2xlarge {
   margin: 0 0 20px 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
   font-weight: normal;
@@ -257,7 +264,12 @@ h6,
 * + h5,
 * + .uk-h5,
 * + h6,
-* + .uk-h6 {
+* + .uk-h6,
+* + .uk-heading-small,
+* + .uk-heading-medium,
+* + .uk-heading-large,
+* + .uk-heading-xlarge,
+* + .uk-heading-2xlarge {
   margin-top: 40px;
 }
 /*
@@ -470,27 +482,33 @@ a.uk-link-muted,
   color: #999;
 }
 a.uk-link-muted:hover,
-.uk-link-muted a:hover {
+.uk-link-muted a:hover,
+.uk-link-toggle:hover .uk-link-muted,
+.uk-link-toggle:focus .uk-link-muted {
   color: #666;
 }
 /* Text
  ========================================================================== */
-a.uk-link-text:not(:hover),
-.uk-link-text a:not(:hover) {
+a.uk-link-text,
+.uk-link-text a {
   color: inherit;
 }
 a.uk-link-text:hover,
-.uk-link-text a:hover {
+.uk-link-text a:hover,
+.uk-link-toggle:hover .uk-link-text,
+.uk-link-toggle:focus .uk-link-text {
   color: #999;
 }
 /* Heading
  ========================================================================== */
-a.uk-link-heading:not(:hover),
-.uk-link-heading a:not(:hover) {
+a.uk-link-heading,
+.uk-link-heading a {
   color: inherit;
 }
 a.uk-link-heading:hover,
-.uk-link-heading a:hover {
+.uk-link-heading a:hover,
+.uk-link-toggle:hover .uk-link-heading,
+.uk-link-toggle:focus .uk-link-heading {
   color: #1e87f0;
   text-decoration: none;
 }
@@ -500,59 +518,90 @@ a.uk-link-heading:hover,
  * `!important` needed to override inverse component
  */
 a.uk-link-reset,
-a.uk-link-reset:hover,
-.uk-link-reset a,
-.uk-link-reset a:hover {
+.uk-link-reset a {
   color: inherit !important;
   text-decoration: none !important;
+}
+/* Toggle
+ ========================================================================== */
+.uk-link-toggle {
+  color: inherit !important;
+  text-decoration: none !important;
+}
+.uk-link-toggle:focus {
+  outline: none;
 }
 /* ========================================================================
    Component: Heading
  ========================================================================== */
-/* Primary
- ========================================================================== */
-.uk-heading-primary {
-  font-size: 3rem;
+.uk-heading-small {
+  font-size: 2.6rem;
   line-height: 1.2;
 }
-/* Tablet landscape and bigger */
-@media (min-width: 960px) {
-  .uk-heading-primary {
-    font-size: 3.375rem;
-  }
-}
-/* Desktop and bigger */
-@media (min-width: 1200px) {
-  .uk-heading-primary {
-    font-size: 3.75rem;
-    line-height: 1.1;
-  }
-}
-/* Hero
- ========================================================================== */
-.uk-heading-hero {
-  font-size: 4rem;
+.uk-heading-medium {
+  font-size: 2.8875rem;
   line-height: 1.1;
 }
-/* Tablet landscape and bigger */
+.uk-heading-large {
+  font-size: 3.4rem;
+  line-height: 1.1;
+}
+.uk-heading-xlarge {
+  font-size: 4rem;
+  line-height: 1;
+}
+.uk-heading-2xlarge {
+  font-size: 6rem;
+  line-height: 1;
+}
+/* Tablet Landscape and bigger */
 @media (min-width: 960px) {
-  .uk-heading-hero {
+  .uk-heading-small {
+    font-size: 3.25rem;
+  }
+  .uk-heading-medium {
+    font-size: 3.5rem;
+  }
+  .uk-heading-large {
+    font-size: 4rem;
+  }
+  .uk-heading-xlarge {
     font-size: 6rem;
-    line-height: 1;
   }
-}
-/* Desktop and bigger */
-@media (min-width: 1200px) {
-  .uk-heading-hero {
+  .uk-heading-2xlarge {
     font-size: 8rem;
-    line-height: 1;
   }
 }
+/* Laptop and bigger */
+@media (min-width: 1200px) {
+  .uk-heading-medium {
+    font-size: 4rem;
+  }
+  .uk-heading-large {
+    font-size: 6rem;
+  }
+  .uk-heading-xlarge {
+    font-size: 8rem;
+  }
+  .uk-heading-2xlarge {
+    font-size: 11rem;
+  }
+}
+/* Primary
+   Deprecated: Use `uk-heading-medium` instead
+ ========================================================================== */
+/* Tablet landscape and bigger */
+/* Desktop and bigger */
+/* Hero
+   Deprecated: Use `uk-heading-xlarge` instead
+ ========================================================================== */
+/* Tablet landscape and bigger */
+/* Desktop and bigger */
 /* Divider
  ========================================================================== */
 .uk-heading-divider {
-  padding-bottom: 10px;
-  border-bottom: 1px solid #e5e5e5;
+  padding-bottom: calc(5px + 0.1em);
+  border-bottom: calc(0.2px + 0.05em) solid #e5e5e5;
 }
 /* Bullet
  ========================================================================== */
@@ -573,9 +622,9 @@ a.uk-link-reset:hover,
   top: calc(-0.1 * 1em);
   vertical-align: middle;
   /* 3 */
-  height: 0.9em;
-  margin-left: 10px;
-  border-right: 5px solid #e5e5e5;
+  height: calc(4px + 0.7em);
+  margin-left: calc(5px + 0.2em);
+  border-right: calc(5px + 0.1em) solid #e5e5e5;
 }
 /* Line
  ========================================================================== */
@@ -602,19 +651,19 @@ a.uk-link-reset:hover,
   content: "";
   /* 1 */
   position: absolute;
-  top: calc(50% - (1px / 2));
+  top: calc(50% - ((0.2px + 0.05em) / 2));
   /* 2 */
   width: 2000px;
   /* 3 */
-  border-bottom: 1px solid #e5e5e5;
+  border-bottom: calc(0.2px + 0.05em) solid #e5e5e5;
 }
 .uk-heading-line > ::before {
   left: 100%;
-  margin-left: 0.6em;
+  margin-left: calc(5px + 0.3em);
 }
 .uk-heading-line > ::after {
   right: 100%;
-  margin-right: 0.6em;
+  margin-right: calc(5px + 0.3em);
 }
 /* ========================================================================
    Component: Divider
@@ -5239,6 +5288,7 @@ ul.uk-nav-sub {
  * 5. Responsiveness
  *    Using `vh` for `max-height` to fix image proportions after resize in Safari and Opera
  *    Using `vh` and `vw` to make responsive image work in IE11
+ * 6. Suppress outline on focus
  */
 .uk-lightbox-items > * {
   /* 1 */
@@ -5260,6 +5310,10 @@ ul.uk-nav-sub {
 .uk-lightbox-items > * > * {
   max-width: 100vw;
   max-height: 100vh;
+}
+/* 6 */
+.uk-lightbox-items > :focus {
+  outline: none;
 }
 .uk-lightbox-items > * > :not(iframe) {
   width: auto;
@@ -5359,6 +5413,7 @@ ul.uk-nav-sub {
  * 3. Clip child elements, e.g. for `uk-cover`
  * 4. Optimize animation
  * 5. Disable horizontal panning gestures in IE11 and Edge
+ * 6. Suppress outline on focus
  */
 .uk-slideshow-items > * {
   /* 1 */
@@ -5374,6 +5429,10 @@ ul.uk-nav-sub {
   will-change: transform, opacity;
   /* 5 */
   touch-action: pan-y;
+}
+/* 6 */
+.uk-slideshow-items > :focus {
+  outline: none;
 }
 /*
  * Hide not active items
@@ -5434,6 +5493,7 @@ ul.uk-nav-sub {
  * 1. Let items take content dimensions (0 0 auto)
  * 2. Create position context
  * 3. Disable horizontal panning gestures in IE11 and Edge
+ * 4. Suppress outline on focus
  */
 .uk-slider-items > * {
   /* 1 */
@@ -5442,6 +5502,10 @@ ul.uk-nav-sub {
   position: relative;
   /* 3 */
   touch-action: pan-y;
+}
+/* 4 */
+.uk-slider-items > :focus {
+  outline: none;
 }
 /* ========================================================================
    Component: Sticky
@@ -6072,6 +6136,7 @@ ul.uk-nav-sub {
  ========================================================================== */
 .uk-sortable-placeholder {
   opacity: 0;
+  pointer-events: none;
 }
 /* Empty modifier
  ========================================================================== */
@@ -6140,33 +6205,6 @@ ul.uk-nav-sub {
   animation-duration: 0.5s;
   animation-timing-function: ease-out;
   animation-fill-mode: both;
-}
-/* Direction modifier
- ========================================================================== */
-.uk-animation-reverse {
-  animation-direction: reverse;
-  animation-timing-function: ease-in;
-}
-/* Toggle (Hover + Focus)
-========================================================================== */
-/*
- * The toggle is triggered on touch devices using `:focus` and tabindex
- */
-.uk-animation-toggle:not(:hover):not(:focus) [class*='uk-animation-'] {
-  animation-name: none;
-}
-/*
- * 1. Prevent tab highlighting on iOS.
- */
-.uk-animation-toggle {
-  /* 1 */
-  -webkit-tap-highlight-color: transparent;
-}
-/*
- * Remove outline for `tabindex`
- */
-.uk-animation-toggle:focus {
-  outline: none;
 }
 /* Animations
  ========================================================================== */
@@ -6245,10 +6283,49 @@ ul.uk-nav-sub {
 .uk-animation-shake {
   animation-name: uk-shake;
 }
+/*
+ * SVG Stroke
+ * The `--uk-animation-stroke` custom property contains the longest path length.
+ * Set it manually or use `uk-svg="stroke-animation: true"` to set it automatically.
+ * All strokes are animated by the same pace and doesn't end simultaneously.
+ * To end simultaneously, `pathLength="1"` could be used, but it's not working in Safari yet.
+ */
+.uk-animation-stroke {
+  animation-name: uk-stroke;
+  stroke-dasharray: var(--uk-animation-stroke);
+  animation-duration: 2s;
+}
+/* Direction modifier
+ ========================================================================== */
+.uk-animation-reverse {
+  animation-direction: reverse;
+  animation-timing-function: ease-in;
+}
 /* Duration modifier
  ========================================================================== */
 .uk-animation-fast {
   animation-duration: 0.1s;
+}
+/* Toggle (Hover + Focus)
+========================================================================== */
+/*
+ * The toggle is triggered on touch devices using `:focus` and tabindex
+ */
+.uk-animation-toggle:not(:hover):not(:focus) [class*='uk-animation-'] {
+  animation-name: none;
+}
+/*
+ * 1. Prevent tab highlighting on iOS.
+ */
+.uk-animation-toggle {
+  /* 1 */
+  -webkit-tap-highlight-color: transparent;
+}
+/*
+ * Remove outline for `tabindex`
+ */
+.uk-animation-toggle:focus {
+  outline: none;
 }
 /* Keyframes used by animation classes
  ========================================================================== */
@@ -6490,6 +6567,17 @@ ul.uk-nav-sub {
   }
   90% {
     transform: translateX(1px);
+  }
+}
+/*
+ * Stroke
+ */
+@keyframes uk-stroke {
+  0% {
+    stroke-dashoffset: var(--uk-animation-stroke);
+  }
+  100% {
+    stroke-dashoffset: 0;
   }
 }
 /* ========================================================================
@@ -7094,6 +7182,9 @@ ul.uk-nav-sub {
 }
 .uk-text-primary {
   color: #1e87f0 !important;
+}
+.uk-text-secondary {
+  color: #222 !important;
 }
 .uk-text-success {
   color: #32d296 !important;
@@ -8493,30 +8584,6 @@ iframe.uk-cover {
     margin-left: 140px !important;
   }
 }
-/* Remove
- ========================================================================== */
-.uk-margin-remove {
-  margin: 0 !important;
-}
-.uk-margin-remove-top {
-  margin-top: 0 !important;
-}
-.uk-margin-remove-bottom {
-  margin-bottom: 0 !important;
-}
-.uk-margin-remove-right {
-  margin-right: 0 !important;
-}
-.uk-margin-remove-left {
-  margin-left: 0 !important;
-}
-.uk-margin-remove-vertical {
-  margin-top: 0 !important;
-  margin-bottom: 0 !important;
-}
-.uk-margin-remove-adjacent + * {
-  margin-top: 0 !important;
-}
 /* Auto
  ========================================================================== */
 .uk-margin-auto {
@@ -8538,6 +8605,119 @@ iframe.uk-cover {
 .uk-margin-auto-vertical {
   margin-top: auto !important;
   margin-bottom: auto !important;
+}
+/* Phone landscape and bigger */
+@media (min-width: 640px) {
+  .uk-margin-auto\@s {
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+  .uk-margin-auto-right\@s {
+    margin-right: auto !important;
+  }
+  .uk-margin-auto-left\@s {
+    margin-left: auto !important;
+  }
+}
+/* Tablet landscape and bigger */
+@media (min-width: 960px) {
+  .uk-margin-auto\@m {
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+  .uk-margin-auto-right\@m {
+    margin-right: auto !important;
+  }
+  .uk-margin-auto-left\@m {
+    margin-left: auto !important;
+  }
+}
+/* Desktop and bigger */
+@media (min-width: 1200px) {
+  .uk-margin-auto\@l {
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+  .uk-margin-auto-right\@l {
+    margin-right: auto !important;
+  }
+  .uk-margin-auto-left\@l {
+    margin-left: auto !important;
+  }
+}
+/* Large screen and bigger */
+@media (min-width: 1600px) {
+  .uk-margin-auto\@xl {
+    margin-right: auto !important;
+    margin-left: auto !important;
+  }
+  .uk-margin-auto-right\@xl {
+    margin-right: auto !important;
+  }
+  .uk-margin-auto-left\@xl {
+    margin-left: auto !important;
+  }
+}
+/* Remove
+ ========================================================================== */
+.uk-margin-remove {
+  margin: 0 !important;
+}
+.uk-margin-remove-top {
+  margin-top: 0 !important;
+}
+.uk-margin-remove-bottom {
+  margin-bottom: 0 !important;
+}
+.uk-margin-remove-right {
+  margin-right: 0 !important;
+}
+.uk-margin-remove-left {
+  margin-left: 0 !important;
+}
+.uk-margin-remove-vertical {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+.uk-margin-remove-adjacent + *,
+.uk-margin-remove-first-child > :first-child {
+  margin-top: 0 !important;
+}
+/* Phone landscape and bigger */
+@media (min-width: 640px) {
+  .uk-margin-remove-right\@s {
+    margin-right: 0 !important;
+  }
+  .uk-margin-remove-left\@s {
+    margin-left: 0 !important;
+  }
+}
+/* Tablet landscape and bigger */
+@media (min-width: 960px) {
+  .uk-margin-remove-right\@m {
+    margin-right: 0 !important;
+  }
+  .uk-margin-remove-left\@m {
+    margin-left: 0 !important;
+  }
+}
+/* Desktop and bigger */
+@media (min-width: 1200px) {
+  .uk-margin-remove-right\@l {
+    margin-right: 0 !important;
+  }
+  .uk-margin-remove-left\@l {
+    margin-left: 0 !important;
+  }
+}
+/* Large screen and bigger */
+@media (min-width: 1600px) {
+  .uk-margin-remove-right\@xl {
+    margin-right: 0 !important;
+  }
+  .uk-margin-remove-left\@xl {
+    margin-left: 0 !important;
+  }
 }
 /* ========================================================================
    Component: Padding
@@ -8654,7 +8834,6 @@ iframe.uk-cover {
   right: 50%;
   transform: translate(50%, -50%);
   /* 1 */
-  width: -moz-max-content;
   width: max-content;
   max-width: 100%;
   box-sizing: border-box;
@@ -8673,12 +8852,10 @@ iframe.uk-cover {
 }
 .uk-position-center-right-out {
   left: 100%;
-  width: -moz-max-content;
   width: max-content;
 }
 .uk-position-center-left-out {
   right: 100%;
-  width: -moz-max-content;
   width: max-content;
 }
 /* Horizontal */
@@ -8687,7 +8864,6 @@ iframe.uk-cover {
   right: 50%;
   transform: translateX(50%);
   /* 1 */
-  width: -moz-max-content;
   width: max-content;
   max-width: 100%;
   box-sizing: border-box;
@@ -8826,10 +9002,9 @@ iframe.uk-cover {
  */
 .uk-transition-fade,
 [class*='uk-transition-scale'],
-[class*='uk-transition-slide'],
-.uk-transition-stroke {
+[class*='uk-transition-slide'] {
   transition: 0.3s ease-out;
-  transition-property: opacity, transform, filter, stroke-dashoffset;
+  transition-property: opacity, transform, filter;
   opacity: 0;
 }
 /*
@@ -8842,26 +9017,25 @@ iframe.uk-cover {
 }
 /*
  * Scale
- * Note: Using `scale3d` for better image rendering
  */
 .uk-transition-scale-up {
-  transform: scale3d(1, 1, 1);
+  transform: scale(1, 1);
 }
 .uk-transition-scale-down {
-  transform: scale3d(1.1, 1.1, 1);
+  transform: scale(1.1, 1.1);
 }
 /* Show */
 .uk-transition-toggle:hover .uk-transition-scale-up,
 .uk-transition-toggle:focus .uk-transition-scale-up,
 .uk-transition-active.uk-active .uk-transition-scale-up {
   opacity: 1;
-  transform: scale3d(1.1, 1.1, 1);
+  transform: scale(1.1, 1.1);
 }
 .uk-transition-toggle:hover .uk-transition-scale-down,
 .uk-transition-toggle:focus .uk-transition-scale-down,
 .uk-transition-active.uk-active .uk-transition-scale-down {
   opacity: 1;
-  transform: scale3d(1, 1, 1);
+  transform: scale(1, 1);
 }
 /*
  * Slide
@@ -8908,19 +9082,6 @@ iframe.uk-cover {
 .uk-transition-active.uk-active [class*='uk-transition-slide'] {
   opacity: 1;
   transform: translate(0, 0);
-}
-/*
- * Stroke
- */
-.uk-transition-stroke {
-  transition-duration: 3s;
-}
-/* Show */
-.uk-transition-stroke:hover,
-.uk-transition-stroke:focus,
-.uk-transition-stroke.uk-transition-active {
-  opacity: 1;
-  stroke-dashoffset: 0 !important;
 }
 /* Opacity modifier
  ========================================================================== */
@@ -9195,6 +9356,11 @@ iframe.uk-cover {
 .uk-light .uk-h5,
 .uk-light h6,
 .uk-light .uk-h6,
+.uk-light .uk-heading-small,
+.uk-light .uk-heading-medium,
+.uk-light .uk-heading-large,
+.uk-light .uk-heading-xlarge,
+.uk-light .uk-heading-2xlarge,
 .uk-section-primary:not(.uk-preserve-color) h1,
 .uk-section-primary:not(.uk-preserve-color) .uk-h1,
 .uk-section-primary:not(.uk-preserve-color) h2,
@@ -9207,6 +9373,11 @@ iframe.uk-cover {
 .uk-section-primary:not(.uk-preserve-color) .uk-h5,
 .uk-section-primary:not(.uk-preserve-color) h6,
 .uk-section-primary:not(.uk-preserve-color) .uk-h6,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-small,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-medium,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-large,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-xlarge,
+.uk-section-primary:not(.uk-preserve-color) .uk-heading-2xlarge,
 .uk-section-secondary:not(.uk-preserve-color) h1,
 .uk-section-secondary:not(.uk-preserve-color) .uk-h1,
 .uk-section-secondary:not(.uk-preserve-color) h2,
@@ -9219,6 +9390,11 @@ iframe.uk-cover {
 .uk-section-secondary:not(.uk-preserve-color) .uk-h5,
 .uk-section-secondary:not(.uk-preserve-color) h6,
 .uk-section-secondary:not(.uk-preserve-color) .uk-h6,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-small,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-medium,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-large,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-xlarge,
+.uk-section-secondary:not(.uk-preserve-color) .uk-heading-2xlarge,
 .uk-tile-primary:not(.uk-preserve-color) h1,
 .uk-tile-primary:not(.uk-preserve-color) .uk-h1,
 .uk-tile-primary:not(.uk-preserve-color) h2,
@@ -9231,6 +9407,11 @@ iframe.uk-cover {
 .uk-tile-primary:not(.uk-preserve-color) .uk-h5,
 .uk-tile-primary:not(.uk-preserve-color) h6,
 .uk-tile-primary:not(.uk-preserve-color) .uk-h6,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-small,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-medium,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-large,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-xlarge,
+.uk-tile-primary:not(.uk-preserve-color) .uk-heading-2xlarge,
 .uk-tile-secondary:not(.uk-preserve-color) h1,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-h1,
 .uk-tile-secondary:not(.uk-preserve-color) h2,
@@ -9243,6 +9424,11 @@ iframe.uk-cover {
 .uk-tile-secondary:not(.uk-preserve-color) .uk-h5,
 .uk-tile-secondary:not(.uk-preserve-color) h6,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-h6,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-small,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-medium,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-large,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-xlarge,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-heading-2xlarge,
 .uk-card-primary.uk-card-body h1,
 .uk-card-primary.uk-card-body .uk-h1,
 .uk-card-primary.uk-card-body h2,
@@ -9255,6 +9441,11 @@ iframe.uk-cover {
 .uk-card-primary.uk-card-body .uk-h5,
 .uk-card-primary.uk-card-body h6,
 .uk-card-primary.uk-card-body .uk-h6,
+.uk-card-primary.uk-card-body .uk-heading-small,
+.uk-card-primary.uk-card-body .uk-heading-medium,
+.uk-card-primary.uk-card-body .uk-heading-large,
+.uk-card-primary.uk-card-body .uk-heading-xlarge,
+.uk-card-primary.uk-card-body .uk-heading-2xlarge,
 .uk-card-primary > :not([class*='uk-card-media']) h1,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-h1,
 .uk-card-primary > :not([class*='uk-card-media']) h2,
@@ -9267,6 +9458,11 @@ iframe.uk-cover {
 .uk-card-primary > :not([class*='uk-card-media']) .uk-h5,
 .uk-card-primary > :not([class*='uk-card-media']) h6,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-h6,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-small,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-medium,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-large,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-xlarge,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-heading-2xlarge,
 .uk-card-secondary.uk-card-body h1,
 .uk-card-secondary.uk-card-body .uk-h1,
 .uk-card-secondary.uk-card-body h2,
@@ -9279,6 +9475,11 @@ iframe.uk-cover {
 .uk-card-secondary.uk-card-body .uk-h5,
 .uk-card-secondary.uk-card-body h6,
 .uk-card-secondary.uk-card-body .uk-h6,
+.uk-card-secondary.uk-card-body .uk-heading-small,
+.uk-card-secondary.uk-card-body .uk-heading-medium,
+.uk-card-secondary.uk-card-body .uk-heading-large,
+.uk-card-secondary.uk-card-body .uk-heading-xlarge,
+.uk-card-secondary.uk-card-body .uk-heading-2xlarge,
 .uk-card-secondary > :not([class*='uk-card-media']) h1,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-h1,
 .uk-card-secondary > :not([class*='uk-card-media']) h2,
@@ -9291,6 +9492,11 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-h5,
 .uk-card-secondary > :not([class*='uk-card-media']) h6,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-h6,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-small,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-medium,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-large,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-xlarge,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-heading-2xlarge,
 .uk-overlay-primary h1,
 .uk-overlay-primary .uk-h1,
 .uk-overlay-primary h2,
@@ -9303,6 +9509,11 @@ iframe.uk-cover {
 .uk-overlay-primary .uk-h5,
 .uk-overlay-primary h6,
 .uk-overlay-primary .uk-h6,
+.uk-overlay-primary .uk-heading-small,
+.uk-overlay-primary .uk-heading-medium,
+.uk-overlay-primary .uk-heading-large,
+.uk-overlay-primary .uk-heading-xlarge,
+.uk-overlay-primary .uk-heading-2xlarge,
 .uk-offcanvas-bar h1,
 .uk-offcanvas-bar .uk-h1,
 .uk-offcanvas-bar h2,
@@ -9314,7 +9525,12 @@ iframe.uk-cover {
 .uk-offcanvas-bar h5,
 .uk-offcanvas-bar .uk-h5,
 .uk-offcanvas-bar h6,
-.uk-offcanvas-bar .uk-h6 {
+.uk-offcanvas-bar .uk-h6,
+.uk-offcanvas-bar .uk-heading-small,
+.uk-offcanvas-bar .uk-heading-medium,
+.uk-offcanvas-bar .uk-heading-large,
+.uk-offcanvas-bar .uk-heading-xlarge,
+.uk-offcanvas-bar .uk-heading-2xlarge {
   color: #fff;
 }
 .uk-light blockquote,
@@ -9367,99 +9583,99 @@ iframe.uk-cover {
 .uk-offcanvas-bar .uk-hr {
   border-top-color: rgba(255, 255, 255, 0.2);
 }
-.uk-light a.uk-link-muted,
+.uk-light .uk-link-muted,
 .uk-light .uk-link-muted a,
-.uk-section-primary:not(.uk-preserve-color) a.uk-link-muted,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-muted,
 .uk-section-primary:not(.uk-preserve-color) .uk-link-muted a,
-.uk-section-secondary:not(.uk-preserve-color) a.uk-link-muted,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-muted,
 .uk-section-secondary:not(.uk-preserve-color) .uk-link-muted a,
-.uk-tile-primary:not(.uk-preserve-color) a.uk-link-muted,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-muted,
 .uk-tile-primary:not(.uk-preserve-color) .uk-link-muted a,
-.uk-tile-secondary:not(.uk-preserve-color) a.uk-link-muted,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-muted,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-link-muted a,
-.uk-card-primary.uk-card-body a.uk-link-muted,
+.uk-card-primary.uk-card-body .uk-link-muted,
 .uk-card-primary.uk-card-body .uk-link-muted a,
-.uk-card-primary > :not([class*='uk-card-media']) a.uk-link-muted,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-muted,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-link-muted a,
-.uk-card-secondary.uk-card-body a.uk-link-muted,
+.uk-card-secondary.uk-card-body .uk-link-muted,
 .uk-card-secondary.uk-card-body .uk-link-muted a,
-.uk-card-secondary > :not([class*='uk-card-media']) a.uk-link-muted,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-muted,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-link-muted a,
-.uk-overlay-primary a.uk-link-muted,
+.uk-overlay-primary .uk-link-muted,
 .uk-overlay-primary .uk-link-muted a,
-.uk-offcanvas-bar a.uk-link-muted,
+.uk-offcanvas-bar .uk-link-muted,
 .uk-offcanvas-bar .uk-link-muted a {
   color: rgba(255, 255, 255, 0.5);
 }
-.uk-light a.uk-link-muted:hover,
+.uk-light .uk-link-muted:hover,
 .uk-light .uk-link-muted a:hover,
-.uk-section-primary:not(.uk-preserve-color) a.uk-link-muted:hover,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-muted:hover,
 .uk-section-primary:not(.uk-preserve-color) .uk-link-muted a:hover,
-.uk-section-secondary:not(.uk-preserve-color) a.uk-link-muted:hover,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-muted:hover,
 .uk-section-secondary:not(.uk-preserve-color) .uk-link-muted a:hover,
-.uk-tile-primary:not(.uk-preserve-color) a.uk-link-muted:hover,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-muted:hover,
 .uk-tile-primary:not(.uk-preserve-color) .uk-link-muted a:hover,
-.uk-tile-secondary:not(.uk-preserve-color) a.uk-link-muted:hover,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-muted:hover,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-link-muted a:hover,
-.uk-card-primary.uk-card-body a.uk-link-muted:hover,
+.uk-card-primary.uk-card-body .uk-link-muted:hover,
 .uk-card-primary.uk-card-body .uk-link-muted a:hover,
-.uk-card-primary > :not([class*='uk-card-media']) a.uk-link-muted:hover,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-muted:hover,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-link-muted a:hover,
-.uk-card-secondary.uk-card-body a.uk-link-muted:hover,
+.uk-card-secondary.uk-card-body .uk-link-muted:hover,
 .uk-card-secondary.uk-card-body .uk-link-muted a:hover,
-.uk-card-secondary > :not([class*='uk-card-media']) a.uk-link-muted:hover,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-muted:hover,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-link-muted a:hover,
-.uk-overlay-primary a.uk-link-muted:hover,
+.uk-overlay-primary .uk-link-muted:hover,
 .uk-overlay-primary .uk-link-muted a:hover,
-.uk-offcanvas-bar a.uk-link-muted:hover,
+.uk-offcanvas-bar .uk-link-muted:hover,
 .uk-offcanvas-bar .uk-link-muted a:hover {
   color: rgba(255, 255, 255, 0.7);
 }
-.uk-light a.uk-link-text:hover,
+.uk-light .uk-link-text:hover,
 .uk-light .uk-link-text a:hover,
-.uk-section-primary:not(.uk-preserve-color) a.uk-link-text:hover,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-text:hover,
 .uk-section-primary:not(.uk-preserve-color) .uk-link-text a:hover,
-.uk-section-secondary:not(.uk-preserve-color) a.uk-link-text:hover,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-text:hover,
 .uk-section-secondary:not(.uk-preserve-color) .uk-link-text a:hover,
-.uk-tile-primary:not(.uk-preserve-color) a.uk-link-text:hover,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-text:hover,
 .uk-tile-primary:not(.uk-preserve-color) .uk-link-text a:hover,
-.uk-tile-secondary:not(.uk-preserve-color) a.uk-link-text:hover,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-text:hover,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-link-text a:hover,
-.uk-card-primary.uk-card-body a.uk-link-text:hover,
+.uk-card-primary.uk-card-body .uk-link-text:hover,
 .uk-card-primary.uk-card-body .uk-link-text a:hover,
-.uk-card-primary > :not([class*='uk-card-media']) a.uk-link-text:hover,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-text:hover,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-link-text a:hover,
-.uk-card-secondary.uk-card-body a.uk-link-text:hover,
+.uk-card-secondary.uk-card-body .uk-link-text:hover,
 .uk-card-secondary.uk-card-body .uk-link-text a:hover,
-.uk-card-secondary > :not([class*='uk-card-media']) a.uk-link-text:hover,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-text:hover,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-link-text a:hover,
-.uk-overlay-primary a.uk-link-text:hover,
+.uk-overlay-primary .uk-link-text:hover,
 .uk-overlay-primary .uk-link-text a:hover,
-.uk-offcanvas-bar a.uk-link-text:hover,
+.uk-offcanvas-bar .uk-link-text:hover,
 .uk-offcanvas-bar .uk-link-text a:hover {
   color: rgba(255, 255, 255, 0.5);
 }
-.uk-light a.uk-link-heading:hover,
+.uk-light .uk-link-heading:hover,
 .uk-light .uk-link-heading a:hover,
-.uk-section-primary:not(.uk-preserve-color) a.uk-link-heading:hover,
+.uk-section-primary:not(.uk-preserve-color) .uk-link-heading:hover,
 .uk-section-primary:not(.uk-preserve-color) .uk-link-heading a:hover,
-.uk-section-secondary:not(.uk-preserve-color) a.uk-link-heading:hover,
+.uk-section-secondary:not(.uk-preserve-color) .uk-link-heading:hover,
 .uk-section-secondary:not(.uk-preserve-color) .uk-link-heading a:hover,
-.uk-tile-primary:not(.uk-preserve-color) a.uk-link-heading:hover,
+.uk-tile-primary:not(.uk-preserve-color) .uk-link-heading:hover,
 .uk-tile-primary:not(.uk-preserve-color) .uk-link-heading a:hover,
-.uk-tile-secondary:not(.uk-preserve-color) a.uk-link-heading:hover,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-link-heading:hover,
 .uk-tile-secondary:not(.uk-preserve-color) .uk-link-heading a:hover,
-.uk-card-primary.uk-card-body a.uk-link-heading:hover,
+.uk-card-primary.uk-card-body .uk-link-heading:hover,
 .uk-card-primary.uk-card-body .uk-link-heading a:hover,
-.uk-card-primary > :not([class*='uk-card-media']) a.uk-link-heading:hover,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-link-heading:hover,
 .uk-card-primary > :not([class*='uk-card-media']) .uk-link-heading a:hover,
-.uk-card-secondary.uk-card-body a.uk-link-heading:hover,
+.uk-card-secondary.uk-card-body .uk-link-heading:hover,
 .uk-card-secondary.uk-card-body .uk-link-heading a:hover,
-.uk-card-secondary > :not([class*='uk-card-media']) a.uk-link-heading:hover,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-link-heading:hover,
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-link-heading a:hover,
-.uk-overlay-primary a.uk-link-heading:hover,
+.uk-overlay-primary .uk-link-heading:hover,
 .uk-overlay-primary .uk-link-heading a:hover,
-.uk-offcanvas-bar a.uk-link-heading:hover,
+.uk-offcanvas-bar .uk-link-heading:hover,
 .uk-offcanvas-bar .uk-link-heading a:hover {
   color: #fff;
 }
@@ -11908,7 +12124,20 @@ iframe.uk-cover {
 .uk-card-secondary > :not([class*='uk-card-media']) .uk-text-primary,
 .uk-overlay-primary .uk-text-primary,
 .uk-offcanvas-bar .uk-text-primary {
-  color: rgba(255, 255, 255, 0.7) !important;
+  color: #fff !important;
+}
+.uk-light .uk-text-secondary,
+.uk-section-primary:not(.uk-preserve-color) .uk-text-secondary,
+.uk-section-secondary:not(.uk-preserve-color) .uk-text-secondary,
+.uk-tile-primary:not(.uk-preserve-color) .uk-text-secondary,
+.uk-tile-secondary:not(.uk-preserve-color) .uk-text-secondary,
+.uk-card-primary.uk-card-body .uk-text-secondary,
+.uk-card-primary > :not([class*='uk-card-media']) .uk-text-secondary,
+.uk-card-secondary.uk-card-body .uk-text-secondary,
+.uk-card-secondary > :not([class*='uk-card-media']) .uk-text-secondary,
+.uk-overlay-primary .uk-text-secondary,
+.uk-offcanvas-bar .uk-text-secondary {
+  color: #fff !important;
 }
 .uk-light .uk-column-divider,
 .uk-section-primary:not(.uk-preserve-color) .uk-column-divider,

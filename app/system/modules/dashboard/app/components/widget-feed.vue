@@ -220,7 +220,7 @@ module.exports = {
                     if (res.status === 200 && data.items && data.items.length) {
                         const entries = data.items;
                         entries.forEach((e) => {
-                            e.publishedDate = e.pubDate;
+                            e.publishedDate = new Date(e.pubDate.replace(/\s+/g, 'T'));
                             e.contentSnippet = e.description.replace(/<(\/)?p([^>]*)>/g, '<$1p$2>');
                         });
                         this.feed = { entries };

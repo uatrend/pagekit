@@ -1,5 +1,4 @@
 import SVG from './svg';
-import Class from '../mixin/class';
 import closeIcon from '../../images/components/close-icon.svg';
 import closeLarge from '../../images/components/close-large.svg';
 import marker from '../../images/components/marker.svg';
@@ -42,19 +41,17 @@ const Icon = {
 
     install,
 
-    attrs: ['icon', 'ratio'],
-
-    mixins: [Class, SVG],
+    extends: SVG,
 
     args: 'icon',
 
     props: ['icon'],
 
-    data: {exclude: ['id', 'style', 'class', 'src', 'icon', 'ratio']},
+    data: {include: []},
 
     isIcon: true,
 
-    connected() {
+    beforeConnect() {
         addClass(this.$el, 'uk-icon');
     },
 
@@ -79,11 +76,17 @@ export default Icon;
 
 export const IconComponent = {
 
+    args: false,
+
     extends: Icon,
 
     data: vm => ({
         icon: hyphenate(vm.constructor.options.name)
-    })
+    }),
+
+    beforeConnect() {
+        addClass(this.$el, this.$name);
+    }
 
 };
 
@@ -91,7 +94,7 @@ export const Slidenav = {
 
     extends: IconComponent,
 
-    connected() {
+    beforeConnect() {
         addClass(this.$el, 'uk-slidenav');
     },
 
@@ -178,7 +181,7 @@ function getIcon(icon) {
         parsed[icon] = $(icons[icon].trim());
     }
 
-    return parsed[icon];
+    return parsed[icon].cloneNode(true);
 }
 
 function applyRtl(icon) {

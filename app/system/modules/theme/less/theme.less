@@ -551,23 +551,35 @@ body:not(.dashboard) .tm-content {
 }
 
 .storage .tm-overflow-container {
-  border: 1px solid #e5e5e5;
+  // border: 1px solid #e5e5e5;
   padding:0;
   margin:0;
 }
 
-.storage .uk-modal-body .tm-overflow-container {
-  border: 0;
+.storage .tm-overflow-container,
+.storage .uk-modal-body .tm-finder-modal-container {
+  border: 1px solid #e5e5e5;
 }
 
-.storage  .tm-overflow-container > ul {
-  padding: 30px;
+.storage .tm-overflow-container,
+.storage .tm-finder-modal-container {
+  background-color: #f9f9fc;
 }
 
-.storage .tm-overflow-container .uk-table > thead,
-.ckwidgets .tm-overflow-container .uk-table > thead {
-  background-color: #FFF;
+.storage .tm-overflow-container > table th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background-color: #fff;
   border-bottom: 1px solid #e5e5e5;
+}
+
+.storage > .uk-modal-body .tm-finder-modal-container .tm-overflow-container {
+  border: none;
+}
+
+.storage .tm-overflow-container > ul {
+  padding: 30px;
 }
 
 .storage .tm-overflow-container h3 {
@@ -613,7 +625,7 @@ body:not(.dashboard) .tm-content {
 .uk-modal-dialog .storage .uk-breadcrumb > :nth-child(n+2):not(.uk-first-column)::before {
   content: "/";
   display: inline-block;
-  margin: 0 0 0 3px;
+  margin: 0 3px 0 3px;
   color: #999;
 }
 
@@ -625,7 +637,7 @@ body:not(.dashboard) .tm-content {
 .storage .uk-breadcrumb > :nth-child(n+2):not(.uk-first-column)::before {
   content: "/";
   display: inline-block;
-  margin: 0 0 0 3px;
+  margin: 0 3px 0 3px;
   color: #999;
 }
 
@@ -652,8 +664,8 @@ body:not(.dashboard) .tm-content {
 }
 
 .storage table .tm-folder-icon i svg {
-  width: 45px;
-  height: 45px;
+  width: 40px;
+  height: 40px;
 }
 
 .storage table .tm-folder-icon i svg polygon {
@@ -691,20 +703,25 @@ body:not(.dashboard) .tm-content {
   background-color: #fff;
 }
 
-.storage .uk-modal-header,
 .marketplace .uk-modal-header,
 .package-details .uk-modal-header {
   border-bottom: 1px solid #e5e5e5;
 }
+
+.storage .uk-modal-header,
+.storage+.uk-modal-footer  {
+  border: none;
+}
+
 .storage .uk-modal-dialog {
   padding: 25px;
 }
-.storage .uk-modal-header + .uk-table {
-  border-bottom: 1px solid #e5e5e5;
-}
-.storage .uk-modal-body {
-  padding:0;
-  background-color: #f9f9fc;
+// .storage .uk-modal-header + .uk-table {
+//   border-bottom: 1px solid #e5e5e5;
+// }
+.storage .uk-modal-body > .uk-overflow-auto {
+  // padding:0;
+  // background-color: #f9f9fc;
 }
 .storage div.uk-modal-body + div {
   border-top:1px solid #e5e5e5;

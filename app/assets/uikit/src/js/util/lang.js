@@ -53,12 +53,27 @@ export function endsWith(str, search) {
     return endsWithFn.call(str, search);
 }
 
-const includesFn = function (search) { return ~this.indexOf(search); };
+const arrPrototype = Array.prototype;
+
+const includesFn = function (search, i) { return ~this.indexOf(search, i); };
 const includesStr = strPrototype.includes || includesFn;
-const includesArray = Array.prototype.includes || includesFn;
+const includesArray = arrPrototype.includes || includesFn;
 
 export function includes(obj, search) {
     return obj && (isString(obj) ? includesStr : includesArray).call(obj, search);
+}
+
+const findIndexFn = arrPrototype.findIndex || function (predicate) {
+    for (let i = 0; i < this.length; i++) {
+        if (predicate.call(arguments[1], this[i], i, this)) {
+            return i;
+        }
+    }
+    return -1;
+};
+
+export function findIndex(array, predicate) {
+    return findIndexFn.call(array, predicate);
 }
 
 export const {isArray} = Array;
@@ -112,6 +127,15 @@ export function isNumeric(value) {
     return isNumber(value) || isString(value) && !isNaN(value - parseFloat(value));
 }
 
+export function isEmpty(obj) {
+    return !(isArray(obj)
+        ? obj.length
+        : isObject(obj)
+            ? Object.keys(obj).length
+            : false
+    );
+}
+
 export function isUndefined(value) {
     return value === void 0;
 }
@@ -145,12 +169,11 @@ export function toNode(element) {
                 : null;
 }
 
-const arrayProto = Array.prototype;
 export function toNodes(element) {
     return isNode(element)
         ? [element]
         : isNodeCollection(element)
-            ? arrayProto.slice.call(element)
+            ? arrPrototype.slice.call(element)
             : isArray(element)
                 ? element.map(toNode).filter(Boolean)
                 : isJQuery(element)
@@ -214,13 +237,21 @@ export function each(obj, cb) {
     return true;
 }
 
-export function sortBy(collection, prop) {
-    return collection.sort(({[prop]: propA = 0}, {[prop]: propB = 0}) =>
+export function sortBy(array, prop) {
+    return array.sort(({[prop]: propA = 0}, {[prop]: propB = 0}) =>
         propA > propB
             ? 1
             : propB > propA
                 ? -1
                 : 0
+    );
+}
+
+export function uniqueBy(array, prop) {
+    const seen = new Set();
+    return array.filter(({[prop]: check}) => seen.has(check)
+        ? false
+        : seen.add(check) || true // IE 11 does not return the Set object
     );
 }
 

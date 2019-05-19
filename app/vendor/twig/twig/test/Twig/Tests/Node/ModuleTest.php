@@ -140,22 +140,22 @@ class __TwigTemplate_%x extends \Twig\Template
     {
         parent::__construct(\$env);
 
-        // line 1
-        \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
         \$this->blocks = [
         ];
     }
 
     protected function doGetParent(array \$context)
     {
+        // line 1
         return "layout.twig";
     }
 
     protected function doDisplay(array \$context, array \$blocks = [])
     {
         // line 2
-        \$context["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2);
+        \$context["macro"] = \$this->loadTemplate("foo.twig", "foo.twig", 2)->unwrap();
         // line 1
+        \$this->parent = \$this->loadTemplate("layout.twig", "foo.twig", 1);
         \$this->parent->display(\$context, array_merge(\$this->blocks, \$blocks));
     }
 
@@ -171,7 +171,7 @@ class __TwigTemplate_%x extends \Twig\Template
 
     public function getDebugInfo()
     {
-        return array (  37 => 1,  35 => 2,  22 => 1,);
+        return array (  36 => 1,  34 => 2,  28 => 1,);
     }
 
     /** @deprecated since 1.27 (to be removed in 2.0). Use getSourceContext() instead */

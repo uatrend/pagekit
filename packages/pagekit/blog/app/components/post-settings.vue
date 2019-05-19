@@ -15,13 +15,13 @@
                 </div>
             </div>
             <div class="uk-margin">
-                <label for="form-post-content" class="uk-form-label uk-float-left">{{ 'Content' | trans }}</label>
+                <label for="form-post-content" class="uk-form-label uk-position-absolute">{{ 'Content' | trans }}</label>
                 <div class="uk-form-controls">
                     <v-editor id="post-content" v-model="post.content" :value.sync="post.content" :options="{markdown : post.data.markdown}" mode="combine" />
                 </div>
             </div>
             <div class="uk-margin">
-                <label for="form-post-excerpt" class="uk-form-label uk-float-left">{{ 'Excerpt' | trans }}</label>
+                <label for="form-post-excerpt" class="uk-form-label uk-position-absolute">{{ 'Excerpt' | trans }}</label>
                 <div class="uk-form-controls">
                     <v-editor id="post-excerpt" v-model="post.excerpt" :value.sync="post.excerpt" :options="{markdown : post.data.markdown, height: 150}" mode="combine" />
                 </div>
