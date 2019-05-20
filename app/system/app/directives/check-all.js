@@ -13,6 +13,7 @@ export default {
         const subSelector = binding.value.selector;
         const selector = group + binding.value.selector;
 
+        binding.keypath = binding.rawName.indexOf(binding.arg) ? binding.rawName.slice(binding.rawName.indexOf(binding.arg)) : binding.arg;
         binding.selector = selector;
         binding.checked = false;
         binding.number = el.getAttribute('number') !== null;
@@ -111,8 +112,10 @@ export default {
         });
 
         if (update) {
-            update = vnode.context.selected.filter(value => values.indexOf(value) === -1);
-            vnode.context.$set(vnode.context, 'selected', update.concat(selected));
+            // update = vnode.context.selected.filter(value => values.indexOf(value) === -1);
+            // vnode.context.$set(vnode.context, 'selected', update.concat(selected));
+            update = _.get(vnode.context, binding.keypath).filter(value => values.indexOf(value) === -1);
+            _.set(vnode.context, binding.keypath, update.concat(selected));
         }
 
         if (selected.length === 0) {

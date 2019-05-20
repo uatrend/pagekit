@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th class="pk-table-width-minimum">
-                <input v-check-all:selected="{ selector: 'input[name=name]' }" class="uk-checkbox" type="checkbox">
+                <input v-check-all:$parent.selected="{ selector: 'input[name=name]' }" class="uk-checkbox" type="checkbox">
             </th>
             <th>
                 {{ 'Name' | trans }}
