@@ -156,6 +156,14 @@ class PackageController
      */
     public function installAction($package = [], $packagist = false)
     {
+
+        // TODO
+        $file = App::path().'/tmp/temp/composer/composer.json';
+
+        if (!is_file($file)) {
+            file_put_contents($file, '{}');
+        }
+
         return App::response()->stream(function () use ($package, $packagist) {
 
             try {

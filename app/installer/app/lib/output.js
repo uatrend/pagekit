@@ -10,6 +10,8 @@ module.exports = {
                 bgClose: false,
                 escClose: false,
             },
+            showOutput: false,
+            filterPhrase: 'Dependency resolution completed'
         };
     },
 
@@ -28,6 +30,11 @@ module.exports = {
         },
 
         setOutput(output) {
+            // Filtered output
+            const pos = output.indexOf(this.filterPhrase);
+            if (pos != -1) this.showOutput = true;
+            output = output.slice(pos);
+
             const lines = output.split('\n');
             const match = lines[lines.length - 1].match(/^status=(success|error)$/);
 
@@ -38,6 +45,13 @@ module.exports = {
             } else {
                 this.output = output;
             }
+
+            this.scrollToEnd();
+        },
+
+        scrollToEnd() {
+            let container = this.$el.querySelector(".pk-pre");
+            if (container && container.scrollHeight) container.scrollTop = container.scrollHeight;
         },
 
         open() {
@@ -46,6 +60,7 @@ module.exports = {
         },
 
         close() {
+            this.scrollToEnd();
             this.$refs.output.close();
         },
 

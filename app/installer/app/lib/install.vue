@@ -6,16 +6,18 @@
         </div>
 
         <div class="uk-modal-body">
-            <pre class="pk-pre uk-text-break" v-html="output" />
 
-            <v-loader v-show="status == 'loading'" />
+            <pre v-show="showOutput" class="pk-pre uk-text-break" v-html="output" uk-overflow-auto />
 
-            <div v-show="status == 'success'" class="uk-alert uk-alert-success">
-                {{ 'Successfully installed.' | trans }}
+            <div v-show="status == 'loading'" class="uk-alert uk-flex uk-flex-middle uk-background-muted">
+                <v-loader/>
+                <span v-show="!showOutput" class="uk-margin-small-left">{{ 'Prepare' | trans }}...</span>
+                <span v-show="showOutput" class="uk-margin-small-left">{{ 'Installing %title% %version%' | trans({title:pkg.title,version:pkg.version}) }}...</span>
             </div>
-            <div v-show="status == 'error'" class="uk-alert uk-alert-danger">
-                {{ 'Error' | trans }}
-            </div>
+
+            <div v-show="status == 'success'" class="uk-alert uk-alert-success uk-margin-remove">{{ 'Successfully installed.' | trans }}</div>
+            <div v-show="status == 'error'" class="uk-alert uk-alert-danger uk-margin-remove">{{ 'Error' | trans }}</div>
+
         </div>
 
         <div v-show="status != 'loading'" class="uk-modal-footer uk-text-right">
@@ -42,6 +44,7 @@ module.exports = {
 
             // return this.$http.post('admin/system/package/install', {package: pkg, packagist: Boolean(packagist)},null , {xhr: this.init()}).then(function () {
             return this.$http.get('admin/system/package/install', { params: { package: pkg, packagist: Boolean(packagist) }, progress() { self.init(this); } }).then(function () {
+                this.scrollToEnd();
                 if (this.status === 'success' && packages) {
                     const index = _.findIndex(packages, { name: pkg.name });
 
@@ -61,7 +64,7 @@ module.exports = {
             this.$parent.enable(this.pkg);
             this.close();
         },
-    },
+    }
 
 };
 

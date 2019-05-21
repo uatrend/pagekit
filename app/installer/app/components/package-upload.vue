@@ -10,20 +10,18 @@
             </div>
         </div>
 
-        <div ref="modal" uk-modal>
-            <div class="uk-modal-dialog">
-                <package-details :api="api" :package="package" />
+        <v-modal ref="modal">
+            <package-details :api="api" :package="package" />
 
-                <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-default uk-modal-close" type="button">
-                        {{ 'Cancel' | trans }}
-                    </button>
-                    <button class="uk-button uk-button-primary" @click.prevent="doInstall">
-                        {{ 'Install' | trans }}
-                    </button>
-                </div>
+            <div class="uk-modal-footer uk-text-right">
+                <button class="uk-button uk-button-default uk-modal-close" type="button">
+                    {{ 'Cancel' | trans }}
+                </button>
+                <button class="uk-button uk-button-primary" @click.prevent="doInstall">
+                    {{ 'Install' | trans }}
+                </button>
             </div>
-        </div>
+        </v-modal>
     </div>
 </template>
 
@@ -59,7 +57,6 @@ module.exports = {
             dataType: 'json',
             name: 'file',
             beforeAll(options) {
-                console.log(options);
                 _.merge(options.params, { _csrf: $pagekit.csrf, type });
             },
             loadStart: this.onStart,
@@ -68,7 +65,6 @@ module.exports = {
         };
 
         UIkit.upload(this.$refs.input, settings);
-        this.modal = UIkit.modal(this.$refs.modal);
     },
 
     methods: {
@@ -113,11 +109,11 @@ module.exports = {
             this.$set(this, 'upload', data);
             this.$set(this, 'package', data.package);
 
-            this.modal.show();
+            this.$refs.modal.open();
         },
 
         doInstall() {
-            this.modal.hide();
+            this.$refs.modal.close()
 
             this.install(this.upload.package, this.packages,
                 (output) => {

@@ -6,16 +6,18 @@
         </div>
 
         <div class="uk-modal-body">
-            <pre class="pk-pre uk-text-break" v-html="output" />
 
-            <v-loader v-show="status == 'loading'" />
+            <pre v-show="showOutput" class="pk-pre uk-text-break" v-html="output" uk-overflow-auto />
 
-            <div v-show="status == 'success'" class="uk-alert uk-alert-success">
-                {{ 'Successfully updated.' | trans }}
+            <div v-show="status == 'loading'" class="uk-alert uk-flex uk-flex-middle uk-background-muted">
+                <v-loader/>
+                <span v-show="!showOutput" class="uk-margin-small-left">{{ 'Prepare' | trans }}...</span>
+                <span v-show="showOutput" class="uk-margin-small-left">{{ 'Updating %title% to %version%' | trans({title:pkg.title,version:updatePkg.version}) }}...</span>
             </div>
-            <div v-show="status == 'error'" class="uk-alert uk-alert-danger">
-                {{ 'Error' | trans }}
-            </div>
+
+            <div v-show="status == 'success'" class="uk-alert uk-alert-success uk-margin-remove">{{ 'Successfully updated.' | trans }}</div>
+            <div v-show="status == 'error'" class="uk-alert uk-alert-danger uk-margin-remove">{{ 'Error' | trans }}</div>
+
         </div>
 
         <div v-show="status != 'loading'" class="uk-modal-footer uk-text-right">
