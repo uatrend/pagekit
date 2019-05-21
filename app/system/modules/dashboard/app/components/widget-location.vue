@@ -152,7 +152,8 @@ module.exports = {
         });
 
         on(Autocompete.$el, 'select', (e, el, data) => {
-            if (!data.id) {
+
+            if (!data || !data.id) {
                 return;
             }
 

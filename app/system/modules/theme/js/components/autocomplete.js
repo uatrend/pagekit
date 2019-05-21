@@ -37,6 +37,14 @@ UIkit.component('autocomplete', {
         selected: null,
     },
 
+    created() {
+
+        this.template = this.rtemplate(this.template);
+        this.dropdown = $('<div class="uk-dropdown"></div>');
+        attr(this.dropdown, 'aria-expanded', 'false');
+
+    },
+
     connected() {
         const $this = this;
 
@@ -55,11 +63,11 @@ UIkit.component('autocomplete', {
             }
         });
 
-        this.template = this.rtemplate(this.template);
+        // this.template = this.rtemplate(this.template);
 
-        this.dropdown = $('<div class="uk-dropdown"></div>');
+        // this.dropdown = $('<div class="uk-dropdown"></div>');
         append(this.$el, this.dropdown);
-        attr(this.dropdown, 'aria-expanded', 'false');
+        // attr(this.dropdown, 'aria-expanded', 'false');
         attr(find('input', this.$el), 'autocomplete', 'off');
         this.input = find('input', this.$el);
 
@@ -242,7 +250,8 @@ UIkit.component('autocomplete', {
 
             this.visible = true;
 
-            addClass($(this.$el), 'uk-open');
+            // addClass($(this.$el), 'uk-open');
+            addClass($(this.dropdown), 'uk-open');
 
             if (active && active !== this) {
                 active.hide();
@@ -259,7 +268,8 @@ UIkit.component('autocomplete', {
         hide() {
             if (!this.visible) return;
             this.visible = false;
-            removeClass($(this.$el), 'uk-open');
+            // removeClass($(this.$el), 'uk-open');
+            removeClass($(this.dropdown), 'uk-open');
 
             if (active === this) {
                 active = false;
