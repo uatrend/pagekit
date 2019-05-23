@@ -487,6 +487,8 @@
   'Next post' => 'Следующий',
   '%1$s Edit' => '%1$s Редактировать',
   'The comments are moderated. Only post quality comments, stay on topic and behave respectfully.' => 'Комментарии модерируются. Публикуйте только качественные комментарии, придерживайтесь темы и ведите себя уважительно.',
+  'Visual' => 'Визуально',
+  'Prepare' => 'Подготовка',
 // Plugins Rules
   'Manage settings' => 'Управлять настройками',
   'Show sidebar' => 'Развернуть',

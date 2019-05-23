@@ -40,7 +40,15 @@ module.exports = {
                 indentWithTabs: false,
                 tabSize: 4,
                 lineNumbers: true,
-                lineWrapping: true
+                lineWrapping: false,
+                extraKeys: {
+                    "F11": function(cm) {
+                        cm.setOption("fullScreen", !cm.getOption("fullScreen"));
+                    },
+                    "Esc": function(cm) {
+                        if (cm.getOption("fullScreen")) cm.setOption("fullScreen", false);
+                    }
+                }
             }, this.$parent.options));
 
             this.editor.setSize(null, this.$parent.height);

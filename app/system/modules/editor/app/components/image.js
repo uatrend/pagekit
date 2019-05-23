@@ -23,7 +23,7 @@ module.exports = {
 
                 var element = editor.selection.getNode();
 
-                if (element.nodeName === 'IMG') {
+                if (element.nodeName === 'IMG' && !element.hasAttribute('data-mce-object')) {
                     editor.selection.select(element);
                     var image = {src: element.attributes.src.nodeValue, alt: element.attributes.alt.nodeValue};
                 } else {
@@ -64,17 +64,27 @@ module.exports = {
                     });
             };
 
-            editor.addButton('image', {
+            editor.ui.registry.addToggleButton('image', {
                 tooltip: 'Insert/edit image',
-                onclick: showDialog,
-                stateSelector: 'img:not([data-mce-object],[data-mce-placeholder]),figure.image'
+                icon: 'image',
+                onAction: function () {
+                    showDialog();
+                },
+                onSetup: function(api) {
+                    return editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', function(state){
+                        api.setActive(state);
+                        if (state) showDialog();
+                    }).unbind;
+                }
             });
 
-            editor.addMenuItem('image', {
-                text: 'Insert/edit image',
+            editor.ui.registry.addMenuItem('image', {
                 icon: 'image',
+                text: 'Insert/edit image',
                 context: 'insert',
-                onclick: showDialog
+                onAction: function() {
+                    showDialog();
+                }
             });
 
         });

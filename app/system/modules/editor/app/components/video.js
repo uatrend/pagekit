@@ -129,18 +129,44 @@ module.exports = {
                     });
             };
 
-            editor.addButton('media', {
+            // editor.addButton('media', {
+            //     tooltip: 'Insert/edit video',
+            //     onclick: showDialog,
+            //     stateSelector: ['img[data-mce-object]', 'span[data-mce-object]']
+            // });
+
+            // editor.addMenuItem('media', {
+            //     text: 'Insert/edit video',
+            //     icon: 'media',
+            //     context: 'insert',
+            //     onclick: showDialog
+            // });
+
+            editor.ui.registry.addIcon('media', '<svg width="24" height="24"><path d="M4 3h16c.6 0 1 .4 1 1v16c0 .6-.4 1-1 1H4a1 1 0 0 1-1-1V4c0-.6.4-1 1-1zm1 2v14h14V5H5zm4.8 2.6l5.6 4a.5.5 0 0 1 0 .8l-5.6 4A.5.5 0 0 1 9 16V8a.5.5 0 0 1 .8-.4z" fill-rule="nonzero"></path></svg>');
+
+            editor.ui.registry.addToggleButton('media', {
                 tooltip: 'Insert/edit video',
-                onclick: showDialog,
-                stateSelector: ['img[data-mce-object]', 'span[data-mce-object]']
+                icon: 'media',
+                onAction: function () {
+                    showDialog();
+                },
+                onSetup: function(api) {
+                    return editor.selection.selectorChangedWithUnbind('img[data-mce-object], span[data-mce-object]', function(state){
+                        api.setActive(state);
+                        if (state) showDialog();
+                    }).unbind;
+                }
             });
 
-            editor.addMenuItem('media', {
-                text: 'Insert/edit video',
+            editor.ui.registry.addMenuItem('media', {
                 icon: 'media',
+                text: 'Insert/edit video',
                 context: 'insert',
-                onclick: showDialog
+                onAction: function() {
+                    showDialog();
+                }
             });
+
         });
 
     }

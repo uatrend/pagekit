@@ -160,7 +160,8 @@ class PackageController
         // TODO
         $file = App::path().'/tmp/temp/composer/composer.json';
 
-        if (!is_file($file)) {
+        if(!file_exists(dirname($file))) {
+            mkdir(dirname($file), 0755, true);
             file_put_contents($file, '{}');
         }
 

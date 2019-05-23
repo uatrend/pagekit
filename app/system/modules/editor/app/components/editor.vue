@@ -139,12 +139,12 @@
                 }
 
             },
-            'editor-html': require('./editor-tinymce'),
+            'editor-html': require('./editor-tinymce5'),
             'editor-code': require('./editor-code'),
             'plugin-link': require('./link'),
             'plugin-image': require('./image'),
             'plugin-video': require('./video'),
-            'plugin-url': require('./url')
+            // 'plugin-url': require('./url')
 
         },
 

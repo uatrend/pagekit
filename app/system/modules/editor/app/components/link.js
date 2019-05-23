@@ -20,7 +20,7 @@ module.exports = {
         tinyMCE.PluginManager.add('pagekitLink', function (editor) {
 
             var showDialog = function () {
-
+            // return editor.windowManager.open({
                 var element = editor.selection.getNode();
 
 
@@ -61,20 +61,36 @@ module.exports = {
                         editor.fire('change');
 
                     });
+            // })
             };
 
-            editor.addButton('link', {
-                tooltip: 'Insert/edit link',
-                onclick: showDialog,
-                stateSelector: 'a'
+            editor.on('click', function(e){
+                if (e.target.nodeName == 'A') {
+                    showDialog();
+                }
+
             });
 
-            editor.addMenuItem('link', {
-                text: 'Insert/edit link',
+            editor.ui.registry.addToggleButton('link', {
+                tooltip: 'Insert/edit link',
                 icon: 'link',
-                context: 'insert',
-                onclick: showDialog
+                onAction: function () {
+                    showDialog();
+                },
+                onSetup: function(api) {
+                    return editor.selection.selectorChangedWithUnbind('a', api.setActive).unbind;
+                }
             });
+
+            editor.ui.registry.addMenuItem('link', {
+                context: 'insert',
+                icon: 'link',
+                text: 'Insert/edit link',
+                onAction: function() {
+                    showDialog();
+                }
+            });
+
         });
     }
 
