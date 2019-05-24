@@ -33,7 +33,7 @@
                             </div>
 
                             <p class="uk-margin">
-                                <button class="uk-button uk-button-primary uk-button-large uk-width-1-1"><?= __('Login') ?></button>
+                                <button class="uk-button uk-button-default uk-button-large uk-width-1-1"><?= __('Login') ?></button>
                             </p>
 
                             <?php $view->token()->get() ?>
@@ -57,7 +57,7 @@
                             </div>
 
                             <p class="uk-margin">
-                                <button class="uk-button uk-button-primary uk-button-large uk-width-1-1"><?= __('Reset Password') ?></button>
+                                <button class="uk-button uk-button-default uk-button-large uk-width-1-1"><?= __('Reset Password') ?></button>
                             </p>
 
                             <?php $view->token()->get() ?>
