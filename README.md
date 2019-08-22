@@ -203,7 +203,7 @@ Example, class for dashboard page look like:
 ```
 
 ## Theme Plugin
-(added to core ```/app/system/components/lib/theme.js```)
+(added to core ```/app/system/app/lib/theme.js```)
 
 Ability to programmatically configure the buttons, dropdown lists, pagination and search form in the top menu for each component used (see code).
 
