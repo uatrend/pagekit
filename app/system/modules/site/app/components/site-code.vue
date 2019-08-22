@@ -2,7 +2,7 @@
     <div>
         <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
             <div>
-                <h2 class="uk-margin-remove">
+                <h2 class="uk-h3 uk-margin-remove">
                     {{ 'Code' | trans }}
                 </h2>
             </div>
@@ -19,14 +19,14 @@
             <div class="uk-margin">
                 <label for="form-codeheader" class="uk-form-label">{{ 'Header' | trans }}</label>
                 <div class="uk-form-controls">
-                    <v-editor v-model="config.code.header" type="code" :value.sync="config.code.header" />
+                    <v-editor v-model="config.code.header" type="code" />
                 </div>
             </div>
 
             <div class="uk-margin">
                 <label for="form-codeheader" class="uk-form-label">{{ 'Footer' | trans }}</label>
                 <div class="uk-form-controls">
-                    <v-editor v-model="config.code.footer" type="code" :value.sync="config.code.footer" />
+                    <v-editor v-model="config.code.footer" type="code" />
                 </div>
             </div>
         </div>

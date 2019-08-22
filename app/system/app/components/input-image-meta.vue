@@ -37,7 +37,7 @@
 
                 <div class="uk-modal-body">
                     <div class="uk-margin">
-                        <input-image v-model="img.src" :source.sync="img.src" :input-field="false" input-class="uk-form-width-large" />
+                        <input-image v-model="img.src" :input-field="false" input-class="uk-form-width-large" />
                     </div>
 
                     <div class="uk-margin">
@@ -56,7 +56,7 @@
                 </div>
 
                 <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-secondary uk-modal-close" type="button">
+                    <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
                         {{ 'Cancel' | trans }}
                     </button>
                     <button class="uk-button uk-button-primary" type="button" @click.prevent="update">

@@ -10,7 +10,7 @@ module.exports = [
             post: './app/views/post',
             posts: './app/views/posts',
             'link-blog': './app/components/link-blog.vue',
-            'post-meta': './app/components/post-meta.vue',
+            'post-meta': './app/components/post-meta.vue'
         },
         output: {
             filename: './app/bundle/[name].js',

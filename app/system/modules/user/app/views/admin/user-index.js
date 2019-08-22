@@ -4,6 +4,8 @@ module.exports = {
 
     el: '#users',
 
+    mixins: [Theme.Mixins.Helper],
+
     data() {
         return _.merge({
             users: false,
@@ -14,6 +16,105 @@ module.exports = {
             count: '',
             selected: [],
         }, window.$data);
+    },
+
+    theme: {
+        hiddenHtmlElements: ['#users > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                'adduser': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Add User',
+                    class: 'uk-button uk-button-primary',
+                    attrs: {
+                        href: () => vm.$url.route('admin/user/edit')
+                    },
+                    priority: 0,
+                },
+                search: {
+                    scope: 'navbar-right',
+                    type: 'search',
+                    class: 'uk-text-small',
+                    domProps: {
+                        value: () => vm.config.filter.search || ''
+                    },
+                    on: {
+                        input: function(e) {
+                            !vm.config.filter.search && vm.$set(vm.config.filter, 'search', '');
+                            vm.config.filter.search = e.target.value
+                        }
+                    }
+                },
+                'actions': {
+                    scope: 'topmenu-left',
+                    type: 'dropdown',
+                    caption: 'Actions',
+                    class: 'uk-button uk-button-text',
+                    icon: {
+                        attrs:{ 'uk-icon': 'triangle-down' },
+                    },
+                    dropdown: { options: () => 'mode:click' },
+                    actionIcons: true,
+                    items:() => {
+                        return {
+                            publish: {
+                                caption: 'Activate',
+                                on: {click: () => vm.status(1)},
+                            },
+                            unpublish: {
+                                caption: 'Block',
+                                on: { click: () => vm.status(0)}
+                            },
+                            delete: {
+                                on: {click: (e) => vm.remove(e)},
+                            }
+                        }
+                    },
+                    priority: 2,
+                    // vif: () => vm.selected.length,
+                    disabled: () => !vm.selected.length,
+                },
+                'selected': {
+                    scope: 'topmenu-right',
+                    type: 'caption',
+                    caption: () => {
+                        if (!vm.selected.length)
+                            return vm.$transChoice('{0} %count% Users|{1} %count% User|]1,Inf[ %count% Users', vm.count, {count: vm.count});
+                        return vm.$transChoice('{1} %count% User selected|]1,Inf[ %count% Users selected', vm.selected.length, {count:vm.selected.length})
+                    },
+                    class: 'uk-text-small',
+                    priority: 1
+                },
+                pagination: {
+                    scope: 'topmenu-right',
+                    type: 'pagination',
+                    caption: 'Pages',
+                    props: {
+                        value: () => vm.config.page,
+                        pages: () => vm.pages,
+                        name: () => vm.$options.name,
+                        options: () => ({
+                            lblPrev: '<span uk-pagination-previous></span>',
+                            lblNext: '<span uk-pagination-next></span>',
+                            displayedPages: 3,
+                            edges: 1,
+                        })
+                    },
+                    on: {
+                        input: (e) => {
+                            if (typeof e === 'number') {
+                                vm.config.page = e;
+                            }
+                        }
+                    },
+                    watch: () => vm.users,
+                    vif: () => (vm.pages > 1 || vm.config.page > 0),
+                    priority: 0,
+                }
+            }
+        }
     },
 
     mounted() {
@@ -137,11 +238,11 @@ module.exports = {
 
     },
 
-    events: {
-        'select:pagination': function (e, page) {
-            this.config.page = Number(page);
-        },
-    },
+    // events: {
+    //     'select:pagination': function (e, page) {
+    //         this.config.page = Number(page);
+    //     },
+    // },
 
 };
 

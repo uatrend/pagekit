@@ -19,10 +19,10 @@
         </div>
     </div>
     <div class="uk-margin">
-        <span class="uk-form-label">{{ 'Restrict Access' | trans }}</span>
+        <label class="uk-form-label">{{ 'Restrict Access' | trans }}</label>
         <div class="uk-form-controls uk-form-controls-text">
             <p v-for="role in config.roles" class="uk-margin-small">
-                <label><input class="uk-checkbox" type="checkbox" :value="role.id" v-model="widget.roles" number> {{ role.name }}</label>
+                <label><input class="uk-checkbox" type="checkbox" :value="role.id" v-model="widget.roles" number><span class="uk-margin-small-left">{{ role.name }}</span></label>
             </p>
         </div>
     </div>

@@ -14,23 +14,23 @@
         </div>
 
         <div class="uk-margin">
-            <span class="uk-form-label">{{ 'Cache' | trans }}</span>
-
+            <label class="uk-form-label">{{ 'Cache' | trans }}</label>
             <div class="uk-form-controls uk-form-controls-text">
                 <p v-for="(cache, key) in caches" :key="key" class="uk-margin-small">
-                    <label><input v-model="config.caches.cache.storage" class="uk-radio" type="radio" :value="key" :disabled="!cache.supported"> {{ cache.name }}</label>
+                    <label>
+                        <input v-model="config.caches.cache.storage" class="uk-radio" type="radio" :value="key" :disabled="!cache.supported" />
+                        <span class="uk-margin-small-left">{{ cache.name }}</span>
+                    </label>
                 </p>
             </div>
         </div>
 
         <div class="uk-margin">
-            <span class="uk-form-label">{{ 'Developer' | trans }}</span>
-
+            <label class="uk-form-label">{{ 'Developer' | trans }}</label>
             <div class="uk-form-controls uk-form-controls-text">
                 <p class="uk-margin-small">
-                    <label><input v-model="config.nocache" class="uk-checkbox" type="checkbox" value="1"> {{ 'Disable cache' | trans }}</label>
+                    <label><input v-model="config.nocache" class="uk-checkbox" type="checkbox" value="1" /><span class="uk-margin-small-left">{{ 'Disable cache' | trans }}</span></label>
                 </p>
-
                 <p>
                     <button class="uk-button uk-button-primary" type="button" @click.prevent="open">
                         {{ 'Clear Cache' | trans }}
@@ -48,17 +48,17 @@
                 <div class="uk-modal-body">
                     <div class="uk-margin">
                         <p class="uk-margin-small">
-                            <label><input v-model="cache.cache" class="uk-checkbox" type="checkbox"> {{ 'System Cache' | trans }}</label>
+                            <label><input v-model="cache.cache" class="uk-checkbox" type="checkbox" /><span class="uk-margin-small-left">{{ 'System Cache' | trans }}</span></label>
                         </p>
 
                         <p class="uk-margin-small">
-                            <label><input v-model="cache.temp" class="uk-checkbox" type="checkbox"> {{ 'Temporary Files' | trans }}</label>
+                            <label><input v-model="cache.temp" class="uk-checkbox" type="checkbox" /><span class="uk-margin-small-left">{{ 'Temporary Files' | trans }}</span></label>
                         </p>
                     </div>
                 </div>
 
                 <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-default uk-modal-close" type="button">
+                    <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
                         {{ 'Cancel' | trans }}
                     </button>
                     <button class="uk-button uk-button-primary" @click.prevent="clear">
@@ -74,6 +74,8 @@
 
 module.exports = {
 
+    mixins: [Theme.Mixins.Helper],
+
     section: {
         label: 'Cache',
         icon: 'pk-icon-large-bolt',
@@ -85,8 +87,29 @@ module.exports = {
     data() {
         return {
             caches: window.$caches,
-            cache: {},
+            cache: {}
         };
+    },
+
+    theme: {
+        hiddenHtmlElements() {
+            return this.$el.querySelectorAll('.uk-button-primary');
+        },
+        elements() {
+            var vm = this;
+            return {
+                'clearcache': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Clear Cache',
+                    class: 'uk-button tm-button-success',
+                    on: {click: () => vm.open()},
+                    priority: 0,
+                    vif: () => vm.$theme.activeTab('leftTab', true),
+                    watch: () => vm.$theme.activeTab('leftTab')
+                }
+            }
+        },
     },
 
     methods: {

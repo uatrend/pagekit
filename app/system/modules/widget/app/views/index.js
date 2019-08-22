@@ -4,7 +4,7 @@ module.exports = {
 
     el: '#widgets',
 
-    mixins: [window.Widgets],
+    mixins: [window.Widgets, Theme.Mixins.Helper],
 
     data() {
         return _.merge({
@@ -14,6 +14,103 @@ module.exports = {
             unassignedWidgets: [],
             type: {},
         }, window.$data);
+    },
+
+    theme: {
+        hiddenHtmlElements: ['.pk-width-content > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                'title': {
+                    scope: 'breadcrumbs',
+                    type: 'caption',
+                    caption: () => {
+                        return vm.position ? vm.position.label : vm.$trans('All')
+                    }
+                },
+                addwidget: {
+                    scope: 'topmenu-left',
+                    type: 'dropdown',
+                    caption: 'Add',
+                    class: 'uk-button uk-button-text',
+                    icon: { attrs:{ 'uk-icon': 'triangle-down' }},
+                    dropdown: { options: () => 'mode: click' },
+                    items: () => Object.values(vm.types).map((type) => {
+                        let props = {
+                            caption: type.label || type.name,
+                            attrs: {
+                                href: () => vm.$url.route('admin/site/widget/edit', {type: type.name, position:(vm.position ? vm.position.name:'')}),
+                            }
+                        }
+                        return Object.assign({}, type, props)
+                    }),
+                    priority: 0
+                },
+                search: {
+                    scope: 'navbar-right',
+                    type: 'search',
+                    class: 'uk-text-small',
+                    domProps: {
+                        value: () => vm.config.filter.search || ''
+                    },
+                    on: {
+                        input: function(e) {
+                            !vm.config.filter.search && vm.$set(vm.config.filter, 'search', '');
+                            vm.config.filter.search = e.target.value
+                        }
+                    }
+                },
+                'actions': {
+                    scope: 'topmenu-left',
+                    type: 'dropdown',
+                    caption: 'Actions',
+                    class: 'uk-button uk-button-text',
+                    icon: {
+                        attrs:{ 'uk-icon': 'triangle-down' },
+                    },
+                    dropdown: { options: () => 'mode:click' },
+                    actionIcons: true,
+                    items:() => {
+                        return {
+                            publish: {
+                                on: {click: () => vm.status(1)},
+                            },
+                            unpublish: {
+                                on: { click: () => vm.status(0)} },
+                            copy: {
+                                on: {click: () => vm.copy},
+                            },
+                            move: {
+                                type: 'dropdown',
+                                dropdown: { options: () => 'pos: right-top; delayHide: 0; offset: 25' },
+                                items: () => vm.config.positions.map((pos) => {
+                                    let props = {
+                                        caption: pos.label,
+                                        on: {click: () => vm.move(pos.name, vm.selected)},
+                                    }
+                                    return Object.assign({}, pos, props);
+                                })
+                            },
+                            trash: {
+                                on: {click: () => vm.remove},
+                            }
+                        }
+                    },
+                    priority: 2,
+                    // vif: () => vm.selected.length,
+                    disabled: () => !vm.selected.length,
+                },
+                'selected': {
+                    scope: 'topmenu-right',
+                    type: 'caption',
+                    caption: () => {
+                        return vm.$transChoice('{1} %count% Widget selected|]1,Inf[ %count% Widgets selected', vm.selected.length, {count:vm.selected.length})
+                    },
+                    class: 'uk-text-small',
+                    vif: !vm.selected.length
+                },
+            }
+        }
     },
 
     mounted() {

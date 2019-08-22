@@ -4,7 +4,44 @@ module.exports = {
 
     el: '#widget-edit',
 
-    mixins: [window.Widgets],
+    mixins: [window.Widgets, Theme.Mixins.Helper],
+
+    theme: {
+        hiddenHtmlElements: ['#widget-edit > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                'title': {
+                    scope: 'breadcrumbs',
+                    type: 'caption',
+                    caption: () => {
+                        let trans = this.$options.filters.trans;
+                        return vm.widget.id && trans ? trans('Edit Widget') : trans('Add Widget');
+                    }
+                },
+                'savewidget': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Save',
+                    class: 'uk-button tm-button-success',
+                    spinner: () => vm.processing,
+                    on: {click: () => vm.submit()},
+                    priority: 1,
+                },
+                'close': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: vm.widget.title ? 'Close' : 'Cancel',
+                    class: 'uk-button uk-button-text',
+                    attrs: {
+                        href: () => vm.$url.route('/admin/site/widget')
+                    },
+                    disabled: () => vm.processing,
+                    priority: 0,
+                }
+            }
+        }
+    },
 
     data() {
         return _.merge({

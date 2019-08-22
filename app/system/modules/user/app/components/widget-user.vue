@@ -3,50 +3,43 @@
         <div v-if="editing" class="uk-card-header pk-panel-teaser">
             <form class="uk-form-stacked">
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'User Type' | trans }}</span>
-
+                    <label class="uk-form-label">{{ 'User Type' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.show" class="uk-radio" type="radio" value="login"> {{ 'Logged in' | trans }}</label>
+                            <label><input v-model="widget.show" class="uk-radio" type="radio" value="login"><span class="uk-margin-small-left">{{ 'Logged in' | trans }}</span></label>
                         </p>
-
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.show" class="uk-radio" type="radio" value="registered"> {{ 'Last registered' | trans }}</label>
+                            <label><input v-model="widget.show" class="uk-radio" type="radio" value="registered"><span class="uk-margin-small-left">{{ 'Last registered' | trans }}</span></label>
                         </p>
                     </div>
                 </div>
 
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Display' | trans }}</span>
-
+                    <label class="uk-form-label">{{ 'Display' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.display" class="uk-radio" type="radio" value="thumbnail"> {{ 'Thumbnail' | trans }}</label>
+                            <label><input v-model="widget.display" class="uk-radio" type="radio" value="thumbnail"><span class="uk-margin-small-left">{{ 'Thumbnail' | trans }}</span></label>
                         </p>
-
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.display" class="uk-radio" type="radio" value="list"> {{ 'List' | trans }}</label>
+                            <label><input v-model="widget.display" class="uk-radio" type="radio" value="list"><span class="uk-margin-small-left">{{ 'List' | trans }}</span></label>
                         </p>
                     </div>
                 </div>
 
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Total Users' | trans }}</span>
-
+                    <label class="uk-form-label">{{ 'Total Users' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.total" class="uk-radio" type="radio" value="1"> {{ 'Show' | trans }}</label>
+                            <label><input v-model="widget.total" class="uk-radio" type="radio" value="1"><span class="uk-margin-small-left">{{ 'Show' | trans }}</span></label>
                         </p>
-
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.total" class="uk-radio" type="radio" value=""> {{ 'Hide' | trans }}</label>
+                            <label><input v-model="widget.total" class="uk-radio" type="radio" value=""><span class="uk-margin-small-left">{{ 'Hide' | trans }}</span></label>
                         </p>
                     </div>
                 </div>
 
                 <div class="uk-margin">
                     <label class="-label" for="form-user-number">{{ 'Number of Users' | trans }}</label>
-
                     <div class="uk-form-controls">
                         <select id="form-user-number" v-model="widget.count" class="uk-select uk-width-1-1" number>
                             <option value="6">
@@ -88,7 +81,7 @@
                 {{ 'Latest logged in Users' | trans }}
             </h3>
 
-            <ul v-if="users.length && widget.display == 'thumbnail'" data-user class="uk-grid uk-grid-small uk-child-width-1-4 uk-child-width-1-6@s uk-child-width-1-4@m uk-child-width-1-6@xl">
+            <ul v-if="users.length && widget.display == 'thumbnail'" data-user class="uk-grid-small uk-child-width-1-5 uk-child-width-1-5@m uk-child-width-1-6@xl" uk-grid>
                 <li v-for="user in users" :key="user.id">
                     <a :href="$url.route('admin/user/edit', {id: user.id})" :title="user.username">
                         <img v-gravatar="user.email" class="uk-border-rounded" width="100" height="100" :alt="user.name">

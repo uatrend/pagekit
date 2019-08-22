@@ -34,11 +34,11 @@
             <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap uk-grid-small" uk-grid>
                 <div class="uk-flex uk-flex-middle uk-flex-wrap" >
 
-                    <h2 class="uk-margin-remove" v-if="!selected.length">{{ position ? position.label : $trans('All') }}</h2>
+                    <h2 class="uk-h3 uk-margin-remove" v-if="!selected.length">{{ position ? position.label : $trans('All') }}</h2>
 
                     <template v-else>
 
-                        <h2 class="uk-margin-remove">{{ '{1} %count% Widget selected|]1,Inf[ %count% Widgets selected' | transChoice(selected.length,{count:selected.length}) }}</h2>
+                        <h2 class="uk-h3 uk-margin-remove">{{ '{1} %count% Widget selected|]1,Inf[ %count% Widgets selected' | transChoice(selected.length,{count:selected.length}) }}</h2>
 
                         <div class="uk-margin-left">
                             <ul class="uk-iconnav">
@@ -93,7 +93,7 @@
                         </div>
                     </div>
 
-                    <h3 class="uk-h1 uk-text-muted uk-text-center uk-margin-bottom">{{ 'No widgets found.' | trans }}</h3>
+                    <h3 class="uk-h2 uk-text-muted uk-text-center uk-margin-bottom">{{ 'No widgets found.' | trans }}</h3>
 
                 </template>
 
@@ -110,7 +110,7 @@
                         </div>
                     </div>
 
-                    <h3 class="uk-h1 uk-text-muted uk-text-center" v-if="!pos.widgets.length || (position && emptyafterfilter(pos.widgets))">{{ 'No widgets found.' | trans }}</h3>
+                    <h3 class="uk-h2 uk-text-muted uk-text-center" v-if="!pos.widgets.length || (position && emptyafterfilter(pos.widgets))">{{ 'No widgets found.' | trans }}</h3>
 
                     <ul class="uk-list uk-margin-remove" v-sortable v-if="!emptyafterfilter(pos.widgets)" :data-position="pos.name">
                         <li class="check-item uk-margin-remove-top" :class="{'uk-active': isSelected(widget.id)}" v-for="widget in pos.widgets" :key="widget.id" :data-id="widget.id" v-show="infilter(widget)">

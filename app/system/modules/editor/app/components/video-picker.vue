@@ -34,26 +34,26 @@
                         <div>
                             <div class="uk-child-width-1-2 uk-grid-small uk-text-small" uk-grid>
                                 <div class="uk-text-nowrap uk-text-truncate">
-                                    <label><input class="uk-checkbox" type="checkbox" v-model="video.data.autoplay"> {{ 'Autoplay' | trans }}</label><br>
-                                    <label v-show="!isVimeo"><input class="uk-checkbox" type="checkbox" v-model="video.data.controls"> {{ 'Controls' | trans }}</label>
+                                    <label><input class="uk-checkbox" type="checkbox" v-model="video.data.autoplay"><span class="uk-margin-small-left">{{ 'Autoplay' | trans }}</span></label><br>
+                                    <label v-show="!isVimeo"><input class="uk-checkbox" type="checkbox" v-model="video.data.controls"><span class="uk-margin-small-left">{{ 'Controls' | trans }}</span></label>
                                 </div>
                                 <div class="uk-text-nowrap uk-text-truncate">
-                                    <label><input class="uk-checkbox" type="checkbox" v-model="video.data.loop"> {{ 'Loop' | trans }}</label><br>
-                                    <label v-show="!isVimeo && !isYoutube"><input class="uk-checkbox" type="checkbox" v-model="video.data.muted"> {{ 'Muted' | trans }}</label>
+                                    <label><input class="uk-checkbox" type="checkbox" v-model="video.data.loop"><span class="uk-margin-small-left">{{ 'Loop' | trans }}</span></label><br>
+                                    <label v-show="!isVimeo && !isYoutube"><input class="uk-checkbox" type="checkbox" v-model="video.data.muted"><span class="uk-margin-small-left">{{ 'Muted' | trans }}</span></label>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="uk-margin" v-show="!isYoutube && !isVimeo">
-                        <span class="uk-form-label">{{ 'Poster Image' | trans }}</span>
+                        <label class="uk-form-label">{{ 'Poster Image' | trans }}</label>
                         <div class="uk-form-controls">
-                            <input-image :source.sync="video.data.poster" v-model="video.data.poster" :input-field="false" input-class="uk-form-width-large"></input-image>
+                            <input-image v-model="video.data.poster" :input-field="false" input-class="uk-form-width-large"></input-image>
                         </div>
                     </div>
                 </div>
 
                 <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-secondary uk-modal-close" type="button">{{ 'Cancel' | trans }}</button>
+                    <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">{{ 'Cancel' | trans }}</button>
                     <button class="uk-button uk-button-primary" type="submit" :disabled="!video.data.src">{{ 'Update' | trans }}</button>
                 </div>
 

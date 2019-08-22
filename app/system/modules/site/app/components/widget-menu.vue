@@ -116,15 +116,14 @@
             </div>
 
             <div class="uk-margin">
-                <span class="uk-form-label">{{ 'Sub Items' | trans }}</span>
-
+                <label class="uk-form-label">{{ 'Sub Items' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
                     <p class="uk-margin-small">
-                        <label><input v-model="widget.data.mode" class="uk-radio" type="radio" value="all"> {{ 'Show all' | trans }}</label>
+                        <label><input v-model="widget.data.mode" class="uk-radio" type="radio" value="all"><span class="uk-margin-small-left">{{ 'Show all' | trans }}</span></label>
                     </p>
 
                     <p class="uk-margin-small">
-                        <label><input v-model="widget.data.mode" class="uk-radio" type="radio" value="active"> {{ 'Show only for active item' | trans }}</label>
+                        <label><input v-model="widget.data.mode" class="uk-radio" type="radio" value="active"><span class="uk-margin-small-left">{{ 'Show only for active item' | trans }}</span></label>
                     </p>
                 </div>
             </div>

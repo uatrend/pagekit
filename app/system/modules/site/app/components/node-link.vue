@@ -3,14 +3,7 @@
         <div class="uk-margin">
             <label for="form-url" class="uk-form-label">{{ 'Url' | trans }}</label>
             <div class="uk-form-controls">
-                <input-link
-                    id="form-url"
-                    v-model="node.link"
-                    cls="uk-form-width-large"
-                    name="link"
-                    :link.sync="node.link"
-                    required
-                />
+                <input-link id="form-url" v-model="node.link" cls="uk-form-width-large" name="link" required></input-link>
                 <div v-show="errors.first('link')" class="uk-text-meta uk-text-danger">
                     {{ 'Invalid url.' | trans }}
                 </div>

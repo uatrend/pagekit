@@ -2,8 +2,6 @@ import VueEventManager from 'vue-event-manager';
 
 import VueIntl from 'vue-intl';
 import VueResource from 'vue-resource';
-import Vue2Filters from 'vue2-filters';
-import VeeValidate from 'vee-validate';
 import Cache from './lib/cache';
 import Asset from './lib/asset';
 import State from './lib/state';
@@ -27,6 +25,13 @@ import Confirm from './directives/confirm';
 import Gravatar from './directives/gravatar';
 import Order from './directives/order';
 import LazyBackground from './directives/lazy-background';
+
+import { Validator, ErrorBag, install as VeeValidate } from 'vee-validate/dist/vee-validate.minimal.esm.js';
+import { required, email, regex } from 'vee-validate/dist/rules.esm.js';
+const dictionary = { en: { messages:{ required: () => true, email: () => true, regex: () => true } } };
+
+import Theme from './lib/theme';
+import './lib/mobiledetect';
 
 function Install(Vue) {
     const config = window.$pagekit;
@@ -64,7 +69,11 @@ function Install(Vue) {
     Vue.use(Notify);
     Vue.use(Trans);
     Vue.use(Filters);
-    Vue.use(Vue2Filters);
+
+    Validator.extend('required', required);
+    Validator.extend('email', email);
+    Validator.extend('regex', regex);
+    Validator.localize(dictionary);
     Vue.use(VeeValidate);
 
     /**
@@ -92,6 +101,9 @@ function Install(Vue) {
     Vue.directive('lazy-background', LazyBackground);
     Vue.directive('focus', { bind(el) { Vue.nextTick(() => { el.focus(); }); } });
 
+    // Theme
+    Vue.use(Theme);
+
     /**
      * Resource
      */
@@ -118,7 +130,7 @@ function Install(Vue) {
 
     Vue.ready = function (fn) {
         if ((fn !== null) && (typeof fn === 'object')) {
-            const options = fn;
+            var options = fn;
 
             fn = function () {
                 new Vue(options);

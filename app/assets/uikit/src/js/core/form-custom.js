@@ -1,5 +1,5 @@
 import Class from '../mixin/class';
-import {$, $$, isInput, matches, query, selInput} from 'uikit-util';
+import {$, $$, closest, isInput, matches, query, selInput} from 'uikit-util';
 
 export default {
 
@@ -47,7 +47,7 @@ export default {
         const prev = target[prop];
         const value = input.files && input.files[0]
             ? input.files[0].name
-            : matches(input, 'select') && (option = $$('option', input).filter(el => el.selected)[0])
+            : matches(input, 'select') && (option = $$('option', input).filter(el => el.selected)[0]) // eslint-disable-line prefer-destructuring
                 ? option.textContent
                 : input.value;
 
@@ -57,12 +57,28 @@ export default {
 
     },
 
-    events: {
+    events: [
 
-        change() {
-            this.$emit();
+        {
+            name: 'change',
+
+            handler() {
+                this.$emit();
+            }
+        },
+
+        {
+            name: 'reset',
+
+            el() {
+                return closest(this.$el, 'form');
+            },
+
+            handler() {
+                this.$emit();
+            }
         }
 
-    }
+    ]
 
 };

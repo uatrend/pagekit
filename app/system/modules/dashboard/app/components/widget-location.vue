@@ -21,7 +21,6 @@
             <form class="uk-form-stacked" @submit.prevent>
                 <div class="uk-margin">
                     <label for="form-city" class="uk-form-label">{{ 'Location' | trans }}</label>
-
                     <div class="uk-form-controls">
                         <div ref="autocomplete" class="uk-autocomplete uk-width-1-1">
                             <input
@@ -38,22 +37,21 @@
                 </div>
 
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Unit' | trans }}</span>
+                    <label class="uk-form-label">{{ 'Unit' | trans }}</label>
 
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.units" class="uk-radio" type="radio" value="metric"> {{ 'Metric' | trans }}</label>
+                            <label><input v-model="widget.units" class="uk-radio" type="radio" value="metric"><span class="uk-margin-small-left">{{ 'Metric' | trans }}</span></label>
                         </p>
-
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.units" class="uk-radio" type="radio" value="imperial"> {{ 'Imperial' | trans }}</label>
+                            <label><input v-model="widget.units" class="uk-radio" type="radio" value="imperial"><span class="uk-margin-small-left">{{ 'Imperial' | trans }}</span></label>
                         </p>
                     </div>
                 </div>
             </form>
         </div>
 
-        <div v-if="status != 'loading'" class="uk-card-body uk-padding-remove uk-inline-clip uk-width-1-1">
+        <div v-if="status != 'loading'" class="uk-inline-clip">
             <img :src="'../../../../../../app/system/assets/images/dashboard-location.jpg'" class="uk-width-1-1">
             <div class="uk-position-cover uk-padding uk-light uk-flex uk-flex-middle uk-height-1-1" style="background-color: rgba(0,0,0,.4);">
                 <div class="uk-width-expand uk-flex uk-flex-column uk-flex-wrap-between uk-height-1-1">
@@ -62,18 +60,18 @@
                             <h1 v-if="time" class="uk-margin-remove uk-text-center pk-text-xlarge">
                                 {{ time | date(format) }}
                             </h1>
-                            <h3 v-if="time" class="uk-text-center uk-margin-remove">
+                            <h4 v-if="time" class="uk-text-center uk-margin-remove">
                                 {{ time | date('longDate') }}
-                            </h3>
+                            </h4>
                         </div>
                     </div>
                     <div class="uk-flex uk-flex-between uk-position-bottom uk-padding-small">
-                        <h3 v-if="widget.city" class="uk-margin-remove">
+                        <h4 v-if="widget.city" class="uk-margin-remove">
                             {{ widget.city }}
-                        </h3>
-                        <h3 v-if="status=='done'" class="uk-flex uk-flex-middle uk-margin-remove">
+                        </h4>
+                        <h4 v-if="status=='done'" class="uk-flex uk-flex-middle uk-margin-remove">
                             {{ temperature }} <img class="uk-margin-small-left" :src="icon" width="25" height="25" alt="Weather">
-                        </h3>
+                        </h4>
                     </div>
                 </div>
             </div>

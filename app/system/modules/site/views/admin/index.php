@@ -17,7 +17,7 @@
                     </li>
                 </ul>
                 <p>
-                    <a class="uk-button uk-button-secondary" @click.prevent="editMenu">{{ 'Add Menu' | trans }}</a>
+                    <a class="uk-button uk-button-default" @click.prevent="editMenu">{{ 'Add Menu' | trans }}</a>
                 </p>
 
             </div>
@@ -28,7 +28,7 @@
             <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap uk-grid-small" uk-grid>
                 <div class="uk-flex uk-flex-middle uk-flex-wrap" >
 
-                    <h2 class="uk-margin-remove">{{ menu.label }}</h2>
+                    <h2 class="uk-h3 uk-margin-remove">{{ menu.label }}</h2>
 
                     <div class="uk-margin-left" v-show="selected.length">
                         <ul class="uk-iconnav">
@@ -47,7 +47,7 @@
                     </div>
 
                 </div>
-                <div class="uk-position-relative" >
+                <div class="uk-position-relative">
 
                         <a class="uk-button uk-button-primary" @click.prevent v-show="menu.id != 'trash'">{{ 'Add' | trans }}</a>
                         <div uk-dropdown="mode: click">
@@ -142,12 +142,12 @@
 
             </div>
 
-            <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="!treedata.length">{{ 'No pages found.' | trans }}</h3>
+            <h3 class="uk-h2 uk-text-muted uk-text-center" v-show="!treedata.length">{{ 'No pages found.' | trans }}</h3>
 
         </div>
     </div>
 
-    <v-modal ref="modal">
+    <v-modal ref="modal" bg-close>
         <div class="uk-form-stacked">
 
             <div class="uk-modal-header">
@@ -164,12 +164,10 @@
                 </div>
 
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Menu Positions' | trans }}</span>
+                    <label class="uk-form-label">{{ 'Menu Positions' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small" v-for="m in config.menus">
-                            <label>
-                                <input class="uk-checkbox" type="checkbox" :value="m.name" v-model="edit.positions"> {{ m.label }}
-                            </label>
+                            <label><input class="uk-checkbox" type="checkbox" :value="m.name" v-model="edit.positions"><span class="uk-margin-small-left">{{ m.label }}</span></label>
                             <span class="uk-text-muted" v-if="getMenu(m.name) && getMenu(m.name).id != edit.id">{{ menuLabel(edit.id) }}</span>
                         </p>
                     </div>
@@ -177,7 +175,7 @@
             </div>
 
             <div class="uk-modal-footer uk-text-right">
-                <button class="uk-button uk-button-secondary" type="button" @click.prevent="cancel" autofocus>{{ 'Cancel' | trans }}</button>
+                <button class="uk-button uk-button-text uk-margin-right" type="button" @click.prevent="cancel" autofocus>{{ 'Cancel' | trans }}</button>
                 <button class="uk-button uk-button-primary" :disabled="errors.has.any || !edit.label" @click.prevent="saveMenu(edit)">{{ 'Save' | trans }}</button>
             </div>
 

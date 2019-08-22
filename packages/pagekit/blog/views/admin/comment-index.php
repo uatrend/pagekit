@@ -6,10 +6,10 @@
     <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap">
         <div class="uk-flex uk-flex-middle uk-flex-wrap">
 
-            <h2 class="uk-margin-remove" v-if="!selected.length">{{ '{0} %count% Comments|{1} %count% Comment|]1,Inf[ %count% Comments' | transChoice(count, {count:count}) }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-if="!selected.length">{{ '{0} %count% Comments|{1} %count% Comment|]1,Inf[ %count% Comments' | transChoice(count, {count:count}) }}</h2>
 
             <template v-else>
-                <h2 class="uk-margin-remove">{{ '{1} %count% Comment selected|]1,Inf[ %count% Comments selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
+                <h2 class="uk-h3 uk-margin-remove">{{ '{1} %count% Comment selected|]1,Inf[ %count% Comments selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
 
                 <div class="uk-margin-left">
                     <ul class="uk-subnav pk-subnav-icon">
@@ -31,7 +31,7 @@
 
     <div class="uk-overflow-auto">
 
-        <table class="uk-table uk-table-middle uk-table-hover pk-table-large">
+        <table class="uk-table uk-table-hover pk-table-large">
             <thead>
                 <tr>
                     <th class="pk-table-width-minimum"><input class="uk-checkbox" type="checkbox" v-check-all:selected="{ selector: 'input[name=id]' }" number></th>
@@ -56,8 +56,8 @@
                             <img class="uk-img-preserve uk-border-circle" width="40" height="40" :alt="comment.author" v-gravatar="comment.email">
                         </td>
                         <td class="uk-visible-toggle">
-
-                            <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap">
+                            <div class="uk-position-relative">
+                            <div class="uk-margin-small uk-flex uk-flex-between uk-flex-wrap">
                                 <div>
                                     <a :href="$url.route('admin/user/edit', { id: comment.user_id })" v-if="comment.user_id!=0">{{ comment.author }}</a>
                                     <span v-else>{{ comment.author }}</span>
@@ -69,28 +69,28 @@
                                         <li><a class="pk-icon-reply pk-icon-hover" :title="'Reply' | trans" uk-tooltip="delay: 500" @click.prevent="reply(comment)"></a></li>
                                     </ul>
 
-                                    <a class="uk-link-muted" v-if="post.accessible" :href="$url.route(post.url.substr(1))+'#comment-'+comment.id">{{ comment.created | relativeDate }}</a>
+                                    <a class="uk-link-muted" v-if="post.accessible && post.url" :href="$url.route(post.url.substr(1))+'#comment-'+comment.id">{{ comment.created | relativeDate }}</a>
                                     <span v-else>{{ comment.created | relativeDate }}</span>
                                 </div>
                             </div>
 
                             <div v-html="comment.content"></div>
-
-                            <div class="uk-margin-top" v-if="replyComment.parent_id === comment.id">
+                            </div>
+                            <div class="uk-margin-small-top" v-if="replyComment.parent_id === comment.id">
                                 <!-- <form v-validator="replyform" @submit.prevent="submit | valid"> -->
                                 <form @submit.prevent="submit">
 
                                     <div class="uk-margin">
                                         <label for="form-content" class="uk-form-label">{{ 'Content' | trans }}</label>
                                         <div class="uk-form-controls">
-                                            <textarea id="form-content" class="uk-form-width-large uk-textarea" name="content" rows="10" v-model="replyComment.content" v-validate="'required'"></textarea>
+                                            <textarea id="form-content" class="uk-textarea uk-form-width-large" name="content" rows="10" v-model="replyComment.content" v-validate="'required'"></textarea>
                                             <div class="uk-text-small uk-text-danger" v-show="errors.first('content')">{{ 'Content cannot be blank.' | trans }}</div>
                                         </div>
                                     </div>
 
                                     <p>
                                         <button class="uk-button uk-button-primary" type="submit">{{ 'Reply' | trans }}</button>
-                                        <button class="uk-button uk-button-default" @click.prevent="cancel">{{ 'Cancel' | trans }}</button>
+                                        <button class="uk-button uk-button-text uk-margin-small-left" @click.prevent="cancel">{{ 'Cancel' | trans }}</button>
                                     </p>
 
                                 </form>
@@ -103,10 +103,9 @@
                         </td>
                         <td class="pk-blog-comments-padding">
                             <a :href="$url.route('admin/blog/post/edit', { id: post.id })">{{ post.title }}</a>
-
-                            <p>
+                            <div class="uk-margin-small">
                                 <a class="uk-text-nowrap" :class="{'pk-link-icon': !post.comments_pending}" :href="$url.route('admin/blog/comment', { post: post.id })" :title="'{0} No pending|{1} One pending|]1,Inf[ %comments_pending% pending' | transChoice(post.comments_pending, post)"><i class="pk-icon-comment" :class="{'pk-icon-primary': post.comments_pending}"></i> {{ post.comment_count }}</a>
-                            </p>
+                            </div>
                         </td>
 
                     </tr>
@@ -121,42 +120,43 @@
                         <td colspan="3">
                             <!-- <form class="uk-form-stacked" v-validator="editform" @submit.prevent="submit | valid"> -->
                             <form class="uk-form-stacked" @submit.prevent="submit">
+                                <div class="uk-width-1-1 uk-grid-small" uk-grid>
+                                    <div class="uk-width-1-3@m">
+                                        <label for="form-author" class="uk-form-label">{{ 'Name' | trans }}</label>
+                                        <div class="uk-form-controls">
+                                            <input id="form-author" class="uk-input" name="author" type="text" v-model="editComment.author" v-validate="'required'">
+                                            <div class="uk-text-small uk-text-danger" v-show="errors.first('author')">{{ 'Author cannot be blank.' | trans }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-1-3@m">
+                                        <label for="form-email" class="uk-form-label">{{ 'E-mail' | trans }}</label>
+                                        <div class="uk-form-controls">
+                                            <input id="form-email" class="uk-input" name="email" type="text" v-model.lazy="editComment.email" v-validate="'required|email'">
+                                            <div class="uk-text-small uk-text-danger" v-show="errors.first('email')">{{ 'Field must be a valid email address.' | trans }}</div>
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-1-3@m">
+                                        <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
+                                        <div class="uk-form-controls">
+                                            <select id="form-status" class="uk-select" v-model="editComment.status">
+                                                <option v-for="(status, status_key) in statuses" :key="status_key" :value="status_key">{{ status }}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="uk-width-1-1@m">
+                                        <label for="form-content" class="uk-form-label">{{ 'Comment' | trans }}</label>
+                                         <div class="uk-form-controls">
+                                            <textarea id="form-content" class="uk-textarea" name="content" rows="10" v-model="editComment.content" v-validate="'required'"></textarea>
+                                            <div class="uk-text-small uk-text-danger" v-show="errors.first('content')">{{ 'Content cannot be blank.' | trans }}</div>
+                                        </div>
+                                    </div>
+
+                                </div>
 
                                 <div class="uk-margin">
-                                    <label for="form-author" class="uk-form-label">{{ 'Name' | trans }}</label>
-                                    <div class="uk-form-controls">
-                                        <input id="form-author" class="uk-form-width-large uk-input" name="author" type="text" v-model="editComment.author" v-validate="'required'">
-                                        <div class="uk-text-small uk-text-danger" v-show="errors.first('author')">{{ 'Author cannot be blank.' | trans }}</p>
-                                    </div>
+                                    <button class="uk-button uk-button-primary" type="submit">{{ 'Save' | trans }}</button>
+                                    <button class="uk-button uk-button-text uk-margin-small-left" @click.prevent="cancel">{{ 'Cancel' | trans }}</button>
                                 </div>
-                                <div class="uk-margin">
-                                    <label for="form-email" class="uk-form-label">{{ 'E-mail' | trans }}</label>
-                                    <div class="uk-form-controls">
-                                        <input id="form-email" class="uk-form-width-large uk-input" name="email" type="text" v-model.lazy="editComment.email" v-validate="'required|email'">
-                                        <div class="uk-text-small uk-text-danger" v-show="errors.first('email')">{{ 'Field must be a valid email address.' | trans }}</p>
-                                    </div>
-                                </div>
-                                <div class="uk-margin">
-                                    <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
-                                    <div class="uk-form-controls">
-                                        <select id="form-status" class="uk-form-width-large uk-select" v-model="editComment.status">
-                                            <option v-for="(status, status_key) in statuses" :key="status_key" :value="status_key">{{ status }}</option>
-                                        </select>
-                                    </div>
-                                </div>
-
-                                <div class="uk-margin">
-                                    <label for="form-content" class="uk-form-label">{{ 'Status' | trans }}</label>
-                                     <div class="uk-form-controls">
-                                        <textarea id="form-content" class="uk-form-width-large uk-textarea" name="content" rows="10" v-model="editComment.content" v-validate="'required'"></textarea>
-                                         <div class="uk-text-small uk-text-danger" v-show="errors.first('content')">{{ 'Content cannot be blank.' | trans }}</div>
-                                    </div>
-                                </div>
-
-                            <p>
-                                <button class="uk-button uk-button-primary" type="submit">{{ 'Save' | trans }}</button>
-                                <button class="uk-button uk-button-secondary" @click.prevent="cancel">{{ 'Cancel' | trans }}</button>
-                            </p>
 
                             </form>
                         </td>
@@ -169,8 +169,8 @@
         </table>
     </div>
 
-    <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="comments && !comments.length">{{ 'No comments found.' | trans }}</h3>
+    <h3 class="uk-h2 uk-text-muted uk-text-center" v-show="comments && !comments.length">{{ 'No comments found.' | trans }}</h3>
 
-    <v-pagination :current.sync="config.page" :pages="pages" v-show="pages > 1 || config.page > 0" v-model="config.page"></v-pagination>
+    <v-pagination :pages="pages" v-model="config.page" v-show="pages > 1 || config.page > 0"></v-pagination>
 
 </div>

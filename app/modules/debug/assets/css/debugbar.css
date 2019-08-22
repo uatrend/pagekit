@@ -276,7 +276,7 @@
 }
 
 #pk-profiler .pf-navbar-nav > li:first-child > a {
-    padding: 0 16px;
+    padding: 0 15px;
 }
 
 #pk-profiler .pf-navbar-nav > li:hover > a,
@@ -310,12 +310,6 @@
     text-align: center;
     line-height: 20px;
     opacity: 0.3;
-}
-
-#pk-profiler .pf-close:after {
-    content: "\f00d";
-    display: block;
-    font-family: FontAwesome;
 }
 
 #pk-profiler .pf-close:hover,

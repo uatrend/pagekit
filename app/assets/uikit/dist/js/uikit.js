@@ -1,4 +1,4 @@
-/*! UIkit 3.1.5 | http://www.getuikit.com | (c) 2014 - 2018 YOOtheme | MIT License */
+/*! UIkit 3.1.7 | http://www.getuikit.com | (c) 2014 - 2019 YOOtheme | MIT License */
 
 (function (global, factory) {
     typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
@@ -510,9 +510,9 @@
                 return ancestor;
             }
 
-            ancestor = ancestor.parentNode;
+            ancestor = ancestor.parentElement;
 
-        } while (ancestor && ancestor.nodeType === 1);
+        } while (ancestor);
     };
 
     function closest(element, selector) {
@@ -522,21 +522,18 @@
         }
 
         return isNode(element)
-            ? element.parentNode && closestFn.call(element, selector)
+            ? closestFn.call(element, selector)
             : toNodes(element).map(function (element) { return closest(element, selector); }).filter(Boolean);
     }
 
     function parents(element, selector) {
         var elements = [];
-        var parent = toNode(element).parentNode;
+        element = toNode(element);
 
-        while (parent && parent.nodeType === 1) {
-
-            if (matches(parent, selector)) {
-                elements.push(parent);
+        while ((element = element.parentElement)) {
+            if (matches(element, selector)) {
+                elements.push(element);
             }
-
-            parent = parent.parentNode;
         }
 
         return elements;
@@ -2038,25 +2035,31 @@
             return remove$1(this.reads, task) || remove$1(this.writes, task);
         },
 
-        flush: function() {
-
-            runTasks(this.reads);
-            runTasks(this.writes.splice(0, this.writes.length));
-
-            this.scheduled = false;
-
-            if (this.reads.length || this.writes.length) {
-                scheduleFlush();
-            }
-
-        }
+        flush: flush
 
     };
 
-    function scheduleFlush() {
+    function flush() {
+        runTasks(fastdom.reads);
+        runTasks(fastdom.writes.splice(0, fastdom.writes.length));
+
+        fastdom.scheduled = false;
+
+        if (fastdom.reads.length || fastdom.writes.length) {
+            scheduleFlush(true);
+        }
+    }
+
+    function scheduleFlush(microtask) {
+        if ( microtask === void 0 ) microtask = false;
+
         if (!fastdom.scheduled) {
             fastdom.scheduled = true;
-            requestAnimationFrame(fastdom.flush.bind(fastdom));
+            if (microtask) {
+                Promise.resolve().then(flush);
+            } else {
+                requestAnimationFrame(flush);
+            }
         }
     }
 
@@ -2800,7 +2803,7 @@
 
         if (document.body) {
 
-            init();
+            fastdom.read(init);
 
         } else {
 
@@ -2819,6 +2822,7 @@
 
             apply(document.body, connect);
 
+            // Safari renders prior to first animation frame
             fastdom.flush();
 
             (new MutationObserver(function (mutations) { return mutations.forEach(applyMutation); })).observe(document, {
@@ -3435,7 +3439,7 @@
                     if (isUndefined(data[key])) {
                         delete data[key];
                     } else {
-                        data[key] = props[key] ? coerce(props[key], data[key], el) : data[key];
+                        data[key] = props[key] ? coerce(props[key], data[key]) : data[key];
                     }
                 }
             }
@@ -4033,7 +4037,7 @@
 
                 var pos = getEventPos(e);
                 var target = 'tagName' in e.target ? e.target : e.target.parentNode;
-                off = once(document, pointerUp, function (e) {
+                off = once(document, (pointerUp + " " + pointerCancel), function (e) {
 
                     var ref = getEventPos(e);
                     var x = ref.x;
@@ -4786,7 +4790,7 @@
             var prev = target[prop];
             var value = input.files && input.files[0]
                 ? input.files[0].name
-                : matches(input, 'select') && (option = $$('option', input).filter(function (el) { return el.selected; })[0])
+                : matches(input, 'select') && (option = $$('option', input).filter(function (el) { return el.selected; })[0]) // eslint-disable-line prefer-destructuring
                     ? option.textContent
                     : input.value;
 
@@ -4796,13 +4800,29 @@
 
         },
 
-        events: {
+        events: [
 
-            change: function() {
-                this.$emit();
+            {
+                name: 'change',
+
+                handler: function() {
+                    this.$emit();
+                }
+            },
+
+            {
+                name: 'reset',
+
+                el: function() {
+                    return closest(this.$el, 'form');
+                },
+
+                handler: function() {
+                    this.$emit();
+                }
             }
 
-        }
+        ]
 
     };
 
@@ -4907,7 +4927,7 @@
                     leftDim = getOffset(row[0], true);
                 }
 
-                if (dim.top >= leftDim.bottom - 1) {
+                if (dim.top >= leftDim.bottom - 1 && dim.top !== leftDim.top) {
                     rows.push([el]);
                     break;
                 }
@@ -5268,12 +5288,24 @@
 
         update: {
 
-            read: function() {
+            read: function(ref) {
+                var prev = ref.minHeight;
+
+
+                if (!isVisible(this.$el)) {
+                    return false;
+                }
 
                 var minHeight = '';
                 var box = boxModelAdjust('height', this.$el, 'content-box');
 
                 if (this.expand) {
+
+                    this.$el.dataset.heightExpand = '';
+
+                    if ($('[data-height-expand]') !== this.$el) {
+                        return false;
+                    }
 
                     minHeight = height(window) - (offsetHeight(document.documentElement) - offsetHeight(this.$el)) - box || '';
 
@@ -5284,9 +5316,9 @@
 
                     if (this.offsetTop) {
 
-                        var ref = offset(this.$el);
-                        var top = ref.top;
-                        minHeight += top < height(window) / 2 ? (" - " + top + "px") : '';
+                        var ref$1 = offset(this.$el);
+                        var top = ref$1.top;
+                        minHeight += top > 0 && top < height(window) / 2 ? (" - " + top + "px") : '';
 
                     }
 
@@ -5312,14 +5344,19 @@
 
                 }
 
-                return {minHeight: minHeight};
+                return {minHeight: minHeight, prev: prev};
             },
 
             write: function(ref) {
                 var minHeight = ref.minHeight;
+                var prev = ref.prev;
 
 
                 css(this.$el, {minHeight: minHeight});
+
+                if (minHeight !== prev) {
+                    this.$update(this.$el, 'resize');
+                }
 
                 if (this.minHeight && toFloat(css(this.$el, 'minHeight')) < this.minHeight) {
                     css(this.$el, 'minHeight', this.minHeight);
@@ -5334,7 +5371,7 @@
     };
 
     function offsetHeight(el) {
-        return el && el.offsetHeight || 0;
+        return el && offset(el).height || 0;
     }
 
     var Svg = {
@@ -5349,15 +5386,16 @@
             width: Number,
             height: Number,
             ratio: Number,
-            'class': String,
+            class: String,
             strokeAnimation: Boolean,
+            focusable: Boolean, // IE 11
             attributes: 'list'
         },
 
         data: {
             ratio: 1,
-            include: ['style', 'class'],
-            'class': '',
+            include: ['style', 'class', 'focusable'],
+            class: '',
             strokeAnimation: false
         },
 
@@ -5634,7 +5672,9 @@
 
         props: ['icon'],
 
-        data: {include: []},
+        data: {
+            include: ['focusable']
+        },
 
         isIcon: true,
 
@@ -6271,17 +6311,7 @@
                         } else {
 
                             active$1 = prev;
-
-                            if (prev.isToggled()) {
-                                prev.hide().then(this.show);
-                            } else {
-                                once(prev.$el, 'beforeshow hidden', this.show, false, function (ref) {
-                                    var target = ref.target;
-                                    var type = ref.type;
-
-                                    return type === 'hidden' && target === prev.$el;
-                                });
-                            }
+                            prev.hide().then(this.show);
                             e.preventDefault();
 
                         }
@@ -6354,6 +6384,7 @@
                                 break;
                             }
 
+                            // eslint-disable-next-line prefer-destructuring
                             prev = prev.prev;
 
                         }
@@ -6380,10 +6411,6 @@
                 var this$1 = this;
 
 
-                if (this.isToggled()) {
-                    return Promise.resolve();
-                }
-
                 if (this.container && this.$el.parentNode !== this.container) {
                     append(this.container, this.$el);
                     return new Promise(function (resolve) { return requestAnimationFrame(function () { return this$1.show().then(resolve); }
@@ -6395,9 +6422,7 @@
             },
 
             hide: function() {
-                return this.isToggled()
-                    ? this.toggleElement(this.$el, false, animate$1(this))
-                    : Promise.resolve();
+                return this.toggleElement(this.$el, false, animate$1(this));
             },
 
             getActive: function() {
@@ -6449,11 +6474,16 @@
 
                     _toggle(el, show);
 
-                    if (toMs(css(transitionElement, 'transitionDuration'))) {
-                        once(transitionElement, 'transitionend', resolve, false, function (e) { return e.target === transitionElement; });
-                    } else {
+                    var off = once(transitionElement, 'transitionstart', function () {
+                        once(transitionElement, 'transitionend transitioncancel', resolve, false, function (e) { return e.target === transitionElement; });
+                        clearTimeout(timer);
+                    }, false, function (e) { return e.target === transitionElement; });
+
+                    var timer = setTimeout(function () {
+                        off();
                         resolve();
-                    }
+                    }, toMs(css(transitionElement, 'transitionDuration')));
+
                 }); }
             ); };
     }
@@ -6892,7 +6922,8 @@
             clsSidebarAnimation: 'uk-offcanvas-bar-animation',
             clsMode: 'uk-offcanvas',
             clsOverlay: 'uk-offcanvas-overlay',
-            selClose: '.uk-offcanvas-close'
+            selClose: '.uk-offcanvas-close',
+            container: false
         },
 
         computed: {
@@ -7043,6 +7074,7 @@
 
                     css(document.documentElement, 'overflowY', this.overlay ? 'hidden' : '');
                     addClass(document.body, this.clsContainer, this.clsFlip);
+                    css(document.body, 'touch-action', 'pan-y pinch-zoom');
                     css(this.$el, 'display', 'block');
                     addClass(this.$el, this.clsOverlay);
                     addClass(this.panel, this.clsSidebarAnimation, this.mode !== 'reveal' ? this.clsMode : '');
@@ -7051,6 +7083,7 @@
                     addClass(document.body, this.clsContainerAnimation);
 
                     this.clsContainerAnimation && suppressUserScale();
+
 
                 }
             },
@@ -7062,6 +7095,7 @@
 
                 handler: function() {
                     removeClass(document.body, this.clsContainerAnimation);
+                    css(document.body, 'touch-action', '');
 
                     var active = this.getActive();
                     if (this.mode === 'none' || active && active !== this && active !== this.prev) {
@@ -7571,7 +7605,7 @@
         props: {
             top: null,
             bottom: Boolean,
-            offset: Number,
+            offset: String,
             animation: String,
             clsActive: String,
             clsInactive: String,
@@ -7599,6 +7633,12 @@
         },
 
         computed: {
+
+            offset: function(ref) {
+                var offset = ref.offset;
+
+                return toPx(offset);
+            },
 
             selTarget: function(ref, $el) {
                 var selTarget = ref.selTarget;
@@ -7901,9 +7941,9 @@
 
             return propOffset + toFloat(value);
 
-        } else if (isString(value) && value.match(/^-?\d+vh$/)) {
+        } else if (isString(value) && value.match(/^-?\d/)) {
 
-            return height(window) * toFloat(value) / 100;
+            return toPx(value);
 
         } else {
 
@@ -8018,6 +8058,8 @@
             var ref = this.$el;
             var children = ref.children;
             this.show(filter(children, ("." + (this.cls)))[0] || children[this.active] || children[0]);
+
+            this.swiping && css(this.connects, 'touch-action', 'pan-y pinch-zoom');
 
         },
 
@@ -8269,7 +8311,7 @@
 
     }
 
-    UIkit.version = '3.1.5';
+    UIkit.version = '3.1.7';
 
     core(UIkit);
 
@@ -8635,7 +8677,7 @@
             children: {
 
                 get: function() {
-                    return toNodes(this.target.children);
+                    return toNodes(this.target && this.target.children);
                 },
 
                 watch: function(list, old) {
@@ -8858,7 +8900,8 @@
         if ( value === void 0 ) value = 0;
         if ( unit === void 0 ) unit = '%';
 
-        return ("translateX(" + value + (value ? unit : '') + ")"); // currently not translate3d to support IE, translate3d within translate3d does not work while transitioning
+        value += value ? unit : '';
+        return isIE ? ("translateX(" + value + ")") : ("translate3d(" + value + ", 0, 0)"); // currently not translate3d in IE, translate3d within translate3d does not work while transitioning
     }
 
     function scale3d(value) {
@@ -9048,34 +9091,6 @@
                     }
                 }
 
-            },
-
-            {
-
-                name: 'mouseenter',
-
-                filter: function() {
-                    return this.autoplay && this.pauseOnHover;
-                },
-
-                handler: function() {
-                    this.isHovering = true;
-                }
-
-            },
-
-            {
-
-                name: 'mouseleave',
-
-                filter: function() {
-                    return this.autoplay && this.pauseOnHover;
-                },
-
-                handler: function() {
-                    this.isHovering = false;
-                }
-
             }
 
         ],
@@ -9089,8 +9104,8 @@
                 this.stopAutoplay();
 
                 this.interval = setInterval(
-                    function () { return !within(document.activeElement, this$1.$el)
-                        && !this$1.isHovering
+                    function () { return (!this$1.draggable || !$(':focus', this$1.$el))
+                        && (!this$1.pauseOnHover || !matches(this$1.$el, ':hover'))
                         && !this$1.stack.length
                         && this$1.show('next'); },
                     this.autoplayInterval
@@ -9461,6 +9476,7 @@
             finite: false,
             velocity: 1,
             index: 0,
+            prevIndex: -1,
             stack: [],
             percent: 0,
             clsActive: 'uk-active',
@@ -9469,16 +9485,22 @@
             transitionOptions: {}
         }); },
 
+        connected: function() {
+            this.prevIndex = -1;
+            this.index = this.getValidIndex(this.index);
+            this.stack = [];
+        },
+
+        disconnected: function() {
+            removeClass(this.slides, this.clsActive);
+        },
+
         computed: {
 
             duration: function(ref, $el) {
                 var velocity = ref.velocity;
 
                 return speedUp($el.offsetWidth / velocity);
-            },
-
-            length: function() {
-                return this.slides.length;
             },
 
             list: function(ref, $el) {
@@ -9497,8 +9519,20 @@
                 return (selList + " > *");
             },
 
-            slides: function() {
-                return toNodes(this.list.children);
+            slides: {
+
+                get: function() {
+                    return toNodes(this.list.children);
+                },
+
+                watch: function() {
+                    this.$reset();
+                }
+
+            },
+
+            length: function() {
+                return this.slides.length;
             }
 
         },
@@ -9714,10 +9748,6 @@
                 this.$update(target);
             },
 
-            itemshow: function() {
-                isNumber(this.prevIndex) && fastdom.flush(); // iOS 10+ will honor the video.play only if called from a gesture handler
-            },
-
             beforeitemshow: function(ref) {
                 var target = ref.target;
 
@@ -9763,6 +9793,7 @@
             selList: '.uk-lightbox-items',
             attrItem: 'uk-lightbox-item',
             selClose: '.uk-close-large',
+            selCaption: '.uk-lightbox-caption',
             pauseOnHover: false,
             velocity: 2,
             Animations: Animations$1,
@@ -9770,14 +9801,22 @@
         }); },
 
         created: function() {
-            var this$1 = this;
 
+            var $el = $(this.template);
+            var list = $(this.selList, $el);
+            this.items.forEach(function () { return append(list, '<li></li>'); });
 
-            this.$mount(append(this.container, this.template));
+            this.$mount(append(this.container, $el));
 
-            this.caption = $('.uk-lightbox-caption', this.$el);
+        },
 
-            this.items.forEach(function () { return append(this$1.list, '<li></li>'); });
+        computed: {
+
+            caption: function(ref, $el) {
+                var selCaption = ref.selCaption;
+
+                return $('.uk-lightbox-caption', $el);
+            }
 
         },
 
@@ -10370,7 +10409,7 @@
                                 : 0) || 0);
                     }
 
-                    var unit = getUnit(steps, prop);
+                    var unit = getUnit(steps);
 
                     if (isColor) {
 
@@ -10772,10 +10811,11 @@
                     return;
                 }
 
-                var index = this.getValidIndex();
-                delete this.index;
-                removeClass(this.slides, this.clsActive, this.clsActivated);
-                this.show(index);
+                var index = this.getValidIndex(this.index);
+
+                if (!~this.prevIndex || this.index !== index) {
+                    this.show(index);
+                }
 
             },
 
@@ -11081,6 +11121,10 @@
                     var index = data(el, this$1.attrItem);
                     this$1.maxIndex && toggleClass(el, 'uk-hidden', isNumeric(index) && (this$1.sets && !includes(this$1.sets, toFloat(index)) || index > this$1.maxIndex));
                 });
+
+                if (!this.dragging && !this.stack.length) {
+                    this._getTransitioner().translate(1);
+                }
 
             },
 
@@ -11567,25 +11611,21 @@
 
                 css(this.handle ? $$(this.handle, this.$el) : this.$el.children, {touchAction: 'none', userSelect: 'none'});
 
-                if (!this.drag) {
-                    return;
+                if (this.drag) {
+
+                    // clamp to viewport
+                    var ref = offset(window);
+                    var right = ref.right;
+                    var bottom = ref.bottom;
+                    offset(this.drag, {
+                        top: clamp(this.pos.y + this.origin.top, 0, bottom - this.drag.offsetHeight),
+                        left: clamp(this.pos.x + this.origin.left, 0, right - this.drag.offsetWidth)
+                    });
+
+                    trackScroll(this.pos);
+
                 }
 
-                offset(this.drag, {top: this.pos.y + this.origin.top, left: this.pos.x + this.origin.left});
-
-                var ref = offset(this.drag);
-                var top = ref.top;
-                var offsetHeight = ref.height;
-                var bottom = top + offsetHeight;
-                var scroll;
-
-                if (top > 0 && top < this.scrollY) {
-                    scroll = this.scrollY - 5;
-                } else if (bottom < height(document) && bottom > height(window) + this.scrollY) {
-                    scroll = this.scrollY + 5;
-                }
-
-                scroll && setTimeout(function () { return scrollTop(window, scroll); }, 5);
             }
 
         },
@@ -11633,7 +11673,8 @@
                 css(this.drag, assign({
                     boxSizing: 'border-box',
                     width: this.placeholder.offsetWidth,
-                    height: this.placeholder.offsetHeight
+                    height: this.placeholder.offsetHeight,
+                    overflow: 'hidden'
                 }, css(this.placeholder, ['paddingLeft', 'paddingRight', 'paddingTop', 'paddingBottom'])));
                 attr(this.drag, 'uk-no-boot', '');
                 addClass(this.drag, this.clsDrag, this.clsCustom);
@@ -11706,6 +11747,8 @@
 
                     return;
                 }
+
+                untrackScroll();
 
                 var sortable = this.getSortable(this.placeholder);
 
@@ -11797,6 +11840,70 @@
         return element.parentNode === target.parentNode && index(element) > index(target);
     }
 
+    var trackTimer;
+    function trackScroll(ref) {
+        var x = ref.x;
+        var y = ref.y;
+
+
+        clearTimeout(trackTimer);
+
+        scrollParents(document.elementFromPoint(x - window.pageXOffset, y - window.pageYOffset)).some(function (scrollEl) {
+
+            var scroll = scrollEl.scrollTop;
+            var scrollHeight = scrollEl.scrollHeight;
+
+            if (getScrollingElement() === scrollEl) {
+                scrollEl = window;
+                scrollHeight -= window.innerHeight;
+            }
+
+            var ref = offset(scrollEl);
+            var top = ref.top;
+            var bottom = ref.bottom;
+
+            if (top < y && top + 30 > y) {
+                scroll -= 5;
+            } else if (bottom > y && bottom - 20 < y) {
+                scroll += 5;
+            }
+
+            if (scroll > 0 && scroll < scrollHeight) {
+                return trackTimer = setTimeout(function () {
+                    scrollTop(scrollEl, scroll);
+                    trackScroll({x: x, y: y});
+                }, 10);
+            }
+
+        });
+
+    }
+
+    function untrackScroll() {
+        clearTimeout(trackTimer);
+    }
+
+    var overflowRe = /(auto|scroll)/;
+
+    function scrollParents(element) {
+        var scrollEl = getScrollingElement();
+        return parents$1(element, function (parent) { return parent === scrollEl || overflowRe.test(css(parent, 'overflow')); });
+    }
+
+    function parents$1(element, fn) {
+        var parents = [];
+        do {
+            if (fn(element)) {
+                parents.unshift(element);
+            }
+        } while (element && (element = element.parentElement));
+        return parents;
+    }
+
+    function getScrollingElement() {
+        return document.scrollingElement || document.documentElement;
+    }
+
     var obj$1;
 
     var actives = [];
@@ -11862,7 +11969,7 @@
 
             hide: function() {
 
-                if (!this.isActive() || matches(this.$el, 'input') && this.$el === document.activeElement) {
+                if (!this.isActive() || matches(this.$el, 'input:focus')) {
                     return;
                 }
 

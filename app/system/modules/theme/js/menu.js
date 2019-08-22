@@ -1,10 +1,12 @@
-import {
-    $, on, css, addClass, removeClass, hasClass,
-} from 'uikit-util';
+import {$, on, css, addClass, removeClass, hasClass} from 'uikit-util';
 
 export default {
 
     name: 'Menu',
+
+    mixins: [Theme.Mixins.Helper, Theme.Mixins.Components],
+
+    type: 'theme-menu',
 
     data() {
         return _.extend({
@@ -12,7 +14,9 @@ export default {
             item: null,
             subnav: null,
             size: null,
+            // Added
             sb: this.$session.get('admin.sidebar', false),
+            breakpoint: false
         }, window.$pagekit);
     },
 
@@ -30,89 +34,29 @@ export default {
             this.subnav = menu[item.id];
         }
 
-        this.size = this.sbSize(menu);
+        window.addEventListener('resize', this.checkmedia);
 
-        if (this.sb) {
-            css($('.tm-body-wrapper'), 'marginLeft', this.size);
-            addClass($('body'), 'sidebar-expanded');
-        }
+        this.checkmedia();
     },
 
-    mounted() {
-        removeClass($('body'), 'preload');
-    },
+    mounted() {},
 
     methods: {
-
-        toggleSidebar() {
-            this.sb = !this.sb;
-            this.setStyle();
-            this.$session.set('admin.sidebar', this.sb);
+        checkmedia(e) {
+            this.breakpoint = window.matchMedia('(min-width: 1200px)').matches ? true : false;
         },
-
-        getChild(item, check) {
+        isActiveParent(item) {
             const menu = _(this.menu).sortBy('priority').groupBy('parent').value();
-            return check ? !!menu[item] : menu[item];
+            return (typeof menu[item.id] != 'undefined' && item.active) ? true: false;
         },
-
-        style(el) {
-            let style = {};
-
-            if (this.sb && el == 'sidebar') {
-                style = { width: this.size };
-            } else if (this.sb && el != 'sidebar') {
-                style = { 'margin-left': this.size };
-            }
-
-            return style;
+        getChildren(item) {
+            const menu = _(this.menu).sortBy('priority').groupBy('parent').value();
+            return typeof menu[item.id] != 'undefined' ? menu[item.id]: [];
         },
-
-        setStyle() {
-            const body = $('body');
-            const wrapper = $('.tm-body-wrapper');
-
-            if (!hasClass(wrapper, 'transition')) {
-                addClass(wrapper, 'transition');
-            }
-
-            if (this.sb) {
-                addClass(body, 'sidebar-expanded');
-                css(wrapper, 'margin-left', this.size);
-            } else {
-                removeClass(body, 'sidebar-expanded');
-                css(wrapper, 'margin-left', '');
-            }
-        },
-
-        sbSize(menu) {
-            const rightSpace = 35;
-            let maxWidth = 0;
-            let sizes = Object.assign({}, menu.root);
-            const selector = $('#js-appnav>li>a>span');
-            const toggle = $('.tm-toggle-sidebar');
-            const toggleSpan = $('.tm-toggle-sidebar>a>span');
-            const fonts = [css(toggleSpan, 'font'), css(selector, 'font')];
-            const toggleTextSize = this.txtSize(toggleSpan.textContent, fonts[0]);
-
-            sizes = _.map(sizes, item => this.txtSize(this.$trans(item.label), fonts[1]));
-            sizes.push(toggleTextSize);
-            maxWidth = Math.max.apply(null, sizes);
-
-            return `${maxWidth
-                    + parseInt(css(toggle, 'paddingLeft'))
-                    + parseInt(css($('i', toggle), 'width'))
-                    + parseInt(css($('span', toggle), 'marginLeft'))
-                    + rightSpace}px`;
-        },
-
-        txtSize(txt, font) {
-            const element = document.createElement('canvas');
-            const context = element.getContext('2d');
-
-            context.font = font;
-            return context.measureText(txt).width;
-        },
-
+        getActive(menu) {
+            const active = _.filter(menu,(item)=>item.active)[0];
+            return active && active.label;
+        }
     },
 
 };

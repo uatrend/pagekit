@@ -3,7 +3,11 @@
         <template v-if="!modal">
             <div class="uk-flex uk-flex-between uk-flex-wrap">
                 <div class="uk-flex uk-flex-middle uk-flex-wrap">
-                    <div v-if="isWritable">
+                    <h2 class="uk-h3 uk-margin-remove">
+                        <span v-if="!selected.length">{{ '{0} %count% Files|{1} %count% File|]1,Inf[ %count% Files' | transChoice(count, {count:count}) }}</span>
+                        <span v-else>{{ '{1} %count% File selected|]1,Inf[ %count% Files selected' | transChoice(selected.length,{count:selected.length}) }}</span>
+                    </h2>
+                    <div class="uk-margin-left" v-if="isWritable && selected.length">
                         <ul class="uk-iconnav">
                             <li :class="selected.length !== 1 ? 'uk-disabled' : ''">
                                 <a uk-icon="file-edit" :title="'Rename' | trans" uk-tooltip="delay: 500" @click.prevent="rename" />
@@ -59,16 +63,11 @@
 
             <progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden />
 
-            <div class="uk-overflow-auto tm-overflow-container">
+            <div class="uk-overflow-auto tm-overflow-container" uk-height-viewport="offset-top: true; offset-bottom: 120px">
                 <component :is="view" v-show="count" />
-                <h3 v-show="!count" class="uk-h1 uk-text-muted uk-text-center">
+                <h3 v-show="!count" class="uk-h2 uk-text-muted uk-text-center">
                     {{ 'No files found.' | trans }}
                 </h3>
-            </div>
-
-            <div class="uk-panel uk-margin-small-top">
-                <span v-if="!selected.length" class="uk-text-meta">{{ '{0} %count% Files|{1} %count% File|]1,Inf[ %count% Files' | transChoice(count, {count:count}) }}</span>
-                <span v-else class="uk-text-meta">{{ '{1} %count% File selected|]1,Inf[ %count% Files selected' | transChoice(selected.length,{count:selected.length}) }}</span>
             </div>
         </template>
 
@@ -76,7 +75,7 @@
             <div class="uk-modal-header">
                 <div class="uk-flex uk-flex-between uk-flex-wrap">
                     <div class="uk-flex uk-flex-middle uk-flex-wrap">
-                        <div v-if="isWritable">
+                        <div v-if="isWritable && selected.length">
                             <ul class="uk-iconnav">
                                 <li :class="selected.length !== 1 ? 'uk-disabled' : ''">
                                     <a uk-icon="file-edit" :title="'Rename' | trans" uk-tooltip="delay: 500" @click.prevent="rename" />
@@ -86,7 +85,6 @@
                                 </li>
                             </ul>
                         </div>
-
                         <div class="uk-search uk-search-default pk-search">
                             <span uk-search-icon />
                             <input v-model="search" class="uk-search-input" type="search">
@@ -117,14 +115,14 @@
                 <progress v-show="upload.running" id="progressbar" class="uk-progress" value="0" max="100" />
             </div>
 
-            <div class="uk-modal-body uk-padding-remove-vertical">
+            <div class="uk-modal-body">
 
                 <div class="tm-finder-modal-container">
 
                     <div class="uk-overflow-auto" uk-overflow-auto :class="{'uk-flex uk-flex-center uk-flex-middle': !count}">
                         <div class="tm-overflow-container">
                             <component :is="view" v-show="count" />
-                            <h3 v-show="!count" class="uk-h1 uk-text-muted uk-text-center">
+                            <h3 v-show="!count" class="uk-h2 uk-text-muted uk-text-center">
                                 {{ 'No files found.' | trans }}
                             </h3>
                         </div>
@@ -143,6 +141,8 @@ module.exports = {
 
     name: 'panel-finder',
 
+    mixins: [Theme.Mixins.Helper],
+
     props: {
         root: { type: String, default: '/' },
         mode: { type: String, default: 'write' },
@@ -158,6 +158,121 @@ module.exports = {
             path: '',
             view: '',
         };
+    },
+
+    theme: {
+        hiddenHtmlElements: ['.storage > div:not(.uk-modal-header):first-child'],
+        elements() {
+            var vm = this;
+            return {
+                'addfolder': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Add Folder',
+                    class: 'uk-button uk-button-primary',
+                    on: {click: () => vm.createFolder()},
+                    priority: 0,
+                    vif: () => !vm.modal
+                },
+                'upload': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Upload',
+                    class: 'uk-button uk-button-primary',
+                    on: {
+                        click: () => {
+                            return UIkit.util.$('input', UIkit.util.$('.files-upload')).click();
+                        },
+                    },
+                    priority: 0,
+                    vif: () => !vm.modal
+                },
+                'actions': {
+                    scope: 'topmenu-left',
+                    type: 'dropdown',
+                    caption: 'Actions',
+                    class: 'uk-button uk-button-text',
+                    icon: {
+                        attrs:{ 'uk-icon': 'triangle-down' },
+                    },
+                    dropdown: { options: () => 'mode:click' },
+                    actionIcons: true,
+                    items:() => {
+                        return {
+                            rename: {
+                                on: { click: (e) => vm.rename(e) },
+                            },
+                            remove: {
+                                on: { click: (e) => vm.remove(e) },
+                                directives: [
+                                    {
+                                        name: 'confirm',
+                                        value: 'Delete Posts?'
+                                    }
+                                ]
+                            },
+                        }
+                    },
+                    priority: 2,
+                    disabled: () => !vm.selected.length,
+                    vif: () => !vm.modal
+                },
+                'selected': {
+                    scope: 'topmenu-right',
+                    type: 'caption',
+                    caption: () => {
+                        if (!vm.selected.length)
+                            return vm.$transChoice('{0} %count% Files|{1} %count% File|]1,Inf[ %count% Files', vm.count, {count: vm.count});
+                        return vm.$transChoice('{1} %count% File selected|]1,Inf[ %count% Files selected', vm.selected.length, {count:vm.selected.length})
+                    },
+                    class: 'uk-text-small',
+                    priority: 0
+                },
+                'views': {
+                    scope: 'topmenu-right',
+                    type: 'dropdown',
+                    caption: 'View',
+                    class: 'uk-button uk-button-text',
+                    icon: {
+                        attrs:{ 'uk-icon': 'triangle-down' },
+                    },
+                    dropdown: { options: () => 'mode:click' },
+                    actionIcons: true,
+                    items:() => {
+                        return {
+                            table: {
+                                on: { click: () => {
+                                        vm.view = 'template-table'
+                                    }
+                                },
+                            },
+                            thumbnails: {
+                                on: { click: () => {
+                                        vm.view = 'template-thumbnail'
+                                    }
+                                }
+                            },
+                        }
+                    },
+                    priority: 1,
+                    vif: () => !vm.modal
+                },
+                search: {
+                    scope: 'navbar-right',
+                    type: 'search',
+                    class: 'uk-text-small',
+                    domProps: {
+                        value: () => vm.search || ''
+                    },
+                    on: {
+                        input: function(e) {
+                            !vm.search && vm.$set(vm, 'search', '');
+                            vm.search = e.target.value
+                        }
+                    }
+                },
+            }
+        }
     },
 
     created() {
@@ -422,8 +537,12 @@ module.exports = {
     },
 
     components: {
-        'template-table': { mixins: [Vue2Filters.mixin], template: require('../templates/table.html') },
-        'template-thumbnail': { mixins: [Vue2Filters.mixin], template: require('../templates/thumbnail.html') },
+        'template-table': {
+        	template: require('../templates/table.html')
+        },
+        'template-thumbnail': {
+        	template: require('../templates/thumbnail.html')
+        },
     },
 
 };

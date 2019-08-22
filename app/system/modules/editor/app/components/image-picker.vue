@@ -9,7 +9,7 @@
 
                 <div class="uk-modal-body">
                     <div class="uk-margin">
-                        <input-image :source.sync="image.data.src" @image:selected="selected" v-model="image.data.src" input-class="uk-width-1-1"></input-image>
+                        <input-image @image:selected="selected" v-model="image.data.src" input-class="uk-width-1-1"></input-image>
                     </div>
 
                     <div class="uk-margin">
@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-secondary uk-modal-close" type="button">{{ 'Cancel' | trans }}</button>
+                    <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">{{ 'Cancel' | trans }}</button>
                     <button class="uk-button uk-button-primary" type="submit">{{ 'Update' | trans }}</button>
                 </div>
 

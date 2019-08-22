@@ -2,7 +2,7 @@
     <div>
         <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
             <div>
-                <h2 class="uk-margin-remove">
+                <h2 class="uk-h3 uk-margin-remove">
                     {{ 'General' | trans }}
                 </h2>
             </div>
@@ -34,7 +34,7 @@
             <div class="uk-margin">
                 <label for="form-logo" class="uk-form-label">{{ 'Logo' | trans }}</label>
                 <div class="uk-form-controls">
-                    <input-image v-model="config.view.logo" :source.sync="config.view.logo" input-class="uk-form-width-large" />
+                    <input-image v-model="config.view.logo" input-class="uk-form-width-large" />
                 </div>
             </div>
 

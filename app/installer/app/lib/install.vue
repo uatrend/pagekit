@@ -21,7 +21,7 @@
         </div>
 
         <div v-show="status != 'loading'" class="uk-modal-footer uk-text-right">
-            <a class="uk-button uk-button-secondary" @click.prevent="close">{{ 'Close' | trans }}</a>
+            <a class="uk-button uk-button-text uk-margin-right" @click.prevent="close">{{ 'Close' | trans }}</a>
             <a v-show="status == 'success'" class="uk-button uk-button-primary" @click.prevent="enable">{{ 'Enable' | trans }}</a>
         </div>
     </v-modal>

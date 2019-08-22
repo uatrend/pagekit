@@ -4,21 +4,53 @@ window.Site = {
 
     el: '#settings',
 
-    mixins: [Vue2Filters.mixin],
+    mixins: [Theme.Mixins.Helper, Theme.Mixins.Elements],
+
+    theme: {
+        hiddenHtmlElements: ['.pk-width-content li > div > div.uk-flex'],
+        elements() {
+            var vm = this;
+            return {
+                'title': {
+                    scope: 'breadcrumbs',
+                    type: 'caption',
+                    caption: () => {
+                        let trans = vm.$options.filters.trans,
+                            activeTab = vm.$theme.activeTab('leftTab', vm),
+                            section = vm.sections.filter((section)=>section.name === activeTab)[0];
+
+                        return vm.$trans(section.label);
+                    }
+                },
+                'submit': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Save',
+                    class: 'uk-button uk-button-primary',
+                    on: {click: () => vm.submit()},
+                    priority: 0,
+                }
+            }
+        },
+    },
 
     data() {
         return _.merge({ form: {} }, window.$data);
     },
 
+    created() {
+        this.$theme.$tabs('leftTab', '#settings .uk-nav', { connect: '.settings-tab', state: true });
+    },
+
     mounted() {
-        UIkit.switcher(this.$refs.tab, { connect: '.settings-tab' });
+        // UIkit.switcher(this.$refs.tab, { connect: '.settings-tab' });
     },
 
     computed: {
 
         sections() {
-            const sections = []; const
-                hash = window.location.hash.replace('#', '');
+            const sections = [];
+            const hash = window.location.hash.replace('#', '');
 
             _.forIn(this.$options.components, (component, name) => {
                 const { section } = component;

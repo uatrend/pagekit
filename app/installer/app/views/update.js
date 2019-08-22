@@ -123,17 +123,17 @@ module.exports = {
             renderer.listitem = function (text) {
                 switch (section) {
                 case 'Added':
-                    return `<li><span class="uk-badge pk-badge-justify uk-badge-success uk-margin-right">${section}</span> ${text}</li>`;
+                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-success uk-margin-right">${section}</span> <span>${text}</span></li>`;
                 case 'Deprecated':
-                    return `<li><span class="uk-badge pk-badge-justify uk-badge-warning uk-margin-right">${section}</span> ${text}</li>`;
+                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-warning uk-margin-right">${section}</span> <span>${text}</span></li>`;
                 case 'Removed':
-                    return `<li><span class="uk-badge pk-badge-justify uk-badge-warning uk-margin-right">${section}</span> ${text}</li>`;
+                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-warning uk-margin-right">${section}</span> <span>${text}</span></li>`;
                 case 'Fixed':
-                    return `<li><span class="uk-badge pk-badge-justify uk-badge-danger uk-margin-right">${section}</span> ${text}</li>`;
+                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-danger uk-margin-right">${section}</span> <span>${text}</span></li>`;
                 case 'Security':
-                    return `<li><span class="uk-badge pk-badge-justify uk-badge-danger uk-margin-right">${section}</span> ${text}</li>`;
+                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-danger uk-margin-right">${section}</span> <span>${text}</span></li>`;
                 default:
-                    return `<li><span class="uk-badge pk-badge-justify uk-margin-right">${section}</span> ${text}</li>`;
+                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-margin-right">${section}</span> ${text}</li>`;
                 }
             };
 

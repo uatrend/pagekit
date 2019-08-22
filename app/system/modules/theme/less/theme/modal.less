@@ -23,7 +23,6 @@
 @modal-close-full-padding:                     @global-margin;
 @modal-close-full-background:                  @modal-dialog-background;
 
-
 // Component
 // ========================================================================
 
@@ -45,11 +44,19 @@
 // Sections
 // ========================================================================
 
-.hook-modal-header() { border-bottom: @modal-header-border-width solid @modal-header-border; }
+.hook-modal-header() {
+    padding: 15px 20px 0 20px;
+    // border-bottom: @modal-header-border-width solid @modal-header-border;
+}
 
-.hook-modal-body() {}
+.hook-modal-body() {
+    padding: 15px 20px;
+}
 
-.hook-modal-footer() { border-top: @modal-footer-border-width solid @modal-footer-border; }
+.hook-modal-footer() {
+    padding: 0px 20px 15px 20px;
+    // border-top: @modal-footer-border-width solid @modal-footer-border;
+}
 
 
 // Title

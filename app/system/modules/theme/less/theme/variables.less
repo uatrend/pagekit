@@ -42,16 +42,27 @@
 @global-medium-font-size:                       1.25rem;  // 20px
 @global-small-font-size:                        0.875rem; // 14px
 
+@base-heading-font-weight:                      300;
+@base-h1-font-size-m:                           @global-xxlarge-font-size * 0.85;
+@base-h2-font-size-m:                           @global-xlarge-font-size * 0.85;
+@base-h1-font-size:                             @base-h1-font-size-m;
+@base-h2-font-size:                             @base-h2-font-size-m;
+
+@card-title-font-size:                          @global-large-font-size * 0.9;
+// @logo-font-size:                                @global-large-font-size;
+
+@form-label-font-size:    2.2rem;
+
 //
 // Colors
 //
 
 @global-color:                                  #666;
-@global-emphasis-color:                         #333;
-@global-muted-color:                            #999;
+@global-emphasis-color:                         #666;
+@global-muted-color:                            #9F9F9F;
 
-@global-link-color:                             #1e87f0;
-@global-link-hover-color:                       #0f6ecd;
+@global-link-color:                             @theme-link-color;//#1e87f0;
+@global-link-hover-color:                       darken(@global-link-color, 20%);//#0f6ecd;
 
 @global-inverse-color:                          #fff;
 
@@ -65,7 +76,7 @@
 @global-primary-background:                     #1e87f0;
 @global-secondary-background:                   #222;
 
-@global-success-background:                     #32d296;
+@global-success-background:                     @theme-success-background;//rgba(141, 203, 96, 1.000);//#32d296;
 @global-warning-background:                     #faa05a;
 @global-danger-background:                      #f0506e;
 
@@ -81,7 +92,7 @@
 //
 
 @global-small-box-shadow:                       0 2px 8px rgba(0,0,0,0.08);
-@global-medium-box-shadow:                      0 5px 15px rgba(0,0,0,0.08);
+@global-medium-box-shadow:                      0 2px 7px rgba(0,0,0,0.12);
 @global-large-box-shadow:                       0 14px 25px rgba(0,0,0,0.16);
 @global-xlarge-box-shadow:                      0 28px 50px rgba(0,0,0,0.16);
 
@@ -134,12 +145,17 @@
 @button-secondary-active-background:            darken(@button-secondary-background, 10%);
 @button-secondary-active-color:                 #414B5D;
 
+@button-primary-background:                     rgba(0, 173, 239, 1.000);//rgba(2, 174, 239, 1.000);//rgba(0, 158, 239, 1.000);//rgba(1, 162, 238, 1.000);
+@button-success-background:                     #3dc372; //rgba(141, 203, 96, 1.000);//rgba(139, 192, 97, 1.000);
+
+@theme-success-background:                      @button-success-background;
+
 //
 // Link
 //
 
-@global-link-color:                             #747E90;
-@global-link-hover-color:                       #414B5D;
+// @global-link-color:                             #747E90;
+// @global-link-hover-color:                       #414B5D;
 
 //
 // Form
@@ -150,3 +166,5 @@
 @form-large-font-size:                          1rem;
 // @form-radio-focus-border:                       #677183;
 // @form-radio-checked-border:                     #677183;
+
+@navbar-nav-item-height: 40px;

@@ -619,7 +619,7 @@ function relativeDate (date, options) {
     date = date instanceof Date ? date : new Date(date);
 
     if (options && options.max && Math.abs((date - new Date()) / 1000) > options["max"]) {
-        return formatDate(date);
+        return formatDate.call(this, date);
     }
 
     return format((date - new Date()) / 1000, options, this.$locale.TIMESPAN_FORMATS, this.$locale.TIMESPAN_FORMATS.localeID || this.$locale.id);

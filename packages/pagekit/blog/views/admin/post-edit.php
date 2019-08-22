@@ -12,7 +12,7 @@
         </div>
         <div class="uk-margin">
 
-            <a v-if="!processing" class="uk-button uk-button-secondary uk-margin-small-right" :href="$url.route('admin/blog/post')">{{ post.id ? 'Close' : 'Cancel' | trans }}</a>
+            <a v-if="!processing" class="uk-button uk-button-text uk-margin-right" :href="$url.route('admin/blog/post')">{{ post.id ? 'Close' : 'Cancel' | trans }}</a>
             <button class="uk-button uk-button-primary" type="submit" :disabled="processing">
                 <span v-if="processing" uk-spinner ratio=".8" class="uk-margin-small-right"></span>
                 <span class="uk-text-middle">{{ 'Save' | trans }}</span>

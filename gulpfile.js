@@ -90,7 +90,8 @@ gulp.task('lint', function () {
         '!**/bundle/*',
         '!**/vendor/**/*',
         '!**/assets/**/*',
-        '!node_modules/**'
+        '!node_modules/**',
+        '!.git/**'
     ])
         .pipe(eslint())
         .pipe(eslint.format())

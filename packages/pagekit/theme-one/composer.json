@@ -1,7 +1,7 @@
 {
     "name": "pagekit/theme-one",
     "type": "pagekit-theme",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "title": "One",
     "description": "Pagekit's default theme.",
     "license": "MIT",

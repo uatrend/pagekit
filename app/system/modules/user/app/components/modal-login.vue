@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-modal ref="login" smallwidth center>
+        <v-modal ref="login" modal-small center>
             <div class="uk-text-center">
                 <form ref="loginEle" class="tm-form" @submit.prevent="login">
                     <div class="uk-card uk-card-default uk-panel" style="padding: 20px;">
@@ -47,7 +47,7 @@
                         </button>
 
                         <p class="uk-margin-remove-bottom">
-                            <label class=""><input v-model="remember" class="uk-checkbox" type="checkbox"> {{ 'Remember Me' | trans }}</label>
+                            <label class=""><input v-model="remember" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'Remember Me' | trans }}</span></label>
                         </p>
                     </div>
                 </form>

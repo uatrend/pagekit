@@ -77,7 +77,7 @@ module.exports = {
     watch: {
         status() {
             if (this.status !== 'loading') {
-                this.$refs.output.modal.$options.props.bgclose = true;
+                this.$refs.output.modal.$options.props.bgClose = true;
                 this.$refs.output.modal.$options.props.keyboard = true;
             }
         },

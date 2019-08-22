@@ -7,7 +7,7 @@
 // Variables
 // ========================================================================
 
-@navbar-nav-item-font-size:                     @global-small-font-size;
+@navbar-nav-item-font-size:                     @global-font-size;//@global-small-font-size;
 
 @navbar-dropdown-margin:                        15px;
 @navbar-dropdown-padding:                       25px;
@@ -39,16 +39,20 @@
 // Container
 // ========================================================================
 
-.hook-navbar-container() {}
+.hook-navbar-container() {
+    padding-top: 15px;
+    padding-bottom: 15px;
+}
 
 
 // Nav
 // ========================================================================
 
 .hook-navbar-nav-item() {
-    text-transform: @navbar-nav-item-text-transform;
+    // text-transform: @navbar-nav-item-text-transform;
     transition: 0.1s ease-in-out;
     transition-property: color, background-color;
+    // font-weight: 300;
 }
 
 .hook-navbar-nav-item-hover() {}

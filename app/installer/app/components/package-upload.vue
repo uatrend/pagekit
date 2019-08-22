@@ -2,7 +2,7 @@
     <div>
         <div ref="input" class="package-upload">
             <div uk-form-custom>
-                <input type="file" name="file">
+                <input type="file" name="file" />
                 <button class="uk-button uk-button-primary" type="button" tabindex="-1">
                     <span v-if="!progress">{{ 'Upload' | trans }}</span>
                     <span v-else><i uk-spinner /> {{ progress }}</span>
@@ -14,7 +14,7 @@
             <package-details :api="api" :package="package" />
 
             <div class="uk-modal-footer uk-text-right">
-                <button class="uk-button uk-button-default uk-modal-close" type="button">
+                <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
                     {{ 'Cancel' | trans }}
                 </button>
                 <button class="uk-button uk-button-primary" @click.prevent="doInstall">
@@ -27,13 +27,12 @@
 
 <script>
 
-// import Package from '../lib/package';
-
 module.exports = {
 
     mixins: [
         // Package
         require('../lib/package'),
+        Theme.Mixins.Helper
     ],
 
     props: {
@@ -48,6 +47,34 @@ module.exports = {
             upload: null,
             progress: '',
         };
+    },
+
+    theme: {
+        elements() {
+            var vm = this;
+            return {
+                'upload': {
+                    scope: 'topmenu',
+                    type: 'button',
+                    caption: () => !vm.progress ? 'Upload' : vm.progress,
+                    class: 'uk-button uk-button-primary',
+                    icon: {
+                        attrs: {
+                            'uk-spinner': '',
+                            ratio: '.6'
+                        },
+                        class: 'uk-margin-small-right',
+                        vif: () => vm.progress
+                    },
+                    on: {
+                        click: () => {
+                            return UIkit.util.$('input', vm.$refs.input).click();
+                        },
+                    },
+                    priority: 0,
+                }
+            }
+        }
     },
 
     mounted() {

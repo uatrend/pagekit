@@ -38,7 +38,7 @@
                         </div>
                     </div>
                     <div>
-                        <button class="uk-button uk-button-secondary uk-modal-close" type="button">
+                        <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
                             {{ 'Cancel' | trans }}
                         </button>
                         <button class="uk-button uk-button-primary" type="button" :disabled="!choice" @click.prevent="select">

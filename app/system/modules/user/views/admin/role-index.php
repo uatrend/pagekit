@@ -18,7 +18,7 @@
                 </ul>
 
                 <p>
-                    <a class="uk-button uk-button-secondary" @click.prevent="edit()">{{ 'Add Role' | trans }}</a>
+                    <a class="uk-button uk-button-default" @click.prevent="edit()">{{ 'Add Role' | trans }}</a>
                 </p>
 
             </div>
@@ -26,7 +26,7 @@
         </div>
         <div class="pk-width-content">
 
-            <h2>{{ current.name }}</h2>
+            <h2 class="uk-h3">{{ current.name }}</h2>
 
             <div class="uk-overflow-auto uk-margin-large" v-for="(group, key_group) in permissions" :key="key_group">
                 <table class="uk-table uk-table-hover uk-table-middle">
@@ -83,7 +83,7 @@
             </div>
 
             <div class="uk-modal-footer uk-text-right">
-                <button class="uk-button uk-button-secondary uk-modal-close" type="button" autofocus>{{ 'Cancel' | trans }}</button>
+                <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button" autofocus>{{ 'Cancel' | trans }}</button>
                 <button class="uk-button uk-button-primary" type="submit">{{ 'Save' | trans }}</button>
             </div>
 

@@ -2,7 +2,7 @@
     <div>
         <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
             <div>
-                <h2 class="uk-margin-remove">
+                <h2 class="uk-h3 uk-margin-remove">
                     {{ 'Theme' | trans }}
                 </h2>
             </div>
@@ -17,7 +17,7 @@
             <div class="uk-margin">
                 <label class="uk-form-label">{{ 'Logo Contrast' | trans }}</label>
                 <div class="uk-form-controls">
-                    <input-image v-model="config.logo_contrast" :source.sync="config.logo_contrast" input-class="uk-form-width-large" />
+                    <input-image v-model="config.logo_contrast" input-class="uk-form-width-large" />
                     <div class="uk-text-meta">
                         {{ 'Select an alternative logo which looks great on images.' | trans }}
                     </div>
@@ -27,7 +27,7 @@
             <div class="uk-margin">
                 <label class="uk-form-label">{{ 'Logo Off-canvas' | trans }}</label>
                 <div class="uk-form-controls">
-                    <input-image v-model="config.logo_offcanvas" :source.sync="config.logo_offcanvas" input-class="uk-form-width-large" />
+                    <input-image v-model="config.logo_offcanvas" input-class="uk-form-width-large" />
                     <div class="uk-text-meta">
                         {{ 'Select an optional logo for the off-canvas menu.' | trans }}
                     </div>
@@ -53,7 +53,7 @@ module.exports = {
 
     events: {
 
-        save() {
+        'save:settings': function() {
             this.$http.post('admin/system/settings/config', { name: this.name, config: this.config }).catch(function (res) {
                 this.$notify(res.data, 'danger');
             });

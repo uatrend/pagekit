@@ -8,12 +8,29 @@ module.exports = {
 
     mixins: [
         require('../../lib/permissions'),
-        Vue2Filters.mixin,
+        Theme.Mixins.Helper
     ],
 
     data: {
         role: {},
         config: window.$config,
+    },
+
+    theme: {
+        hiddenHtmlElements: ['#roles .pk-width-sidebar .uk-button.uk-button-default'],
+        elements() {
+            var vm = this;
+            return {
+                'addmenu': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Add Role',
+                    class: 'uk-button uk-button-primary',
+                    on: {click: () => vm.edit()},
+                    priority: 0,
+                },
+            }
+        }
     },
 
     mounted() {

@@ -2,23 +2,27 @@
     <div class="pk-grid-large pk-width-sidebar-large" uk-grid>
         <div class="pk-width-content uk-form-stacked">
             <div class="uk-margin">
-                <input
-                    v-model="widget.title"
-                    v-validate="'required'"
-                    class="uk-width-1-1 uk-form-large uk-input"
-                    type="text"
-                    name="title"
-                    :placeholder="'Enter Title' | trans"
-                >
-                <div v-show="errors.first('title')" class="uk-text-meta uk-text-danger">
-                    {{ 'Title cannot be blank.' | trans }}
+                <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
+                <div class="uk-form-controls">
+                    <input
+                        v-model="widget.title"
+                        v-validate="'required'"
+                        class="uk-width-1-1 uk-form-large uk-input"
+                        type="text"
+                        name="title"
+                        :placeholder="'Enter Title' | trans"
+                    >
+                    <div v-show="errors.first('title')" class="uk-text-meta uk-text-danger">
+                        {{ 'Title cannot be blank.' | trans }}
+                    </div>
                 </div>
             </div>
 
             <div class="uk-margin">
-                <v-editor v-model="widget.data.content" :value.sync="widget.data.content" :options="{markdown : widget.data.markdown}" mode="combine" />
+                <label for="form-title" class="uk-form-label">{{ 'Content' | trans }}</label>
+                <v-editor v-model="widget.data.content" :options="{markdown : widget.data.markdown}" />
                 <p class="uk-margin-small-top">
-                    <label><input v-model="widget.data.markdown" class="uk-checkbox" type="checkbox"> {{ 'Enable Markdown' | trans }}</label>
+                    <label><input v-model="widget.data.markdown" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'Enable Markdown' | trans }}</span></label>
                 </p>
             </div>
         </div>

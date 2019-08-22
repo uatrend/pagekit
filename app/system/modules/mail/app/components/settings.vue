@@ -96,20 +96,12 @@
 
         <div class="uk-margin">
             <div class="uk-form-controls">
-                <div class="wp-form-width-max-large">
-                    <div class="uk-flex uk-grid-small uk-child-width-1-2" uk-grid>
-                        <div>
-                            <button v-show="'smtp' == options.driver" class="uk-button uk-button-default uk-text-truncate" type="button" @click="test('smtp')">
-                                {{ 'Check Connection' | trans }}
-                            </button>
-                        </div>
-                        <div>
-                            <button class="uk-button uk-button-default uk-text-truncate" type="button" @click="test('email')">
-                                {{ 'Send Test Email' | trans }}
-                            </button>
-                        </div>
-                    </div>
-                </div>
+                <button v-show="'smtp' == options.driver" class="uk-button uk-button-default uk-text-truncate" type="button" @click="test('smtp')">
+                    {{ 'Check Connection' | trans }}
+                </button>
+                <button class="uk-button uk-button-default uk-text-truncate" type="button" @click="test('email')">
+                    {{ 'Send Test Email' | trans }}
+                </button>
             </div>
         </div>
     </div>
@@ -118,6 +110,8 @@
 <script>
 
 module.exports = {
+
+    mixins: [Theme.Mixins.Helper],
 
     section: {
         label: 'Mail',
@@ -130,17 +124,60 @@ module.exports = {
     data() {
         return _.extend({
             hidePassword: true,
+            processing: {
+                smtp: false,
+                email: false
+            }
         }, window.$mail);
+    },
+
+    theme: {
+        hiddenHtmlElements() {
+            return this.$el.querySelectorAll('.uk-button-default');
+        },
+        elements() {
+            var vm = this;
+            return {
+                'testsmtp': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Check Connection',
+                    class: 'uk-button tm-button-success',
+                    spinner: () => vm.processing.smtp,
+                    on: {click: () => vm.test('smtp')},
+                    vif: () => vm.$theme.activeTab('leftTab', true),
+                    watch: () => vm.$theme.activeTab('leftTab'),
+                    priority: 0,
+                },
+                'testmail': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Send Test Email',
+                    class: 'uk-button tm-button-success',
+                    spinner: () => vm.processing.email,
+                    on: {click: () => vm.test('email')},
+                    vif: () => vm.$theme.activeTab('leftTab', true),
+                    watch: () => vm.$theme.activeTab('leftTab'),
+                    priority: 1,
+                }
+            }
+        },
     },
 
     methods: {
 
         test(driver) {
+            this.processing[driver] = true;
+            if (driver === 'email') this.processing.email = true;
             this.$http.post(`admin/system/${driver}`, { option: this.options }).then(function (res) {
                 const { data } = res;
                 this.$notify(data.message, data.success ? '' : 'danger');
             }, function () {
                 this.$notify('Ajax request to server failed.', 'danger');
+            }).then(function() {
+                setTimeout(() => {
+                  this.processing[driver] = false
+                }, 200)
             });
         },
 

@@ -1,69 +1,54 @@
 <template>
     <div>
         <div :class="['pk-form-link', cls ? cls : '']">
-            <input
-                v-if="isRequired"
-                :id="id"
-                v-validate="'required'"
-                class="uk-width-1-1 uk-input"
-                type="text"
-                :value="link"
-                :name="name"
-                @change="update"
-            >
-            <input
-                v-else
-                :id="id"
-                class="uk-width-1-1 uk-input"
-                type="text"
-                :value="link"
-                :name="name"
-                @change="update"
-            >
+            <input v-if="isRequired" :id="id" v-validate="'required'" class="uk-width-1-1 uk-input" type="text" v-model.lazy="link" :name="name">
+            <input v-else :id="id" class="uk-width-1-1 uk-input" type="text" v-model.lazy="link" :name="name">
             <a class="pk-form-link-toggle pk-link-icon uk-flex-middle" @click.prevent="open">{{ 'Select' | trans }} <i class="pk-icon-link pk-icon-hover uk-margin-small-left" /></a>
         </div>
 
-        <p v-show="url" class="uk-text-muted uk-margin-small-top uk-margin-remove-bottom">
+        <div v-show="url" class="uk-text-muted uk-text-small">
             {{ url }}
-        </p>
+        </div>
 
-        <v-modal ref="modal">
-            <form class="uk-margin" @submit.prevent="update">
-                <div class="uk-modal-header">
-                    <h2>{{ 'Select Link' | trans }}</h2>
-                </div>
+        <div uk-modal ref="modal">
+            <div class="uk-modal-dialog">
+                <form class="uk-margin" @submit.prevent="update">
+                    <div class="uk-modal-header">
+                        <h2>{{ 'Select Link' | trans }}</h2>
+                    </div>
 
-                <div class="uk-modal-body">
-                    <panel-link ref="links" v-model="c_link" />
-                </div>
+                    <div class="uk-modal-body">
+                        <panel-link ref="links"></panel-link>
+                    </div>
 
-                <div class="uk-modal-footer uk-text-right">
-                    <button class="uk-button uk-button-secondary uk-modal-close" type="button">
-                        {{ 'Cancel' | trans }}
-                    </button>
-                    <button class="uk-button uk-button-primary" type="submit" :disabled="!c_link">
-                        {{ 'Update' | trans }}
-                    </button>
-                </div>
-            </form>
-        </v-modal>
+                    <div class="uk-modal-footer uk-text-right">
+                        <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
+                            {{ 'Cancel' | trans }}
+                        </button>
+                        <button class="uk-button uk-button-primary" type="submit" :disabled="!showUpdate()" autofocus="">
+                            {{ 'Update' | trans }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </template>
 
 <script>
-const { isInput } = UIkit.util;
+const { on } = UIkit.util;
 
 module.exports = {
 
     name: 'input-link',
 
-    props: ['link', 'name', 'cls', 'id', 'required'],
+    props: ['value', 'name', 'cls', 'id', 'required'],
 
     inject: ['$validator'],
 
     data() {
         return {
-            c_link: this.link,
+            link: this.value,
             url: false,
         };
     },
@@ -73,7 +58,7 @@ module.exports = {
         link: {
             handler: 'load',
             immediate: true,
-        },
+        }
 
     },
 
@@ -81,7 +66,12 @@ module.exports = {
 
         isRequired() {
             return this.required !== undefined;
-        },
+        }
+
+    },
+
+    mounted() {
+        this.modal = UIkit.modal(this.$refs.modal, {escClose: true, bgClose: false, stack: true});
 
     },
 
@@ -89,6 +79,7 @@ module.exports = {
 
         load() {
             if (this.link) {
+                this.$emit('input', this.link);
                 this.$http.get('api/site/link', { params: { link: this.link } }).then(function (res) {
                     this.url = res.data.url || false;
                 }, function () {
@@ -100,13 +91,27 @@ module.exports = {
         },
 
         open() {
-            this.$refs.modal.open();
+            var vm = this;
+            // this.modal = UIkit.modal(this.$refs.modal, {escClose: true, bgClose: false, stack: true});
+            this.modal.show();
+            // on(this.modal.$el, 'hidden', function(ref){
+            //     var target = ref.target;
+            //     var currentTarget = ref.currentTarget;
+
+            //     if (target === currentTarget) {
+            //         // vm.modal.$destroy(true);
+            //     }
+            // })
         },
 
-        update(e) {
-            this.$emit('input', isInput(e.target) ? e.target.value : this.c_link);
-            this.$refs.modal.close();
+        update() {
+            this.$set(this, 'link', this.$refs.links.link);
+            this.modal.hide();
         },
+
+        showUpdate: function () {
+            return this.$refs.links && !!this.$refs.links.link;
+        }
 
     },
 

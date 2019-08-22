@@ -1,16 +1,17 @@
 import UIkit from 'uikit';
-import {
-    $, on, css, toNodes, isString, assign, html, remove,
-} from 'uikit-util';
+import {$, on, css, toNodes, isString, assign, html, remove} from 'uikit-util';
 import Autocomplete from './components/autocomplete';
 import Pagination from './components/pagination';
-import MenuObject from './menu';
+import HTMLEditor from './components/htmleditor';
+import Menu from './menu';
+import Sidebar from './sidebar';
 
 Vue.ready(() => {
-    const Menu = Vue.extend(MenuObject);
 
-    // mount menu
-    new Menu().$mount('#sidebar');
+    var TopMenu = { object: Menu, target: '.tm-navbar-container' },
+        SideMenu = { object: Sidebar, target: '.tm-sidebar-left' };
+
+    Theme.$mount([TopMenu, SideMenu]);
 
     // main menu order
     on('#js-appnav', 'stop', function (e) {
@@ -51,7 +52,7 @@ Vue.ready(() => {
         options = assign({ bgClose: false, escClose: true, labels: UIkit.modal.labels }, options);
 
         return new Promise(((resolve, reject) => {
-            const confirm = UIkit.modal.dialog((` <form>${options.title ? `<div class="uk-modal-header"><h2>${options.title}</h2></div>` : ''} <div class="uk-modal-body">${isString(message) ? message : html(message)}</div> <div class="uk-modal-footer uk-text-right"> <button class="uk-button uk-button-secondary uk-modal-close" type="button">${options.labels.cancel}</button> <button class="uk-button uk-button-primary" autofocus>${options.labels.ok}</button> </div> </form> `), options);
+            const confirm = UIkit.modal.dialog((` <form>${options.title ? `<div class="uk-modal-header"><h2>${options.title}</h2></div>` : ''} <div class="uk-modal-body">${isString(message) ? message : html(message)}</div> <div class="uk-modal-footer uk-text-right"> <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">${options.labels.cancel}</button> <button class="uk-button uk-button-primary" autofocus>${options.labels.ok}</button> </div> </form> `), options);
 
             let resolved = false;
 
@@ -73,7 +74,7 @@ Vue.ready(() => {
         options = assign({ bgClose: false, escClose: true, labels: UIkit.modal.labels }, options);
 
         return new Promise(((resolve) => {
-            const prompt = UIkit.modal.dialog((` <form class="uk-form-stacked">${options.title ? `<div class="uk-modal-header"><h2>${options.title}</h2></div>` : ''} <div class="uk-modal-body"> <label>${isString(message) ? message : html(message)}</label> <input class="uk-input" autofocus> </div> <div class="uk-modal-footer uk-text-right"> <button class="uk-button uk-button-secondary uk-modal-close" type="button">${options.labels.cancel}</button> <button class="uk-button uk-button-primary">${options.labels.ok}</button> </div> </form> `), options);
+            const prompt = UIkit.modal.dialog((` <form class="uk-form-stacked">${options.title ? `<div class="uk-modal-header"><h2>${options.title}</h2></div>` : ''} <div class="uk-modal-body"> <label class="uk-form-label">${isString(message) ? message : html(message)}</label> <input class="uk-input" autofocus> </div> <div class="uk-modal-footer uk-text-right"> <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">${options.labels.cancel}</button> <button class="uk-button uk-button-primary">${options.labels.ok}</button> </div> </form> `), options);
             const input = $('input', prompt.$el);
 
             input.value = value;

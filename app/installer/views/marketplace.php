@@ -5,13 +5,7 @@
     <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap">
         <div class="uk-flex uk-flex-middle uk-flex-wrap">
 
-            <h2 class="uk-margin-remove">{{ title | trans }}</h2>
-
-<!--             <div class="pk-search">
-                <div class="uk-search">
-                    <input class="uk-search-field" type="text" v-model="search" debounce="300">
-                </div>
-            </div> -->
+            <h2 class="uk-h3 uk-margin-remove">{{ title | trans }}</h2>
 
             <div class="uk-search uk-search-default pk-search">
                 <span uk-search-icon></span>

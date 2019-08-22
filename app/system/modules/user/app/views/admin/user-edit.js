@@ -4,8 +4,47 @@ window.User = {
 
     el: '#user-edit',
 
+    mixins: [Theme.Mixins.Helper],
+
     data() {
         return _.extend({ sections: [], form: {}, processing: false }, window.$data);
+    },
+
+    theme: {
+        hiddenHtmlElements: ['#user-edit > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                'title': {
+                    scope: 'breadcrumbs',
+                    type: 'caption',
+                    caption: () => {
+                        let trans = this.$options.filters.trans;
+                        return vm.user.id && trans ? trans('Edit User') : trans('Add User')
+                    }
+                },
+                'saveuser': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Save',
+                    class: 'uk-button tm-button-success',
+                    spinner: () => vm.processing,
+                    on: {click: () => vm.submit()},
+                    priority: 1,
+                },
+                'close': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: vm.user.id ? 'Close' : 'Cancel',
+                    class: 'uk-button uk-button-text',
+                    attrs: {
+                        href: () => vm.$url.route('admin/user')
+                    },
+                    disabled: () => vm.processing,
+                    priority: 0,
+                }
+            }
+        }
     },
 
     created() {
@@ -38,8 +77,8 @@ window.User = {
         },
 
         save() {
-            const data = { user: this.user }; const
-                vm = this;
+            const data = { user: this.user };
+            const vm = this;
 
             this.$trigger('save:user', data);
 
@@ -51,11 +90,13 @@ window.User = {
                 this.$set(this, 'user', res.data.user);
 
                 this.$notify('User saved.');
+
+            }, function (res) {
+                this.$notify(res.data, 'danger');
+            }).then(function() {
                 setTimeout(() => {
                     vm.processing = false;
                 }, 500);
-            }, function (res) {
-                this.$notify(res.data, 'danger');
             });
         },
 

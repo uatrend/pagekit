@@ -2,24 +2,22 @@
     <div class="pk-grid-large pk-width-sidebar-large uk-form-stacked" uk-grid>
         <div class="pk-width-content">
             <div class="uk-margin">
-                <input
-                    v-model.lazy="page.title"
-                    v-validate="'required'"
-                    class="uk-width-1-1 uk-input uk-form-large"
-                    type="text"
-                    name="page[title]"
-                    :placeholder="'Enter Title' | trans"
-                >
+                <label class="uk-form-label">{{ 'Title' | trans }}</label>
+                <input class="uk-width-1-1 uk-input uk-form-large" type="text" name="page[title]" :placeholder="'Enter Title' | trans" v-model.lazy="page.title" v-validate="'required'">
                 <div v-show="errors.first('page[title]')" class="uk-text-meta uk-text-danger">
                     {{ 'Title cannot be blank.' | trans }}
                 </div>
             </div>
 
             <div class="uk-margin">
-                <v-editor v-model="page.content" :value.sync="page.content" :options="{markdown : page.data.markdown}" mode="combine" />
-                <p class="uk-margin-small-top">
-                    <label><input v-model="page.data.markdown" class="uk-checkbox" type="checkbox"> {{ 'Enable Markdown' | trans }}</label>
-                </p>
+                <label class="uk-form-label">{{ 'Content' | trans }}</label>
+                <v-editor v-model="page.content" :options="{markdown : page.data.markdown}" />
+                <div class="uk-margin-small-top">
+                    <label>
+                        <input v-model="page.data.markdown" class="uk-checkbox" type="checkbox">
+                        <span class="uk-margin-small-left">{{ 'Enable Markdown' | trans }}</span>
+                    </label>
+                </div>
             </div>
         </div>
         <div class="pk-width-sidebar">
@@ -53,18 +51,24 @@
                 </div>
 
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Restrict Access' | trans }}</span>
+                    <label class="uk-form-label">{{ 'Restrict Access' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
-                        <p v-for="role in roles" :key="role.id" class="uk-margin-small">
-                            <label><input v-model.number="node.roles" class="uk-checkbox" type="checkbox" :value="role.id"> {{ role.name }}</label>
-                        </p>
+                        <div v-for="role in roles" :key="role.id" class="uk-margin-small">
+                            <label>
+                                <input v-model.number="node.roles" class="uk-checkbox" type="checkbox" :value="role.id">
+                                <span class="uk-margin-small-left">{{ role.name }}</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Menu' | trans }}</span>
+                    <label class="uk-form-label">{{ 'Menu' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
-                        <label><input v-model="node.data.menu_hide" class="uk-checkbox" type="checkbox" value="center-content"> {{ 'Hide in menu' | trans }}</label>
+                        <label>
+                            <input v-model="node.data.menu_hide" class="uk-checkbox" type="checkbox" value="center-content">
+                            <span class="uk-margin-small-left">{{ 'Hide in menu' | trans }}</span>
+                        </label>
                     </div>
                 </div>
             </div>
@@ -128,7 +132,6 @@ module.exports = {
 
 };
 
-// window.Site.components['page:settings'] = module.exports;
 window.Site.components['page--settings'] = module.exports;
 
 </script>

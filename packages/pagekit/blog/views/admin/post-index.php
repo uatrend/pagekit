@@ -5,10 +5,10 @@
     <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap" >
         <div class="uk-flex uk-flex-middle uk-flex-wrap" >
 
-            <h2 class="uk-margin-remove" v-if="!selected.length">{{ '{0} %count% Posts|{1} %count% Post|]1,Inf[ %count% Posts' | transChoice(count, {count:count}) }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-if="!selected.length">{{ '{0} %count% Posts|{1} %count% Post|]1,Inf[ %count% Posts' | transChoice(count, {count:count}) }}</h2>
 
             <template v-else>
-                <h2 class="uk-margin-remove">{{ '{1} %count% Post selected|]1,Inf[ %count% Posts selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
+                <h2 class="uk-h2 uk-margin-remove">{{ '{1} %count% Post selected|]1,Inf[ %count% Posts selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
 
                 <div class="uk-margin-left" >
                     <ul class="uk-subnav pk-subnav-icon">
@@ -91,8 +91,9 @@
         </table>
     </div>
 
-    <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="posts && !posts.length">{{ 'No posts found.' | trans }}</h3>
+    <h3 class="uk-h2 uk-text-muted uk-text-center" v-show="posts && !posts.length">{{ 'No posts found.' | trans }}</h3>
 
-    <v-pagination :current.sync="config.page" :pages="pages" v-show="pages > 1 || config.page > 0" v-model="config.page"></v-pagination>
+    <!-- <v-pagination :current.sync="config.page" :pages="pages" v-show="pages > 1 || config.page > 0" v-model="config.page"></v-pagination> -->
+    <v-pagination :pages="pages" v-model="config.page" v-show="pages > 1 || config.page > 0"></v-pagination>
 
 </div>

@@ -1,7 +1,4 @@
-var util         = UIkit.util,
-    $            = util.$,
-    trigger      = util.trigger,
-    closest      = util.closest;
+var {$, css, closest, removeAttr, height, trigger} = UIkit.util;
 
 module.exports = {
 
@@ -23,11 +20,11 @@ module.exports = {
     },
 
     methods: {
-        init: function() {
+        init() {
 
             var self = this,
-                mode = this.$parent.mode,
-                $el  = (mode != 'combine') ? this.$parent.$refs['editor'] : this.$parent.$refs['editor-code'];
+                mode = this.$parent.editorMode,
+                $el  = (mode != 'split') ? this.$parent.$refs['editor'] : this.$parent.$refs['editor-code'];
 
             this.editor = CodeMirror.fromTextArea($el, _.extend({
                 mode: 'htmlmixed',
@@ -40,7 +37,7 @@ module.exports = {
                 indentWithTabs: false,
                 tabSize: 4,
                 lineNumbers: true,
-                lineWrapping: false,
+                lineWrapping: true,
                 extraKeys: {
                     "F11": function(cm) {
                         cm.setOption("fullScreen", !cm.getOption("fullScreen"));
@@ -51,9 +48,13 @@ module.exports = {
                 }
             }, this.$parent.options));
 
-            this.editor.setSize(null, this.$parent.height);
+            this.editor.setSize(null, this.$parent.height - 2);
 
             this.editor.refresh();
+
+            if (mode != 'split') {
+                this.$parent.ready = true;
+            }
 
             this.editor.on('change', function () {
                 self.editor.save();
@@ -61,8 +62,8 @@ module.exports = {
             });
 
             this.$watch('$parent.active', function (state) {
-                if (mode == 'combine' && state == 1) {
-                    this.editor.setSize(null, this.getHiddenHeight(this.$parent.$refs.tinymce));
+                if (mode == 'split' && state == 1) {
+                    this.editor.setSize(null, this.getHeight(this.$parent.$refs.visual) - 2);
                     this.editor.refresh();
                 }
             });
@@ -74,40 +75,39 @@ module.exports = {
                 }
             });
 
-            this.refreshEditor($el, mode);
+            this.observe($el, mode);
 
             this.$emit('ready');
         },
 
-        getHiddenHeight: function(el) {
-            var height = 0;
+        getHeight(el) {
+            var h = 0;
 
-            if(util.css(el, 'display') !== 'none') {
-                return util.height(el);
+            if(css(el, 'display') !== 'none') {
+                return height(el);
             }
-            util.css(el, {'position': 'absolute', 'visibility': 'hidden','display': 'block'});
-            height = util.height(el);
-            util.removeAttr(el,'style');
+            css(el, {'position': 'absolute', 'visibility': 'hidden','display': 'block'});
+            h = height(el);
+            removeAttr(el,'style');
 
-            return height;
+            return h;
         },
 
-        refreshEditor: function(el, mode) {
-            var vm =this;
+        observe(el, mode) {
 
-            if (mode != 'combine') {
-                var observer, node = closest(el, 'li');
+            var vm = this;
+            var observer, element = closest(el, 'li');
 
-                if (node) {
-                    observer = new MutationObserver(function(){
-                       if(node.style.display !='none' ){
-                            vm.editor.refresh();
-                       }
-                    });
+            if (mode === 'split') return;
+            if (!element) return;
 
-                    observer.observe(node,  { attributes: true, childList: true });
-                }
-            }
+            observer = new MutationObserver(function(){
+               if(element.style.display !='none' ){
+                    vm.editor.refresh();
+               }
+            });
+
+            observer.observe(element,  { attributes: true, childList: true });
         }
     }
 

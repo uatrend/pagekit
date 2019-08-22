@@ -16,6 +16,9 @@ export declare type Locale = {
     toggleTitle: string;
     amPM: [string, string];
     yearAriaLabel: string;
+    hourAriaLabel: string;
+    minuteAriaLabel: string;
+    time_24hr: boolean;
 };
 export declare type CustomLocale = {
     ordinal?: Locale["ordinal"];
@@ -26,7 +29,10 @@ export declare type CustomLocale = {
     toggleTitle?: Locale["toggleTitle"];
     scrollTitle?: Locale["scrollTitle"];
     yearAriaLabel?: string;
+    hourAriaLabel?: string;
+    minuteAriaLabel?: string;
     amPM?: Locale["amPM"];
+    time_24hr?: Locale["time_24hr"];
     weekdays: {
         shorthand: [string, string, string, string, string, string, string];
         longhand: [string, string, string, string, string, string, string];
@@ -36,4 +42,4 @@ export declare type CustomLocale = {
         longhand: [string, string, string, string, string, string, string, string, string, string, string, string];
     };
 };
-export declare type key = "ar" | "at" | "az" | "be" | "bg" | "bn" | "cat" | "cs" | "cy" | "da" | "de" | "default" | "en" | "eo" | "es" | "et" | "fa" | "fi" | "fo" | "fr" | "gr" | "he" | "hi" | "hr" | "hu" | "id" | "is" | "it" | "ja" | "ko" | "km" | "kz" | "lt" | "lv" | "mk" | "mn" | "ms" | "my" | "nl" | "no" | "pa" | "pl" | "pt" | "ro" | "ru" | "si" | "sk" | "sl" | "sq" | "sr" | "sv" | "th" | "tr" | "uk" | "vn" | "zh" | "zh_tw";
+export declare type key = "ar" | "at" | "az" | "be" | "bg" | "bn" | "bs" | "cat" | "cs" | "cy" | "da" | "de" | "default" | "en" | "eo" | "es" | "et" | "fa" | "fi" | "fo" | "fr" | "gr" | "he" | "hi" | "hr" | "hu" | "id" | "is" | "it" | "ja" | "ko" | "km" | "kz" | "lt" | "lv" | "mk" | "mn" | "ms" | "my" | "nl" | "no" | "pa" | "pl" | "pt" | "ro" | "ru" | "si" | "sk" | "sl" | "sq" | "sr" | "sv" | "th" | "tr" | "uk" | "vn" | "zh" | "zh_tw";

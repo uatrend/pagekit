@@ -14,7 +14,8 @@
 
         <div class="uk-section-secondary">
             <div class="uk-flex uk-flex-center uk-flex-middle uk-text-center tm-background" uk-height-viewport>
-                <div class="tm-container tm-container-small">
+                <div class="uk-background-cover uk-position-absolute uk-width-1-1" uk-height-viewport></div>
+                <div class="tm-container tm-container-small uk-position-z-index">
 
                     <img class="uk-margin-large-bottom" src="<?= $view->url()->getStatic('app/system/assets/images/pagekit-logo-text.svg') ?>" alt="Pagekit">
 

@@ -6,7 +6,7 @@ import glob from "glob";
 import terser from "terser";
 import chokidar from "chokidar";
 import stylus from "stylus";
-import stylus_autoprefixer from "autoprefixer-stylus";
+import stylusAutoprefixer from "autoprefixer-stylus";
 
 import * as rollup from "rollup";
 
@@ -15,6 +15,8 @@ import rollupConfig, { getConfig } from "./config/rollup";
 
 import * as pkg from "./package.json";
 const version = `/* flatpickr v${pkg.version},, @license MIT */`;
+
+let DEV_MODE = process.argv.indexOf("--dev") > -1;
 
 const paths = {
   themes: "./src/style/themes/*.styl",
@@ -31,7 +33,6 @@ const watchers: chokidar.FSWatcher[] = [];
 
 function logErr(e: Error | string) {
   console.error(e);
-  console.trace();
 }
 
 function resolveGlob(g: string) {
@@ -42,12 +43,14 @@ function resolveGlob(g: string) {
   });
 }
 
-async function readFileAsync(path: string) {
-  return new Promise<string>((resolve, reject) => {
-    fs.readFile(path, (err, buffer) => {
-      err ? reject(err) : resolve(buffer.toString());
-    });
-  });
+async function readFileAsync(path: string): Promise<string> {
+  try {
+    const buf = await fs.readFile(path);
+    return buf.toString();
+  } catch (e) {
+    logErr(e);
+    return e.toString();
+  }
 }
 
 function uglify(src: string) {
@@ -66,48 +69,62 @@ function uglify(src: string) {
 
 async function buildFlatpickrJs() {
   const bundle = await rollup.rollup(rollupConfig);
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   return bundle.write(rollupConfig.output!);
 }
 
 async function buildScripts() {
   try {
     await buildFlatpickrJs();
-    const transpiled = await fs.readFile("./dist/flatpickr.js");
-    fs.writeFile("./dist/flatpickr.min.js", uglify(transpiled.toString()));
+    const transpiled = await readFileAsync("./dist/flatpickr.js");
+    fs.writeFile("./dist/flatpickr.min.js", uglify(transpiled));
   } catch (e) {
     logErr(e);
   }
 }
 
 function buildExtras(folder: "plugins" | "l10n") {
-  return async function(changed_path?: string) {
-    const [src_paths, css_paths] = await Promise.all([
-      changed_path !== undefined
-        ? [changed_path]
-        : resolveGlob(`./src/${folder}/**/*.ts`),
-      resolveGlob(`./src/${folder}/**/*.css`),
-    ]);
+  return async function(changedPath?: string) {
+    const [srcPaths, cssPaths] = await Promise.all(
+      changedPath !== undefined
+        ? changedPath.endsWith(".ts")
+          ? [[changedPath], []]
+          : [[], [changedPath]]
+        : [
+            resolveGlob(`./src/${folder}/**/*.ts`),
+            resolveGlob(`./src/${folder}/**/*.css`),
+          ]
+    );
 
     try {
       await Promise.all([
-        ...src_paths.map(async sourcePath => {
-          const bundle = await rollup.rollup({
-            ...rollupConfig,
-            cache: undefined,
-            input: sourcePath,
-          });
+        ...srcPaths
+          .filter(p => !p.includes(".spec.ts"))
+          .map(async sourcePath => {
+            const bundle = await rollup.rollup({
+              ...rollupConfig,
+              cache: undefined,
+              input: sourcePath,
+            });
 
-          const fileName = path.basename(sourcePath, path.extname(sourcePath));
+            const fileName = path.basename(
+              sourcePath,
+              path.extname(sourcePath)
+            );
+            const folderName = path.basename(path.dirname(sourcePath));
 
-          return bundle.write({
-            exports: folder === "l10n" ? "named" : "default",
-            format: "umd",
-            sourcemap: false,
-            file: sourcePath.replace("src", "dist").replace(".ts", ".js"),
-            name: customModuleNames[fileName] || fileName,
-          });
-        }),
-        ...(css_paths.map(p => fs.copy(p, p.replace("src", "dist"))) as any),
+            return bundle.write({
+              exports: folder === "l10n" ? "named" : "default",
+              format: "umd",
+              sourcemap: DEV_MODE,
+              file: sourcePath.replace("src", "dist").replace(".ts", ".js"),
+              name:
+                sourcePath.includes("plugins") && fileName === "index"
+                  ? `${folderName}Plugin`
+                  : customModuleNames[fileName] || fileName,
+            });
+          }),
+        ...(cssPaths.map(p => fs.copy(p, p.replace("src", "dist"))) as any),
       ]);
     } catch (err) {
       logErr(err);
@@ -123,7 +140,7 @@ async function transpileStyle(src: string, compress = false) {
       .include(`${__dirname}/src/style`)
       .include(`${__dirname}/src/style/themes`)
       .use(
-        stylus_autoprefixer({
+        stylusAutoprefixer({
           browsers: pkg.browserslist,
         })
       )
@@ -135,20 +152,16 @@ async function transpileStyle(src: string, compress = false) {
 
 async function buildStyle() {
   try {
-    const [src, src_ie] = await Promise.all([
+    const [src, srcIE] = await Promise.all([
       readFileAsync(paths.style),
       readFileAsync("./src/style/ie.styl"),
     ]);
 
-    const [style, min, ie] = await Promise.all([
-      transpileStyle(src),
-      transpileStyle(src, true),
-      transpileStyle(src_ie),
+    await Promise.all([
+      fs.writeFile("./dist/flatpickr.css", await transpileStyle(src)),
+      fs.writeFile("./dist/flatpickr.min.css", await transpileStyle(src, true)),
+      fs.writeFile("./dist/ie.css", await transpileStyle(srcIE)),
     ]);
-
-    fs.writeFile("./dist/flatpickr.css", style);
-    fs.writeFile("./dist/flatpickr.min.css", min);
-    fs.writeFile("./dist/ie.css", ie);
   } catch (e) {
     logErr(e);
   }
@@ -156,19 +169,23 @@ async function buildStyle() {
 
 const themeRegex = /themes\/(.+).styl/;
 async function buildThemes() {
-  const themePaths = await resolveGlob("./src/style/themes/*.styl");
-  await Promise.all(
-    themePaths.map(async themePath => {
-      const match = themeRegex.exec(themePath);
-      if (!match) return;
+  try {
+    const themePaths = await resolveGlob("./src/style/themes/*.styl");
+    await Promise.all(
+      themePaths.map(async themePath => {
+        const match = themeRegex.exec(themePath);
+        if (!match) return;
 
-      const src = await readFileAsync(themePath);
-      return fs.writeFile(
-        `./dist/themes/${match[1]}.css`,
-        await transpileStyle(src)
-      );
-    })
-  );
+        const src = await readFileAsync(themePath);
+        return fs.writeFile(
+          `./dist/themes/${match[1]}.css`,
+          await transpileStyle(src)
+        );
+      })
+    );
+  } catch (err) {
+    logErr(err);
+  }
   return;
 }
 
@@ -200,9 +217,14 @@ function watch(path: string, cb: (path: string) => void) {
   );
 }
 
-function start() {
-  const devMode = process.argv.indexOf("--dev") > -1;
-  if (devMode) {
+async function start() {
+  if (DEV_MODE) {
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    rollupConfig.output!.sourcemap = true;
+    const indexExists = await fs.pathExists("./index.html");
+    if (!indexExists) {
+      await fs.copyFile("./index.template.html", "./index.html");
+    }
     const write = (s: string) => process.stdout.write(`rollup: ${s}`);
     const watcher = rollup.watch([getConfig({ dev: true })]);
 
@@ -218,8 +240,10 @@ function start() {
       input?: string;
       output?: string;
     }
+
     function logEvent(e: RollupWatchEvent) {
       write(
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
         [e.code, e.input && `${e.input} -> ${e.output!}`, "\n"]
           .filter(x => x)
           .join(" ")
@@ -236,6 +260,10 @@ function start() {
     setupWatchers();
   }
 
+  try {
+    await fs.mkdirp("./dist/themes");
+  } catch {}
+
   buildScripts();
   buildStyle();
   buildThemes();
@@ -244,5 +272,3 @@ function start() {
 }
 
 start();
-
-process.on("unhandledRejection", logErr);

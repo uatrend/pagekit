@@ -4,7 +4,6 @@
             <form class="uk-form-stacked">
                 <div class="uk-margin">
                     <label for="form-feed-title" class="uk-form-label">{{ 'Title' | trans }}</label>
-
                     <div class="uk-form-controls">
                         <input id="form-feed-title" v-model="widget.title" class="uk-width-1-1 uk-input" type="text" name="widget[title]">
                     </div>
@@ -12,7 +11,6 @@
 
                 <div class="uk-margin">
                     <label for="form-feed-url" class="uk-form-label">{{ 'URL' | trans }}</label>
-
                     <div class="uk-form-controls">
                         <input
                             id="form-feed-url"
@@ -27,7 +25,6 @@
 
                 <div class="uk-margin">
                     <label for="form-feed-count" class="uk-form-label">{{ 'Number of Posts' | trans }}</label>
-
                     <div class="uk-form-controls">
                         <select id="form-feed-count" v-model="widget.count" class="uk-select uk-width-1-1" number>
                             <option value="1">
@@ -65,19 +62,17 @@
                 </div>
 
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Post Content' | trans }}</span>
+                    <label class="uk-form-label">{{ 'Post Content' | trans }}</label>
 
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.content" class="uk-radio" type="radio" value=""> {{ "Don't show" | trans }}</label>
+                            <label><input v-model="widget.content" class="uk-radio" type="radio" value=""><span class="uk-margin-small-left">{{ "Don't show" | trans }}</span></label>
                         </p>
-
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.content" class="uk-radio" type="radio" value="1"> {{ 'Show on all posts' | trans }}</label>
+                            <label><input v-model="widget.content" class="uk-radio" type="radio" value="1"><span class="uk-margin-small-left">{{ 'Show on all posts' | trans }}</span></label>
                         </p>
-
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.content" class="uk-radio" type="radio" value="2"> {{ 'Only show on first post.' | trans }}</label>
+                            <label><input v-model="widget.content" class="uk-radio" type="radio" value="2"><span class="uk-margin-small-left">{{ 'Only show on first post.' | trans }}</span></label>
                         </p>
                     </div>
                 </div>
@@ -105,9 +100,9 @@
                             {{ entry.publishedDate | relativeDate }}
                         </p>
 
-                        <p v-if="widget.content == '1'" class="uk-margin-small-top uk-text-justify uk-text-small" v-html="entry.contentSnippet" />
+                        <div v-if="widget.content == '1'" class="uk-margin-small-top uk-text-justify uk-text-small" v-html="entry.contentSnippet"></div>
 
-                        <p v-if="widget.content == '2'" class="uk-margin-small-top uk-text-justify uk-text-small" v-html="$index == 0 ? entry.contentSnippet : ''" />
+                        <div v-if="widget.content == '2'" class="uk-margin-small-top uk-text-justify uk-text-small" v-html="key == 0 ? entry.contentSnippet : ''"></div>
                     </li>
                 </ul>
 
@@ -212,7 +207,7 @@ module.exports = {
 
             // TODO: Add cache
             // rss2json
-            this.$http.get(`https://api.rss2json.com/v1/api.json?rss_url=${this.widget.url}`, {}, { cache: 60 })
+            this.$http.get(`https://api.rss2json.com/v1/api.json?rss_url=${this.widget.url}`, { params: { cache: 60 } })
                 .then(function (res) {
                     const { data } = res;
                     const index = this.widget.count;

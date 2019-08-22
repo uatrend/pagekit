@@ -2,7 +2,7 @@
     <div>
         <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
             <div>
-                <h2 class="uk-margin-remove">
+                <h2 class="uk-h3 uk-margin-remove">
                     {{ 'Meta' | trans }}
                 </h2>
             </div>

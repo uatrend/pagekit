@@ -7,24 +7,11 @@
                 </li>
             </ul>
 
-            <a class="pf-close" @click.prevent="close">
-                <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" data-svg="close-icon"><line
-                    fill="none"
-                    stroke="#000"
-                    stroke-width="1.1"
-                    x1="1"
-                    y1="1"
-                    x2="13"
-                    y2="13"
-                /><line
-                    fill="none"
-                    stroke="#000"
-                    stroke-width="1.1"
-                    x1="13"
-                    y1="1"
-                    x2="1"
-                    y2="13"
-                /></svg>
+            <a v-if="panel" class="pf-close" @click.prevent="close">
+                <svg width="14" height="14" viewBox="0 0 14 14" xmlns="http://www.w3.org/2000/svg" data-svg="close-icon">
+                    <line fill="none" stroke="#000" stroke-width="1.1" x1="1" y1="1" x2="13" y2="13" />
+                    <line fill="none" stroke="#000" stroke-width="1.1" x1="13" y1="1" x2="1" y2="13" />
+                </svg>
             </a>
         </div>
 
@@ -41,8 +28,6 @@ const config = window.$debugbar;
 module.exports = {
 
     name: 'debug-bar',
-
-    mixins: [Vue2Filters.mixin],
 
     data() {
         return {

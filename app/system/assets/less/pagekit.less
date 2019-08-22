@@ -89,8 +89,12 @@
 ========================================================================== */
 
 .pk-nav-large > li > a {
-    padding-top: 14px;
-    padding-bottom: 14px;
+    padding: 15px 20px;
+    // padding-bottom: 15px;
+}
+
+.pk-nav-large > li.uk-active > a {
+    background-color: @theme-background-menu-active-color;
 }
 
 
@@ -132,7 +136,7 @@
 .pk-search {
     // margin-left: 25px;
     // padding-left: 15px;
-    border-left: 1px solid @global-border;
+    border-left: 1px solid darken(@global-border, 5%);
     /* 1 */
     position: relative;
     z-index: 0;
@@ -153,7 +157,7 @@
 }
 
 .pk-search .uk-search-icon > svg {
-    width: 25px;
+    width: 24px;
 }
 
 .pk-search .uk-search-icon:not(.uk-search-icon-flip) + .uk-search-input {
@@ -172,10 +176,47 @@
   height: 30px;
 }
 
+.storage .uk-modal-header .pk-search {
+  border-left-width: 0px;
+  margin-left: 0;
+}
+
+.storage .uk-modal-header .pk-search .uk-search-icon {
+  margin-left: 0;
+  width: 22px;
+}
+
+.storage .uk-modal-header .pk-search .uk-search-input {
+  margin-left: 0;
+}
+
+.storage .uk-modal-header div + .pk-search {
+  border-left-width: 1px;
+  margin-left: 20px;
+}
+
+.storage .uk-modal-header div + .pk-search .uk-search-icon {
+  margin-left: 20px;
+}
+
+.storage .uk-modal-header div + .pk-search .uk-search-input {
+  margin-left: 15px;
+}
+
+.storage .uk-modal-header .pk-search .uk-search-icon:not(.uk-search-icon-flip) + .uk-search-input {
+  padding-left: 32px;
+}
+
+.storage .uk-modal-header div + .pk-search .uk-search-icon:not(.uk-search-icon-flip) + .uk-search-input {
+  padding-left: 42px;
+}
+
 /* Modifier: Badge
 ==========================================================================
+*/
 
 .pk-badge-justify {
+    text-align: center;
     box-sizing: border-box;
     width: 100px;
 }
@@ -251,7 +292,7 @@
 }
 
 .pk-icon-circle-primary { background: @global-primary-background; }
-.pk-icon-circle-success { background: @global-success-background; }
+.pk-icon-circle-success { background: @theme-success-background; }
 .pk-icon-circle-danger { background: @global-danger-background; }
 .pk-icon-circle-warning { background: @global-warning-background; }
 
@@ -311,6 +352,7 @@
 .pk-icon-large-brush { background-image: url("../images/icon-large-brush.svg"); }
 .pk-icon-large-cone { background-image: url("../images/icon-large-cone.svg"); }
 .pk-icon-large-meta { background-image: url("../images/icon-large-meta.svg"); }
+.pk-icon-large-cogwheel { background-image: url("../../modules/theme/images/icon-cogwheel.svg"); }
 
 
 
@@ -402,15 +444,16 @@
 
 .pk-text-large {
     font-family: @base-heading-font-family;
-    font-weight: 400;
+    font-weight: 300;
     font-size: @base-h2-font-size;
     line-height: @base-h2-line-height;
 }
 
 .pk-text-xlarge {
     font-family: @base-heading-font-family;
-    font-size: 46px;
-    line-height: 52px;
+    font-size: @global-xlarge-font-size * 1.6;
+    line-height: 1.4;
+    font-weight: 300;
 }
 
 
@@ -540,7 +583,7 @@
  */
 
 .pk-table-fake-header > div {
-    font-size: round((@global-font-size * 0.85)); // 12px / 14px
+    font-size: round((@global-font-size * 0.85));
     text-transform: uppercase;
     font-weight: normal;
     color: @global-muted-color;
@@ -596,9 +639,6 @@
  ========================================================================== */
 
 .pk-panel-teaser {
-    // margin: @panel-box-teaser-margin @panel-box-teaser-margin @panel-teaser-margin-bottom @panel-box-teaser-margin;
-    // padding: @panel-box-padding;
-    // border-bottom: 1px solid @global-border;
     padding: @global-gutter @global-gutter;
 }
 
@@ -644,7 +684,7 @@
 
 .pk-modal-dialog-badge {
     position: absolute;
-    top: @modal-header-padding-vertical;
+    // top: @modal-header-padding-vertical;
     right: @modal-body-padding-horizontal - 10;
 }
 
@@ -697,14 +737,21 @@
 .pk-editor {
     // padding: @form-padding-vertical @form-padding-horizontal;
     // border: @global-border-width solid @global-border;
-    background: @form-background;
+    // background: @form-background;
     // border-radius: @global-border-radius;
 }
 
-.pk-editor .uk-switcher > li {
-  border: 1px solid #e5e5e5;
+.pk-editor > .uk-switcher {
+    background: @form-background;
 }
 
+.pk-editor.split .uk-switcher {
+    border: 1px solid #e5e5e5;
+}
+
+.pk-editor.split .uk-switcher > li {
+    margin: -1px;
+}
 
 /* Remove `box-shadow` from Drag'n Drop target
  ========================================================================== */
@@ -786,9 +833,6 @@
 }
 
 @-webkit-keyframes pk-loader-color {
-    // 0% { stroke: @global-primary-hover-background; }
-    // 50% { stroke: @global-primary-hover-background; }
-    // 100% { stroke: @global-primary-hover-background; }
     0% { stroke: @global-link-hover-color; }
     50% { stroke: @global-link-hover-color; }
     100% { stroke: @global-link-hover-color; }

@@ -69,32 +69,32 @@
             </div>
 
             <div class="uk-margin">
-                <span class="uk-form-label">{{ 'Status' | trans }}</span>
+                <label class="uk-form-label">{{ 'Status' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
                     <p v-for="(status, key) in config.statuses" :key="key" class="uk-margin-small">
-                        <label><input v-model="user.status" class="uk-radio" type="radio" :value="parseInt(key)" :disabled="config.currentUser == user.id"> {{ status }}</label>
+                        <label><input v-model="user.status" class="uk-radio" type="radio" :value="parseInt(key)" :disabled="config.currentUser == user.id"><span class="uk-margin-small-left">{{ status }}</span></label>
                     </p>
                 </div>
             </div>
 
             <div class="uk-margin">
-                <span class="uk-form-label">{{ 'Roles' | trans }}</span>
+                <label class="uk-form-label">{{ 'Roles' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
                     <p v-for="role in config.roles" :key="role.id" class="uk-margin-small">
-                        <label><input v-model="user.roles" class="uk-checkbox" type="checkbox" :value="role.id" :disabled="role.disabled"> {{ role.name }}</label>
+                        <label><input v-model="user.roles" class="uk-checkbox" type="checkbox" :value="role.id" :disabled="role.disabled"><span class="uk-margin-small-left">{{ role.name }}</span></label>
                     </p>
                 </div>
             </div>
 
             <div class="uk-margin">
-                <span class="uk-form-label">{{ 'Last login' | trans }}</span>
+                <label class="uk-form-label">{{ 'Last login' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
                     <p>{{ $trans('%date%', { date: user.login ? $date(user.login) : $trans('Never') }) }}</p>
                 </div>
             </div>
 
             <div class="uk-margin">
-                <span class="uk-form-label">{{ 'Registered since' | trans }}</span>
+                <label class="uk-form-label">{{ 'Registered since' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
                     {{ user.registered ? $trans('%date%', { date: $date(user.registered) }) : '' }}
                 </div>
@@ -164,7 +164,7 @@ module.exports = {
 
     events: {
 
-        'save:user': function (data) {
+        'save:user': function (e, data) {
             data.password = this.password;
         },
 

@@ -4,7 +4,7 @@ module.exports = {
 
     el: '#comments',
 
-    mixins: [Vue2Filters.mixin],
+    mixins: [Theme.Mixins.Helper],
 
     data() {
         return _.merge({
@@ -20,6 +20,77 @@ module.exports = {
             replyComment: {},
             editComment: {},
         }, window.$data);
+    },
+
+    theme:{
+        hiddenHtmlElements: ['#comments > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                search: {
+                    scope: 'navbar-right',
+                    type: 'search',
+                    class: 'uk-text-small',
+                    domProps: {
+                        value: () => vm.config.filter.search || ''
+                    },
+                    on: {
+                        input: function(e) {
+                            !vm.config.filter.search && vm.$set(vm.config.filter, 'search', '');
+                            vm.config.filter.search = e.target.value
+                        }
+                    }
+                },
+                'selected': {
+                    scope: 'topmenu-right',
+                    type: 'caption',
+                    caption: () => {
+                        if (!vm.selected.length)
+                            return vm.$transChoice('{0} %count% Comments|{1} %count% Comment|]1,Inf[ %count% Comments', vm.count, {count: vm.count});
+                        return vm.$transChoice('{1} %count% Comment selected|]1,Inf[ %count% Comments selected', vm.selected.length, {count:vm.selected.length})
+                    },
+                    class: 'uk-text-small',
+                    priority: 1
+                },
+                'actions': {
+                    scope: 'topmenu-left',
+                    type: 'dropdown',
+                    caption: 'Actions',
+                    class: 'uk-button uk-button-text',
+                    icon: {
+                        attrs:{ 'uk-icon': 'triangle-down' },
+                    },
+                    dropdown: { options: () => 'mode:click' },
+                    actionIcons: true,
+                    items:() => {
+                        return {
+                            publish: {
+                                caption: 'Approve',
+                                on: {click: () => vm.status(1)},
+                            },
+                            unpublish: {
+                                caption: 'Unapprove',
+                                on: {click: () => vm.status(0)}
+                            },
+                            spam: {
+                                on: {click: () => vm.status(2)},
+                            },
+                            delete: {
+                                on: {click: (e) => vm.remove(e)},
+                                directives: [
+                                    {
+                                        name: 'confirm',
+                                        value: 'Delete Comments?'
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    priority: 2,
+                    disabled: () => !vm.selected.length,
+                },
+            }
+        }
     },
 
     mounted() {
@@ -55,6 +126,10 @@ module.exports = {
     },
 
     methods: {
+        postUri(post, comment) {
+            console.log(post.url);
+            console.log(this.$url.route(post.url.substr(1))+'#comment-'+comment.id);
+        },
 
         active(comment) {
             return this.selected.indexOf(comment.id) != -1;
@@ -123,7 +198,13 @@ module.exports = {
             return this.statuses[comment.status];
         },
 
-        cancel() {
+        cancel(e) {
+            if (Object.values(this.editComment).length) {
+               this.$validator.detach('author');
+               this.$validator.detach('comment');
+               this.$validator.detach('email');
+            }
+            this.$validator.resume()
             this.$set(this, 'replyComment', {});
             this.$set(this, 'editComment', {});
         },

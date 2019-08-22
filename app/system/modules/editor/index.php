@@ -12,7 +12,8 @@ return [
 
     'config' => [
 
-        'editor' => 'html'
+        'editor' => 'html',
+        'mode'   => ''
 
     ],
 

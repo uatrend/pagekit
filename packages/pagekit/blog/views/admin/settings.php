@@ -22,14 +22,10 @@
 
                     <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap">
                         <div>
-
-                            <h2 class="uk-margin-remove">{{ 'General' | trans }}</h2>
-
+                            <h2 class="uk-h3 uk-margin-remove">{{ 'General' | trans }}</h2>
                         </div>
                         <div>
-
                             <button class="uk-button uk-button-primary" @click.prevent="save">{{ 'Save' | trans }}</button>
-
                         </div>
                     </div>
 
@@ -39,31 +35,31 @@
                             <p class="uk-margin-small">
                                 <label>
                                     <input class="uk-radio" type="radio" v-model="config.permalink.type" value="">
-                                    {{ 'Numeric' | trans }} <code>{{ '/123' | trans }}</code>
+                                    <span class="uk-margin-small-left">{{ 'Numeric' | trans }} <code>{{ '/123' | trans }}</code></span>
                                 </label>
                             </p>
                             <p class="uk-margin-small">
                                 <label>
                                     <input class="uk-radio" type="radio" v-model="config.permalink.type" value="{slug}">
-                                    {{ 'Name' | trans }} <code>{{ '/sample-post' | trans }}</code>
+                                    <span class="uk-margin-small-left">{{ 'Name' | trans }} <code>{{ '/sample-post' | trans }}</code></span>
                                 </label>
                             </p>
                             <p class="uk-margin-small">
                                 <label>
                                     <input class="uk-radio" type="radio" v-model="config.permalink.type" value="{year}/{month}/{day}/{slug}">
-                                    {{ 'Day and name' | trans }} <code>{{ '/2014/06/12/sample-post' | trans }}</code>
+                                    <span class="uk-margin-small-left">{{ 'Day and name' | trans }} <code>{{ '/2014/06/12/sample-post' | trans }}</code></span>
                                 </label>
                             </p>
                             <p class="uk-margin-small">
                                 <label>
                                     <input class="uk-radio" type="radio" v-model="config.permalink.type" value="{year}/{month}/{slug}">
-                                    {{ 'Month and name' | trans }} <code>{{ '/2014/06/sample-post' | trans }}</code>
+                                    <span class="uk-margin-small-left">{{ 'Month and name' | trans }} <code>{{ '/2014/06/sample-post' | trans }}</code></span>
                                 </label>
                             </p>
                             <p class="uk-margin-small">
                                 <label>
                                     <input class="uk-radio" type="radio" v-model="config.permalink.type" value="custom">
-                                    {{ 'Custom' | trans }}
+                                    <span class="uk-margin-small-left">{{ 'Custom' | trans }}</span>
                                 </label>
                                 <input class="uk-form-small uk-input uk-margin-small-top" type="text" v-model="config.permalink.custom">
                             </p>
@@ -80,13 +76,13 @@
                     </div>
 
                     <div class="uk-margin">
-                        <span class="uk-form-label">{{ 'Default post settings' | trans }}</span>
+                        <label class="uk-form-label">{{ 'Default post settings' | trans }}</label>
                         <div class="uk-form-controls uk-form-controls-text">
                             <p class="uk-margin-small">
-                                <label><input class="uk-checkbox" type="checkbox" v-model="config.posts.markdown_enabled"> {{ 'Enable Markdown' | trans }}</label>
+                                <label><input class="uk-checkbox" type="checkbox" v-model="config.posts.markdown_enabled"><span class="uk-margin-small-left">{{ 'Enable Markdown' | trans }}</span></label>
                             </p>
                             <p class="uk-margin-small">
-                                <label><input class="uk-checkbox" type="checkbox" v-model="config.posts.comments_enabled"> {{ 'Enable Comments' | trans }}</label>
+                                <label><input class="uk-checkbox" type="checkbox" v-model="config.posts.comments_enabled"><span class="uk-margin-small-left">{{ 'Enable Comments' | trans }}</span></label>
                             </p>
                         </div>
                     </div>
@@ -97,7 +93,7 @@
                     <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap">
                         <div>
 
-                            <h2 class="uk-margin-remove">{{ 'Comments' | trans }}</h2>
+                            <h2 class="uk-h3 uk-margin-remove">{{ 'Comments' | trans }}</h2>
 
                         </div>
                         <div>

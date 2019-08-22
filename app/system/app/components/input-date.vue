@@ -60,11 +60,10 @@ module.exports = {
 
     mounted() {
         const format = this.dateFormat;
-
         this.$nextTick(() => {
             flatpickr($('input', this.$refs.datepicker), _.extend(this.options.datepicker, {
                 altInput: true,
-                altFormat: this.dateFormat,
+                altFormat: this.dateFormat
             }));
             flatpickr($('input', this.$refs.timepicker), _.extend(this.options.timepicker, {
                 time_24hr: (this.clockFormat == '24h'),
@@ -83,13 +82,14 @@ module.exports = {
         },
 
         dateFormat() {
-            return window.$locale.DATETIME_FORMATS.shortDate
+            return format = window.$locale.DATETIME_FORMATS.shortDate
                 .replace(/\bdd\b/i, 'D').toLowerCase()
                 .replace(/\bmm\b/i, 'M').toLowerCase()
                 .replace(/\byy\b/i, 'Y')
                 .toLowerCase()
                 .split('')
-                .join('');
+                .join('')
+                .replace(/[^\x00-\xFF]/g, "");
         },
 
         timeFormat() {
@@ -97,7 +97,8 @@ module.exports = {
                 .replace(/\bmm\b/i, 'i')
                 .replace(/\bhh\b/i, 'H')
                 .replace(/\bh\b/i, (this.clockFormat == '24h') ? 'H' : 'h')
-                .replace(/\ba\b/i, 'K');
+                .replace(/\ba\b/i, 'K')
+                .replace(/[^\x00-\xFF]/g, "");
         },
 
         clockFormat() {
@@ -123,15 +124,13 @@ module.exports = {
         time: {
 
             get() {
-                return new Date(this.datetime)
-                    .toLocaleString(window.$locale.localeID.replace(/\_/g, '-'), { hour: 'numeric', minute: 'numeric', hour12: this.clockFormat != '24h' });
+                return flatpickr.formatDate(new Date(this.datetime), this.timeFormat);
             },
 
             set(time) {
                 const fulltime = time;
                 const date = new Date(this.datetime);
-                let hour; let
-                    min;
+                let hour, min;
                 time = time.replace(/AM|PM/, '').trim().split(':');
                 hour = parseInt(time[0]) + ((fulltime.indexOf('PM') !== -1) ? 12 : 0);
                 min = parseInt(time[1]);
@@ -153,8 +152,7 @@ module.exports = {
 Vue.component('input-date', (resolve, reject) => {
     Vue.asset({
         css: [
-            'app/assets/flatpickr/dist/flatpickr.min.css',
-            'app/assets/flatpickr/dist/themes/airbnb.css',
+            'app/assets/flatpickr/dist/flatpickr.min.css'
         ],
         js: [
             'app/assets/flatpickr/dist/flatpickr.min.js',

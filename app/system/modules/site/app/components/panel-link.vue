@@ -35,11 +35,7 @@ window.Links = module.exports = {
                 }
             },
             immediate: true,
-        },
-
-        link(link) {
-            this.$emit('input', link);
-        },
+        }
 
     },
 

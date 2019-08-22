@@ -11,6 +11,8 @@ window.Dashboard = {
 
     name: 'dashboard',
 
+    mixins: [Theme.Mixins.Helper],
+
     el: '#dashboard',
 
     data() {
@@ -18,6 +20,45 @@ window.Dashboard = {
             editing: {},
             update: {},
         }, window.$data);
+    },
+
+    theme: {
+        hiddenHtmlElements: '#dashboard > div:first-child > div:last-child',
+        elements() {
+            var vm = this;
+            return {
+                addwidget: {
+                    scope: 'topmenu-left',
+                    type: 'dropdown',
+                    caption: 'Add Widget',
+                    class: 'uk-button uk-button-text',
+                    icon: { attrs: { 'uk-icon': 'triangle-down' }},
+                    dropdown: { options: () => 'mode: click' },
+                    items: () => vm.getTypes().map((type) => {
+                        let props = {
+                            on: {click: () => vm.add(type)},
+                            caption: type.label,
+                            class: 'uk-dropdown-close'
+                        }
+                        return {...type, ...props}
+                    }),
+                }
+            }
+        },
+        extend() {
+            console.log('Push Items to AddItem from Dashboard');
+            return {
+                scope: 'sidemenu',
+                element: 'additem',
+                items() {
+                    return [{
+                        caption: 'Test1'
+                    }, {
+                        caption: 'Test2'
+                    }]
+                }
+            }
+        }
     },
 
     created() {
@@ -155,7 +196,7 @@ window.Dashboard = {
         },
 
         checkVersion() {
-            this.$http.get(`${this.api}/api/update`, { cache: 60 }).then(function (res) {
+            this.$http.get(`${this.api}/api/update`, { params: { cache: 60 } }).then(function (res) {
                 const update = res.data[this.channel == 'nightly' ? 'nightly' : 'latest'];
 
                 if (update) {

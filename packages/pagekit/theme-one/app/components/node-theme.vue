@@ -41,19 +41,19 @@
             <label class="uk-form-label">Hero {{ 'Position' | trans }}</label>
             <div class="uk-form-controls uk-form-controls-text">
                 <p class="uk-margin-small">
-                    <label><input v-model="node.theme.hero_viewport" class="uk-checkbox" type="checkbox"> {{ 'Full viewport height' | trans }}</label>
+                    <label><input v-model="node.theme.hero_viewport" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'Full viewport height' | trans }}</span></label>
                 </p>
                 <p class="uk-margin-small">
-                    <label><input v-model="node.theme.hero_contrast" class="uk-checkbox" type="checkbox"> {{ 'Invert colors' | trans }}</label>
+                    <label><input v-model="node.theme.hero_contrast" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'Invert colors' | trans }}</span></label>
                 </p>
                 <p class="uk-margin-small">
-                    <label><input v-model="node.theme.navbar_transparent" class="uk-checkbox" type="checkbox"> {{ 'Transparent navbar as overlay' | trans }}</label>
+                    <label><input v-model="node.theme.navbar_transparent" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'Transparent navbar as overlay' | trans }}</span></label>
                 </p>
                 <p class="uk-margin-small uk-margin-bottom">
-                    <label><input v-model="node.theme.hero_parallax" class="uk-checkbox" type="checkbox"> {{ 'Enable parallax effect' | trans }}</label>
+                    <label><input v-model="node.theme.hero_parallax" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'Enable parallax effect' | trans }}</span></label>
                 </p>
                 <div class="uk-form-width-large">
-                    <input-image v-model="node.theme.hero_image" :source.sync="node.theme.hero_image" input-class="uk-form-width-large" />
+                    <input-image v-model="node.theme.hero_image" input-class="uk-form-width-large" />
                 </div>
                 <div class="uk-text-meta">
                     {{ 'Select a background image for the hero position.' | trans }}

@@ -4,7 +4,6 @@
             <label for="form-link-file" class="uk-form-label">{{ 'File' | trans }}</label>
             <div class="uk-form-controls">
                 <div class="pk-form-link uk-width-1-1">
-                    <!-- <input id="form-link-file" class="uk-width-1-1 uk-input" type="text" v-model="file" v-validate:required="isRequired" v-el:input lazy> -->
                     <input id="form-link-file" ref="input" v-model.lazy="file" class="uk-width-1-1 uk-input" type="text">
                     <a class="pk-form-link-toggle pk-link-icon uk-flex-middle" @click.prevent="pick">{{ 'Select' | trans }} <i class="pk-icon-link pk-icon-hover uk-margin-small-left" /></a>
                 </div>
@@ -23,7 +22,7 @@
                         </div>
                     </div>
                     <div>
-                        <button class="uk-button uk-button-secondary uk-modal-close" type="button">
+                        <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
                             {{ 'Cancel' | trans }}
                         </button>
                         <button class="uk-button uk-button-primary" type="button" :disabled="!choice" @click.prevent="select">

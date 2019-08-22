@@ -1,8 +1,8 @@
 <template>
     <div>
-        <div v-if="!img_src" :class="[inputClass, 'uk-inline-clip']" @click.prevent="pick">
+        <div v-if="!source" :class="[inputClass, 'uk-inline-clip']" @click.prevent="pick">
             <a>
-                <div class="uk-placeholder uk-text-center">
+                <div class="uk-placeholder uk-text-center uk-margin-remove">
                     <img width="60" height="60" :alt="'Placeholder Image' | trans" :src="$url('app/system/assets/images/placeholder-image.svg')">
                     <p class="uk-text-muted uk-margin-small-top">{{ title | trans }}</p>
                 </div>
@@ -10,21 +10,14 @@
         </div>
 
         <div v-else :class="[inputClass, 'uk-inline-clip uk-position-relative uk-transition-toggle uk-visible-toggle']">
-            <img :src="img_src.indexOf('blob:') !== 0 ? $url(img_src) : img_src">
+            <img :src="source.indexOf('blob:') !== 0 ? $url(source) : source">
 
             <a class="uk-transition-fade uk-position-cover pk-thumbnail-overlay uk-flex uk-flex-center uk-flex-middle" @click.prevent="pick" />
 
             <div class="uk-card-badge pk-panel-badge uk-invisible-hover">
                 <ul class="uk-subnav pk-subnav-icon">
                     <li>
-                        <a
-                            v-confirm="'Reset image?'"
-                            class="uk-icon-link"
-                            uk-icon="icon: trash"
-                            :title="'Delete' | trans"
-                            uk-tooltip="delay: 500"
-                            @click.prevent="remove"
-                        />
+                        <a class="uk-icon-link" uk-icon="trash" :title="'Delete' | trans" uk-tooltip="delay: 500" @click.prevent="remove" v-confirm="'Reset image?'"></a>
                     </li>
                 </ul>
             </div>
@@ -33,12 +26,12 @@
         <div v-if="inputField" class="uk-margin-small-top">
             <div :class="[inputClass, 'uk-inline']">
                 <a class="uk-form-icon" uk-icon="icon: image" @click.prevent="pick" />
-                <a v-if="img_src" v-confirm="'Reset image?'" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: close" @click.prevent="img_src=''" />
-                <input v-model="img_src" type="text" class="uk-input">
+                <a v-if="source" v-confirm="'Reset image?'" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: close" @click.prevent="source=''" />
+                <input v-model="source" type="text" class="uk-input">
             </div>
         </div>
 
-        <v-modal ref="modal" large>
+        <v-modal ref="modal" large bg-close>
             <panel-finder ref="finder" :root="storage" :modal="true" @select:finder="selectFinder" />
 
             <div class="uk-modal-footer">
@@ -50,7 +43,7 @@
                         </div>
                     </div>
                     <div>
-                        <button class="uk-button uk-button-secondary uk-modal-close" type="button">
+                        <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
                             {{ 'Cancel' | trans }}
                         </button>
                         <button class="uk-button uk-button-primary" type="button" :disabled="!choice" @click.prevent="select">
@@ -69,7 +62,7 @@ module.exports = {
 
     props: {
         inputClass: { default: '' },
-        source: { default: '' },
+        value: { default: '' },
         title: { default: 'Select Image' },
         inputField: { default: true, type: Boolean },
     },
@@ -77,7 +70,7 @@ module.exports = {
     data() {
         return _.merge({
             choice: '',
-            img_src: this.source,
+            source: this.value,
             finder: {},
         }, $pagekit);
     },
@@ -105,16 +98,16 @@ module.exports = {
         },
 
         select() {
-            const old_img_src = this.img_src;
-            this.img_src = decodeURI(this.$refs.finder.getSelected()[0]);
-            this.$emit('input', this.img_src);
-            this.$emit('image:selected', this.img_src, old_img_src);
+            const old_source = this.source;
+            this.source = decodeURI(this.$refs.finder.getSelected()[0]);
+            this.$emit('input', this.source);
+            this.$emit('image:selected', this.source, old_source);
             this.$refs.finder.removeSelection();
             this.$refs.modal.close();
         },
 
         remove() {
-            this.img_src = '';
+            this.source = '';
             // this.$dispatch('image-removed');
             this.$emit('image:removed');
         },
@@ -126,7 +119,7 @@ module.exports = {
     },
 
     watch: {
-        img_src(src) {
+        source(src) {
             this.$emit('input', src);
         },
     },

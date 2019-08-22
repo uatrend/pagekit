@@ -25,18 +25,18 @@
     </div>
 
     <div class="uk-margin">
-        <span class="uk-form-label">{{ 'Restrict Access' | trans }}</span>
+        <label class="uk-form-label">{{ 'Restrict Access' | trans }}</label>
         <div class="uk-form-controls uk-form-controls-text">
             <p v-for="role in roles" class="uk-margin-small">
-                <label><input class="uk-checkbox" type="checkbox" :value="role.id" v-model.number="node.roles"> {{ role.name }}</label>
+                <label><input class="uk-checkbox" type="checkbox" :value="role.id" v-model.number="node.roles"><span class="uk-margin-small-left">{{ role.name }}</span></label>
             </p>
         </div>
     </div>
 
     <div class="uk-margin">
-        <span class="uk-form-label">{{ 'Menu' | trans }}</span>
+        <label class="uk-form-label">{{ 'Menu' | trans }}</label>
         <div class="uk-form-controls uk-form-controls-text">
-            <label><input class="uk-checkbox" type="checkbox" value="center-content" v-model="node.data.menu_hide"> {{ 'Hide in menu' | trans }}</label>
+            <label><input class="uk-checkbox" type="checkbox" value="center-content" v-model="node.data.menu_hide"><span class="uk-margin-small-left">{{ 'Hide in menu' | trans }}</span></label>
         </div>
     </div>
 </div>

@@ -2,6 +2,7 @@
     <div class="pk-grid-large pk-width-sidebar-large uk-form-stacked" uk-grid>
         <div class="pk-width-content">
             <div class="uk-margin">
+                <label class="uk-form-label">{{ 'Title' | trans }}</label>
                 <input
                     v-model="post.title"
                     v-validate:required
@@ -15,15 +16,15 @@
                 </div>
             </div>
             <div class="uk-margin">
-                <label for="form-post-content" class="uk-form-label uk-position-absolute">{{ 'Content' | trans }}</label>
+                <label for="form-post-content" class="uk-form-label">{{ 'Content' | trans }}</label>
                 <div class="uk-form-controls">
-                    <v-editor id="post-content" v-model="post.content" :value.sync="post.content" :options="{markdown : post.data.markdown}" mode="combine" />
+                    <v-editor id="post-content" v-model="post.content" :options="{markdown : post.data.markdown}" />
                 </div>
             </div>
             <div class="uk-margin">
-                <label for="form-post-excerpt" class="uk-form-label uk-position-absolute">{{ 'Excerpt' | trans }}</label>
+                <label for="form-post-excerpt" class="uk-form-label">{{ 'Excerpt' | trans }}</label>
                 <div class="uk-form-controls">
-                    <v-editor id="post-excerpt" v-model="post.excerpt" :value.sync="post.excerpt" :options="{markdown : post.data.markdown, height: 150}" mode="combine" />
+                    <v-editor id="post-excerpt" v-model="post.excerpt" :options="{markdown : post.data.markdown, height: 150}" />
                 </div>
             </div>
         </div>
@@ -63,28 +64,28 @@
                     </div>
                 </div>
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Publish on' | trans }}</span>
+                    <label class="uk-form-label">{{ 'Publish on' | trans }}</label>
                     <div class="uk-form-controls">
                         <input-date v-model="post.date" />
                     </div>
                 </div>
 
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Restrict Access' | trans }}</span>
+                    <label class="uk-form-label">{{ 'Restrict Access' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p v-for="role in data.roles" class="uk-margin-small">
-                            <label><input v-model="post.roles" class="uk-checkbox" type="checkbox" :value="role.id" number> {{ role.name }}</label>
+                            <label><input v-model="post.roles" class="uk-checkbox" type="checkbox" :value="role.id" number><span class="uk-margin-small-left">{{ role.name }}</span></label>
                         </p>
                     </div>
                 </div>
                 <div class="uk-margin">
-                    <span class="uk-form-label">{{ 'Options' | trans }}</span>
+                    <label class="uk-form-label">{{ 'Options' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="post.data.markdown" class="uk-checkbox" type="checkbox" value="1"> {{ 'Enable Markdown' | trans }}</label>
+                            <label><input v-model="post.data.markdown" class="uk-checkbox" type="checkbox" value="1"><span class="uk-margin-small-left">{{ 'Enable Markdown' | trans }}</span></label>
                         </p>
                         <p class="uk-margin-small">
-                            <label><input v-model="post.comment_status" class="uk-checkbox" type="checkbox" value="1"> {{ 'Enable Comments' | trans }}</label>
+                            <label><input v-model="post.comment_status" class="uk-checkbox" type="checkbox" value="1"><span class="uk-margin-small-left">{{ 'Enable Comments' | trans }}</span></label>
                         </p>
                     </div>
                 </div>

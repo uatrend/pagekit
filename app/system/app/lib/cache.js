@@ -1,5 +1,4 @@
 import storage from 'JSONStorage';
-// var storage = require('JSONStorage');
 
 export default function (bucket, adapter) {
     const db = storage.select(bucket, adapter || 'local');

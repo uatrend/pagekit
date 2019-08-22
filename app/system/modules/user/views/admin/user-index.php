@@ -5,11 +5,11 @@
     <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap" >
         <div class="uk-flex uk-flex-middle uk-flex-wrap" >
 
-            <h2 class="uk-margin-remove" v-if="!selected.length">{{ '{0} %count% Users|{1} %count% User|]1,Inf[ %count% Users' | transChoice(count, {count:count}) }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-if="!selected.length">{{ '{0} %count% Users|{1} %count% User|]1,Inf[ %count% Users' | transChoice(count, {count:count}) }}</h2>
 
             <template v-else>
 
-                <h2 class="uk-margin-remove">{{ '{1} %count% User selected|]1,Inf[ %count% Users selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
+                <h2 class="uk-h3 uk-margin-remove">{{ '{1} %count% User selected|]1,Inf[ %count% Users selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
 
                 <div class="uk-margin-left">
                     <ul class="uk-subnav pk-subnav-icon">
@@ -20,14 +20,6 @@
                 </div>
 
             </template>
-
-<!--
-            <div class="pk-search">
-                <div class="uk-search">
-                    <input class="uk-search-field" type="text" v-model="config.filter.search" debounce="300">
-                </div>
-            </div>
--->
 
             <div class="uk-search uk-search-default pk-search">
                 <span uk-search-icon></span>
@@ -90,8 +82,8 @@
         </table>
     </div>
 
-    <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="users && !users.length">{{ 'No user found.' | trans }}</h3>
+    <h3 class="uk-h2 uk-text-muted uk-text-center" v-show="users && !users.length">{{ 'No user found.' | trans }}</h3>
 
-    <v-pagination :page.sync="config.page" :pages="pages" v-show="pages > 1 || config.page > 0"></v-pagination>
-
+<!--     <v-pagination :page.sync="config.page" :pages="pages" v-show="pages > 1 || config.page > 0"></v-pagination> -->
+    <v-pagination :pages="pages" v-model="config.page" v-show="pages > 1 || config.page > 0"></v-pagination>
 </div>

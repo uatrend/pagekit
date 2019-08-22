@@ -166,6 +166,25 @@ return [
         'view.scripts' => function ($event, $scripts) {
             $scripts->register('link-blog', 'blog:app/bundle/link-blog.js', '~panel-link');
             $scripts->register('post-meta', 'blog:app/bundle/post-meta.js', '~post-edit');
+        },
+
+        'view.data' => function ($event, $data) use ($app) {
+            if (!$app->isAdmin()) {
+                return;
+            }
+            $data->add('Theme', [
+                'SidebarItems' => [
+                    'additem' => [
+                        'addpost' => [
+                            'caption' => 'Add Post',
+                            'attrs' => [
+                                'href' => $app['url']->get('admin/blog/post/edit')
+                            ],
+                            'priority' => 1
+                        ]
+                    ]
+                ]
+            ]);
         }
 
     ]

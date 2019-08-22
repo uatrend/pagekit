@@ -55,6 +55,10 @@ switch ($vars['REQUEST_URI']) {
         header('Location: http://foo.example.', true, 301);
         break;
 
+    case '/301/invalid':
+        header('Location: //?foo=bar', true, 301);
+        break;
+
     case '/302':
         if (!isset($vars['HTTP_AUTHORIZATION'])) {
             header('Location: http://localhost:8057/', true, 302);
@@ -76,7 +80,7 @@ switch ($vars['REQUEST_URI']) {
     case '/post':
         $output = json_encode($_POST + ['REQUEST_METHOD' => $vars['REQUEST_METHOD']], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE);
         header('Content-Type: application/json', true);
-        header('Content-Length: '.\strlen($output));
+        header('Content-Length: '.strlen($output));
         echo $output;
         exit;
 

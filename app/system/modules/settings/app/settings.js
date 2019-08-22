@@ -4,7 +4,7 @@ window.Settings = {
 
     el: '#settings',
 
-    mixins: [Vue2Filters.mixin],
+    mixins: [Theme.Mixins.Helper, Theme.Mixins.Elements],
 
     data() {
         return _.extend({
@@ -12,12 +12,41 @@ window.Settings = {
         }, window.$settings);
     },
 
+    theme: {
+        hiddenHtmlElements: ['.pk-width-content li > div > div.uk-flex'],
+        elements() {
+            var vm = this;
+            return {
+                'title': {
+                    scope: 'breadcrumbs',
+                    type: 'caption',
+                    caption: () => {
+                        let trans = vm.$options.filters.trans,
+                            activeTab = vm.$theme.activeTab('leftTab', vm),
+                            section = vm.sections.filter((section)=>section.name === activeTab)[0];
+
+                        return vm.$trans(section.label);
+                    }
+                },
+                'submit': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Save',
+                    class: 'uk-button uk-button-primary',
+                    on: {click: () => vm.save()},
+                    priority: 0,
+                }
+            }
+        },
+    },
+
     created() {
         this.toHtml5Keys(this.config, this.options);
+        this.$theme.$tabs('leftTab', '#settings .uk-nav', { connect: '.settings-tab', state: true });
     },
 
     mounted() {
-        UIkit.switcher(this.$refs.tab, { connect: '.settings-tab' });
+        // UIkit.switcher(this.$refs.tab, { connect: '.settings-tab' });
     },
 
     computed: {
@@ -69,6 +98,7 @@ window.Settings = {
 
         save() {
             this.$trigger('save:settings', this.$data);
+
             this.$resource('admin/system/settings/save').save({ config: this.toOrigin(this.config), options: this.toOrigin(this.options) }).then(function () {
                 this.$notify('Settings saved.');
             }, function (res) {
@@ -82,6 +112,7 @@ window.Settings = {
 
         locale: require('./components/locale.vue').default,
         system: require('./components/system.vue').default,
+        misc  : require('./components/misc.vue').default
 
     },
 

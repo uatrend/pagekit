@@ -1,30 +1,17 @@
-<?php //$view->script('extensions', 'installer:app/bundle/extensions.js', ['vue', 'uikit-upload']); ?>
 <?php $view->script('extensions', 'installer:app/bundle/extensions.js', ['vue']); ?>
 
 <div id="extensions" v-cloak>
 
-    <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap" >
+    <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap">
         <div class="uk-flex uk-flex-middle uk-flex-wrap" >
-
-            <h2 class="uk-margin-remove">{{ 'Extensions' | trans }}</h2>
-
-<!--             <div class="pk-search">
-                <div class="uk-search">
-                    <input class="uk-search-field" type="text" v-model="search">
-                </div>
-            </div> -->
-
+            <h2 class="uk-h3 uk-margin-remove">{{ 'Extensions' | trans }}</h2>
             <div class="uk-search uk-search-default pk-search">
                 <span uk-search-icon></span>
                 <input class="uk-search-input" type="search" v-model="search">
             </div>
-
-
         </div>
-        <div >
-
+        <div class="uk-hidden@m">
             <package-upload :api="api" :packages="packages" type="extension"></package-upload>
-
         </div>
     </div>
 
@@ -41,7 +28,6 @@
                 </tr>
             </thead>
             <tbody>
-                <!-- <tr class="uk-visible-toggle" v-for="pkg in packages | filterBy search in 'title'"> -->
                 <tr class="uk-visible-toggle" v-for="pkg in filterBy(packages, search, 'title')">
                     <td class="pk-table-width-minimum">
                         <div class="uk-position-relative">
@@ -55,7 +41,7 @@
                         <div class="uk-text-muted">{{ pkg.authors[0].name }}</div>
                     </td>
                     <td>
-                        <a class="uk-button uk-button-default uk-button-success uk-button-small" @click="update(pkg, updates)" v-show="updates && updates[pkg.name]">{{ 'Update' | trans }}</a>
+                        <a class="uk-button tm-button-success uk-button-small" @click="update(pkg, updates)" v-show="updates && updates[pkg.name]">{{ 'Update' | trans }}</a>
                     </td>
                     <td class="uk-text-center">
                         <a class="pk-icon-circle-success" :title="'Enabled' | trans" v-if="pkg.enabled" @click="disable(pkg)"></a>
@@ -77,8 +63,7 @@
         </table>
     </div>
 
-    <!-- <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="packages | empty">{{ 'No extension found.' | trans }}</h3> -->
-    <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="empty(packages)">{{ 'No extension found.' | trans }}</h3>
+    <h3 class="uk-h2 uk-text-muted uk-text-center" v-show="empty(packages)">{{ 'No extension found.' | trans }}</h3>
 
     <v-modal ref="details">
         <package-details :api="api" :package="package"></package-details>

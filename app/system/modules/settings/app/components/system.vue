@@ -32,14 +32,14 @@
 
         <div class="uk-margin">
             <label for="form-user-recaptcha-enable" class="uk-form-label">{{ 'Google reCAPTCHA' | trans }}</label>
-            <div class="uk-form-controls">
+            <div class="uk-form-controls uk-form-controls-text">
                 <div>
-                    <label><input id="form-user-recaptcha-enable" v-model="$root.options['system-captcha'].recaptcha_enable" class="uk-checkbox" type="checkbox"> {{ 'Enable for user registration and comments' | trans }}</label>
+                    <label><input id="form-user-recaptcha-enable" v-model="$root.options['system-captcha'].recaptcha_enable" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'Enable for user registration and comments' | trans }}</span></label>
                 </div>
                 <div v-if="$root.options['system-captcha'].recaptcha_enable" class="uk-margin-small">
                     <input id="form-user-recaptcha-sitekey" v-model="$root.options['system-captcha'].recaptcha_sitekey" class="uk-form-width-large uk-input" :placeholder="'Site key' | trans">
                 </div>
-                <div v-if="$root.options['system-captcha'].recaptcha_enable" class="uk-margin-small-top">
+                <div v-if="$root.options['system-captcha'].recaptcha_enable" class="uk-margin-small">
                     <input id="form-user-recaptcha-secret" v-model="$root.options['system-captcha'].recaptcha_secret" class="uk-form-width-large uk-input" :placeholder="'Secret key' | trans">
                 </div>
                 <div class="uk-text-meta">
@@ -50,13 +50,13 @@
 
 
         <div class="uk-margin">
-            <span class="uk-form-label">{{ 'Developer' | trans }}</span>
+            <label class="uk-form-label">{{ 'Developer' | trans }}</label>
             <div class="uk-form-controls uk-form-controls-text">
                 <div class="uk-margin-small">
-                    <label><input v-model="$root.config.application.debug" class="uk-checkbox" type="checkbox" value="1"> {{ 'Enable debug mode' | trans }}</label>
+                    <label><input v-model="$root.config.application.debug" class="uk-checkbox" type="checkbox" value="1"><span class="uk-margin-small-left">{{ 'Enable debug mode' | trans }}</span></label>
                 </div>
-                <div class="uk-margin-small-top">
-                    <label><input v-model="$root.config.debug.enabled" class="uk-checkbox" type="checkbox" value="1" :disabled="!sqlite"> {{ 'Enable debug toolbar' | trans }}</label>
+                <div class="uk-margin-small">
+                    <label><input v-model="$root.config.debug.enabled" class="uk-checkbox" type="checkbox" value="1" :disabled="!sqlite"><span class="uk-margin-small-left">{{ 'Enable debug toolbar' | trans }}</span></label>
                 </div>
                 <div v-if="!sqlite" class="uk-text-meta">
                     {{ 'Please enable the SQLite database extension.' | trans }}

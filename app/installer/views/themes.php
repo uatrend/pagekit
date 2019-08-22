@@ -5,19 +5,14 @@
 
     <div class="uk-margin uk-flex uk-flex-between uk-flex-wrap" >
         <div class="uk-flex uk-flex-middle uk-flex-wrap" >
-
             <h2 class="uk-margin-remove">{{ 'Themes' | trans }}</h2>
-
             <div class="uk-search uk-search-default pk-search">
                 <span uk-search-icon></span>
                 <input class="uk-search-input" type="search" v-model="search">
             </div>
-
         </div>
-        <div >
-
+        <div class="uk-hidden@m">
             <package-upload :api="api" :packages="packages" type="theme"></package-upload>
-
         </div>
     </div>
 
@@ -41,8 +36,8 @@
                     <div class="uk-text-muted">{{ pkg.authors[0].name }}</div>
 
                     <div class="uk-position-center-right uk-padding-remove-vertical uk-padding-small">
-                        <button class="uk-button uk-button-secondary uk-button-small" v-show="pkg.enabled && pkg.settings" @click="settings(pkg)">Customize</button>
-                        <button class="uk-button uk-button-default uk-button-success uk-button-small" @click="update(pkg, updates)" v-show="updates && updates[pkg.name]">{{ 'Update' | trans }}</button>
+                        <button class="uk-button uk-button-primary uk-button-small" v-show="pkg.enabled && pkg.settings" @click="settings(pkg)">{{ 'Customize' | trans }}</button>
+                        <button class="uk-button tm-button-success uk-button-small" @click="update(pkg, updates)" v-show="updates && updates[pkg.name]">{{ 'Update' | trans }}</button>
                     </div>
                 </div>
 
@@ -57,7 +52,7 @@
         </div>
     </div>
 
-    <h3 class="uk-h1 uk-text-muted uk-text-center" v-show="packages | empty">{{ 'No theme found.' | trans }}</h3>
+    <h3 class="uk-h2 uk-text-muted uk-text-center" v-show="packages | empty">{{ 'No theme found.' | trans }}</h3>
 
     <v-modal ref="details">
         <package-details :api="api" :package="package"></package-details>

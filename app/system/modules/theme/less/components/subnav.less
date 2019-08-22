@@ -89,7 +89,7 @@
  * 2. Style
  */
 
-.uk-subnav > * > :first-child {
+.uk-subnav:not(.tm-action-buttons) > * > :first-child {
     /* 1 */
     display: block;
     /* 2 */
@@ -98,8 +98,8 @@
 }
 
 /* Hover + Focus */
-.uk-subnav > * > a:hover,
-.uk-subnav > * > a:focus {
+.uk-subnav:not(.tm-action-buttons) > * > a:hover,
+.uk-subnav:not(.tm-action-buttons) > * > a:focus {
     color: @subnav-item-hover-color;
     text-decoration: @subnav-item-hover-text-decoration;
     outline: none;
@@ -107,7 +107,7 @@
 }
 
 /* Active */
-.uk-subnav > .uk-active > a {
+.uk-subnav:not(.tm-action-buttons) > .uk-active > a {
     color: @subnav-item-active-color;
     .hook-subnav-item-active;
 }

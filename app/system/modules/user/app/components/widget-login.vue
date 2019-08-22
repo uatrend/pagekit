@@ -21,14 +21,14 @@
             <div class="uk-margin">
                 <label class="uk-form-label">{{ 'Login Redirect' | trans }}</label>
                 <div class="uk-form-controls wp-form-width-max-large">
-                    <input-link v-model="widget.data.redirect_login" :link.sync="widget.data.redirect_login" />
+                    <input-link v-model="widget.data.redirect_login" cls="uk-form-width-large"></input-link>
                 </div>
             </div>
 
             <div class="uk-margin">
                 <label class="uk-form-label">{{ 'Logout Redirect' | trans }}</label>
                 <div class="uk-form-controls wp-form-width-max-large">
-                    <input-link v-model="widget.data.redirect_logout" :link.sync="widget.data.redirect_logout" />
+                    <input-link v-model="widget.data.redirect_logout" cls="uk-form-width-large"></input-link>
                 </div>
             </div>
         </div>

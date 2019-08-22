@@ -1,7 +1,7 @@
 <template>
     <div class="uk-form-horizontal">
         <div class="uk-margin">
-            <span class="uk-form-label">{{ 'Pages' | trans }}</span>
+            <label class="uk-form-label">{{ 'Pages' | trans }}</label>
             <div v-if="config.menus" class="uk-form-controls uk-form-controls-text">
                 <input-tree v-model="widget.nodes" :active.sync="widget.nodes" />
             </div>

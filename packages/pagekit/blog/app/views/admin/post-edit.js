@@ -4,6 +4,8 @@ window.Post = {
 
     el: '#post',
 
+    mixins: [Theme.Mixins.Helper],
+
     data() {
         return {
             data: window.$data,
@@ -22,13 +24,48 @@ window.Post = {
         };
     },
 
+    theme: {
+        hiddenHtmlElements: ['#post > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                'title': {
+                    scope: 'breadcrumbs',
+                    type: 'caption',
+                    caption: () => {
+                        let trans = this.$options.filters.trans;
+                        return vm.post.id && trans ? trans('Edit Post') : trans('Add Post');
+                    }
+                },
+                'savepost': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Save',
+                    class: 'uk-button tm-button-success',
+                    spinner: () => vm.processing,
+                    on: {click: () => vm.submit()},
+                    priority: 1,
+                },
+                'close': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: vm.post.id ? 'Close' : 'Cancel',
+                    class: 'uk-button uk-button-text',
+                    attrs: {
+                        href: () => vm.$url.route('admin/blog/post')
+                    },
+                    disabled: () => vm.processing,
+                    priority: 0,
+                }
+            }
+        }
+    },
+
     created() {
         const sections = [];
 
         _.forIn(this.$options.components, (component, name) => {
-            // var options = component.options || {};
 
-            // if (options.section) {
             if (component.section) {
                 sections.push(_.extend({ name, priority: 0 }, component.section));
             }
@@ -41,7 +78,6 @@ window.Post = {
 
     mounted() {
         const vm = this;
-        // this.tab = UIkit.tab(this.$els.tab, {connect: this.$els.content});
         this.tab = UIkit.tab('#post-tab', { connect: '#post-content' });
 
         UIkit.util.on(this.tab.connects, 'show', (e, tab) => {

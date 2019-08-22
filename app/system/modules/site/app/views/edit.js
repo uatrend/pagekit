@@ -8,10 +8,49 @@ window.Site = {
 
     el: '#site-edit',
 
+    mixins: [Theme.Mixins.Helper],
+
     data() {
         return _.merge({
             sections: [], form: {}, active: 0, processing: false,
         }, window.$data);
+    },
+
+    theme: {
+        hiddenHtmlElements: ['#site-edit > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                'title': {
+                    scope: 'breadcrumbs',
+                    type: 'caption',
+                    caption: () => {
+                        let trans = this.$options.filters.trans;
+                        return vm.node.id && trans ? trans('Edit %type%', {type:vm.type.label}) : trans('Add %type%', {type:vm.type.label})
+                    }
+                },
+                'savepage': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Save',
+                    class: 'uk-button tm-button-success',
+                    spinner: () => vm.processing,
+                    on: {click: () => vm.submit()},
+                    priority: 1,
+                },
+                'close': {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: vm.node.id ? 'Close' : 'Cancel',
+                    class: 'uk-button uk-button-text',
+                    attrs: {
+                        href: () => vm.$url.route('admin/site/page')
+                    },
+                    disabled: () => vm.processing,
+                    priority: 0,
+                }
+            }
+        }
     },
 
     created() {

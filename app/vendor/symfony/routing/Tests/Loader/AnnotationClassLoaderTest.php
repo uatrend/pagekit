@@ -205,12 +205,12 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $reader
             ->expects($this->exactly(1))
             ->method('getClassAnnotations')
-            ->will($this->returnValue([new RouteAnnotation($classRouteData1), new RouteAnnotation($classRouteData2)]))
+            ->willReturn([new RouteAnnotation($classRouteData1), new RouteAnnotation($classRouteData2)])
         ;
         $reader
             ->expects($this->once())
             ->method('getMethodAnnotations')
-            ->will($this->returnValue([]))
+            ->willReturn([])
         ;
         $loader = new class($reader) extends AnnotationClassLoader {
             protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot)
@@ -276,6 +276,34 @@ class AnnotationClassLoaderTest extends AbstractAnnotationLoaderTest
         $this->assertCount(2, $routes);
         $this->assertEquals('/en/suffix', $routes->get('action.en')->getPath());
         $this->assertEquals('/nl/suffix', $routes->get('action.nl')->getPath());
+    }
+
+    /**
+     * @requires function mb_strtolower
+     */
+    public function testDefaultRouteName()
+    {
+        $methodRouteData = [
+            'name' => null,
+        ];
+
+        $reader = $this->getReader();
+        $reader
+            ->expects($this->once())
+            ->method('getMethodAnnotations')
+            ->willReturn([new RouteAnnotation($methodRouteData)])
+        ;
+
+        $loader = new class($reader) extends AnnotationClassLoader {
+            protected function configureRoute(Route $route, \ReflectionClass $class, \ReflectionMethod $method, $annot)
+            {
+            }
+        };
+        $routeCollection = $loader->load('Symfony\Component\Routing\Tests\Fixtures\AnnotatedClasses\EncodingClass');
+
+        $defaultName = array_keys($routeCollection->all())[0];
+
+        $this->assertSame($defaultName, 'symfony_component_routing_tests_fixtures_annotatedclasses_encodingclass_routeàction');
     }
 
     public function testLoadingRouteWithPrefix()

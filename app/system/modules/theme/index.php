@@ -10,6 +10,58 @@ return [
 
     'events' => [
 
+       'view.data' => function ($event, $data) use ($app) {
+            if (!$app->isAdmin()) {
+                return;
+            }
+            $data->add('Theme', [
+                'SidebarItems' => [
+                    'additem' => [
+                        'addpage' => [
+                            'caption' => 'Add Page',
+                            'attrs' => [
+                                'href' => $app['url']->get('admin/site/page/edit?id=page&menu=')
+                            ],
+                            'priority' => 0
+                        ]
+                    ],
+                    'menuitem' => [
+                        'site' => [
+                            'caption' => 'Visit Site',
+                            'attrs' => [
+                                'href' => $app['url']->get(''),
+                                'target' => '_blank'
+                            ],
+                            'priority' => 0
+                        ],
+                        'pagekitdocs' => [
+                            'caption' => 'Documentation',
+                            'attrs' => [
+                                'href' => $app['url']->get('https://pagekit.com/docs'),
+                                'target' => '_blank'
+                            ],
+                            'priority' => 1
+                        ],
+                        'pagekit' => [
+                            'caption' => '<span class="uk-text-middle">pagekit.com</span>',
+                            'attrs' => [
+                                'href' => $app['url']->get('https://pagekit.com'),
+                                'target' => '_blank'
+                            ],
+                            'priority' => 2
+                        ],
+                        'logout' => [
+                            'caption' => 'Logout',
+                            'attrs' => [
+                                'href' => $app['url']->get('@user/logout', ['redirect' => 'admin/login'])
+                            ],
+                            'priority' => 99
+                        ]
+                    ]
+                ]
+            ]);
+        },
+
         'view.meta' => [function($event, $meta) use ($app) {
             $meta([
                 'link:favicon' => [
@@ -33,7 +85,7 @@ return [
             $user = $app['user'];
 
             $view->data('$pagekit', [
-                'editor' => $app->module('system/editor')->config('editor'),
+                'editor' => $app->module('system/editor')->config(),//->config('editor')
                 'storage' => $app->module('system/finder')->config('storage'),
                 'user' => [
                     'id' => $user->id,
@@ -56,8 +108,7 @@ return [
     		}
 
             $event['subset'] = $subsets;
-            $event['sbstatus'] = $app['user']->get('admin.sidebar_open');
-            $event['pid'] = str_replace('/','-', str_replace('/admin/', '', parse_url( $app['url']->current(true),PHP_URL_PATH )));
+            $event['pageClass'] = str_replace('/','-', str_replace('/admin/', '', parse_url( $app['url']->current(true),PHP_URL_PATH )));
 
         }
 

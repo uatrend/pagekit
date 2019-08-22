@@ -1,12 +1,12 @@
 <template>
     <div>
-        <label><input v-model="all" class="uk-checkbox" type="checkbox"> {{ 'All Pages' | trans }}</label>
+        <label><input v-model="all" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'All Pages' | trans }}</span></label>
 
         <ul class="uk-list">
             <li v-for="(menu, key) in treelist" v-show="menu.list.length" :key="key">
                 <span class="uk-h5">{{ menu.label }}</span>
                 <vue-nestable :value="menu.list">
-                    <label slot-scope="{ item }" :item="item"><input v-model="c_active" class="uk-checkbox" type="checkbox" :value="item.id" number> {{ item.title }}</label>
+                    <label slot-scope="{ item }" :item="item"><input v-model="c_active" class="uk-checkbox" type="checkbox" :value="item.id" number><span class="uk-margin-small-left">{{ item.title }}</span></label>
                 </vue-nestable>
             </li>
         </ul>

@@ -3,10 +3,14 @@ module.exports = {
     template: '<ul class="uk-pagination uk-flex-center"></ul>',
 
     props: {
-        current: {
+        value: {
             default: 0,
             type: Number,
         },
+        // current: {
+        //     default: 0,
+        //     type: Number,
+        // },
 
         pages: {
             default: 1,
@@ -17,16 +21,31 @@ module.exports = {
             type: Boolean,
             default: true,
         },
+
+        options: {
+            type: Object,
+            default: function() {return {}}
+        },
+
+        name: {
+            default: '',
+            type: String
+        }
     },
 
     data() {
         return {
-            page: this.current,
+            // page: this.current,
+            page: this.value,
         };
     },
 
     created() {
-        this.key = `${this.$parent.$options.name}.pagination`;
+
+        var name = this.name || this.$parent.$options.name || this.$parent.$options._componentTag;
+
+        // this.key = `${this.$parent.$options.name}.pagination`;
+        this.key = `${name}.pagination`;
 
         if (this.page === null && this.$session.get(this.key)) {
             this.$set(this, 'page', this.$session.get(this.key));
@@ -40,7 +59,11 @@ module.exports = {
     mounted() {
         const vm = this;
 
-        this.pagination = UIkit.pagination(this.$el, { pages: this.pages, currentPage: this.page || 0 });
+        this.pagination = UIkit.pagination(this.$el, _.extend({
+            pages: this.pages,
+            currentPage: this.page || 0
+        }, this.options));
+
         UIkit.util.on(this.pagination.$el, 'select.uk.pagination', (e, pagination, page) => {
             vm.$emit('input', Number(page));
             // vm.$set(vm, 'page', page);
@@ -49,7 +72,11 @@ module.exports = {
 
     watch: {
 
-        current(page) {
+        // current(page) {
+        //     this.$set(this, 'page', page);
+        // },
+
+        value(page) {
             this.$set(this, 'page', page);
         },
 

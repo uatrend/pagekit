@@ -4,6 +4,8 @@ module.exports = {
 
     el: '#post',
 
+    mixins: [Theme.Mixins.Helper],
+
     data() {
         return _.merge({
             posts: false,
@@ -15,6 +17,111 @@ module.exports = {
             selected: [],
             canEditAll: false,
         }, window.$data);
+    },
+
+    theme: {
+        hiddenHtmlElements: ['#post > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                addpost: {
+                    scope: 'topmenu-left',
+                    type: 'button',
+                    caption: 'Add Post',
+                    attrs: {
+                        href: vm.$url.route('admin/blog/post/edit')
+                    },
+                    class: 'uk-button uk-button-primary',
+                    priority: 0,
+                },
+                'selected': {
+                    scope: 'topmenu-right',
+                    type: 'caption',
+                    caption: () => {
+                        if (!vm.selected.length)
+                            return vm.$transChoice('{0} %count% Posts|{1} %count% Post|]1,Inf[ %count% Posts', vm.count, {count: vm.count});
+                        return vm.$transChoice('{1} %count% Post selected|]1,Inf[ %count% Posts selected', vm.selected.length, {count:vm.selected.length})
+                    },
+                    class: 'uk-text-small',
+                    priority: 1
+                },
+                search: {
+                    scope: 'navbar-right',
+                    type: 'search',
+                    class: 'uk-text-small',
+                    domProps: {
+                        value: () => vm.config.filter.search || ''
+                    },
+                    on: {
+                        input: function(e) {
+                            !vm.config.filter.search && vm.$set(vm.config.filter, 'search', '');
+                            vm.config.filter.search = e.target.value
+                        }
+                    }
+                },
+                'actions': {
+                    scope: 'topmenu-left',
+                    type: 'dropdown',
+                    caption: 'Actions',
+                    class: 'uk-button uk-button-text',
+                    icon: {
+                        attrs:{ 'uk-icon': 'triangle-down' },
+                    },
+                    dropdown: { options: () => 'mode:click' },
+                    actionIcons: true,
+                    items:() => {
+                        return {
+                            publish: {
+                                on: {click: () => vm.status(2)},
+                            },
+                            unpublish: {
+                                on: {click: () => vm.status(3)}
+                            },
+                            copy: {
+                                on: {click: (e) => vm.copy(e)},
+                            },
+                            delete: {
+                                on: {click: (e) => vm.remove(e)},
+                                directives: [
+                                    {
+                                        name: 'confirm',
+                                        value: 'Delete Posts?'
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    priority: 2,
+                    disabled: () => !vm.selected.length,
+                },
+                pagination: {
+                    scope: 'topmenu-right',
+                    type: 'pagination',
+                    caption: 'Pages',
+                    props: {
+                        value: () => vm.config.page,
+                        pages: () => vm.pages,
+                        name: () => vm.$options.name,
+                        options: () => ({
+                            lblPrev: '<span uk-pagination-previous></span>',
+                            lblNext: '<span uk-pagination-next></span>',
+                            displayedPages: 3,
+                            edges: 1,
+                        })
+                    },
+                    on: {
+                        input: (e) => {
+                            if (typeof e === 'number') {
+                                vm.config.page = e;
+                            }
+                        }
+                    },
+                    watch: () => vm.posts,
+                    vif: () => (vm.pages > 1 || vm.config.page > 0),
+                    priority: 0,
+                }
+            }
+        }
     },
 
     mounted() {
@@ -35,11 +142,7 @@ module.exports = {
                 this.$session.set('posts.filter', filter);
             },
             deep: true,
-        },
-
-        // 'config.page': function(page) {
-        //     this.load()
-        // }
+        }
 
     },
 

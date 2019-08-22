@@ -48,12 +48,14 @@
     font-size: @tab-item-font-size;
     text-transform: @tab-item-text-transform;
     transition: color 0.1s ease-in-out;
+    color: @theme-link-color;
 }
 
 .hook-tab-item-hover() {}
 
 .hook-tab-item-active() {
-    border-color: #677183;
+    border-color: @theme-highlight-color;
+    border-width: 2px;
     // border-color: @tab-item-active-border;
 }
 

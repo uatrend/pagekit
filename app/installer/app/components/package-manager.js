@@ -3,7 +3,7 @@ module.exports = {
     mixins: [
         // Package,
         require('../lib/package'),
-        Vue2Filters.mixin,
+        Theme.Mixins.Helper
     ],
 
     data() {
@@ -14,6 +14,29 @@ module.exports = {
             search: this.$session.get(`${this.$options.name}.search`, ''),
             status: '',
         }, window.$data);
+    },
+
+    theme: {
+        hiddenHtmlElements: ['#extensions > div:first-child','#themes > div:first-child'],
+        elements() {
+            var vm = this;
+            return {
+                search: {
+                    scope: 'navbar-right',
+                    type: 'search',
+                    class: 'uk-text-small',
+                    domProps: {
+                        value: () => vm.search || ''
+                    },
+                    on: {
+                        input: function(e) {
+                            !vm.search && vm.$set(vm, 'search', '');
+                            vm.search = e.target.value
+                        }
+                    }
+                }
+            }
+        }
     },
 
     mounted() {

@@ -25,26 +25,17 @@
             </div>
         </div>
 
-        <v-pagination v-show="pages > 1 || page > 0" v-model="$parent.page" :current.sync="page" :pages="pages" />
+        <v-pagination :pages="pages" v-model="$parent.page" v-show="pages > 1 || page > 0" />
 
         <div ref="modal" class="uk-modal-container" uk-modal>
             <div class="uk-modal-dialog marketplace">
-                <button class="uk-modal-close-outside uk-close-large" type="button" uk-close />
                 <div v-if="pkg">
-                    <div class="pk-modal-dialog-badge">
-                        <button v-if="isInstalled(pkg)" class="uk-button uk-button-default" disabled>
-                            {{ 'Installed' | trans }}
-                        </button>
-                        <button v-else class="uk-button uk-button-primary" @click.prevent="doInstall(pkg)">
-                            {{ 'Install' | trans }}
-                        </button>
-                    </div>
 
-                    <div class="uk-modal-header">
-                        <h2 class="uk-margin-remove">
+                    <div class="uk-modal-header uk-position-relative">
+                        <h2 class="uk-h3 uk-margin-remove">
                             {{ pkg.title }}
                         </h2>
-                        <ul class="uk-subnav uk-subnav-divider uk-margin-remove-top">
+                        <ul class="uk-subnav uk-subnav-divider uk-margin-remove-top uk-margin-remove-bottom">
                             <li v-if="pkg.author.homepage">
                                 <a class="uk-link-muted" :href="pkg.author.homepage" target="_blank">{{ pkg.author.name }}</a>
                             </li>
@@ -58,28 +49,40 @@
                                 <span>{{ pkg.license }}</span>
                             </li>
                         </ul>
+                        <!-- pk-modal-dialog-badge  -->
+                        <div class="pk-modal-dialog-badge uk-position-center-right">
+                            <button v-if="isInstalled(pkg)" class="uk-button uk-button-default" disabled>
+                                {{ 'Installed' | trans }}
+                            </button>
+                            <button v-else class="uk-button uk-button-primary" @click.prevent="doInstall(pkg)">
+                                {{ 'Install' | trans }}
+                            </button>
+                        </div>
                     </div>
 
                     <div class="uk-modal-body">
-                        <div uk-grid>
-                            <div class="uk-width-1-2@m">
-                                <img width="1200" height="800" :alt="pkg.title" :src="pkg.extra.image">
+                        <div class="uk-child-width-1-2@m" uk-grid>
+                            <div class="uk-grid-item-match">
+                                <div class="uk-height-max-large uk-cover-container">
+                                    <img :alt="pkg.title" :src="pkg.extra.image" uk-cover>
+                                    <canvas width="1200" height="800"></canvas>
+                                </div>
                             </div>
-                            <div class="uk-width-1-2@m">
-                                <!-- <div v-html="pkg.description | marked" v-if="pkg.description"></div> -->
-                                <div v-if="pkg.description" v-html="marked(pkg.description)" />
-
-                                <ul class="uk-grid-small" uk-grid>
-                                    <li v-if="pkg.demo">
-                                        <a class="uk-button uk-button-default" :href="pkg.demo" target="_blank">{{ 'Demo' | trans }}</a>
-                                    </li>
-                                    <li v-if="pkg.support">
-                                        <a class="uk-button uk-button-default" :href="pkg.support" target="_blank">{{ 'Support' | trans }}</a>
-                                    </li>
-                                    <li v-if="pkg.documentation">
-                                        <a class="uk-button uk-button-default" :href="pkg.documentation" target="_blank">{{ 'Documentation' | trans }}</a>
-                                    </li>
-                                </ul>
+                            <div>
+                                <div class="uk-height-max-large uk-overflow-auto">
+                                    <div v-if="pkg.description" v-html="marked(pkg.description)"></div>
+                                    <ul class="uk-grid-small uk-margin-top" uk-grid>
+                                        <li v-if="pkg.demo">
+                                            <a class="uk-button uk-button-default" :href="pkg.demo" target="_blank">{{ 'Demo' | trans }}</a>
+                                        </li>
+                                        <li v-if="pkg.support">
+                                            <a class="uk-button uk-button-default" :href="pkg.support" target="_blank">{{ 'Support' | trans }}</a>
+                                        </li>
+                                        <li v-if="pkg.documentation">
+                                            <a class="uk-button uk-button-default" :href="pkg.documentation" target="_blank">{{ 'Documentation' | trans }}</a>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>

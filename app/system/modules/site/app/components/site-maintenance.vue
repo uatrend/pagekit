@@ -2,7 +2,7 @@
     <div>
         <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
             <div>
-                <h2 class="uk-margin-remove">
+                <h2 class="uk-h3 uk-margin-remove">
                     {{ 'Maintenance' | trans }}
                 </h2>
             </div>
@@ -15,9 +15,9 @@
 
         <div class=" uk-form-horizontal">
             <div class="uk-margin">
-                <span class="uk-form-label">{{ 'Offline' | trans }}</span>
+                <label class="uk-form-label">{{ 'Offline' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
-                    <label><input v-model="config.maintenance.enabled" class="uk-checkbox" type="checkbox" value="1"> {{ 'Put the site offline and show the offline message.' | trans }}</label>
+                    <label><input v-model="config.maintenance.enabled" class="uk-checkbox" type="checkbox" value="1"><span class="uk-margin-small-left">{{ 'Put the site offline and show the offline message.' | trans }}</span></label>
                 </div>
             </div>
 
