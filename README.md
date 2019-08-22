@@ -270,7 +270,7 @@ Improved russian translation.
 
 ## Fixed Bugs
 
-Getting News Feed in WidgetFeed, selection in InputFilter component and etc.
+Getting News Feed in WidgetFeed, selection in 'check-all' directive and etc.
 
 ---
 
