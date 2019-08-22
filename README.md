@@ -199,7 +199,7 @@ For individual markup of each page added class page in the body tag generated vi
 
 Example, class for dashboard page look like:
 ```html
-<body class=“tm-dashboard”>
+<body class=“dashboard”>
 ```
 
 ## Theme Plugin
