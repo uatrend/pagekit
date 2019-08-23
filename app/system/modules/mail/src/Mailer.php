@@ -106,7 +106,7 @@ class Mailer implements MailerInterface
      */
     public function testSmtpConnection($host = 'localhost', $port = 25, $username = '', $password = '', $encryption = null)
     {
-        Swift_SmtpTransport::newInstance($host, $port)
+        (new Swift_SmtpTransport($host, $port))
             ->setUsername($username)
             ->setPassword($password)
             ->setEncryption($encryption)

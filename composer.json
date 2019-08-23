@@ -13,7 +13,7 @@
     ],
     "require": {
         "php": ">=7.2",
-        "composer/composer": "~1",
+        "composer/composer": "~1.9",
         "doctrine/annotations": "~1.7",
         "doctrine/dbal": "~2.9",
         "ircmaxell/random-lib": "~1.2",
