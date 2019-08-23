@@ -160,18 +160,21 @@ Location: ``` app/system/modules/theme/js/components```
 
 ## Install from source
 
-- clone repo
+Clone Repository
+
 ```
 git clone git@github.com:trk/pagekit.git project-folder
 cd project-folder
 ```
 
-- install dependencies
+Install Dependencies
+
 ```
 composer install
 ```
 
-- compile assets
+Compile Assets
+
 ```
 npm install
 ```
