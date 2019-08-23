@@ -40,7 +40,7 @@
                     <tbody>
                         <tr v-for="(permission, key_permission) in group" :class="{'uk-visible-toggle': permission.trusted}" :key="key_permission">
                             <td class="pk-table-text-break">
-                                <span :uk-tooltip="permission.description | trans" pos="pos-left">{{ permission.title | trans }}</span>
+                                <div :uk-tooltip="permission.description | trans" pos="pos-left">{{ permission.title | trans }}</div>
                             </td>
                             <td>
                                 <i class="pk-icon-warning uk-invisible-hover" :uk-tooltip="'Grant this permission to trusted roles only to avoid security implications.' | trans" v-if="permission.trusted"></i>
