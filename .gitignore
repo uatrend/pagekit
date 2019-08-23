@@ -7,6 +7,7 @@
 !/app/assets/uikit
 /app/installer/assets/css/*
 /app/system/modules/theme/css/*
+/app/system/modules/theme/js/theme.js
 /packages/*
 /pagekit*.zip
 /pagekit.db
