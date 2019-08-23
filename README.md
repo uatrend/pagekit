@@ -163,7 +163,7 @@ Location: ``` app/system/modules/theme/js/components```
 Clone Repository
 
 ```
-git clone git@github.com:pagekit/pagekit.git project-folder
+git clone git@github.com:uatrend/pagekit.git project-folder
 cd project-folder
 ```
 
