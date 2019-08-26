@@ -1,6 +1,6 @@
 <?php
 
-if (version_compare($ver = PHP_VERSION, $req = '5.5.9', '<')) {
+if (version_compare($ver = PHP_VERSION, $req = '7.2', '<')) {
     exit(sprintf('You are running PHP %s, but Pagekit needs at least <strong>PHP %s</strong> to run.', $ver, $req));
 }
 
