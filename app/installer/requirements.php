@@ -352,7 +352,7 @@ class RequirementCollection implements IteratorAggregate
  */
 class PagekitRequirements extends RequirementCollection
 {
-    const REQUIRED_PHP_VERSION = '5.5.9';
+    const REQUIRED_PHP_VERSION = '7.2.0';
 
     /**
      * Constructor that initializes the requirements.

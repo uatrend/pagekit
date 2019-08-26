@@ -42,7 +42,15 @@ return [
             }
 
             if ('mail' == $this->config['driver']) {
-                return Swift_MailTransport::newInstance();
+                // Deprecated Swift_MailTransport since 6.0
+                // configure SwiftMailer to use Sendmail https://www.texelate.co.uk/blog/how-to-configure-swiftmailer-to-use-sendmail
+
+                $sendMailPath = ini_get('sendmail_path');
+
+                // If not set or available default to what Swift recommend
+                $sendMailPath = ($sendMailPath === false || $sendMailPath === '') ? '/usr/sbin/sendmail -bs' : $sendMailPath;
+
+                return new \Swift_SendmailTransport($sendMailPath);
             }
 
             throw new \InvalidArgumentException('Invalid mail driver.');

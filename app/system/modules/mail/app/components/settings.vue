@@ -145,7 +145,7 @@ module.exports = {
                     class: 'uk-button tm-button-success',
                     spinner: () => vm.processing.smtp,
                     on: {click: () => vm.test('smtp')},
-                    vif: () => vm.$theme.activeTab('leftTab', true),
+                    vif: () => vm.$theme.activeTab('leftTab', true) && 'smtp' === vm.options.driver,
                     watch: () => vm.$theme.activeTab('leftTab'),
                     priority: 0,
                 },

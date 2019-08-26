@@ -16,7 +16,7 @@
         "composer/composer": "~1.9",
         "doctrine/annotations": "~1.7",
         "doctrine/dbal": "~2.9",
-        "ircmaxell/random-lib": "~1.2",
+        "paragonie/random-lib": "~2.0.0",
         "maximebf/debugbar": "~1.15",
         "monolog/monolog": "~1.24",
         "nikic/php-parser": "~4.2",

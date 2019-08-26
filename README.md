@@ -31,6 +31,8 @@ Marketplace functionality like install, update and remove works the same like in
 
 ### Major changes:
 
+**Required PHP Version - 7.2 or higher.**
+
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
 <thead>
 <tr>
@@ -124,7 +126,7 @@ Marketplace functionality like install, update and remove works the same like in
         Symfony Framework
     </td>
     <td>
-        4.2
+        4.3
     </td>
     <td width="50%" colspan="2">
     </td>
@@ -134,7 +136,7 @@ Marketplace functionality like install, update and remove works the same like in
         Composer
     </td>
     <td>
-        1.8
+        1.9
     </td>
     <td width="50%" colspan="2">
     </td>
