@@ -1,17 +1,11 @@
-# Ignor bundles
-**/app/bundle/**/*.js
-# Ignor assets
+# Ignore assets
 /app/assets/*
 # Don't ignore these assets
-!/app/assets/flatpickr
-!/app/assets/js-md5
 !/app/assets/JSONStorage
-!/app/assets/lodash
-!/app/assets/uikit
-!/app/assets/vue
 !/app/assets/vue-form
 !/app/assets/vue-intl
-!/app/assets/vue-resource
+# Ignor bundles
+**/app/bundle/**/*.js
 # Ignore vendor folder
 /app/vendor/*
 # Ignor module assets
