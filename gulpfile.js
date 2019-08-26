@@ -40,6 +40,34 @@ var errhandler = function (error) {
 };
 
 /**
+ * Copy required asset files to app/assets/** folder
+ */
+gulp.task('copy', function() {
+    // Uikit
+    gulp.src([
+        './node_modules/uikit/dist/js/uikit.js',
+        './node_modules/uikit/dist/js/uikit.min.js',
+        './node_modules/uikit/dist/js/uikit-icons.js',
+        './node_modules/uikit/dist/js/uikit-icons.min.js'])
+        .pipe(gulp.dest('./app/assets/uikit/dist/js/'));
+    // Vue
+    gulp.src(['./node_modules/vue/dist/vue.js', './node_modules/vue/dist/vue.min.js'])
+        .pipe(gulp.dest('./app/assets/vue/dist/'));
+    // Lodash
+    gulp.src(['./node_modules/lodash/lodash.js', './node_modules/lodash/lodash.min.js'])
+        .pipe(gulp.dest('./app/assets/lodash/dist/'));
+    // Flatpickr
+    gulp.src([
+        './node_modules/flatpickr/dist/flatpickr.css',
+        './node_modules/flatpickr/dist/flatpickr.min.css',
+        './node_modules/flatpickr/dist/flatpickr.js',
+        './node_modules/flatpickr/dist/flatpickr.min.js'])
+        .pipe(gulp.dest('./app/assets/flatpickr/dist/'));
+    gulp.src('./node_modules/flatpickr/dist/l10n/*.js')
+        .pipe(gulp.dest('./app/assets/flatpickr/dist/l10n/'));
+});
+
+/**
  * Compile all less files
  */
 gulp.task('compile', function () {
@@ -143,4 +171,4 @@ gulp.task('cldr', function (done) {
     done();
 });
 
-gulp.task('default', gulp.series('compile'));
+gulp.task('default', gulp.parallel('copy', 'compile'));

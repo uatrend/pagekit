@@ -1,7 +1,7 @@
 {
     "name": "pagekit",
     "scripts": {
-        "install": "bower install && webpack --progress --hide-modules -p && gulp",
+        "install": "./node_modules/.bin/webpack --progress --hide-modules -p && gulp",
         "watch": "./node_modules/.bin/webpack --progress --colors --hide-modules --watch",
         "build": "./node_modules/.bin/webpack --progress --display-error-details --hide-modules -p",
         "lint": "./node_modules/.bin/eslint ."
@@ -15,7 +15,6 @@
         "@vue/babel-preset-jsx": "^1.1.0",
         "babel-eslint": "^10.0.2",
         "babel-loader": "^8.0.6",
-        "bower": "^1.8.8",
         "cldr-core": "^28.0.0",
         "cldr-localenames-modern": "^28.0.0",
         "css-loader": "^2.1.1",
@@ -46,7 +45,11 @@
         "vue-style-loader": "^4.1.2",
         "vue-template-compiler": "^2.6.10",
         "webpack": "^4.39.2",
-        "webpack-cli": "^3.3.6"
+        "webpack-cli": "^3.3.6",
+        "flatpickr": "^4.6.2",
+        "js-md5": "^0.7.3",
+        "uikit": "^3.1.7",
+        "vue-resource": "1.5.1"
     },
     "dependencies": {
         "vee-validate": "^2.2.13",
