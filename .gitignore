@@ -1,13 +1,29 @@
-/app/vendor/*
+# Ignor bundles
+**/app/bundle/**/*.js
+# Ignor assets
 /app/assets/*
-!/app/assets/codemirror
-!/app/assets/marked
+# Don't ignore these assets
+!/app/assets/flatpickr
+!/app/assets/js-md5
+!/app/assets/JSONStorage
+!/app/assets/lodash
+!/app/assets/uikit
+!/app/assets/vue
+!/app/assets/vue-form
+!/app/assets/vue-intl
+!/app/assets/vue-resource
+# Ignore vendor folder
+/app/vendor/*
+# Ignor module assets
 /app/installer/assets/css/*
 /app/system/modules/theme/css/*
-/config.php
+/app/system/modules/theme/js/theme.js
+# /packages/*
 /pagekit*.zip
 /pagekit.db
-/tmp/**/*
+/config.php
+/composer.lock
+/package-lock.json
 node_modules
 .DS_Store
 .idea

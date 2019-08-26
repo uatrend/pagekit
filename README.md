@@ -160,6 +160,21 @@ Location: ``` app/system/modules/theme/js/components```
 
 ## Install from source
 
+Clone Repository
+
+```
+git clone git@github.com:uatrend/pagekit.git project-folder
+cd project-folder
+```
+
+Install Dependencies
+
+```
+composer install
+```
+
+Compile Assets
+
 ```
 npm install
 ```
