@@ -1,9 +1,0 @@
-*
-!LICENSE.md
-!README.md
-!dist
-!dist/**/*
-!src/style
-!src/style/**/*
-dist/index.d.ts
-!index.d.ts
