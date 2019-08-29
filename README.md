@@ -15,7 +15,7 @@
 
 [Homepage](http://pagekit.com) - Official home page.
 
-This is a updated build Pagekit CMS (for developers).
+This is an updated build Pagekit CMS (for developers).
 
 Build includes:
 
