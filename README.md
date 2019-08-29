@@ -23,7 +23,7 @@ Build includes:
 - Blog extension
 - Theme One
 
-[Install from source](#install) before installation. The installation procedure is the same as in the official [documentation](https://pagekit.com/docs/getting-started/installation) .
+[Install from source](#install) before installation. The installation procedure is the same as in the official [documentation](https://pagekit.com/docs/getting-started/installation).
 
 Marketplace functionality like install, update and remove works the same like in original version. Before enabling extensions, update them for compatibility. Debug mode and debug panel work the same as in the main version.
 
@@ -143,10 +143,10 @@ Marketplace functionality like install, update and remove works the same like in
   </tr>
   <tr>
     <td>
-        Codemirror
+      <a href="https://github.com/uatrend/codemirror" target="_blank">Codemirror</a>
     </td>
     <td>
-        5.48.2
+        5.48.4
     </td>
     <td width="50%" colspan="2">
     </td>
