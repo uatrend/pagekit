@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
         <?php $view->style('theme', 'system/theme:css/theme.css') ?>
-        <?php $view->script('theme-admin') ?>
+        <?php $view->script('theme', 'system/theme:js/theme.js', ['vue']) ?>
         <?= $view->render('head') ?>
     </head>
     <body class="<?= $pageClass ?>">

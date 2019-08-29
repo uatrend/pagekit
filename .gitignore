@@ -1,17 +1,9 @@
+# Ignore assets
+/app/assets/*
 # Ignor bundles
 **/app/bundle/**/*.js
 # Ignor assets
 /app/assets/*
-# Don't ignore these assets
-!/app/assets/flatpickr
-!/app/assets/js-md5
-!/app/assets/JSONStorage
-!/app/assets/lodash
-!/app/assets/uikit
-!/app/assets/vue
-!/app/assets/vue-form
-!/app/assets/vue-intl
-!/app/assets/vue-resource
 # Ignore vendor folder
 /app/vendor/*
 # Ignor module assets
@@ -23,6 +15,7 @@
 /pagekit.db
 /config.php
 /composer.lock
+/yarn.lock
 /package-lock.json
 node_modules
 .DS_Store

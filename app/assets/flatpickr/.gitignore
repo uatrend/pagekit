@@ -1,9 +1,0 @@
-*.log
-node_modules
-index.html
-coverage
-dist
-
-yarn.lock
-pnpm-lock.yaml
-.vscode/*

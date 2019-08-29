@@ -15,19 +15,19 @@
 
 [Homepage](http://pagekit.com) - Official home page.
 
-This is a custom updated build Pagekit CMS (for developers).
+This is a updated build Pagekit CMS (for developers).
 
 Build includes:
+
 - Pagekit CMS 1.0.17
 - Blog extension
 - Theme One
-- Custom Admin Panel
 
-The installation procedure is the same as in the official [documentation](http://pagekit.com/docs) .
+[Install from source](#install) before installation. The installation procedure is the same as in the official [documentation](https://pagekit.com/docs/getting-started/installation) .
 
-Marketplace functionality like install, update and remove works the same like in original version. Before enabling extensions - they need to be updated for compatibility.
+Marketplace functionality like install, update and remove works the same like in original version. Before enabling extensions, update them for compatibility. Debug mode and debug panel work the same as in the main version.
 
----
+------
 
 ### Major changes:
 
@@ -57,7 +57,7 @@ Marketplace functionality like install, update and remove works the same like in
   </tr>
   <tr>
     <td>
-        Vue-Resource
+        Vue-resource
     </td>
     <td>
         1.5.1
@@ -66,7 +66,7 @@ Marketplace functionality like install, update and remove works the same like in
         Vee-validate
     </td>
     <td>
-        2.2.13
+        2.2.15
     </td>
   </tr>
   <tr>
@@ -94,7 +94,7 @@ Marketplace functionality like install, update and remove works the same like in
         Flatpickr
     </td>
     <td>
-        4.6.1
+        4.6.2
     </td>
   </tr>
   <tr>
@@ -102,13 +102,13 @@ Marketplace functionality like install, update and remove works the same like in
         Webpack
     </td>
     <td>
-        4.39.2
+        4.39.3
     </td>
     <td>
         Tinymce
     </td>
     <td>
-        5.0.13
+        5.0.14
     </td>
   </tr>
   <tr>
@@ -154,73 +154,101 @@ Marketplace functionality like install, update and remove works the same like in
   </tbody>
 </table>
 
-**Updated all core javascript components** for compability with new dependencies.
-**Removed jQuery.**
+**Updated all core javascript components** for compability with new dependencies. Several bugs that are present in the original assembly have been fixed, some styles have been changed for ease of use. The mobile version has remained the same with minor changes.
 
-Ported components from UIkit 2  - **autocomplete, pagination, htmleditor** with markedjs.
+Added components for **UIkit 3**  - **autocomplete, pagination, htmleditor**.  
 Location: ``` app/system/modules/theme/js/components```
 
-## Install from source
+Removed **jQuery**, **Bower**.
+
+## <a name="install"></a>Install from source
+
+You can [install Node dependencies, build the front-end components](#node) and run [scripts](#scripts) via [yarn](https://yarnpkg.com/) or [NPM](https://npmjs.org/).
 
 Clone Repository
 
 ```
-git clone git@github.com:uatrend/pagekit.git project-folder
-cd project-folder
+$ git clone git@github.com:uatrend/pagekit.git project-folder
+$ cd project-folder
 ```
 
-Install Dependencies
+Install PHP dependencies
 
 ```
-composer install
+$ composer install
 ```
 
-Compile Assets
+<a name="node"></a>Install Node dependencies
 
 ```
-npm install
+$ yarn install
+$ npm install
 ```
 
-## NPM scripts
+## <a name="scripts"></a>Scripts
 
 Webpack watch:
+
 ```
-npm run watch
+$ yarn watch
+$ npm run watch
 ```
+
 Webpack build (minified):
+
 ```
-npm run build
+$ yarn build
+$ npm run build
 ```
+
 Linting with eslint:
-```
-npm run lint
-```
-## Gulp
 
-Compile and watch theme LESS:
 ```
-gulp watch
+$ yarn lint
+$ npm run lint
 ```
 
-## Editor Settings
+## Gulp tasks
 
-Added the ability to select an editor in the settings: HTML Editor, Tinymce or Codemirror.
-Moved all editor component dependencies to: ``` app/system/modules/editor/app/assets```.
-Added split mode for Tinymce.
+Compile LESS:
+
+```
+$ gulp compile
+```
+
+Compile and watch LESS:
+
+```
+$ gulp watch
+```
+
+CLDR locale data for internationalization:
+
+```
+$ gulp cldr
+```
 
 ## Admin Theme
 
-Theme is fully compatible with **UIkit 3**.
-Changed default admin theme - script, layout and colors. Added side and top menus with dropdowns.
-For individual markup of each page added class page in the body tag generated via php.
+Theme is fully compatible with **UIkit 3**.  
+Changed default admin theme - script, layout and colors. Added side and top menus with dropdowns.  
+For individual markup of each page added class page in the body tag generated via php.  
 
 Example, class for dashboard page look like:
+
 ```html
 <body class=“dashboard”>
 ```
 
+## Editor Settings
+
+Added the ability to select an editor in the settings: HTML Editor, Tinymce or Codemirror.  
+Moved all editor component dependencies to: ``` app/system/modules/editor/app/assets```.  
+Added split mode for Tinymce.
+
 ## Theme Plugin
-(added to core ```/app/system/app/lib/theme.js```)
+
+(added to core ```/app/system/app/lib/theme.js```)  
 
 Ability to programmatically configure the buttons, dropdown lists, pagination and search form in the top menu for each component used (see code).
 
@@ -258,6 +286,7 @@ theme: {
     }
 }
 ```
+
 Adding side menu items through PHP - ```$view->$data()```
 
 ```php
@@ -281,15 +310,7 @@ Adding side menu items through PHP - ```$view->$data()```
 }
 ```
 
-## Translation
+------
 
-Improved russian translation.
-
-## Fixed Bugs
-
-Getting News Feed in WidgetFeed, selection in 'check-all' directive and etc.
-
----
-
-Thanks to Yootheme and developers!
+Thanks to Yootheme and developers!  
 Feel free to ask any questions - I will answer as much as possible.
