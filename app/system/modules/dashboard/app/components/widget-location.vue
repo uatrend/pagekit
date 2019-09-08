@@ -51,28 +51,16 @@
             </form>
         </div>
 
-        <div v-if="status != 'loading'" class="uk-inline-clip">
-            <img :src="'../../../../../../app/system/assets/images/dashboard-location.jpg'" class="uk-width-1-1">
-            <div class="uk-position-cover uk-padding uk-light uk-flex uk-flex-middle uk-height-1-1" style="background-color: rgba(0,0,0,.4);">
-                <div class="uk-width-expand uk-flex uk-flex-column uk-flex-wrap-between uk-height-1-1">
-                    <div class="uk-flex uk-flex-center uk-flex-middle uk-height-1-1">
-                        <div>
-                            <h1 v-if="time" class="uk-margin-remove uk-text-center pk-text-xlarge">
-                                {{ time | date(format) }}
-                            </h1>
-                            <h4 v-if="time" class="uk-text-center uk-margin-remove">
-                                {{ time | date('longDate') }}
-                            </h4>
-                        </div>
-                    </div>
-                    <div class="uk-flex uk-flex-between uk-position-bottom uk-padding-small">
-                        <h4 v-if="widget.city" class="uk-margin-remove">
-                            {{ widget.city }}
-                        </h4>
-                        <h4 v-if="status=='done'" class="uk-flex uk-flex-middle uk-margin-remove">
-                            {{ temperature }} <img class="uk-margin-small-left" :src="icon" width="25" height="25" alt="Weather">
-                        </h4>
-                    </div>
+        <div v-if="status !== 'loading'" class="uk-inline-clip pk-panel-background uk-light">
+            <canvas class="" width="550" height="350"></canvas>
+            <div class="uk-position-cover uk-width-1-1">
+                <div class="uk-flex uk-flex-center uk-flex-column uk-height-1-1">
+                    <h1 class="uk-margin-remove uk-text-center pk-text-xlarge" v-if="time">{{ time | date(format) }}</h1>
+                    <h2 class="uk-h4 uk-text-center uk-margin-remove" v-if="time">{{ time | date('longDate') }}</h2>
+                </div>
+                <div class="uk-position-bottom uk-padding-small uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
+                    <h3 class="uk-h4 uk-margin-remove" v-if="widget.city">{{ widget.city }}</h3>
+                    <h3 class="uk-h4 uk-flex uk-flex-middle uk-margin-remove" v-if="status=='done'">{{ temperature }} <img class="uk-margin-small-left" :src="icon" width="25" height="25" alt="Weather"></h3>
                 </div>
             </div>
         </div>
@@ -85,10 +73,9 @@
 
 <script>
 
-const { on } = UIkit.util;
-const { append } = UIkit.util;
+import { on, append } from 'uikit-util';
 
-module.exports = {
+export default {
 
     name: 'location',
 

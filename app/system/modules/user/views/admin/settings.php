@@ -45,7 +45,7 @@
     <div class="uk-margin">
         <label for="form-redirect" class="uk-form-label">{{ 'Login Redirect' | trans }}</label>
         <div class="uk-form-controls">
-           <input-link id="form-redirect" cls="uk-form-width-large" v-model="config.login_redirect"></input-link>
+           <input-link id="form-redirect" input-class="uk-form-width-large" v-model="config.login_redirect"></input-link>
         </div>
     </div>
 

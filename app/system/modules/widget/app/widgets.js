@@ -1,6 +1,4 @@
-const TemplateSettings = require('./templates/widget-settings.html');
-
-window.Widgets = module.exports = {
+var Widgets = {
 
     data() {
         return {
@@ -13,14 +11,13 @@ window.Widgets = module.exports = {
     },
 
     components: {
-
-        settings: require('./components/widget-settings.vue').default,
-        visibility: require('./components/widget-visibility.vue').default,
-        'template-settings': {
-            props: ['widget', 'form', 'config'],
-            template: TemplateSettings,
-        },
-
+        /*
+         * Moved to widget/app/views/edit.js
+         */
     },
 
 };
+
+export default Widgets;
+
+window.Widgets = Widgets;

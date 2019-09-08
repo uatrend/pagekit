@@ -39,7 +39,7 @@
 
 <script>
 
-module.exports = {
+var SiteTheme = {
 
     section: {
         label: 'Theme',
@@ -63,6 +63,8 @@ module.exports = {
 
 };
 
-window.Site.components['site-theme'] = module.exports;
+export default SiteTheme;
+
+window.Site.components['site-theme'] = SiteTheme;
 
 </script>

@@ -110,7 +110,7 @@
 
 <script>
 
-module.exports = {
+var NodeTheme = {
 
     section: {
         label: 'Theme',
@@ -121,6 +121,8 @@ module.exports = {
 
 };
 
-window.Site.components['node-theme'] = module.exports;
+export default NodeTheme;
+
+window.Site.components['node-theme'] = NodeTheme;
 
 </script>

@@ -77,23 +77,22 @@
                             <div v-html="comment.content"></div>
                             </div>
                             <div class="uk-margin-small-top" v-if="replyComment.parent_id === comment.id">
-                                <!-- <form v-validator="replyform" @submit.prevent="submit | valid"> -->
+
+                                <validation-observer v-slot="{ invalid, passes }" slim>
                                 <form @submit.prevent="submit">
 
                                     <div class="uk-margin">
                                         <label for="form-content" class="uk-form-label">{{ 'Content' | trans }}</label>
-                                        <div class="uk-form-controls">
-                                            <textarea id="form-content" class="uk-textarea uk-form-width-large" name="content" rows="10" v-model="replyComment.content" v-validate="'required'"></textarea>
-                                            <div class="uk-text-small uk-text-danger" v-show="errors.first('content')">{{ 'Content cannot be blank.' | trans }}</div>
-                                        </div>
+                                        <v-input id="form-content" name="content" v-model="replyComment.content" rows="10" view="tag: textarea, class: uk-textarea" rules="required" message="Content cannot be blank." />
                                     </div>
 
-                                    <p>
-                                        <button class="uk-button uk-button-primary" type="submit">{{ 'Reply' | trans }}</button>
+                                    <div class="uk-margin">
+                                        <button class="uk-button uk-button-primary" type="submit" :disabled="invalid">{{ 'Reply' | trans }}</button>
                                         <button class="uk-button uk-button-text uk-margin-small-left" @click.prevent="cancel">{{ 'Cancel' | trans }}</button>
-                                    </p>
+                                    </div>
 
                                 </form>
+                                </validation-observer>
                             </div>
 
                         </td>
@@ -118,22 +117,18 @@
                             <img class="uk-img-preserve uk-border-circle" width="40" height="40" :alt="editComment.author" v-gravatar="editComment.email">
                         </td>
                         <td colspan="3">
-                            <!-- <form class="uk-form-stacked" v-validator="editform" @submit.prevent="submit | valid"> -->
-                            <form class="uk-form-stacked" @submit.prevent="submit">
+
+                            <validation-observer v-slot="{ invalid, passes }" slim>
+                            <form class="uk-form-stacked" @submit.prevent="passes(submit)">
+
                                 <div class="uk-width-1-1 uk-grid-small" uk-grid>
                                     <div class="uk-width-1-3@m">
                                         <label for="form-author" class="uk-form-label">{{ 'Name' | trans }}</label>
-                                        <div class="uk-form-controls">
-                                            <input id="form-author" class="uk-input" name="author" type="text" v-model="editComment.author" v-validate="'required'">
-                                            <div class="uk-text-small uk-text-danger" v-show="errors.first('author')">{{ 'Author cannot be blank.' | trans }}</div>
-                                        </div>
+                                        <v-input id="form-author" name="author" type="text" v-model="editComment.author" view="class: uk-input" rules="required" message="Author cannot be blank." />
                                     </div>
                                     <div class="uk-width-1-3@m">
                                         <label for="form-email" class="uk-form-label">{{ 'E-mail' | trans }}</label>
-                                        <div class="uk-form-controls">
-                                            <input id="form-email" class="uk-input" name="email" type="text" v-model.lazy="editComment.email" v-validate="'required|email'">
-                                            <div class="uk-text-small uk-text-danger" v-show="errors.first('email')">{{ 'Field must be a valid email address.' | trans }}</div>
-                                        </div>
+                                        <v-input id="form-email" name="email" type="email" v-model="editComment.email" view="class: uk-input" rules="required|email" message="Field must be a valid email address." />
                                     </div>
                                     <div class="uk-width-1-3@m">
                                         <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
@@ -145,20 +140,18 @@
                                     </div>
                                     <div class="uk-width-1-1@m">
                                         <label for="form-content" class="uk-form-label">{{ 'Comment' | trans }}</label>
-                                         <div class="uk-form-controls">
-                                            <textarea id="form-content" class="uk-textarea" name="content" rows="10" v-model="editComment.content" v-validate="'required'"></textarea>
-                                            <div class="uk-text-small uk-text-danger" v-show="errors.first('content')">{{ 'Content cannot be blank.' | trans }}</div>
-                                        </div>
+                                        <v-input id="form-content" name="content" v-model="editComment.content" rows="10" view="tag: textarea, class: uk-textarea" rules="required" message="Content cannot be blank." />
                                     </div>
-
                                 </div>
 
                                 <div class="uk-margin">
-                                    <button class="uk-button uk-button-primary" type="submit">{{ 'Save' | trans }}</button>
+                                    <button class="uk-button uk-button-primary" type="submit" :disabled="invalid">{{ 'Save' | trans }}</button>
                                     <button class="uk-button uk-button-text uk-margin-small-left" @click.prevent="cancel">{{ 'Cancel' | trans }}</button>
                                 </div>
 
                             </form>
+                            </validation-observer>
+
                         </td>
 
                     </tr>

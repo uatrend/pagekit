@@ -2,18 +2,8 @@
     <div class="pk-grid-large pk-width-sidebar-large uk-form-stacked" uk-grid>
         <div class="pk-width-content">
             <div class="uk-margin">
-                <label class="uk-form-label">{{ 'Title' | trans }}</label>
-                <input
-                    v-model="post.title"
-                    v-validate:required
-                    class="uk-form-large uk-width-1-1 uk-input"
-                    type="text"
-                    name="title"
-                    :placeholder="'Enter Title' | trans"
-                >
-                <div v-show="errors.first('title')" class="uk-text-small uk-text-danger">
-                    {{ 'Title cannot be blank.' | trans }}
-                </div>
+                <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
+                <v-input id="form-title" name="title" type="text" placeholder="Enter Title" view="class: uk-form-large uk-width-1-1 uk-input" rules="required" v-model="post.title" message="Title cannot be blank." />
             </div>
             <div class="uk-margin">
                 <label for="form-post-content" class="uk-form-label">{{ 'Content' | trans }}</label>
@@ -96,7 +86,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     props: ['post', 'data', 'form'],
 
@@ -104,7 +94,11 @@ module.exports = {
         label: 'Post',
     },
 
-    inject: ['$validator'],
+    inject: ['$components'],
+
+    created() {
+        _.extend(this.$options.components, this.$components);
+    }
 
 };
 

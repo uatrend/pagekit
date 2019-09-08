@@ -84,76 +84,6 @@ export default {
         }
     },
 
-    // theme() {
-    //     const vm = this;
-    //     return {
-    //         'sidemenu': {
-    //             additem: {
-    //                 type: 'dropdown',
-    //                 dropdown: {
-    //                     options: () => {
-    //                         if (!vm.sb || !vm.breakpoint) {
-    //                             return 'pos: right-top; mode: hover; offset: 0; delayHide: 0'
-    //                         }
-    //                         return 'pos: bottom-right; mode: click; offset: 0;'
-    //                     },
-    //                     class: () => {
-    //                         if (!vm.sb || !vm.breakpoint) {
-    //                             return {'tm-dropdown-parent-items uk-position-fixed': true}
-    //                         }
-    //                         return {'tm-dropdown-parent-items uk-position-fixed tm-left': true}
-    //                     },
-    //                     style: () => {
-    //                         if (vm.sb) return { width: vm.size }
-    //                     }
-    //                 },
-    //                 icon: {
-    //                     class: () => 'tm-menu-image',
-    //                     attrs: {
-    //                         'uk-icon': 'icon: plus; ratio: 1.2',
-    //                     }
-    //                 },
-    //                 items: () => vm.sidemenu.additem
-    //             },
-    //             menuitem: {
-    //                 type: 'dropdown',
-    //                 dropdown: {
-    //                     options: () => {
-    //                         if (!vm.sb || !vm.breakpoint) {
-    //                             return 'pos: right-top; mode: hover; offset: 0; delayHide: 0'
-    //                         }
-    //                         return 'pos: bottom-right; mode: click; offset: 0;'
-    //                     },
-    //                     class: () => {
-    //                         if (!vm.sb || !vm.breakpoint) {
-    //                             return {'tm-dropdown-parent-items uk-position-fixed': true}
-    //                         }
-    //                         return {'tm-dropdown-parent-items uk-position-fixed tm-left': true}
-    //                     },
-    //                     style: () => {
-    //                         if (vm.sb) return { width: vm.size }
-    //                     }
-    //                 },
-    //                 icon: {
-    //                     // options: () => 'icon: menu; ratio: 1.4',
-    //                     class: () => 'tm-menu-image',
-    //                     attrs: {
-    //                         'uk-navbar-toggle-icon': true
-    //                     }
-    //                 },
-    //                 items: () => [],//vm.sidemenu.additem,
-    //                 priority:0
-    //             }
-    //         },
-    //         extend: () => {
-    //             return {
-    //                 // 'sidemenu.additem': () => [{},{}],
-    //                 'topmenu.addpage': () => [{},{}]
-    //             }
-    //         }
-    //     }
-    // },
-
     computed: {
         sbStyle() {
             return (this.sb) ? { width: this.size } : {}
@@ -204,11 +134,6 @@ export default {
             }
             return false
         },
-
-        // getChild(item, check) {
-        //     const menu = _(this.menu).sortBy('priority').groupBy('parent').value();
-        //     return check ? !!menu[item] : menu[item];
-        // },
 
         setStyle() {
             if (!hasClass(this.page, 'transition')) addClass(this.page, 'transition');

@@ -1,4 +1,4 @@
-module.exports = {
+var Info = {
 
     name: 'info',
 
@@ -19,4 +19,6 @@ module.exports = {
 
 };
 
-Vue.ready(module.exports);
+export default Info;
+
+Vue.ready(Info);

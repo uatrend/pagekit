@@ -2,9 +2,9 @@
  * URL resolver plugin
  */
 
-var { on }  = UIkit.util;
+import { on } from 'uikit-util';
 
-module.exports = {
+export default {
 
     name: 'url-plugin',
 

@@ -63,9 +63,11 @@
         </div>
     </div>
 
-    <v-modal ref="modal">
-        <form class="uk-form-stacked" @submit.prevent.stop="save">
-
+    <v-modal ref="modal" bg-close>
+    
+        <validation-observer v-slot="{ invalid, passes }">
+        <div class="uk-form-stacked">
+        
             <div class="uk-modal-header">
                 <h2>{{ (role.id ? 'Edit Role':'Add Role') | trans }}</h2>
             </div>
@@ -74,20 +76,19 @@
 
                 <div class="uk-margin">
                     <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input id="form-name" class="uk-width-1-1 uk-input" type="text" name="name" v-model="role.name" v-validate="'required'">
-                        <div class="uk-text-meta uk-text-danger" v-show="errors.first('name')">{{ 'Name cannot be blank.' | trans }}</div>
-                    </div>
+                    <v-input id="form-name" name="name" type="text" view="class: uk-width-1-1 uk-input" rules="required" v-model.trim="role.name" message="Name cannot be blank." />
                 </div>
 
             </div>
 
             <div class="uk-modal-footer uk-text-right">
                 <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button" autofocus>{{ 'Cancel' | trans }}</button>
-                <button class="uk-button uk-button-primary" type="submit">{{ 'Save' | trans }}</button>
+                <button class="uk-button uk-button-primary" :disabled="invalid || !role.name" @click.prevent="passes(save)">{{ 'Save' | trans }}</button>
             </div>
-
-        </form>
+            
+        </div>
+        </validation-observer>
+        
     </v-modal>
 
 </div>

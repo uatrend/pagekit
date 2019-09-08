@@ -25,7 +25,7 @@
 
 <script>
 
-module.exports = {
+var LinkUser = {
 
     link: {
         label: 'User',
@@ -52,6 +52,8 @@ module.exports = {
 
 };
 
-window.Links.components['link-user'] = module.exports;
+export default LinkUser;
+
+window.Links.default.components['link-user'] = LinkUser;
 
 </script>

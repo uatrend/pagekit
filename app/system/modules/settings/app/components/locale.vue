@@ -41,7 +41,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         label: 'Localization',
@@ -62,7 +62,6 @@ module.exports = {
         },
 
         option() {
-            // return this.$root.$get('options.system');
             return this.$root.options.system;
         },
 

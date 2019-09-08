@@ -70,7 +70,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     props: {
         cls: {
@@ -130,7 +130,7 @@ Vue.component('input-image-meta', (resolve, reject) => {
             'app/system/modules/finder/app/bundle/panel-finder.js',
         ],
     }).then(() => {
-        resolve(module.exports);
+        resolve(require('./input-image-meta.vue'));
     });
 });
 

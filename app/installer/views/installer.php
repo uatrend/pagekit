@@ -6,16 +6,12 @@
         <link href="app/system/modules/theme/favicon.ico" rel="shortcut icon" type="image/x-icon">
         <link href="app/system/modules/theme/apple_touch_icon.png" rel="apple-touch-icon-precomposed">
         <?php $view->style('installer-css', 'app/installer/assets/css/installer.css') ?>
-        <?php $view->script('installer', 'app/installer/app/bundle/installer.js', ['vue', 'uikit']) ?>
+        <?php $view->script('vue-dist1', 'app/assets/vue/dist/vue.js') ?>
+        <?php $view->script('vue1', 'app/system/app/bundle/vue.js', ['uikit', 'uikit-icons', 'vue-dist1', 'lodash', 'locale']) ?>
+        <?php $view->script('installer', 'app/installer/app/bundle/installer.js', ['vue1', 'uikit']) ?>
         <?= $view->render('head') ?>
     </head>
     <body>
-
-        <div id="installer" class="tm-background uk-height-viewport uk-flex uk-flex-center uk-flex-middle" v-cloak>
-            <div class="tm-container">
-                <div :is="step" :vm.sync="$root"></div>
-            </div>
-        </div>
-
+        <div id="installer" v-cloak></div>
     </body>
 </html>

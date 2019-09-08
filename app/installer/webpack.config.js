@@ -2,7 +2,7 @@ module.exports = [
 
     {
         entry: {
-            installer: './app/views/installer',
+            installer: './app/views/installer.vue',
             extensions: './app/views/extensions',
             marketplace: './app/views/marketplace',
             themes: './app/views/themes',

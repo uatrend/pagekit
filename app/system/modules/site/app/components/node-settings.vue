@@ -14,8 +14,10 @@ export default {
         label: 'Settings',
     },
 
+    inject: ['$components'],
+
     created() {
-        this.$options.components['template-settings'] = this.$root.$options.components['template-settings'];
+        _.extend(this.$options.components, this.$components);
     },
 
 };

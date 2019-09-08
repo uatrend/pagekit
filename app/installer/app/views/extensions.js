@@ -1,3 +1,5 @@
-window.Extensions = _.merge(require('../components/package-manager'), { name: 'extensions', el: '#extensions' });
+import PackageManager from '../components/package-manager';
+
+window.Extensions = _.merge(PackageManager, { name: 'extensions', el: '#extensions' });
 
 Vue.ready(window.Extensions);

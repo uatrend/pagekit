@@ -1,7 +1,5 @@
 import UIkit from 'uikit';
-import {
-    $, on, css, attr, addClass, data, removeClass, hasClass, toNodes, append, find, findAll, empty, getIndex, trigger, closest
-} from 'uikit-util';
+import { $, on, css, attr, addClass, data, removeClass, hasClass, toNodes, append, find, findAll, empty, getIndex, trigger, closest } from 'uikit-util';
 
 let active;
 

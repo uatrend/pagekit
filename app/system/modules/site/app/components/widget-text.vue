@@ -3,19 +3,7 @@
         <div class="pk-width-content uk-form-stacked">
             <div class="uk-margin">
                 <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
-                <div class="uk-form-controls">
-                    <input
-                        v-model="widget.title"
-                        v-validate="'required'"
-                        class="uk-width-1-1 uk-form-large uk-input"
-                        type="text"
-                        name="title"
-                        :placeholder="'Enter Title' | trans"
-                    >
-                    <div v-show="errors.first('title')" class="uk-text-meta uk-text-danger">
-                        {{ 'Title cannot be blank.' | trans }}
-                    </div>
-                </div>
+                <v-input id="form-title" type="text" name="title" placeholder="Enter Title" view="class: uk-width-1-1 uk-form-large uk-input" rules="required" v-model="widget.title" message="Title cannot be blank."/>
             </div>
 
             <div class="uk-margin">
@@ -34,7 +22,7 @@
 
 <script>
 
-module.exports = {
+var WidgetText = {
 
     name: 'widget-text',
 
@@ -42,17 +30,18 @@ module.exports = {
         label: 'Settings',
     },
 
-    inject: ['$validator'],
+    inject: ['$components'],
 
     props: ['widget', 'config', 'form'],
 
     created() {
-        // this.$options.partials = this.$parent.$options.partials;
-        this.$options.components['template-settings'] = this.$parent.$options.components['template-settings'];
+        _.extend(this.$options.components, this.$components);
     },
 
 };
 
-window.Widgets.components['system-text--settings'] = module.exports;
+export default WidgetText;
+
+window.Widgets.components['system-text.settings'] = WidgetText;
 
 </script>

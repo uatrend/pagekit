@@ -2,9 +2,10 @@
  * Editor Image plugin.
  */
 
-var { on, attr, findAll } = UIkit.util;
+import { on, attr, findAll } from 'uikit-util';
+import ImagePreview from './image-preview.vue';
 
-module.exports = {
+export default {
 
     name: 'image-plugin',
 
@@ -124,9 +125,7 @@ module.exports = {
     },
 
     components: {
-
-        'image-preview': require('./image-preview.vue').default
-
+        'image-preview': ImagePreview
     }
 
 };

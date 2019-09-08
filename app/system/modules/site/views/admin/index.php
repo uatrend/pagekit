@@ -148,8 +148,10 @@
     </div>
 
     <v-modal ref="modal" bg-close>
+    
+        <validation-observer v-slot="{ invalid, passes }" slim>
         <div class="uk-form-stacked">
-
+        
             <div class="uk-modal-header">
                 <h2 class="uk-modal-title">{{ 'Add Menu' | trans }}</h2>
             </div>
@@ -157,10 +159,7 @@
             <div class="uk-modal-body">
                 <div class="uk-margin">
                     <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input id="form-name" class="uk-input uk-width-1-1" name="label" type="text" v-model.trim="edit.label" v-validate="'required'">
-                        <div class="uk-text-meta uk-text-danger" v-show="errors.has('label')">{{ 'Invalid name.' | trans }}</div>
-                    </div>
+                    <v-input id="form-name" name="label" type="text" view="class: uk-input" rules="required" v-model.trim="edit.label" message="Invalid name." />
                 </div>
 
                 <div class="uk-margin">
@@ -176,10 +175,12 @@
 
             <div class="uk-modal-footer uk-text-right">
                 <button class="uk-button uk-button-text uk-margin-right" type="button" @click.prevent="cancel" autofocus>{{ 'Cancel' | trans }}</button>
-                <button class="uk-button uk-button-primary" :disabled="errors.has.any || !edit.label" @click.prevent="saveMenu(edit)">{{ 'Save' | trans }}</button>
+                <button class="uk-button uk-button-primary" :disabled="invalid || !edit.label" @click.prevent="passes(()=>saveMenu(edit))">{{ 'Save' | trans }}</button>
             </div>
-
+            
         </div>
+        </validation-observer>
+        
     </v-modal>
 
 </form>

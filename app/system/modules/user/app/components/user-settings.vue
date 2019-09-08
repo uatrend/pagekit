@@ -3,67 +3,50 @@
         <div class="uk-width-2-3@s">
             <div class="uk-margin">
                 <label for="form-username" class="uk-form-label">{{ 'Username' | trans }}</label>
-                <div class="uk-form-controls">
-                    <input
-                        id="form-username"
-                        v-model="user.username"
-                        v-validate="{required: true, regex: /^[a-zA-Z0-9._\-]+$/}"
-                        autocomplete="new-username"
-                        class="uk-form-width-large uk-input"
-                        type="text"
-                        name="username"
-                    >
-                    <div v-show="errors.first('username')" class="uk-text-meta uk-text-danger">
-                        {{ 'Username cannot be blank and may only contain alphanumeric characters (A-Z, 0-9) and some special characters ("._-")' | trans }}
-                    </div>
-                </div>
+                <v-input id="form-username" name="username" type="text"
+                    view="class: uk-form-width-large uk-input"
+                    v-model="user.username"
+                    :rules="{required: true, regex: /^[a-zA-Z0-9._\-]+$/}"
+                    autocomplete="new-username"
+                    message='Username cannot be blank and may only contain alphanumeric characters (A-Z, 0-9) and some special characters ("._-")'
+                />
             </div>
 
             <div class="uk-margin">
                 <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
-                <div class="uk-form-controls">
-                    <input
-                        id="form-name"
-                        v-model="user.name"
-                        v-validate="'required'"
-                        autocomplete="new-name"
-                        class="uk-form-width-large uk-input"
-                        type="text"
-                        name="name"
-                    >
-                    <div v-show="errors.first('name')" class="uk-text-meta uk-text-danger">
-                        {{ 'Name cannot be blank.' | trans }}
-                    </div>
-                </div>
+                <v-input id="form-name" name="name" type="text"
+                    view="class: uk-form-width-large uk-input"
+                    v-model="user.name"
+                    :rules="{required: true}"
+                    autocomplete="new-name"
+                    message='Name cannot be blank.'
+                />
             </div>
 
             <div class="uk-margin">
                 <label for="form-email" class="uk-form-label">{{ 'Email' | trans }}</label>
-                <div class="uk-form-controls">
-                    <input
-                        id="form-email"
-                        v-model.lazy="user.email"
-                        v-validate="'required|email'"
-                        autocomplete="new-email"
-                        class="uk-form-width-large uk-input"
-                        type="text"
-                        name="email"
-                    >
-                    <div v-show="errors.first('email')" class="uk-text-meta uk-text-danger">
-                        {{ 'Field must be a valid email address.' | trans }}
-                    </div>
-                </div>
+                <v-input id="form-email" name="email" type="email"
+                    view="class: uk-form-width-large uk-input"
+                    v-model.lazy="user.email"
+                    :rules="{required: true, email: true}"
+                    autocomplete="new-email"
+                    message="Field must be a valid email address."
+                />
             </div>
 
             <div class="uk-margin">
                 <label for="form-password" class="uk-form-label">{{ 'Password' | trans }}</label>
                 <div v-show="user.id && !editingPassword" class="uk-form-controls uk-form-controls-text">
-                    <a href="#" @click.prevent="editingPassword = true">{{ 'Change password' | trans }}</a>
+                    <a href="#" @click.prevent="editingPassword = true" class="uk-text-small">{{ 'Change password' | trans }}</a>
                 </div>
                 <div class="uk-form-controls" :class="{'uk-hidden' : (user.id && !editingPassword)}">
                     <div class="uk-form-password">
-                        <input id="form-password" v-model="password" autocomplete="new-password" class="uk-form-width-large uk-input" :type="hidePassword ? 'password' : 'text'">
-                        <a href="#" class="uk-form-password-toggle uk-text-small uk-display-block" @click.prevent="hidePassword = !hidePassword">{{ hidePassword ? 'Show' : 'Hide' | trans }}</a>
+                        <div class="uk-margin">
+                            <div class="uk-inline">
+                                <a @click.prevent="hidePassword = !hidePassword" :uk-tooltip="hidePassword ? 'Show' : 'Hide' | trans" delay="500" pos="right" class="uk-form-icon uk-form-icon-flip" href="#" :uk-icon="hidePassword ? 'lock': 'unlock'"></a>
+                                <input id="form-password" v-model="password" autocomplete="new-password" class="uk-form-width-large uk-input" :type="hidePassword ? 'password' : 'text'">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -136,7 +119,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         label: 'User',
@@ -144,15 +127,17 @@ module.exports = {
 
     props: ['user', 'config', 'form'],
 
-    inject: ['$validator'],
+    inject: ['$components'],
 
     data() {
         return { password: '', hidePassword: true, editingPassword: false };
     },
 
-    mounted() {
-
+    created() {
+        _.extend(this.$options.components, this.$components);
     },
+
+    mounted() {},
 
     computed: {
 

@@ -1,4 +1,4 @@
-module.exports = {
+var Post = {
 
     name: 'post',
 
@@ -229,8 +229,10 @@ module.exports = {
             return this.statuses[post.status];
         },
 
-    },
+    }
 
 };
 
-Vue.ready(module.exports);
+export default Post;
+
+Vue.ready(Post);

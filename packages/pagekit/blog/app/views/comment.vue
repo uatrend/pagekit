@@ -1,28 +1,23 @@
 <template>
     <li :id="'comment-'+comment.id">
         <article class="uk-comment uk-visible-toggle" :class="{'uk-comment-primary': comment.special}">
+
             <header class="uk-comment-header uk-position-relative">
-                <div v-if="comment.status" class="uk-flex uk-flex-middle">
+                <div class="uk-grid-medium uk-flex-middle" uk-grid>
                     <div class="uk-width-auto">
-                        <img v-gravatar="comment.email" class="uk-comment-avatar uk-border-rounded" width="30" height="30" :alt="comment.author">
+                        <img v-gravatar="comment.email" class="uk-comment-avatar uk-border-rounded" width="60" height="60" :alt="comment.author">
                     </div>
-                    <div class="uk-margin-small-left">
-                        <div class="uk-flex uk-flex-middle">
-                            <h4 class="uk-comment-title uk-margin-remove">
-                                {{ comment.author }}
-                            </h4>
-                            <time class="uk-margin-small-left" :datetime="comment.created">{{ comment.created | date('dd.MM.yy в hh:ss') }}</time>
-                            <a :href="permalink" uk-scroll>
-                                <span class="uk-margin-small-left tm-icon-hashtag" />
-                            </a>
-                        </div>
+                    <div class="uk-width-expand">
+                        <h4 class="uk-comment-title uk-margin-remove">{{ comment.author }}</h4>
+                        <p class="uk-comment-meta uk-margin-remove-top">
+                            <time :datetime="comment.created">{{ comment.created | relativeDate({max:2592000}) }}</time>
+                            | <a class="uk-link-muted" :href="permalink" uk-scroll>#</a>
+                        </p>
                     </div>
                 </div>
-
-                <div v-if="comment.status" class="uk-position-top-right uk-hidden-hover">
-                    <a v-if="showReplyButton" class="uk-link-muted" href="#" :uk-icon="'reply'" @click.prevent="replyTo" />
+                <div v-if="comment.status" class="uk-comment-meta uk-position-top-right uk-position-small uk-hidden-hover">
+                    <a v-if="showReplyButton" class="uk-link-muted" href="#" @click.prevent="replyTo">{{ 'Reply' | trans }}</a>
                 </div>
-
                 <p v-else class="uk-comment-meta">
                     {{ 'The comment is awaiting approval.' }}
                 </p>
@@ -53,9 +48,11 @@
 </template>
 
 <script>
-module.exports = {
+
+export default {
 
     name: 'comment',
+
     props: ['comment', 'config', 'tree', 'root'],
 
     computed: {

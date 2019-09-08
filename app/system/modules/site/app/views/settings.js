@@ -1,3 +1,10 @@
+import SiteCode from '../components/site-code.vue';
+import SiteMeta from '../components/site-meta.vue';
+import SiteGeneral from '../components/site-general.vue';
+import SiteMaintenance from '../components/site-maintenance.vue';
+
+import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+
 window.Site = {
 
     name: 'site-settings',
@@ -5,6 +12,12 @@ window.Site = {
     el: '#settings',
 
     mixins: [Theme.Mixins.Helper, Theme.Mixins.Elements],
+
+    provide: {
+        '$components': {
+            'v-input': VInput
+        }
+    },
 
     theme: {
         hiddenHtmlElements: ['.pk-width-content li > div > div.uk-flex'],
@@ -18,7 +31,6 @@ window.Site = {
                         let trans = vm.$options.filters.trans,
                             activeTab = vm.$theme.activeTab('leftTab', vm),
                             section = vm.sections.filter((section)=>section.name === activeTab)[0];
-
                         return vm.$trans(section.label);
                     }
                 },
@@ -69,14 +81,11 @@ window.Site = {
 
     methods: {
 
-        submit() {
-            const vm = this;
-
-            this.$validator.validateAll().then((res) => {
-                if (res) {
-                    vm.save();
-                }
-            });
+        async submit() {
+            const isValid = await this.$refs.observer.validate();
+            if (isValid) {
+                this.save();
+            }
         },
 
         save() {
@@ -92,12 +101,11 @@ window.Site = {
     },
 
     components: {
-
-        'site-code': require('../components/site-code.vue').default,
-        'site-meta': require('../components/site-meta.vue').default,
-        'site-general': require('../components/site-general.vue').default,
-        'site-maintenance': require('../components/site-maintenance.vue').default,
-
+        'site-code': SiteCode,
+        'site-meta': SiteMeta,
+        'site-general': SiteGeneral,
+        'site-maintenance': SiteMaintenance,
+        'validation-observer': ValidationObserver
     },
 
 };

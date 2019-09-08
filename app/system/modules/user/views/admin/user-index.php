@@ -38,7 +38,6 @@
         <table class="uk-table uk-table-hover uk-table-middle">
             <thead>
                 <tr>
-                    <!-- <th class="pk-table-width-minimum"><input class="uk-checkbox" type="checkbox" v-check-all:selected.literal="input[name=id]" number></th> -->
                     <th class="pk-table-width-minimum"><input class="uk-checkbox" type="checkbox" v-check-all:selected="{ selector: 'input[name=id]' }" number></th>
                     <th class="uk-text-truncate" colspan="2" v-order:username="config.filter.order">
                         {{ 'User' | trans }}
@@ -84,6 +83,5 @@
 
     <h3 class="uk-h2 uk-text-muted uk-text-center" v-show="users && !users.length">{{ 'No user found.' | trans }}</h3>
 
-<!--     <v-pagination :page.sync="config.page" :pages="pages" v-show="pages > 1 || config.page > 0"></v-pagination> -->
     <v-pagination :pages="pages" v-model="config.page" v-show="pages > 1 || config.page > 0"></v-pagination>
 </div>

@@ -102,11 +102,11 @@
 
 <script>
 
-module.exports = {
+import Package from '../lib/package';
 
-    mixins: [
-        require('../lib/package'),
-    ],
+export default {
+
+    mixins: [Package],
 
     props: {
         api: { type: String, default: '' },

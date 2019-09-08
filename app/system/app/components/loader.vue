@@ -8,6 +8,6 @@
 
 export default {
     name: 'Loader',
-};
+}
 
 </script>

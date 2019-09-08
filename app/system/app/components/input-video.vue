@@ -53,7 +53,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     props: ['source'],
 
@@ -144,11 +144,10 @@ module.exports = {
 Vue.component('input-video', (resolve, reject) => {
     Vue.asset({
         js: [
-            // 'app/assets/uikit/dist/js/components/upload.min.js',
             'app/system/modules/finder/app/bundle/panel-finder.js',
         ],
     }).then(() => {
-        resolve(module.exports);
+        resolve(require('./input-video.vue'));
     });
 });
 

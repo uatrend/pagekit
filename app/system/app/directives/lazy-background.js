@@ -1,7 +1,6 @@
 export default {
 
     update(el, binding, vnode) {
-        // var el = $(this.el),
         const img = new Image();
         const { value } = binding;
 

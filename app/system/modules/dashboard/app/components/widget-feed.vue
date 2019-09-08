@@ -124,7 +124,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     name: 'feed',
 

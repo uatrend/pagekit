@@ -1,10 +1,7 @@
 <div>
     <div class="uk-margin">
         <label for="form-menu-title" class="uk-form-label">{{ 'Menu Title' | trans }}</label>
-        <div class="uk-form-controls">
-            <input id="form-menu-title" class="uk-form-width-large  uk-input" type="text" name="title" v-model="node.title" v-validate="'required'">
-            <div class="uk-text-meta uk-text-danger" v-show="errors.first('title')">{{ 'Invalid name.' | trans }}</div>
-        </div>
+		<v-input id="form-menu-title" name="title" type="text" rules="required" view="class: uk-form-width-large uk-input" v-model="node.title" message="Invalid name." />
     </div>
 
     <div class="uk-margin">

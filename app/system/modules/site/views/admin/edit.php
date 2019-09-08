@@ -1,6 +1,6 @@
 <?php $view->script('site-edit', 'system/site:app/bundle/edit.js', ['vue', 'editor', 'uikit']); ?>
 
-<form id="site-edit" @submit.prevent="submit" v-cloak>
+<validation-observer id="site-edit" ref="observer" @submit.prevent="submit" v-cloak>
 
     <div class="uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
         <div class="">
@@ -26,8 +26,8 @@
 
     <div ref="content" class="uk-switcher uk-margin" id="page-content">
         <div v-for="section in sections" :key="section.name">
-            <component :is="section.name" :node.sync="node" :roles.sync="roles" :form="form"></component>
+            <component :is="section.name" :node.sync="node" :roles.sync="roles"></component>
         </div>
     </div>
 
-</form>
+</validation-observer>

@@ -4,6 +4,9 @@
 **/app/bundle/**/*.js
 # Ignor assets
 /app/assets/*
+/app/system/modules/editor/app/assets/*
+# Don't ignore editor assets
+!/app/system/modules/editor/app/assets/tinymce_skin
 # Ignore vendor folder
 /app/vendor/*
 # Ignor module assets

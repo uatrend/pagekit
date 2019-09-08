@@ -16,19 +16,7 @@
         <div class="uk-form-horizontal">
             <div class="uk-margin">
                 <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
-                <div class="uk-form-controls">
-                    <input
-                        id="form-title"
-                        v-model="config.title"
-                        v-validate="'required'"
-                        class="uk-form-width-large uk-input"
-                        name="title"
-                        type="text"
-                    >
-                    <div v-show="errors.first('title')" class="uk-text-meta uk-text-danger">
-                        {{ 'Site title cannot be blank.' | trans }}
-                    </div>
-                </div>
+                <v-input id="form-title" name="title" type="text" rules="required" view="class: uk-form-width-large uk-input" v-model="config.title" :message="'Site title cannot be blank.'" />
             </div>
 
             <div class="uk-margin">
@@ -57,7 +45,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         label: 'General',
@@ -65,9 +53,13 @@ module.exports = {
         priority: 10,
     },
 
-    inject: ['$validator'],
+    inject: ['$components'],
 
     props: ['config'],
+
+    created() {
+        _.extend(this.$options.components, this.$components)
+    }
 
 };
 

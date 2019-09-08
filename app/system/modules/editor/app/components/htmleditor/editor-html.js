@@ -1,6 +1,6 @@
-var { on, removeClass, trigger } = UIkit.util;
+import { on, trigger } from 'uikit-util';
 
-module.exports = {
+export default {
 
     name: 'editor-html',
 

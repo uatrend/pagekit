@@ -13,7 +13,7 @@
 
 <script>
 
-module.exports = {
+var LinkPage = {
 
     link: {
         label: 'Page',
@@ -48,6 +48,8 @@ module.exports = {
 
 };
 
-window.Links.components['link-page'] = module.exports;
+export default LinkPage;
+
+window.Links.default.components['link-page'] = LinkPage;
 
 </script>

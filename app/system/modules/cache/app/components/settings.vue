@@ -72,7 +72,7 @@
 
 <script>
 
-module.exports = {
+var Cache = {
 
     mixins: [Theme.Mixins.Helper],
 
@@ -131,6 +131,8 @@ module.exports = {
 
 };
 
-window.Settings.components['system-cache'] = module.exports;
+export default Cache;
+
+window.Settings.components['system-cache'] = Cache;
 
 </script>

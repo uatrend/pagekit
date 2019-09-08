@@ -2,9 +2,10 @@
  * Editor Link plugin.
  */
 
-var { on, attr, findAll }     = UIkit.util;
+import { on, attr, findAll } from 'uikit-util';
+import LinkPreview from './link-preview.vue';
 
-module.exports = {
+export default {
 
     name: 'link-plugin',
 
@@ -116,9 +117,7 @@ module.exports = {
     },
 
     components: {
-
-        'link-preview': require('./link-preview.vue').default
-
+        'link-preview': LinkPreview
     }
 
 };

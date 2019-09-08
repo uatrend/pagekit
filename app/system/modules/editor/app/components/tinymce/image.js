@@ -2,13 +2,13 @@
  * Editor Image plugin.
  */
 
-module.exports = {
+export default {
 
     name: "plugin-image",
 
     plugin: true,
 
-    created: function () {
+    created() {
 
         if (typeof tinyMCE === 'undefined') {
             return;

@@ -1,31 +1,29 @@
 <template>
+
     <div class="uk-grid-small uk-child-width-1-2@l" uk-grid>
         <div>
-            <div ref="datepicker" class="uk-inline uk-width-1-1">
+            <div ref="datepicker" class="uk-inline">
                 <span class="uk-form-icon" uk-icon="calendar" />
-                <input v-if="isRequired" v-model.lazy="date" v-validate="'required'" class="uk-input" type="text">
-                <input v-else v-model.lazy="date" class="uk-input" type="text">
+                <input class="uk-input" type="text" v-model.lazy="date">
             </div>
         </div>
         <div>
-            <div ref="timepicker" class="uk-inline uk-width-1-1">
+            <div ref="timepicker" class="uk-inline">
                 <span class="uk-form-icon" uk-icon="clock" />
-                <input v-if="isRequired" v-model="time" v-validate="'required'" class="uk-input" type="text">
-                <input v-else v-model="time" class="uk-input" type="text">
+                <input class="uk-input" type="text" v-model.lazy="time">
             </div>
         </div>
     </div>
+    <!-- TODO Component Validation -->
 </template>
 
 <script>
 
-const { $ } = UIkit.util;
+import { $ } from 'uikit-util';
 
-module.exports = {
+export default {
 
     props: ['value', 'required'],
-
-    inject: ['$validator'],
 
     data() {
         return {
@@ -59,11 +57,11 @@ module.exports = {
     created() {},
 
     mounted() {
-        const format = this.dateFormat;
         this.$nextTick(() => {
             flatpickr($('input', this.$refs.datepicker), _.extend(this.options.datepicker, {
                 altInput: true,
-                altFormat: this.dateFormat
+                altFormat: this.dateFormat,
+                dateFormat: 'Y-m-d'
             }));
             flatpickr($('input', this.$refs.timepicker), _.extend(this.options.timepicker, {
                 time_24hr: (this.clockFormat == '24h'),
@@ -82,7 +80,7 @@ module.exports = {
         },
 
         dateFormat() {
-            return format = window.$locale.DATETIME_FORMATS.shortDate
+            return window.$locale.DATETIME_FORMATS.shortDate
                 .replace(/\bdd\b/i, 'D').toLowerCase()
                 .replace(/\bmm\b/i, 'M').toLowerCase()
                 .replace(/\byy\b/i, 'Y')
@@ -112,6 +110,7 @@ module.exports = {
             },
 
             set(date) {
+                if (!date) return;
                 const prev = new Date(this.datetime);
                 date = new Date(date);
                 date.setHours(prev.getHours(), prev.getMinutes(), 0);
@@ -128,6 +127,7 @@ module.exports = {
             },
 
             set(time) {
+                if (!time) return;
                 const fulltime = time;
                 const date = new Date(this.datetime);
                 let hour, min;
@@ -145,8 +145,7 @@ module.exports = {
             return typeof this.required !== 'undefined';
         },
 
-    },
-
+    }
 };
 
 Vue.component('input-date', (resolve, reject) => {
@@ -158,7 +157,7 @@ Vue.component('input-date', (resolve, reject) => {
             'app/assets/flatpickr/dist/flatpickr.min.js',
         ],
     }).then(() => {
-        resolve(module.exports);
+        resolve(require('./input-date.vue'));
     });
 });
 

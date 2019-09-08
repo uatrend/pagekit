@@ -9,9 +9,14 @@ const common  = {
     module: {
         rules: [
             {test: /\.js$/,  exclude: [/node_modules/, /assets/, /vendor/],  use: ["babel-loader"]}
-        ]
+        ],
     },
-    externals: {"Vue": "Vue", "uikit": "UIkit", "uikit-util": "UIkit.util"}
+    resolve: {
+        alias: {
+            SystemApp: path.resolve(__dirname, 'app/system/app'),
+        }
+    },
+    externals: {"vue": "Vue", "uikit": "UIkit", "uikit-util": "UIkit.util"}
 };
 
 // Define process mode and paths to ignore when processed
@@ -29,7 +34,7 @@ glob.sync('{app/modules/**,app/installer/**,app/system/**,packages/**}/webpack.c
     let pkg = path.join(path.basename(path.dirname(dir)), path.basename(dir));
 
     exports = exports.concat(require('./' + file).map((config) => {
-        config      = _.merge({mode: mode, context: dir, output: {path: dir}, externals: common.externals}, config);
+        config      = _.merge({mode: mode, context: dir, output: {path: dir}, externals: common.externals, resolve: common.resolve}, config);
         return build(config);
     }));
 

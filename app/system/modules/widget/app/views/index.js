@@ -1,4 +1,4 @@
-module.exports = {
+var Widgets = {
 
     name: 'widgets',
 
@@ -426,4 +426,6 @@ module.exports = {
 
 };
 
-Vue.ready(module.exports);
+export default Widgets;
+
+Vue.ready(Widgets);

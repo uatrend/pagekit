@@ -11,7 +11,8 @@
             {{ error }}
         </div>
 
-        <form v-if="user.canComment" class="uk-form-stacked" @submit.prevent="save">
+        <validation-observer v-if="user.canComment" v-slot="{ invalid, passes }" slim>
+        <form class="uk-form-stacked" @submit.prevent="passes(save)">
             <p v-if="user.isAuthenticated">
                 {{ 'Logged in as %name%' | trans({name:user.name}) }}
             </p>
@@ -19,62 +20,28 @@
             <template v-else>
                 <div class="uk-margin">
                     <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input
-                            id="form-name"
-                            v-model="author"
-                            v-validate="'required'"
-                            class="uk-form-width-large uk-input"
-                            type="text"
-                            name="author"
-                        >
-                        <div v-show="errors.first('author')" class="uk-text-small uk-text-danger">
-                            {{ 'Name cannot be blank.' | trans }}
-                        </div>
-                    </div>
+                    <v-input id="form-name" name="author" type="text" v-model="author" view="class: uk-input uk-form-width-large" rules="required" message="Name cannot be blank." />
                 </div>
 
                 <div class="uk-margin">
                     <label for="form-email" class="uk-form-label">{{ 'Email' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input
-                            id="form-email"
-                            v-model="email"
-                            v-validate="'required|email'"
-                            class="uk-form-width-large uk-input"
-                            type="email"
-                            name="email"
-                        >
-                        <div v-show="errors.first('email')" class="uk-text-small uk-text-danger">
-                            {{ 'Email invalid.' | trans }}
-                        </div>
-                    </div>
+                    <v-input id="form-email" name="email" type="email" v-model="email" view="class: uk-input uk-form-width-large" rules="required|email" message="Email invalid." />
                 </div>
             </template>
 
             <div class="uk-margin">
                 <label for="form-comment" class="uk-form-label">{{ 'Comment' | trans }}</label>
-                <div class="uk-form-controls">
-                    <textarea
-                        id="form-comment"
-                        v-model="content"
-                        v-validate="'required'"
-                        class="uk-form-width-large uk-textarea"
-                        name="content"
-                        rows="10"
-                    />
-                    <div v-show="errors.first('content')" class="uk-text-small uk-text-danger">
-                        {{ 'Comment cannot be blank.' | trans }}
-                    </div>
-                </div>
+                <v-input id="form-comment" name="content" v-model="content" rows="10" view="tag: textarea, class: uk-textarea uk-form-width-large" rules="required" message="Comment cannot be blank." />
             </div>
 
-            <p>
+            <div class="uk-margin">
                 <button class="uk-button uk-button-primary" type="submit" accesskey="s">
                     <span>{{ 'Submit' | trans }}</span>
                 </button>
-            </p>
+            </div>
+
         </form>
+        </validation-observer>
 
         <template v-else>
             <p v-if="user.isAuthenticated">
@@ -88,6 +55,8 @@
 </template>
 
 <script>
+
+import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
 
 export default {
 
@@ -118,40 +87,35 @@ export default {
     methods: {
 
         save() {
-            const vm = this;
 
-            this.$validator.validateAll().then((res) => {
-                if (res) {
-                    const comment = {
-                        parent_id: vm.parent,
-                        post_id: vm.config.post,
-                        content: vm.content,
-                    };
+            const comment = {
+                parent_id: this.parent,
+                post_id: this.config.post,
+                content: this.content,
+            };
 
-                    if (!vm.user.isAuthenticated) {
-                        comment.author = vm.author;
-                        comment.email = vm.email;
-                    }
+            if (!this.user.isAuthenticated) {
+                comment.author = this.author;
+                comment.email = this.email;
+            }
 
-                    vm.$set(vm, 'error', false);
+            this.$set(this, 'error', false);
 
-                    vm.$resource('api/blog/comment{/id}').save({ id: 0 }, { comment }).then(function (res) {
-                        const { data } = res;
+            this.$resource('api/blog/comment{/id}').save({ id: 0 }, { comment }).then(function (res) {
+                const { data } = res;
 
-                        if (!vm.user.skipApproval) {
-                            vm.root.messages.push(this.$trans('Thank you! Your comment needs approval before showing up.'));
-                        } else {
-                            vm.root.load().then(() => {
-                                window.location.hash = `comment-${data.comment.id}`;
-                            });
-                        }
-
-                        vm.cancel();
-                    }, () => {
-                        // TODO better error messages
-                        vm.$set(vm, 'error', vm.$trans('Unable to comment. Please try again later.'));
+                if (!this.user.skipApproval) {
+                    this.root.messages.push(this.$trans('Thank you! Your comment needs approval before showing up.'));
+                } else {
+                    this.root.load().then(() => {
+                        window.location.hash = `comment-${data.comment.id}`;
                     });
                 }
+
+                this.cancel();
+            }, () => {
+                // TODO better error messages
+                this.$set(this, 'error', this.$trans('Unable to comment. Please try again later.'));
             });
         },
 
@@ -160,6 +124,11 @@ export default {
         },
 
     },
+
+    components: {
+        ValidationObserver,
+        VInput
+    }
 
 };
 

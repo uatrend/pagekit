@@ -4,17 +4,7 @@
             <div class="uk-margin">
                 <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
                 <div class="uk-form-controls">
-                    <input
-                        id="form-title"
-                        v-model="widget.title"
-                        v-validate="'required'"
-                        class="uk-input uk-form-width-large"
-                        type="text"
-                        name="title"
-                    >
-                    <div v-show="errors.first('title')" class="uk-text-meta uk-text-danger">
-                        {{ 'Title cannot be blank.' | trans }}
-                    </div>
+                    <v-input id="form-title" type="text" name="title" placeholder="Enter Title" view="class: uk-input uk-form-width-large" rules="required" v-model="widget.title" message="Title cannot be blank."/>
                 </div>
             </div>
         </div>
@@ -26,18 +16,18 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         label: 'Settings',
     },
 
-    inject: ['$validator'],
+    inject: ['$components'],
 
-    props: ['widget', 'form', 'config'],
+    props: ['widget', 'config'],
 
     created() {
-        this.$options.components['template-settings'] = this.$parent.$options.components['template-settings'];
+        _.extend(this.$options.components, this.$components)
     },
 
 };

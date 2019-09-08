@@ -27,13 +27,12 @@
 
 <script>
 
-module.exports = {
+import Package from '../lib/package';
+import PackageDetails from './package-details.vue';
 
-    mixins: [
-        // Package
-        require('../lib/package'),
-        Theme.Mixins.Helper
-    ],
+export default {
+
+    mixins: [Package, Theme.Mixins.Helper],
 
     props: {
         api: { type: String, default: '' },
@@ -155,9 +154,7 @@ module.exports = {
     },
 
     components: {
-
-        'package-details': require('./package-details.vue').default,
-
+        'package-details': PackageDetails
     },
 };
 

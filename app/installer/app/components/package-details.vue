@@ -61,9 +61,9 @@
 
 <script>
 
-const Version = require('../lib/version');
+import Version from '../lib/version';
 
-module.exports = {
+export default {
 
     props: {
         api: {

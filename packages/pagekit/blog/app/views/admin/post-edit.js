@@ -1,3 +1,6 @@
+import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+import settings from '../../components/post-settings.vue';
+
 window.Post = {
 
     name: 'post',
@@ -5,6 +8,12 @@ window.Post = {
     el: '#post',
 
     mixins: [Theme.Mixins.Helper],
+
+    provide: {
+        '$components': {
+            'v-input': VInput
+        }
+    },
 
     data() {
         return {
@@ -96,14 +105,12 @@ window.Post = {
 
     methods: {
 
-        submit() {
-            const vm = this;
-            this.$validator.validateAll().then((res) => {
-                if (res) {
-                    vm.processing = true;
-                    vm.save();
-                }
-            });
+        async submit() {
+            const isValid = await this.$refs.observer.validate();
+            if (isValid) {
+                this.processing = true;
+                this.save();
+            }
         },
 
         save() {
@@ -136,7 +143,8 @@ window.Post = {
 
     components: {
 
-        settings: require('../../components/post-settings.vue').default,
+        settings: settings,
+        ValidationObserver
 
     },
 

@@ -1,6 +1,6 @@
 <?php $view->script('site-settings', 'system/site:app/bundle/settings.js', ['vue', 'editor']) ?>
 
-<form id="settings" @submit.prevent="submit" v-cloak>
+<validation-observer tag="form" id="settings" ref="observer" @submit.prevent="submit" v-cloak>
 
     <div class="pk-grid-large" uk-grid>
         <div class="pk-width-sidebar">
@@ -27,4 +27,4 @@
         </div>
     </div>
 
-</form>
+</validation-observer>

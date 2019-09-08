@@ -14,7 +14,7 @@
     "require": {
         "php": ">=7.2",
         "composer/composer": "~1.9",
-        "doctrine/annotations": "~1.7",
+        "doctrine/annotations": "^1.7",
         "doctrine/dbal": "~2.9",
         "paragonie/random-lib": "~2.0.0",
         "maximebf/debugbar": "~1.15",

@@ -1,4 +1,6 @@
-module.exports = {
+import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+
+var Comments = {
 
     name: 'comment',
 
@@ -136,12 +138,7 @@ module.exports = {
         },
 
         submit() {
-            const vm = this;
-            this.$validator.validateAll().then((res) => {
-                if (res) {
-                    vm.save(vm.editComment.id ? vm.editComment : vm.replyComment);
-                }
-            });
+            this.save(this.editComment.id ? this.editComment : this.replyComment);
         },
 
         save(comment) {
@@ -199,12 +196,6 @@ module.exports = {
         },
 
         cancel(e) {
-            if (Object.values(this.editComment).length) {
-               this.$validator.detach('author');
-               this.$validator.detach('comment');
-               this.$validator.detach('email');
-            }
-            this.$validator.resume()
             this.$set(this, 'replyComment', {});
             this.$set(this, 'editComment', {});
         },
@@ -228,6 +219,13 @@ module.exports = {
 
     },
 
+    components: {
+        ValidationObserver,
+        VInput
+    }
+
 };
 
-Vue.ready(module.exports);
+export default Comments;
+
+Vue.ready(Comments);

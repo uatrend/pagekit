@@ -1,5 +1,5 @@
 <template>
-    <!-- <div> -->
+
     <v-modal ref="output" :options="options">
         <div class="uk-modal-header uk-flex uk-flex-middle">
             <h2>{{ 'Installing %title% %version%' | trans({title:pkg.title,version:pkg.version}) }}</h2>
@@ -25,14 +25,16 @@
             <a v-show="status == 'success'" class="uk-button uk-button-primary" @click.prevent="enable">{{ 'Enable' | trans }}</a>
         </div>
     </v-modal>
-    <!-- </div> -->
+
 </template>
 
 <script>
 
-module.exports = {
+import Output from './output';
 
-    mixins: [require('./output')],
+export default {
+
+    mixins: [Output],
 
     methods: {
 
@@ -42,7 +44,6 @@ module.exports = {
 
             self = this;
 
-            // return this.$http.post('admin/system/package/install', {package: pkg, packagist: Boolean(packagist)},null , {xhr: this.init()}).then(function () {
             return this.$http.get('admin/system/package/install', { params: { package: pkg, packagist: Boolean(packagist) }, progress() { self.init(this); } }).then(function () {
                 this.scrollToEnd();
                 if (this.status === 'success' && packages) {

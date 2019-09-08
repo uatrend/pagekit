@@ -1,35 +1,32 @@
-const Comment = require('./comment.vue').default;
-const Reply = require('./reply.vue').default;
+import Comment from './comment.vue';
+import Reply from './reply.vue';
 
-const { $ } = UIkit.util;
-const { append } = UIkit.util;
-
-module.exports = {
+var Comments = {
 
     el: '#comments',
 
     name: 'comments',
 
     template: `
-            <div id="comments" class="uk-margin-large-top" v-show="config.enabled || comments.length">
+        <div id="comments" class="uk-margin-large-top" v-show="config.enabled || comments.length">
 
-                <template v-if="comments.length">
+            <template v-if="comments.length">
 
-                    <h2 class="uk-h4">{{ 'Comments (%count%)' | trans({count:count}) }}</h2>
+                <h2 class="uk-h4">{{ 'Comments (%count%)' | trans({count:count}) }}</h2>
 
-                    <ul class="uk-comment-list">
-                        <comment v-for="comment in tree[0]" :key="comment.id" :comment="comment" :config="config" :tree="tree" :comments="comments" :root="root"></comment>
-                    </ul>
+                <ul class="uk-comment-list">
+                    <comment v-for="comment in tree[0]" :key="comment.id" :comment="comment" :config="config" :tree="tree" :comments="comments" :root="root"></comment>
+                </ul>
 
-                </template>
+            </template>
 
-                <div class="uk-alert" v-for="message in messages">{{ message }}</div>
+            <div class="uk-alert" v-for="message in messages">{{ message }}</div>
 
-                <div ref="reply" v-if="config.enabled"></div>
+            <div ref="reply" v-if="config.enabled"></div>
 
-                <p v-else>{{ 'Comments are closed.' | trans }}</p>
+            <p v-else>{{ 'Comments are closed.' | trans }}</p>
 
-            </div>`,
+        </div>`,
 
     data() {
         return _.extend({
@@ -113,7 +110,9 @@ module.exports = {
     components: {
         comment: Comment,
         reply: Reply,
-    },
+    }
 };
 
-Vue.ready(module.exports);
+export default Comments;
+
+Vue.ready(Comments);

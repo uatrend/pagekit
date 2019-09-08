@@ -18,7 +18,7 @@
 
 <script>
 
-module.exports = {
+var PostMeta = {
 
     section: {
         label: 'Meta',
@@ -29,6 +29,8 @@ module.exports = {
 
 };
 
-window.Post.components['post-meta'] = module.exports;
+export default PostMeta;
+
+window.Post.components['post-meta'] = PostMeta;
 
 </script>

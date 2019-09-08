@@ -1,7 +1,6 @@
 <?php $view->script('post-edit', 'blog:app/bundle/post-edit.js', ['vue', 'editor', 'uikit']) ?>
 
-<!-- <form id="post" v-validator="form" @submit.prevent="save | valid" v-cloak> -->
-<form id="post" @submit.prevent="submit" v-cloak>
+<validation-observer tag="form" id="post" ref="observer" v-cloak>
 
     <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
         <div>
@@ -31,4 +30,4 @@
         </div>
     </div>
 
-</form>
+</validation-observer>

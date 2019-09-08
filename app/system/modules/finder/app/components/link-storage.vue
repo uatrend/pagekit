@@ -37,7 +37,7 @@
 
 <script>
 
-module.exports = {
+var LinkStorage = {
 
     link: {
         label: 'Storage',
@@ -108,6 +108,8 @@ module.exports = {
 
 };
 
-window.Links.components['link-storage'] = module.exports;
+export default LinkStorage;
+
+window.Links.default.components['link-storage'] = LinkStorage;
 
 </script>

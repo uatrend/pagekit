@@ -18,7 +18,7 @@
                 <div class="uk-margin">
                     <label for="form-link-url" class="uk-form-label">{{ 'Url' | trans }}</label>
                     <div class="uk-form-controls">
-                        <input-link id="form-link-url" cls="uk-width-1-1" v-model="link.link"></input-link>
+                        <input-link id="form-link-url" input-class="uk-width-1-1" v-model="link.link"></input-link>
                     </div>
                 </div>
             </div>
@@ -35,31 +35,31 @@
 
 <script>
 
-    module.exports = {
+export default {
 
-        data: function () {
-            return {
-                link: {link: '', txt: '', class: ''}
-            }
+    data: function () {
+        return {
+            link: {link: '', txt: '', class: ''}
+        }
+    },
+
+    mounted: function () {
+        this.$refs.modal.open();
+    },
+
+    methods: {
+
+        close: function() {
+            this.$destroy(true);
         },
 
-        mounted: function () {
-            this.$refs.modal.open();
-        },
-
-        methods: {
-
-            close: function() {
-                this.$destroy(true);
-            },
-
-            update: function () {
-                this.$refs.modal.close();
-                this.$emit('select', this.link);
-            }
-
+        update: function () {
+            this.$refs.modal.close();
+            this.$emit('select', this.link);
         }
 
-    };
+    }
+
+};
 
 </script>

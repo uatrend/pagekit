@@ -1,4 +1,6 @@
-module.exports = {
+import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+
+var Registration = {
 
     name: 'registration',
 
@@ -8,26 +10,26 @@ module.exports = {
         return {
             user: {},
             error: null,
-            hidePassword: true
+            hidePassword: true,
+            view: {
+                type: 'icon',
+                containerClass: 'uk-margin',
+                class: 'uk-input uk-form-width-large',
+                icon: () => this.hidePassword ? 'lock' : 'unlock',
+                iconClick: () => { this.hidePassword = !this.hidePassword },
+                iconTag: 'a',
+                iconDir: 'right',
+            }
         }
-    },
-
-    mounted() {
-        this.$nextTick(function(){
-            UIkit.util.removeAttr(this.$el, 'hidden');
-        }.bind(this))
     },
 
     methods: {
 
-        valid() {
-            const vm = this;
-
-            this.$validator.validateAll().then((res) => {
-                if (res) {
-                    vm.submit();
-                }
-            })
+        async valid() {
+            const isValid = await this.$refs.observer.validate();
+            if (isValid) {
+                this.submit();
+            }
         },
 
         submit() {
@@ -42,6 +44,13 @@ module.exports = {
 
     },
 
+    components: {
+        ValidationObserver,
+        VInput
+    }
+
 };
 
-Vue.ready(module.exports);
+export default Registration;
+
+Vue.ready(Registration);

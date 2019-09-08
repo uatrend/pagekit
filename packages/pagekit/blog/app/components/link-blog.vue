@@ -18,7 +18,7 @@
 
 <script>
 
-module.exports = {
+var LinkBlog = {
 
     link: {
         label: 'Blog',
@@ -62,6 +62,8 @@ module.exports = {
 
 };
 
-window.Links.components['link-blog'] = module.exports;
+export default LinkBlog;
+
+window.Links.default.components['link-blog'] = LinkBlog;
 
 </script>

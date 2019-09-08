@@ -109,7 +109,7 @@
 
 <script>
 
-module.exports = {
+var Mail = {
 
     mixins: [Theme.Mixins.Helper],
 
@@ -185,6 +185,8 @@ module.exports = {
 
 };
 
-window.Settings.components['system-mail'] = module.exports;
+export default Mail;
+
+window.Settings.components['system-mail'] = Mail;
 
 </script>

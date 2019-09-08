@@ -37,70 +37,70 @@
 
 <script>
 
-    module.exports = {
+export default {
 
-        props: ['index'],
+    props: ['index'],
 
-        data: function() {
-            return {imageSrc: false, videoSrc: false, width: '', height: ''};
+    data: function() {
+        return {imageSrc: false, videoSrc: false, width: '', height: ''};
+    },
+
+    watch: {
+        'video.data': {
+            handler: 'update',
+            immediate: true,
+            deep: true
+        }
+    },
+
+    computed: {
+
+        video: function() {
+            return this.$parent.videos[this.index] || {};
+        }
+
+    },
+
+    methods: {
+
+        config: function() {
+            this.$parent.openModal(this.video);
         },
 
-        watch: {
-            'video.data': {
-                handler: 'update',
-                immediate: true,
-                deep: true
-            }
+        remove: function() {
+            this.video.replace('');
         },
 
-        computed: {
+        update: function (data) {
 
-            video: function() {
-                return this.$parent.videos[this.index] || {};
-            }
+            var matches;
 
-        },
+            this.$set(this, 'imageSrc', false);
+            this.$set(this, 'videoSrc', false);
+            this.$set(this, 'width', data.width || 690);
+            this.$set(this, 'height', data.height || 390);
 
-        methods: {
+            var src = data.src || '';
+            if (matches = (src.match(/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/))) {
 
-            config: function() {
-                this.$parent.openModal(this.video);
-            },
+                this.imageSrc = '//img.youtube.com/vi/' + matches[1] + '/hqdefault.jpg';
 
-            remove: function() {
-                this.video.replace('');
-            },
+            } else if (src.match(/https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/)) {
 
-            update: function (data) {
+                this.$http.get('http://vimeo.com/api/oembed.json', {params: {url: src}, cache: 10}).then(function (res) {
+                    this.imageSrc = res.data.thumbnail_url;
+                });
 
-                var matches;
+            } else {
 
-                this.$set(this, 'imageSrc', false);
-                this.$set(this, 'videoSrc', false);
-                this.$set(this, 'width', data.width || 690);
-                this.$set(this, 'height', data.height || 390);
-
-                var src = data.src || '';
-                if (matches = (src.match(/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/))) {
-
-                    this.imageSrc = '//img.youtube.com/vi/' + matches[1] + '/hqdefault.jpg';
-
-                } else if (src.match(/https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/)) {
-
-                    this.$http.get('http://vimeo.com/api/oembed.json', {params: {url: src}, cache: 10}).then(function (res) {
-                        this.imageSrc = res.data.thumbnail_url;
-                    });
-
-                } else {
-
-                    this.videoSrc = this.$url(src);
-
-                }
+                this.videoSrc = this.$url(src);
 
             }
 
         }
 
-    };
+    }
+
+};
 
 </script>

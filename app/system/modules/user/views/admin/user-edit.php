@@ -1,6 +1,6 @@
 <?php $view->script('user-edit', 'system/user:app/bundle/user-edit.js', ['vue']) ?>
 
-<form id="user-edit" class="uk-form-horizontal" @submit.prevent="submit" v-cloak>
+<validation-observer tag="form" id="user-edit" class="uk-form-horizontal" ref="observer" @submit.prevent="submit" v-cloak>
 
     <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap" >
         <div >
@@ -29,4 +29,4 @@
         </div>
     </div>
 
-</form>
+</validation-observer>

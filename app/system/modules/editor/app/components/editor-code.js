@@ -1,6 +1,6 @@
-var {$, css, closest, removeAttr, height, trigger} = UIkit.util;
+import { css, closest, removeAttr, height, trigger } from 'uikit-util';
 
-module.exports = {
+export default {
 
     name: 'editor-code',
 

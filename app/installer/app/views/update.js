@@ -1,6 +1,6 @@
-const Version = require('../lib/version');
+import Version from '../lib/version';
 
-module.exports = {
+var Update = {
 
     name: 'update',
 
@@ -150,4 +150,6 @@ module.exports = {
 
 };
 
-Vue.ready(module.exports);
+export default Update;
+
+Vue.ready(Update);

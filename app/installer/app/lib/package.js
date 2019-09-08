@@ -2,7 +2,7 @@ const Install = Vue.extend(require('./install.vue').default);
 const Uninstall = Vue.extend(require('./uninstall.vue').default);
 const Update = Vue.extend(require('./update.vue').default);
 
-module.exports = {
+export default {
 
     methods: {
 
@@ -56,8 +56,8 @@ module.exports = {
 
         error(message) {
             this.$notify(message.data, 'danger');
-        },
+        }
 
-    },
+    }
 
 };

@@ -32,7 +32,6 @@ export default {
                 binding.def.state(el, binding, vnode);
             },
             function (e) {
-                // console.log(e);
                 e.stopImmediatePropagation();
                 if (!(util.isInput(e.target) || e.target.tagName == 'A') && !window.getSelection().toString()) {
                     binding.selectors = Array.from(util.findAll(subSelector, this));
@@ -112,8 +111,6 @@ export default {
         });
 
         if (update) {
-            // update = vnode.context.selected.filter(value => values.indexOf(value) === -1);
-            // vnode.context.$set(vnode.context, 'selected', update.concat(selected));
             update = _.get(vnode.context, binding.keypath).filter(value => values.indexOf(value) === -1);
             _.set(vnode.context, binding.keypath, update.concat(selected));
         }

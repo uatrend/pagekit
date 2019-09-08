@@ -4,7 +4,5 @@ Vue.ready({
 
     name: 'storage',
 
-    el: '#storage',
-
-    mounted() {},
+    el: '#storage'
 });

@@ -2,13 +2,13 @@
  * Editor Link plugin.
  */
 
-module.exports = {
+export default {
 
     name: "plugin-link",
 
     plugin: true,
 
-    created: function () {
+    created() {
 
         if (typeof tinyMCE === 'undefined') {
             return;

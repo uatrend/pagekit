@@ -1,6 +1,6 @@
 <?php $view->script('widget-edit', 'system/widget:app/bundle/edit.js', ['widgets', 'editor', 'input-tree']) ?>
 
-<form id="widget-edit" @submit.prevent="submit" v-cloak>
+<validation-observer tag="form" id="widget-edit" ref="observer" @submit.prevent="submit" v-cloak>
 
     <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
         <div class="">
@@ -29,4 +29,4 @@
         </div>
     </div>
 
-</form>
+</validation-observer>

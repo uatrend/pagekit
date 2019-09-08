@@ -108,7 +108,11 @@ var ThemeTabs = function(name, ele, option) {
 
         UIkit.util.on(element.tab.connects, 'show', function(e, tab) {
             if (tab !== element.tab) return false;
-            self.$children.forEach((component, idx) => {
+            var baseComponent = self;
+            if (_.has(self.$children[0], '$_veeObserver')) {
+                baseComponent = self.$children[0];
+            }
+            baseComponent.$children.forEach((component, idx) => {
                 if (component.$el === e.target.firstChild) {
                     let tabName = component.$options.name || component.$options._componentTag;
                     self.$set(element, 'activeTab', tabName);
@@ -158,10 +162,15 @@ function renderElement(h, element, _vue) {
 
     var render = {
         dropdown() {
+            let dropdownOptions = () => {
+                let options = get(this, 'dropdown.options');
+                if (!/topmenu/.test(this.scope)) return options;
+                return `${options}; offset: ${$this.offset}`;
+            }
             return [
                 render['button'].call(this),
                 h('div', {
-                    attrs: { 'uk-dropdown': get(this, 'dropdown.options') },
+                    attrs: { 'uk-dropdown': dropdownOptions() },
                     class: get(this, 'dropdown.class'),
                     style: get(this, 'dropdown.style')
                 }, [
@@ -211,17 +220,14 @@ function renderElement(h, element, _vue) {
                     if (get(this, 'caption')) {
                         if ((icon || spinner) && !internal) {
                             elements.push([
-                                // h('span', {class: 'uk-text-middle'}, $trans(get(this, 'caption')))
                                 h('span', {class: 'uk-text-middle'}, getText(get(this, 'caption')))
                             ])
                         } else if (icon && internal) {
                             elements.push([
-                                // h('span', {class: 'uk-text-middle uk-margin-small-right'}, $trans(get(this, 'caption')))
                                 h('span', {class: 'uk-text-middle uk-margin-small-right'}, getText(get(this, 'caption')))
                             ])
                         } else if (!icon) {
                             elements.push([
-                                // $trans(get(this, 'caption'))
                                 getText(get(this, 'caption'))
                             ])
                         }
@@ -404,6 +410,11 @@ var ThemeTopMenu = {
 
         var isScopes = scopes.map((scope) => $theme.isScopeEmpty($theme.getScope(scope))).filter((item) => !item).length;
         return isScopes && h('div', { class: 'tm-topmenu uk-visible@m'}, scopes.map((scope) => renderScope.call(this, h, 'topmenu', scope)))
+    },
+    created() {
+        // define dropdown top offset
+        let { $, getStyle } = UIkit.util;
+        this.offset = parseInt(getStyle($('.uk-navbar-container'), 'paddingBottom'));
     }
 }
 
@@ -546,8 +557,7 @@ ThemeHelper.prototype.addElements = function() {
     })
 }
 
-ThemeHelper.prototype.extendElements = function() {
-}
+ThemeHelper.prototype.extendElements = function() {}
 
 ThemeHelper.prototype.callWatches = function() {
     var elements = this.elementsOption,

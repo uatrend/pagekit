@@ -1,4 +1,4 @@
-module.exports = {
+export default {
 
     template: '<ul class="uk-pagination uk-flex-center"></ul>',
 
@@ -7,10 +7,6 @@ module.exports = {
             default: 0,
             type: Number,
         },
-        // current: {
-        //     default: 0,
-        //     type: Number,
-        // },
 
         pages: {
             default: 1,
@@ -35,7 +31,6 @@ module.exports = {
 
     data() {
         return {
-            // page: this.current,
             page: this.value,
         };
     },
@@ -44,7 +39,6 @@ module.exports = {
 
         var name = this.name || this.$parent.$options.name || this.$parent.$options._componentTag;
 
-        // this.key = `${this.$parent.$options.name}.pagination`;
         this.key = `${name}.pagination`;
 
         if (this.page === null && this.$session.get(this.key)) {
@@ -66,15 +60,10 @@ module.exports = {
 
         UIkit.util.on(this.pagination.$el, 'select.uk.pagination', (e, pagination, page) => {
             vm.$emit('input', Number(page));
-            // vm.$set(vm, 'page', page);
         });
     },
 
     watch: {
-
-        // current(page) {
-        //     this.$set(this, 'page', page);
-        // },
 
         value(page) {
             this.$set(this, 'page', page);

@@ -35,30 +35,30 @@
 
 <script>
 
-    module.exports = {
+export default {
 
-        props: ['index'],
+    props: ['index'],
 
-        computed: {
+    computed: {
 
-            image: function() {
-                return this.$parent.images[this.index] || {};
-            }
-
-        },
-
-        methods: {
-
-            config: function() {
-                this.$parent.openModal(this.image);
-            },
-
-            remove: function() {
-                this.image.replace('');
-            }
-
+        image: function() {
+            return this.$parent.images[this.index] || {};
         }
 
-    };
+    },
+
+    methods: {
+
+        config: function() {
+            this.$parent.openModal(this.image);
+        },
+
+        remove: function() {
+            this.image.replace('');
+        }
+
+    }
+
+};
 
 </script>

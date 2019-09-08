@@ -59,7 +59,6 @@ if (config.grecaptcha) {
 }
 
 function onSubmit(gRecaptchaResponse) {
-    console.log('submitted');
     requestResolve(gRecaptchaResponse);
 }
 

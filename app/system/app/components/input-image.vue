@@ -58,7 +58,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     props: {
         inputClass: { default: '' },
@@ -132,7 +132,7 @@ Vue.component('input-image', (resolve, reject) => {
             'app/system/modules/finder/app/bundle/panel-finder.js',
         ],
     }).then(() => {
-        resolve(module.exports);
+        resolve(require('./input-image.vue'));
     });
 });
 

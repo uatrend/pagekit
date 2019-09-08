@@ -647,9 +647,9 @@
  ========================================================================== */
 
 .pk-panel-background {
-    margin: -@global-gutter;
-    padding: @global-gutter;
-    background: @global-primary-background url("../images/dashboard-location.jpg") 0 0 no-repeat;
+    // margin: -@global-gutter;
+    // padding: @global-gutter;
+    background: url("../images/dashboard-location.jpg") 0 0 no-repeat;//@global-primary-background url("../images/dashboard-location.jpg") 0 0 no-repeat;
     background-size: cover;
 }
 
@@ -712,10 +712,11 @@
     display: -webkit-flex !important;
     display: flex !important;
     position: absolute;
-    top: 10%;
+    top: 0;//10%;
     bottom: 10%;
     right: 10px;
     font-size: 13px;
+    height: @form-height;
 }
 
 .pk-form-link > input { padding-right: 100px !important; }

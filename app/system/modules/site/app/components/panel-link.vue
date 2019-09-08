@@ -17,7 +17,7 @@
 
 <script>
 
-window.Links = module.exports = {
+export default {
 
     data() {
         return {
@@ -61,7 +61,7 @@ window.Links = module.exports = {
 };
 
 Vue.component('panel-link', (resolve) => {
-    resolve(module.exports);
+    resolve(require('./panel-link.vue'));
 });
 
 </script>

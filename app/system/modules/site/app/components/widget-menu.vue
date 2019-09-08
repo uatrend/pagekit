@@ -3,20 +3,7 @@
         <div class="pk-width-content uk-form-horizontal">
             <div class="uk-margin">
                 <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
-
-                <div class="uk-form-controls">
-                    <input
-                        v-model="widget.title"
-                        v-validate="'required'"
-                        class="uk-form-width-large uk-input"
-                        type="text"
-                        name="title"
-                        :placeholder="'Enter Title' | trans"
-                    >
-                    <div v-show="errors.first('title')" class="uk-text-meta uk-text-danger">
-                        {{ 'Title cannot be blank.' | trans }}
-                    </div>
-                </div>
+            	<v-input id="form-title" type="text" name="title" placeholder="Enter Title" view="class: uk-form-width-large uk-input" rules="required" v-model="widget.title" message="Title cannot be blank."/>
             </div>
 
             <div class="uk-margin">
@@ -136,13 +123,11 @@
 
 <script>
 
-module.exports = {
+var WidgetMenu = {
 
     section: {
         label: 'Settings',
     },
-
-    inject: ['$validator'],
 
     props: ['widget', 'config', 'form'],
 
@@ -152,9 +137,10 @@ module.exports = {
         };
     },
 
+    inject: ['$components'],
+
     created() {
-        // this.$options.partials = this.$parent.$options.partials;
-        this.$options.components['template-settings'] = this.$parent.$options.components['template-settings'];
+        _.extend(this.$options.components, this.$components);
 
         this.$http.get('api/site/menu').then(function (res) {
             this.$set(this, 'menus', res.data.filter(menu => menu.id !== 'trash'));
@@ -163,6 +149,8 @@ module.exports = {
 
 };
 
-window.Widgets.components['system-menu--settings'] = module.exports;
+export default WidgetMenu;
+
+window.Widgets.components['system-menu.settings'] = WidgetMenu;
 
 </script>

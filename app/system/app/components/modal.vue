@@ -1,7 +1,8 @@
 <template>
     <div uk-modal :class="modalCls">
         <div class="uk-modal-dialog" :class="dialogCls">
-            <slot v-if="opened" />
+            <slot v-if="opened">
+            </slot>
         </div>
     </div>
 </template>

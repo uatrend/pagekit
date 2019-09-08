@@ -1,5 +1,7 @@
+import PackageManager from '../components/package-manager';
+
 window.Themes = _.merge(
-    require('../components/package-manager.js'),
+    PackageManager,
     {
         name: 'themes',
 

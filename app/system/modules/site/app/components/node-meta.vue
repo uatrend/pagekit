@@ -29,7 +29,7 @@
 
 <script>
 
-module.exports = {
+var Meta = {
 
     section: {
         label: 'Meta',
@@ -46,6 +46,8 @@ module.exports = {
 
 };
 
-window.Site.components['node-meta'] = module.exports;
+export default Meta;
+
+window.Site.components['node-meta'] = Meta;
 
 </script>

@@ -65,45 +65,45 @@
 
 <script>
 
-    module.exports = {
+export default {
 
-        name: 'video-picker',
+    name: 'video-picker',
 
-        data: function () {
-            return {
-                video: {data: {src: '', controls: true}}
-            }
+    data: function () {
+        return {
+            video: {data: {src: '', controls: true}}
+        }
+    },
+
+    mounted: function () {
+        this.$refs.modal.open();
+    },
+
+    computed: {
+
+        isYoutube: function () {
+            return this.video.data.src ? this.video.data.src.match(/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/) : false;
         },
 
-        mounted: function () {
-            this.$refs.modal.open();
-        },
-
-        computed: {
-
-            isYoutube: function () {
-                return this.video.data.src ? this.video.data.src.match(/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/) : false;
-            },
-
-            isVimeo: function () {
-                return this.video.data.src ? this.video.data.src.match(/https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/) : false;
-            }
-
-        },
-
-        methods: {
-
-            close: function() {
-                this.$destroy(true);
-            },
-
-            update: function () {
-                this.$emit('select', this.video);
-                this.$refs.modal.close();
-            }
-
+        isVimeo: function () {
+            return this.video.data.src ? this.video.data.src.match(/https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/) : false;
         }
 
-    };
+    },
+
+    methods: {
+
+        close: function() {
+            this.$destroy(true);
+        },
+
+        update: function () {
+            this.$emit('select', this.video);
+            this.$refs.modal.close();
+        }
+
+    }
+
+};
 
 </script>

@@ -137,7 +137,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     name: 'panel-finder',
 
@@ -304,8 +304,6 @@ module.exports = {
         this.resource = this.$resource('system/finder{/cmd}');
 
         this.load().then(function () {
-            // this.$dispatch('ready.finder', this);
-            // this.$emit('ready.finder', this);
             this.$emit('ready:finder', this);
         });
     },
@@ -317,8 +315,6 @@ module.exports = {
         },
 
         selected() {
-            // this.$dispatch('select.finder', this.getSelected(), this);
-            // this.$emit('select.finder', this.getSelected(), this);
             this.$emit('select:finder', this.getSelected(), this);
         },
 
@@ -464,8 +460,6 @@ module.exports = {
             return this.resource.get({ path: this.path, root: this.getRoot() }).then(function (res) {
                 this.$set(this, 'items', res.data.items || []);
                 this.$set(this, 'selected', []);
-                // this.$dispatch('path.finder', this.getFullPath(), this);
-                // this.$emit('path.finder', this.getFullPath(), this);
                 this.$emit('path:finder', this.getFullPath(), this);
             }, function () {
                 this.$notify('Unable to access directory.', 'danger');
@@ -507,7 +501,6 @@ module.exports = {
                     try {
                         var data = JSON.parse(data.responseText);
                     } catch (e) {
-                        // var data = data.responseText.replace(/<script[^>]*?>.*?<\/script>/gi, '').replace(/<[\/\!]*?[^<>]*?>/gi, '').replace(/<style[^>]*?>.*?<\/style>/gi, '').replace(/<![\s\S]*?--[ \t\n\r]*>/gi, '').replace(/^\s+|\s+$/g, "").replace(/\s+/g, " ");
                         try {
                             var data = JSON.parse(data.responseText.substring(data.responseText.lastIndexOf('{'), data.responseText.lastIndexOf('}') + 1));
                             var { message } = data;
@@ -538,17 +531,17 @@ module.exports = {
 
     components: {
         'template-table': {
-        	template: require('../templates/table.html')
+        	template: require('../templates/table.html').default
         },
         'template-thumbnail': {
-        	template: require('../templates/thumbnail.html')
+        	template: require('../templates/thumbnail.html').default
         },
     },
 
 };
 
 Vue.component('panel-finder', (resolve) => {
-    resolve(module.exports);
+    resolve(require('./panel-finder.vue'));
 });
 
 </script>

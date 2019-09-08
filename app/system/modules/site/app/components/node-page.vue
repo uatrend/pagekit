@@ -3,10 +3,7 @@
         <div class="pk-width-content">
             <div class="uk-margin">
                 <label class="uk-form-label">{{ 'Title' | trans }}</label>
-                <input class="uk-width-1-1 uk-input uk-form-large" type="text" name="page[title]" :placeholder="'Enter Title' | trans" v-model.lazy="page.title" v-validate="'required'">
-                <div v-show="errors.first('page[title]')" class="uk-text-meta uk-text-danger">
-                    {{ 'Title cannot be blank.' | trans }}
-                </div>
+                <v-input name="page[title]" type="text" rules="required" view="class: uk-input uk-form-large" v-model.lazy="page.title" placeholder="Enter Title" message="Title cannot be blank." />
             </div>
 
             <div class="uk-margin">
@@ -78,13 +75,13 @@
 
 <script>
 
-module.exports = {
+var PageSettings = {
 
     section: {
         label: 'Content',
     },
 
-    inject: ['$validator'],
+    inject: ['$components'],
 
     props: ['node', 'roles', 'form'],
 
@@ -94,6 +91,10 @@ module.exports = {
                 data: { title: true },
             },
         };
+    },
+
+    created(){
+        _.extend(this.$options.components, this.$components);
     },
 
     mounted() {
@@ -132,6 +133,8 @@ module.exports = {
 
 };
 
-window.Site.components['page--settings'] = module.exports;
+export default PageSettings;
+
+window.Site.components['page.settings'] = PageSettings;
 
 </script>

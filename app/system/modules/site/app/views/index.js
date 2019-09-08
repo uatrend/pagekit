@@ -1,5 +1,8 @@
 import { $, on, css, addClass, removeClass, hasClass, toNodes } from 'uikit-util';
 import { VueNestable, VueNestableHandle } from 'vue-nestable';
+import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+
+import isMobile from 'ismobilejs';
 
 Vue.ready({
 
@@ -59,7 +62,7 @@ Vue.ready({
                     type: 'button',
                     caption: 'Add Menu',
                     class: 'uk-button uk-button-primary',
-                    on: {click: () => vm.editMenu()},
+                    on: {click: () => vm.editMenu},
                     priority: 0,
                 },
                 'actions': {
@@ -99,44 +102,9 @@ Vue.ready({
                             }
                         }
                     },
-                    // disabled:() => vm.menu.id === 'trash',
                     priority: 2,
-                    // vif: () => vm.selected.length,
                     disabled: () => !vm.selected.length,
                 },
-                // menuitems: {
-                //     scope: 'topmenu-center',
-                //     type:  'iconnav',
-                //     class: '',
-                //     items: () => {
-                //         return {
-                //             publish: {
-                //                 on: {click: () => vm.status(1)},
-                //                 // icon: {internal: true},
-                //             },
-                //             unpublish: {on: { click: () => vm.status(0)} },
-                //             move: {
-                //                 type: 'dropdown',
-                //                 dropdown: { options: () => 'mode: click' },
-                //                 items: () => vm.trash(vm.menus).map((item) => {
-                //                     let props = {
-                //                         caption: item.label,
-                //                         on: {click: () => vm.moveNodes(item.id)},
-                //                         class: item.id === vm.menu.id ? 'uk-disabled uk-text-muted': ''
-                //                     }
-                //                     return Object.assign({}, item, props);
-                //                 }),
-                //                 vif: () => vm.showMove
-                //             },
-                //             trash: {
-                //                 on: {click: () => vm.removeNodes},
-                //                 vif: () => vm.showDelete
-                //             }
-                //         }
-                //     },
-                //     vif: () => vm.selected.length,
-                //     priority: 99
-                // }
             }
         }
     },
@@ -454,13 +422,15 @@ Vue.ready({
         },
 
         isMobile() {
-            return window.isMobile;
+            return isMobile(navigator.userAgent).any;
         },
     },
 
     components: {
         VueNestable,
         VueNestableHandle,
+        ValidationObserver,
+        VInput
     },
 
 });

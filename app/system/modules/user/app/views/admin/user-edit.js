@@ -1,3 +1,6 @@
+import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+import UserSettings from '../../components/user-settings.vue';
+
 window.User = {
 
     name: 'user-edit',
@@ -8,6 +11,12 @@ window.User = {
 
     data() {
         return _.extend({ sections: [], form: {}, processing: false }, window.$data);
+    },
+
+    provide: {
+        '$components': {
+            'v-input': VInput
+        }
     },
 
     theme: {
@@ -65,15 +74,12 @@ window.User = {
 
     methods: {
 
-        submit() {
-            const vm = this;
-
-            this.$validator.validateAll().then((res) => {
-                if (res) {
-                    vm.processing = true;
-                    vm.save();
-                }
-            });
+        async submit() {
+            const isValid = await this.$refs.observer.validate();
+            if (isValid) {
+                this.processing = true;
+                this.save();
+            }
         },
 
         save() {
@@ -104,7 +110,8 @@ window.User = {
 
     components: {
 
-        settings: require('../../components/user-settings.vue').default,
+        ValidationObserver,
+        settings: UserSettings,
 
     },
 

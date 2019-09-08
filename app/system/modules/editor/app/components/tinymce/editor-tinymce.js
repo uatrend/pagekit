@@ -1,6 +1,6 @@
-var { $, on, attr, css, removeClass, removeAttr, find } = UIkit.util;
+import { $, attr, css, removeAttr } from 'uikit-util';
 
-module.exports = {
+export default {
 
     name: "editor-tinymce",
 

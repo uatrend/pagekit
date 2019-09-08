@@ -71,7 +71,7 @@
 
 <script>
 
-module.exports = {
+var WidgetTheme = {
 
     section: {
         label: 'Theme',
@@ -82,6 +82,8 @@ module.exports = {
 
 };
 
-window.Widgets.components.theme = module.exports;
+export default WidgetTheme;
+
+window.Widgets.components.theme = WidgetTheme;
 
 </script>

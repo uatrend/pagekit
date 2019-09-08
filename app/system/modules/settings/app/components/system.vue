@@ -71,7 +71,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         label: 'System',

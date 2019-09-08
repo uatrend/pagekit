@@ -76,7 +76,7 @@ body {
         margin-top: @form-horizontal-label-margin-top;
         float: left;
         /* Theme Reset */
-        font-size: @global-font-size;
+        font-size: 15px;//@global-font-size;
         line-height: @global-line-height;
         text-transform: none;
     }
@@ -292,4 +292,22 @@ body {
     }
 }
 
+.uk-card-body {
+    padding: 30px;
+}
+
+.uk-select {
+    padding: 0 4px;
+}
+
+.slide-enter-active {
+  transition: all .3s ease;
+}
+.slide-leave-active {
+  display: none;
+}
+.slide-enter, .slide-leave-to {
+  transform: translateX(100%);
+  opacity: 0;
+}
 

@@ -1,4 +1,4 @@
-module.exports = {
+var UserIndex = {
 
     name: 'user-index',
 
@@ -236,14 +236,10 @@ module.exports = {
             }, this);
         },
 
-    },
-
-    // events: {
-    //     'select:pagination': function (e, page) {
-    //         this.config.page = Number(page);
-    //     },
-    // },
+    }
 
 };
 
-Vue.ready(module.exports);
+export default UserIndex;
+
+Vue.ready(UserIndex);

@@ -1,10 +1,10 @@
-module.exports = {
+import Package from '../lib/package';
+import PackageUpload from './package-upload.vue';
+import PackageDetails from './package-details.vue';
 
-    mixins: [
-        // Package,
-        require('../lib/package'),
-        Theme.Mixins.Helper
-    ],
+export default {
+
+    mixins: [Package,Theme.Mixins.Helper],
 
     data() {
         return _.extend({
@@ -116,8 +116,8 @@ module.exports = {
     },
 
     components: {
-        'package-upload': require('./package-upload.vue').default,
-        'package-details': require('./package-details.vue').default,
+        'package-upload': PackageUpload,
+        'package-details': PackageDetails
     },
 
 };

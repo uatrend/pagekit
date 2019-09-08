@@ -1,4 +1,4 @@
-module.exports = {
+var Marketplace = {
 
     name: 'marketplace',
 
@@ -49,4 +49,6 @@ module.exports = {
 
 };
 
-Vue.ready(module.exports);
+export default Marketplace;
+
+Vue.ready(Marketplace);

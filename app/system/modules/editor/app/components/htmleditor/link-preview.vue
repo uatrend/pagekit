@@ -10,20 +10,20 @@
 
 <script>
 
-    module.exports = {
+export default {
 
-        name: 'link-preview',
+    name: 'link-preview',
 
-        props: ['index'],
+    props: ['index'],
 
-        computed: {
+    computed: {
 
-            link: function() {
-                return this.$parent.links[this.index] || {};
-            }
+        link: function() {
+            return this.$parent.links[this.index] || {};
+        }
 
-        },
+    },
 
-    };
+};
 
 </script>

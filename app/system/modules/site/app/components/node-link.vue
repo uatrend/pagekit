@@ -3,10 +3,7 @@
         <div class="uk-margin">
             <label for="form-url" class="uk-form-label">{{ 'Url' | trans }}</label>
             <div class="uk-form-controls">
-                <input-link id="form-url" v-model="node.link" cls="uk-form-width-large" name="link" required></input-link>
-                <div v-show="errors.first('link')" class="uk-text-meta uk-text-danger">
-                    {{ 'Invalid url.' | trans }}
-                </div>
+                <input-link id="form-url" name="link" v-model="node.link" input-class="uk-form-width-large" required="Invalid url."></input-link>
             </div>
         </div>
 
@@ -28,7 +25,7 @@
             </div>
         </div>
 
-        <component :is="'template-settings'" :node.sync="node" :roles.sync="roles" :form="form" />
+        <component :is="'template-settings'" :node.sync="node" :roles.sync="roles" />
     </div>
 </template>
 
@@ -42,9 +39,9 @@ export default {
         active: 'link',
     },
 
-    inject: ['$validator'],
-
     props: ['node', 'roles', 'form'],
+
+    inject: ['$components'],
 
     computed: {
 
@@ -72,8 +69,7 @@ export default {
     },
 
     created() {
-        // this.$options.partials = this.$parent.$options.partials;
-        this.$options.components['template-settings'] = this.$root.$options.components['template-settings'];
+        _.extend(this.$options.components, this.$components);
 
         if (this.behavior === 'redirect') {
             this.node.link = this.node.data.redirect;

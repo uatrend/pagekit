@@ -1,10 +1,22 @@
-module.exports = {
+import settings from '../components/widget-settings.vue';
+import visibility from '../components/widget-visibility.vue';
+import TemplateSettings from '../components/template-settings';
+import { ValidationObserver, VInput} from '../../../../app/components/validation.vue';
+
+var WidgetEdit = {
 
     name: 'widget',
 
     el: '#widget-edit',
 
     mixins: [window.Widgets, Theme.Mixins.Helper],
+
+    provide: {
+        '$components': {
+            'template-settings': TemplateSettings,
+            'v-input' : VInput
+        }
+    },
 
     theme: {
         hiddenHtmlElements: ['#widget-edit > div:first-child'],
@@ -60,10 +72,12 @@ module.exports = {
         });
 
         sections = _.sortBy(sections.filter((section) => {
-            active = section.name.match('(.+)--(.+)');
+            // active = section.name.match('(.+)--(.+)');
+            let name = section.name;
+            active = (name.match(/\.[^.]/) && !name.match(/\s/)) ? name.match(/(.*(?=\.))\.(.*)/) : null
 
             if (active === null) {
-                return !_.find(sections, { name: `${type}--${section.name}` });
+                return !_.find(sections, { name: `${type}.${section.name}` });
             }
 
             return active[1] == type;
@@ -102,15 +116,12 @@ module.exports = {
 
     methods: {
 
-        submit() {
-            const vm = this;
-
-            this.$validator.validateAll().then((res) => {
-                if (res) {
-                    vm.processing = true;
-                    vm.save();
-                }
-            });
+        async submit() {
+            const isValid = await this.$refs.observer.validate();
+            if (isValid) {
+                this.processing = true;
+                this.save();
+            }
         },
 
         save() {
@@ -145,6 +156,14 @@ module.exports = {
 
     },
 
+    components: {
+        settings,
+        visibility,
+        ValidationObserver
+    }
+
 };
 
-Vue.ready(module.exports);
+export default WidgetEdit;
+
+Vue.ready(WidgetEdit);

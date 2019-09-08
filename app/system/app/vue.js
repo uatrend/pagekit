@@ -1,3 +1,4 @@
+import Vue from 'vue';
 import VueEventManager from 'vue-event-manager';
 
 import VueIntl from 'vue-intl';
@@ -26,12 +27,7 @@ import Gravatar from './directives/gravatar';
 import Order from './directives/order';
 import LazyBackground from './directives/lazy-background';
 
-import { Validator, ErrorBag, install as VeeValidate } from 'vee-validate/dist/vee-validate.minimal.esm.js';
-import { required, email, regex } from 'vee-validate/dist/rules.esm.js';
-const dictionary = { en: { messages:{ required: () => true, email: () => true, regex: () => true } } };
-
 import Theme from './lib/theme';
-import './lib/mobiledetect';
 
 function Install(Vue) {
     const config = window.$pagekit;
@@ -69,12 +65,6 @@ function Install(Vue) {
     Vue.use(Notify);
     Vue.use(Trans);
     Vue.use(Filters);
-
-    Validator.extend('required', required);
-    Validator.extend('email', email);
-    Validator.extend('regex', regex);
-    Validator.localize(dictionary);
-    Vue.use(VeeValidate);
 
     /**
      * Components

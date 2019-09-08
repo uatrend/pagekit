@@ -23,7 +23,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     name: 'panel',
 

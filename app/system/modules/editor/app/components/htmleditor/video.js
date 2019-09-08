@@ -2,9 +2,10 @@
  * Editor Video plugin.
  */
 
-var { on, attr, findAll }      = UIkit.util;
+import { on, attr, findAll } from 'uikit-util';
+import VideoPreview from './video-preview.vue';
 
-module.exports = {
+export default {
 
     name: 'video-plugin',
 
@@ -12,7 +13,7 @@ module.exports = {
 
     plugin: true,
 
-    created: function () {
+    created() {
 
         var vm = this, editor = this.$parent.editor;
 
@@ -210,9 +211,7 @@ module.exports = {
     },
 
     components: {
-
-        'video-preview': require('./video-preview.vue').default
-
+        'video-preview': VideoPreview
     }
 
 };

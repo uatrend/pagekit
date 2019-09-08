@@ -1,10 +1,13 @@
 <template>
     <div>
-        <div :class="['pk-form-link', cls ? cls : '']">
-            <input v-if="isRequired" :id="id" v-validate="'required'" class="uk-width-1-1 uk-input" type="text" v-model.lazy="link" :name="name">
-            <input v-else :id="id" class="uk-width-1-1 uk-input" type="text" v-model.lazy="link" :name="name">
-            <a class="pk-form-link-toggle pk-link-icon uk-flex-middle" @click.prevent="open">{{ 'Select' | trans }} <i class="pk-icon-link pk-icon-hover uk-margin-small-left" /></a>
-        </div>
+        <v-input :id="id"
+            :name="name"
+            type="text"
+            :rules="{required: isRequired}"
+            :view="view"
+            v-model.lazy="link"
+            :message="required"
+        />
 
         <div v-show="url" class="uk-text-muted uk-text-small">
             {{ url }}
@@ -36,20 +39,29 @@
 </template>
 
 <script>
-const { on } = UIkit.util;
 
-module.exports = {
+import VInput from 'SystemApp/components/validation.vue';
+
+export default {
 
     name: 'input-link',
 
-    props: ['value', 'name', 'cls', 'id', 'required'],
-
-    inject: ['$validator'],
+    props: ['name', 'inputClass', 'id', 'required', 'value'],
 
     data() {
         return {
             link: this.value,
             url: false,
+            isMounted: false,
+            view: {
+                type: 'icon',
+                class: ['uk-input', this.inputClass],
+                icon: 'link',
+                iconClick: this.open,
+                iconTag: 'a',
+                iconDir: 'right',
+                iconLabel: 'Select'
+            }
         };
     },
 
@@ -72,53 +84,47 @@ module.exports = {
 
     mounted() {
         this.modal = UIkit.modal(this.$refs.modal, {escClose: true, bgClose: false, stack: true});
-
+        this.isMounted = true;
     },
 
     methods: {
 
         load() {
             if (this.link) {
-                this.$emit('input', this.link);
                 this.$http.get('api/site/link', { params: { link: this.link } }).then(function (res) {
                     this.url = res.data.url || false;
                 }, function () {
                     this.url = false;
                 });
             } else {
-                this.url = false;
+                this.url = '';
             }
         },
 
         open() {
-            var vm = this;
-            // this.modal = UIkit.modal(this.$refs.modal, {escClose: true, bgClose: false, stack: true});
             this.modal.show();
-            // on(this.modal.$el, 'hidden', function(ref){
-            //     var target = ref.target;
-            //     var currentTarget = ref.currentTarget;
-
-            //     if (target === currentTarget) {
-            //         // vm.modal.$destroy(true);
-            //     }
-            // })
         },
 
         update() {
             this.$set(this, 'link', this.$refs.links.link);
+            this.$emit('input', this.link);
             this.modal.hide();
         },
 
         showUpdate: function () {
-            return this.$refs.links && !!this.$refs.links.link;
+            return this.isMounted && this.$refs.links && this.$refs.links.link;
         }
 
     },
 
+    components: {
+        VInput
+    }
+
 };
 
 Vue.component('input-link', (resolve) => {
-    resolve(module.exports);
+    resolve(require('./input-link.vue'));
 });
 
 </script>

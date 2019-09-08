@@ -15,9 +15,9 @@
 
 <script>
 
-const { VueNestable } = require('vue-nestable');
+import { VueNestable } from 'vue-nestable';
 
-module.exports = {
+export default {
 
     name: 'input-tree',
 
@@ -116,12 +116,12 @@ module.exports = {
     },
 
     components: {
-        VueNestable,
-    },
+        VueNestable
+    }
 };
 
-window.Vue.component('input-tree', (resolve) => {
-    resolve(module.exports);
+Vue.component('input-tree', (resolve) => {
+    resolve(require('./input-tree.vue'));
 });
 
 </script>

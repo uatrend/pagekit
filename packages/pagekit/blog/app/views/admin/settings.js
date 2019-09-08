@@ -1,4 +1,4 @@
-module.exports = {
+var Settings = {
 
     el: '#settings',
 
@@ -39,4 +39,6 @@ module.exports = {
 
 };
 
-Vue.ready(module.exports);
+export default Settings;
+
+Vue.ready(Settings);

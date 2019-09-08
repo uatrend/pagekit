@@ -1,5 +1,5 @@
 <template>
-    <!-- <div> -->
+
     <v-modal ref="output" :options="options">
         <div class="uk-modal-header uk-flex uk-flex-middle">
             <h2>{{ 'Removing %title% %version%' | trans({title:pkg.title,version:pkg.version}) }}</h2>
@@ -24,14 +24,16 @@
             <a class="uk-button uk-button-secondary" @click.prevent="close">{{ 'Close' | trans }}</a>
         </div>
     </v-modal>
-    <!-- </div> -->
+
 </template>
 
 <script>
 
-module.exports = {
+import Output from './output';
 
-    mixins: [require('./output')],
+export default {
+
+    mixins: [Output],
 
     methods: {
 
@@ -40,7 +42,6 @@ module.exports = {
 
             self = this;
 
-            // return this.$http.post('admin/system/package/uninstall', {name: pkg.name}, {xhr: this.init()}).then(function () {
             return this.$http.get('admin/system/package/uninstall', { params: { name: pkg.name }, progress() { self.init(this); } }).then(function () {
                 this.scrollToEnd();
                 if (this.status === 'success' && packages) {

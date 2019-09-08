@@ -1,13 +1,15 @@
-const { util } = UIkit;
+import util from 'uikit-util';
+import Permissions from '../../lib/permissions';
+import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
 
-module.exports = {
+var UserRoles =  {
 
     name: 'user-roles',
 
     el: '#roles',
 
     mixins: [
-        require('../../lib/permissions'),
+        Permissions,
         Theme.Mixins.Helper
     ],
 
@@ -63,27 +65,23 @@ module.exports = {
                 return;
             }
 
-            this.$validator.validateAll().then((res) => {
-                if (res) {
-                    this.Roles.save({ id: this.role.id }, { role: this.role }).then(function (res) {
-                        const { data } = res;
+            this.Roles.save({ id: this.role.id }, { role: this.role }).then(function (res) {
+                const { data } = res;
 
-                        if (this.role.id) {
-                            const role = _.findIndex(this.roles, 'id', this.role.id);
-                            this.roles.splice(role, 1, data.role);
+                if (this.role.id) {
+                    const role = _.findIndex(this.roles, 'id', this.role.id);
+                    this.roles.splice(role, 1, data.role);
 
-                            this.$notify('Role saved');
-                        } else {
-                            this.roles.push(data.role);
-                            this.$notify('Role added');
-                        }
-                    }, function (res) {
-                        this.$notify(res.data, 'danger');
-                    });
-
-                    this.$refs.modal.close();
+                    this.$notify('Role saved');
+                } else {
+                    this.roles.push(data.role);
+                    this.$notify('Role added');
                 }
+            }, function (res) {
+                this.$notify(res.data, 'danger');
             });
+
+            this.$refs.modal.close();
         },
 
         remove(role) {
@@ -115,6 +113,13 @@ module.exports = {
 
     },
 
+    components: {
+        ValidationObserver,
+        VInput
+    }
+
 };
 
-Vue.ready(module.exports);
+export default UserRoles;
+
+Vue.ready(UserRoles);
