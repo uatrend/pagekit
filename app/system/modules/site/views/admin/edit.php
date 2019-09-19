@@ -1,6 +1,6 @@
 <?php $view->script('site-edit', 'system/site:app/bundle/edit.js', ['vue', 'editor', 'uikit']); ?>
 
-<validation-observer id="site-edit" ref="observer" @submit.prevent="submit" v-cloak>
+<validation-observer tag="form" id="site-edit" ref="observer" @submit.prevent="submit" v-cloak>
 
     <div class="uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
         <div class="">

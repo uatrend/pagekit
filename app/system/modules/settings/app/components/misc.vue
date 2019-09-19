@@ -1,8 +1,19 @@
 <template>
     <div>
+        <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
+            <div>
+                <h2 class="uk-margin-remove">
+                    {{ 'Misc' | trans }}
+                </h2>
+            </div>
+            <div class="uk-margin-small">
+                <button class="uk-button uk-button-primary" type="submit">
+                    {{ 'Save' | trans }}
+                </button>
+            </div>
+        </div>
 
-        <h2 class="uk-h4 uk-margin-remove">{{ 'Editor Settings' | trans }}</h2>
-        <hr class="uk-margin-small-top">
+        <h3 class="uk-h4 uk-margin-small">{{ 'Editor Settings' | trans }}</h3>
 
         <div class="uk-margin-small">
             <label for="form-user-editor" class="uk-form-label">{{ 'Default editor' | trans }}</label>
