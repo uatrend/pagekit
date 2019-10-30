@@ -11,14 +11,14 @@
                 <div class="uk-margin">
                     <label for="form-link-title" class="uk-form-label">{{ 'Title' | trans }}</label>
                     <div class="uk-form-controls">
-                        <input id="form-link-title" class="uk-width-1-1 uk-input" type="text" v-model="link.txt">
+                        <input id="form-link-title" class="uk-input uk-width-1-1" type="text" v-model="link.txt">
                     </div>
                 </div>
 
                 <div class="uk-margin">
                     <label for="form-link-url" class="uk-form-label">{{ 'Url' | trans }}</label>
                     <div class="uk-form-controls">
-                        <input-link id="form-link-url" input-class="uk-width-1-1" v-model="link.link"></input-link>
+                        <input-link id="form-link-url" input-class="uk-width-xlarge" v-model="link.link"></input-link>
                     </div>
                 </div>
             </div>

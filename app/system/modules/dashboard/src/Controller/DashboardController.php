@@ -136,6 +136,6 @@ class DashboardController
         $data['APPID'] = $this->apiKey;
         $url .= '?' . http_build_query($data);
 
-        return App::response(file_get_contents($url), 200, ['Content-Type' => 'application/json']);
+        return App::response(file_get_contents((string) $url), 200, ['Content-Type' => 'application/json']);
     }
 }

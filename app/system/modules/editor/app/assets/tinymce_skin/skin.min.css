@@ -15,6 +15,7 @@
 }
 
 .tox-fullscreen .tox.tox-tinymce.tox-fullscreen {
+    width: 100% !important;
     z-index: 999;
 }
 
