@@ -29,7 +29,7 @@
         "symfony/stopwatch": "~4.4",
         "symfony/templating": "~4.4",
         "symfony/translation": "~4.4",
-        "twig/twig": "^3.0.0"
+        "twig/twig": "^2.12"
     },
     "require-dev": {
         "ext-dom": "*",
