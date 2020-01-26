@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bad5ec79f601059ae55ac7667a8f2adf",
+    "content-hash": "6a7e750afad2fdae4fb8b7ec98234ef1",
     "packages": [
         {
             "name": "pagekit/blog",

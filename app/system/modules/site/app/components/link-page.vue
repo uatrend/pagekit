@@ -1,8 +1,8 @@
 <template>
     <div class="uk-margin">
-        <label for="form-link-page" class="uk-form-label">{{ 'View' | trans }}</label>
+        <label class="uk-form-label">{{ 'View' | trans }}</label>
         <div class="uk-form-controls">
-            <select id="form-link-page" v-model="page" class="uk-width-1-1 uk-select">
+            <select v-model="page" class="uk-width-1-1 uk-select">
                 <option v-for="p in pages" :key="p.id" :value="p.id">
                     {{ p.title }}
                 </option>

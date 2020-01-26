@@ -1,3 +1,5 @@
+const on = UIkit.util.on;
+
 export default {
 
     data() {
@@ -6,12 +8,11 @@ export default {
             updatePkg: {},
             output: '',
             status: 'loading',
-            options: {
+            options: () => ({
                 bgClose: false,
                 escClose: false,
-            },
+            }),
             showOutput: false,
-            filterPhrase: 'Dependency resolution completed'
         };
     },
 
@@ -30,10 +31,7 @@ export default {
         },
 
         setOutput(output) {
-            // Filtered output
-            const pos = output.indexOf(this.filterPhrase);
-            if (pos != -1) this.showOutput = true;
-            output = output.slice(pos);
+            this.showOutput = true;
 
             const lines = output.split('\n');
             const match = lines[lines.length - 1].match(/^status=(success|error)$/);
@@ -45,22 +43,14 @@ export default {
             } else {
                 this.output = output;
             }
-
-            this.scrollToEnd();
-        },
-
-        scrollToEnd() {
-            let container = this.$el.querySelector(".pk-pre");
-            if (container && container.scrollHeight) container.scrollTop = container.scrollHeight;
         },
 
         open() {
             this.$refs.output.open();
-            UIkit.util.on(this.$refs.output.modal.$el, 'hide', this.onClose);
+            on(this.$refs.output.modal.$el, 'hidden', this.onClose);
         },
 
         close() {
-            this.scrollToEnd();
             this.$refs.output.close();
         },
 
@@ -70,15 +60,15 @@ export default {
             }
 
             this.$destroy();
-        },
-
+        }
     },
 
     watch: {
         status() {
             if (this.status !== 'loading') {
-                this.$refs.output.modal.$options.props.bgClose = true;
-                this.$refs.output.modal.$options.props.keyboard = true;
+                // TODO
+                // this.$refs.output.modal.$options.props.bgClose = true;
+                //this.$refs.output.modal.$options.props.escClose = true;
             }
         },
     },

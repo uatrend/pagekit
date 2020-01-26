@@ -45,35 +45,19 @@
                 <div class="tm-navbar-container uk-navbar-container" v-cloak>
                     <div class="uk-container uk-container-expand">
 
-                        <nav uk-navbar='{"align":"left","boundary":"!.uk-navbar","dropbar":true,"dropbar-anchor":"!.uk-navbar","dropbar-mode":"slide"}'>
+                        <nav class="tm-navbar" uk-navbar='{"align":"left","boundary":"!.uk-navbar","dropbar":true,"dropbar-anchor":"!.uk-navbar","dropbar-mode":"slide"}'>
                             <div class="uk-navbar-left">
                                 <ul class="uk-navbar-nav uk-visible@m">
                                     <li>
                                         <a class="uk-link-heading" :href="item.url">
-                                            <h1 class="uk-logo uk-margin-remove">{{ item.label | trans }}</h1>
+                                            <span class="tm-breadcrumbs-item">{{ item.label | trans }}</span>
                                         </a>
                                     </li>
                                     <li class="uk-parent" v-if="objLength(subnav)">
-                                        <a>
-                                            <h2 class="uk-h4 uk-margin-remove">
-                                                <span>{{ getActive(subnav) | trans}}</span>
-                                                <span uk-icon="chevron-down" class="uk-icon"></span>
-                                            </h2>
-                                        </a>
-                                        <div class="uk-navbar-dropdown uk-navbar-dropdown-dropbar">
-                                            <div class="uk-navbar-dropdown-grid uk-child-width-1-1 uk-grid uk-grid-stack" uk-grid>
-                                                <div>
-                                                    <ul class="uk-nav uk-navbar-dropdown-nav">
-                                                        <li :class="{ 'uk-active': item.active }" v-for="item in subnav">
-                                                            <a class="uk-h5 uk-margin-remove" :href="item.url">{{ item.label | trans }}</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <span class="tm-breadcrumbs-item">{{ getActive(subnav) | trans}}</span>
                                     </li>
+                                    <theme-breadcrumbs></theme-breadcrumbs>
                                 </ul>
-                                <theme-breadcrumbs></theme-breadcrumbs>
                                 <theme-navbar-items dir="left"></theme-navbar-items>
                                 <div class="uk-navbar-item uk-hidden@m">
                                     <span class="uk-logo uk-margin-remove">{{ item.label | trans }}</span>

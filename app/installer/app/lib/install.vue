@@ -39,13 +39,15 @@ export default {
     methods: {
 
         install(pkg, packages, onClose, packagist) {
+            const self = this;
+
             this.$set(this, 'pkg', pkg);
             this.cb = onClose;
 
-            self = this;
-
-            return this.$http.get('admin/system/package/install', { params: { package: pkg, packagist: Boolean(packagist) }, progress() { self.init(this); } }).then(function () {
-                this.scrollToEnd();
+            return this.$http.get('admin/system/package/install', {
+                params: { package: pkg, packagist: Boolean(packagist) },
+                progress() { self.init(this) }
+            }).then(() => {
                 if (this.status === 'success' && packages) {
                     const index = _.findIndex(packages, { name: pkg.name });
 
@@ -55,7 +57,7 @@ export default {
                         packages.push(pkg);
                     }
                 }
-            }, function (msg) {
+            }, (msg) => {
                 this.$notify(msg.data, 'danger');
                 this.close();
             });

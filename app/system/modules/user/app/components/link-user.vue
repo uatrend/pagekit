@@ -1,8 +1,8 @@
 <template>
     <div class="uk-margin">
-        <label for="form-link-user" class="uk-form-label">{{ 'View' | trans }}</label>
+        <label class="uk-form-label">{{ 'View' | trans }}</label>
         <div class="uk-form-controls">
-            <select id="form-link-user" v-model="url" class="uk-width-1-1 uk-select">
+            <select v-model="url" class="uk-width-1-1 uk-select">
                 <option value="@user/login">
                     {{ 'User Login' | trans }}
                 </option>

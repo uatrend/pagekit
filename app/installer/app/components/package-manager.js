@@ -4,7 +4,7 @@ import PackageDetails from './package-details.vue';
 
 export default {
 
-    mixins: [Package,Theme.Mixins.Helper],
+    mixins: [Package, Theme.Mixins.Helper],
 
     data() {
         return _.extend({

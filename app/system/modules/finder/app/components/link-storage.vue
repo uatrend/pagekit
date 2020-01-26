@@ -1,10 +1,10 @@
 <template>
     <div>
         <div class="uk-margin">
-            <label for="form-link-file" class="uk-form-label">{{ 'File' | trans }}</label>
+            <label class="uk-form-label">{{ 'File' | trans }}</label>
             <div class="uk-form-controls">
                 <div class="pk-form-link uk-width-1-1">
-                    <input id="form-link-file" ref="input" v-model.lazy="file" class="uk-width-1-1 uk-input" type="text">
+                    <input ref="input" v-model.lazy="file" class="uk-width-1-1 uk-input" type="text">
                     <a class="pk-form-link-toggle pk-link-icon uk-flex-middle" @click.prevent="pick">{{ 'Select' | trans }} <i class="pk-icon-link pk-icon-hover uk-margin-small-left" /></a>
                 </div>
             </div>

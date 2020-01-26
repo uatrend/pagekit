@@ -1,6 +1,6 @@
 <template>
-    <div uk-modal :class="modalCls">
-        <div class="uk-modal-dialog" :class="dialogCls">
+    <div uk-modal :class="modalClasses">
+        <div class="uk-modal-dialog" :class="dialogClasses">
             <slot v-if="opened">
             </slot>
         </div>
@@ -16,20 +16,11 @@ export default {
     props: {
         large     : Boolean,
         lightbox  : Boolean,
-        modalFull : Boolean,
-        modalSmall: Boolean,
-        widthAuto : Boolean,
         center    : Boolean,
-        contrast  : Boolean,
-        bgClose   : Boolean,
-        escClose  : Boolean,
         closed    : Function,
         modifier: { type: String, default: '' },
         options: {
-            type: Object,
-            default() {
-                return {};
-            },
+            default: () => ({})
         },
     },
 
@@ -39,54 +30,12 @@ export default {
         };
     },
 
-    computed: {
-
-        modalCls() {
-            const modalCls = this.modifier.split(' ');
-
-            if (this.large) {
-                modalCls.push('uk-modal-container');
-            }
-
-            if (this.modalFull) {
-                modalCls.push('uk-modal-full');
-            }
-
-            if (this.modalSmall) {
-                modalCls.push('tm-modal-small');
-            }
-
-            return modalCls;
-        },
-
-        dialogCls() {
-            const dialogCls = [];
-
-            if (this.center) {
-                dialogCls.push('uk-margin-auto-vertical');
-            }
-
-            if (this.contrast) {
-                dialogCls.push('uk-light');
-            }
-
-            if (this.widthAuto) {
-                dialogCls.push('uk-width-auto');
-            }
-
-            return dialogCls;
-        },
-
-    },
-
     mounted() {
         const vm = this;
+        let options;
 
-        this.modal = UIkit.modal(this.$el, _.extend({
-            bgClose  : !this.bgClose,
-            escClose : !this.escClose,
-            stack    : true,
-        }, this.options));
+        options =  _.extend({stack: true}, typeof this.options === 'function' ? this.options() : this.options);
+        this.modal = UIkit.modal(this.$el, () => options);
 
         on(this.modal.$el, 'hidden', (ref) => {
 
@@ -97,6 +46,39 @@ export default {
             }
 
         });
+    },
+
+    computed: {
+
+        modalClasses() {
+            const modalClasses = this.modifier.split(' ');
+
+            if (this.large) {
+                modalClasses.push('uk-modal-container');
+            }
+
+            if (this.center) {
+                modalClasses.push('uk-flex');
+                modalClasses.push('uk-flex-top');
+            }
+
+            return modalClasses;
+        },
+
+        dialogClasses() {
+            const dialogClasses = [];
+
+            if (this.center) {
+                dialogClasses.push('uk-margin-auto-vertical');
+            }
+
+            if (this.lightbox) {
+                dialogClasses.push('uk-width-auto');
+            }
+
+            return dialogClasses;
+        },
+
     },
 
     methods: {

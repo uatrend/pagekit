@@ -63,11 +63,11 @@
         </div>
     </div>
 
-    <v-modal ref="modal" bg-close>
-    
+    <v-modal ref="modal" :options="{bgClose: false}">
+
         <validation-observer v-slot="{ invalid, passes }">
         <div class="uk-form-stacked">
-        
+
             <div class="uk-modal-header">
                 <h2>{{ (role.id ? 'Edit Role':'Add Role') | trans }}</h2>
             </div>
@@ -85,10 +85,10 @@
                 <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button" autofocus>{{ 'Cancel' | trans }}</button>
                 <button class="uk-button uk-button-primary" :disabled="invalid || !role.name" @click.prevent="passes(save)">{{ 'Save' | trans }}</button>
             </div>
-            
+
         </div>
         </validation-observer>
-        
+
     </v-modal>
 
 </div>

@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <v-modal ref="modal" large bg-close>
+        <v-modal ref="modal" large :options="{bgClose: false}">
             <panel-finder ref="finder" :root="storage" :modal="true" @select:finder="selectFinder" />
 
             <div class="uk-modal-footer">

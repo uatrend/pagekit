@@ -1,47 +1,43 @@
-const _ = Vue.util;
-
 export default {
 
     bind(el, binding, vnode) {
-        binding.def.update(el, binding, vnode);
+        binding.def.componentUpdated(el, binding, vnode);
     },
 
-    update(el, binding, vnode) {
+    componentUpdated(el, binding, vnode) {
+        const vm = vnode.context;
         const buttons = (el.getAttribute('buttons') || '').split(',');
 
-        let options = {
+        binding.options = {
             title: false,
             labels: {
-                ok: buttons[0] || vnode.context.$trans('Ok'),
-                cancel: buttons[1] || vnode.context.$trans('Cancel'),
+                ok: buttons[0] || vm.$trans('Ok'),
+                cancel: buttons[1] || vm.$trans('Cancel'),
             },
             stack: true,
         };
 
-        // // vue-confirm="'Title':'Text...?'"
-        // if (this.arg) {
-        //     this.options.title = this.arg;
-        // }
-
         // vue-confirm="'Text...?'"
         if (typeof binding.value === 'string') {
-            options.text = binding.value;
+            binding.options.text = binding.value;
         }
 
         // vue-confirm="{title:'Title', text:'Text...?'}"
         if (typeof binding.value === 'object') {
-            options = _.extend(options, binding.value);
+            _.extend(binding.options, binding.value);
         }
 
-        const handler = vnode.data.on.click.fns;
+        _.forEach(['title', 'text'], (item) => {
+            binding.options[item] && vm.$trans(binding.options[item])
+        })
 
-        vnode.data.on.click.fns = function (e) {
-            const modal = UIkit.modal.confirm(vnode.context.$trans(binding.value), options).then(() => {
-                handler(e);
-            }, () => {});
-        };
-    },
+        binding.handler = vnode.data.on.click.fns;
 
-    unbind(el, binding, vnode) {},
-
-};
+        vnode.data.on.click.fns = function(e) {
+            UIkit.modal.confirm(binding.options.text, binding.options)
+            .then(function() {
+                binding.handler(e);
+            }, function(){});
+        }
+    }
+}

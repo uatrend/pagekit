@@ -22,6 +22,8 @@ class InstallerIO extends ConsoleIO
         $this->output = $output ?: new StreamOutput(fopen('php://output', 'w'));
         $this->helperSet = $helperSet ?: new HelperSet();
 
+        parent::__construct($this->input, $this->output, $this->helperSet);
+
         if (PHP_SAPI != 'cli') {
 
             ob_implicit_flush(true);

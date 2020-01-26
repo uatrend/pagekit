@@ -258,6 +258,9 @@ function renderElement(h, element, _vue) {
             ))
         },
         caption() {
+            if (get(this, 'scope') === 'breadcrumbs') {
+                return h('span', {class: 'tm-breadcrumbs-item'},[get(this, 'caption')])
+            }
             if (get(this, 'class')) {
                 return h('span', {class: get(this, 'class')},[get(this, 'caption')])
             }
@@ -381,13 +384,11 @@ var renderScope = function(h, scope, dir) {
             ])
         },
         breadcrumbs: () => {
-            return h('ul', { class: 'tm-breadcrumbs uk-nav uk-visible@m' },
-                this.orderBy(items, 'priority').map((element) =>
-                    !isElementEmpty(element) && get(element, 'vif') &&
-                    h('li', {
-                        class: [{ 'uk-disabled': get(element, 'disabled') }, 'uk-h4 uk-margin-remove']
-                    }, [ renderElement(h, element, this) ])
-                )
+            return (items.length === 1) && this.orderBy(items, 'priority').map((element) =>
+                !isElementEmpty(element) && get(element, 'vif') &&
+                h('li', {
+                    class: [{ 'uk-disabled': get(element, 'disabled') }, ]
+                }, [ renderElement(h, element, this) ])
             )
         },
         navbar: () => {

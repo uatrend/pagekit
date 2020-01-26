@@ -1,8 +1,8 @@
 <template>
     <div class="uk-margin">
-        <label for="form-link-blog" class="uk-form-label">{{ 'View' | trans }}</label>
+        <label class="uk-form-label">{{ 'View' | trans }}</label>
         <div class="uk-form-controls">
-            <select id="form-link-blog" v-model="post" class="uk-width-1-1 uk-select">
+            <select v-model="post" class="uk-width-1-1 uk-select">
                 <option value="@blog">
                     {{ 'Posts View' | trans }}
                 </option>

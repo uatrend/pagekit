@@ -176,7 +176,7 @@ class CommentApiController
         }
 
         $approved_once = (boolean) Comment::where(['user_id' => $this->user->id, 'status' => Comment::STATUS_APPROVED])->first();
-        $comment->status = $this->user->hasAccess('blog: skip comment approval') ? Comment::STATUS_APPROVED : $this->user->hasAccess('blog: comment approval required once') && $approved_once ? Comment::STATUS_APPROVED : Comment::STATUS_PENDING;
+        $comment->status = $this->user->hasAccess('blog: skip comment approval') ? Comment::STATUS_APPROVED : ($this->user->hasAccess('blog: comment approval required once') && $approved_once ? Comment::STATUS_APPROVED : Comment::STATUS_PENDING);
 
         // check the max links rule
         if ($comment->status == Comment::STATUS_APPROVED && $this->blog->config('comments.maxlinks') <= preg_match_all('/<a [^>]*href/i', @$data['content'])) {

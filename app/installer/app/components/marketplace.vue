@@ -49,7 +49,7 @@
                                 <span>{{ pkg.license }}</span>
                             </li>
                         </ul>
-                        <!-- pk-modal-dialog-badge  -->
+
                         <div class="pk-modal-dialog-badge uk-position-center-right">
                             <button v-if="isInstalled(pkg)" class="uk-button uk-button-default" disabled>
                                 {{ 'Installed' | trans }}

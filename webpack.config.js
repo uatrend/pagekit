@@ -34,7 +34,7 @@ glob.sync('{app/modules/**,app/installer/**,app/system/**,packages/**}/webpack.c
     let pkg = path.join(path.basename(path.dirname(dir)), path.basename(dir));
 
     exports = exports.concat(require('./' + file).map((config) => {
-        config      = _.merge({mode: mode, context: dir, output: {path: dir}, externals: common.externals, resolve: common.resolve}, config);
+        config = _.merge({mode: mode, context: dir, output: {path: dir}, externals: common.externals, resolve: common.resolve}, config);
         return build(config);
     }));
 

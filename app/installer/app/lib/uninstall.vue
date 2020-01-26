@@ -38,16 +38,18 @@ export default {
     methods: {
 
         uninstall(pkg, packages) {
+            const self = this;
+
             this.$set(this, 'pkg', pkg);
 
-            self = this;
-
-            return this.$http.get('admin/system/package/uninstall', { params: { name: pkg.name }, progress() { self.init(this); } }).then(function () {
-                this.scrollToEnd();
+            return this.$http.get('admin/system/package/uninstall', {
+                params: { name: pkg.name },
+                progress() { self.init(this) }
+            }).then(() => {
                 if (this.status === 'success' && packages) {
                     packages.splice(packages.indexOf(pkg), 1);
                 }
-            }, function (msg) {
+            }, (msg) => {
                 this.$notify(msg.data, 'danger');
                 this.close();
             });

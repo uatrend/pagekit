@@ -27,30 +27,55 @@
 .uk-logo {
     line-height: 1.4;
 }
-
 .uk-logo, .uk-logo:hover {
     color: @theme-primary-color;
-}
-.tm-breadcrumbs {
-    position: relative;
 }
 .uk-navbar-left .uk-navbar-nav li {
     position: relative;
 }
-.uk-navbar-left>.uk-navbar-nav>li+li:before,
-.uk-navbar-left>.uk-navbar-nav+.tm-breadcrumbs:before {
+.tm-navbar .uk-navbar-left>.uk-navbar-nav>li+li:before,
+.tm-navbar .uk-navbar-left>.uk-navbar-nav+.tm-breadcrumbs:before {
     content: '';
     position: absolute;
     top: 50%;
     left: 0;
-    height: 27px;
-    width: 1px;
-    transform: translate(0, -50%);
-    background: darken(@global-border, 5%);
+    transform: translate(-50%, -50%);
+    width: 15px;
+    height: 15px;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg' data-svg='chevron-right'%3E%3Cpolyline fill='none' stroke='%23AAA' stroke-width='1.03' points='7 4 13 10 7 16'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat !important;
+    background-position: 50% 50% !important;
 }
-.tm-breadcrumbs>li {
-    padding: 0 @global-small-gutter;
+.tm-navbar .tm-breadcrumbs-item {
+    line-height: 1.4;
+    font-size: 1.15rem;
+    font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";
+    color: #666;
+    text-decoration: none;
+    font-weight: 300;
 }
+.tm-navbar .uk-navbar-nav>li>span,
+.tm-navbar .uk-navbar-nav>li>a,
+.tm-navbar .uk-navbar-item,
+.tm-navbar .uk-navbar-toggle {
+    min-height: 32px !important;
+}
+
+.tm-navbar .uk-navbar-nav>li>span {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 0 15px;
+    pointer-events: none;
+}
+.tm-navbar .uk-navbar-nav>li:first-child>a>span {
+    color: #000;
+}
+.tm-navbar .uk-navbar-right .uk-search-default .uk-search-input {
+    height: 32px;
+}
+
 /* ========================================================================
    Theme
  ========================================================================== */
