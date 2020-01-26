@@ -19,7 +19,7 @@ This is an updated build Pagekit CMS (for developers).
 
 Build includes:
 
-- Pagekit CMS 1.0.17
+- Pagekit CMS 1.0.18
 - Blog extension
 - Theme One
 
@@ -33,7 +33,7 @@ Marketplace functionality like install, update and remove works the same like in
 
 ### Major changes:
 
-- **Required PHP Version - 7.2 or higher.**
+- **Required PHP Version - 7.2 or higher(7.4+).**
 - **[Updated all project dependencies](https://github.com/uatrend/pagekit/blob/develop/package.json).**
 - **Updated all core javascript components**.
 - **Removed jQuery**.
