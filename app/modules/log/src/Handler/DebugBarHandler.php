@@ -15,7 +15,7 @@ class DebugBarHandler extends AbstractHandler implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($record['level'] < $this->level) {
             return false;
