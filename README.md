@@ -1,5 +1,5 @@
-Updated some pagekit extensions: [Pagekit News](https://github.com/cssailing/pagekit-news),
-[Pagekit Search](https://github.com/cssailing/pagekit-search), [Pagekit Highlight](https://github.com/cssailing/pagekit-highlight). Thanks for [cssailing](https://github.com/cssailing)!
+Updated some Pagekit extensions: [Pagekit News](https://github.com/cssailing/pagekit-news),
+[Pagekit Search](https://github.com/cssailing/pagekit-search), [Pagekit Highlight](https://github.com/cssailing/pagekit-highlight). AS IS. Need testing. Thanks to [cssailing](https://github.com/cssailing)!
 
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
