@@ -1,5 +1,5 @@
 import UIkit from 'uikit';
-import {$, on, css, append, addClass, removeClass, hasClass, attr, toNodes, each, find, findAll} from 'uikit-util';
+import {$, on, toNodes, each, findAll} from 'uikit-util';
 
 import Version from '../../../../../installer/app/lib/version';
 
@@ -44,20 +44,6 @@ window.Dashboard = {
                     }),
                 }
             }
-        },
-        extend() {
-            console.log('Push Items to AddItem from Dashboard');
-            return {
-                scope: 'sidemenu',
-                element: 'additem',
-                items() {
-                    return [{
-                        caption: 'Test1'
-                    }, {
-                        caption: 'Test2'
-                    }]
-                }
-            }
         }
     },
 
@@ -78,51 +64,8 @@ window.Dashboard = {
         }));
 
         this.checkVersion();
-    },
 
-    mounted() {
-        const self = this;
-
-        // widget re-ordering
-        const sortables = findAll('.uk-sortable[data-column]', $(this.$el));
-        sortables.forEach((el) => {
-            const sortableItem = UIkit.sortable(el, { group: 'widgets', dragCustomClass: 'pk-sortable-dragged-panel', handleClass: 'pk-icon-handle' });
-
-            UIkit.util.on(sortableItem.$el, 'added moved removed', (e, sortable, item, mode) => {
-                var mode = e.type;
-
-                if (!mode) {
-                    return;
-                }
-
-                switch (mode) {
-                case 'added':
-                case 'moved':
-                case 'removed':
-
-                    var widgets = self.widgets,
-                        column = parseInt(UIkit.util.data(sortable.$el, 'column'), 10),
-                        data = {}, widget;
-
-                    each(findAll('[data-idx]', $(sortable.$el)), (item, idx) => {
-                        widget = _.find(widgets, {'id': item.getAttribute('data-id')});
-                        widget.column = column;
-                        widget.idx = idx;
-                    });
-
-                    widgets.forEach((widget) => {
-                        data[widget.id] = widget;
-                    });
-
-                    self.$http.post('admin/dashboard/savewidgets', { widgets: data }).then((res) => {
-                        // cleanup empty items - maybe fixed with future vue.js version
-                        // sortables.children().forEach(function () {
-                        // if (!this.children.length) $(this).remove();
-                        // });
-                    });
-                }
-            });
-        });
+        on(window, 'load', this.load);
     },
 
     computed: {
@@ -140,6 +83,52 @@ window.Dashboard = {
 
     methods: {
 
+        load() {
+            const self = this;
+
+            // widget re-ordering
+            const sortables = findAll('.uk-sortable[data-column]', $(this.$el));
+
+            sortables.forEach((el) => {
+                const sortableItem = UIkit.sortable(el, { group: 'widgets', dragCustomClass: 'pk-sortable-dragged-panel', handleClass: 'pk-icon-handle' });
+
+                on(sortableItem.$el, 'added moved removed', (e, sortable, item, mode) => {
+                    var mode = e.type;
+
+                    if (!mode) {
+                        return;
+                    }
+
+                    switch (mode) {
+                    case 'added':
+                    case 'moved':
+                    case 'removed':
+
+                        var widgets = self.widgets,
+                            column = parseInt(UIkit.util.data(sortable.$el, 'column'), 10),
+                            data = {}, widget;
+
+                        each(findAll('[data-idx]', $(sortable.$el)), (item, idx) => {
+                            widget = _.find(widgets, {'id': item.getAttribute('data-id')});
+                            widget.column = column;
+                            widget.idx = idx;
+                        });
+
+                        widgets.forEach((widget) => {
+                            data[widget.id] = widget;
+                        });
+
+                        self.$http.post('admin/dashboard/savewidgets', { widgets: data }).then((res) => {
+                            // cleanup empty items - maybe fixed with future vue.js version
+                            // sortables.children().forEach(function () {
+                            // if (!this.children.length) $(this).remove();
+                            // });
+                        });
+                    }
+                });
+            });
+        },
+
         getColumn(column) {
             column = parseInt(column || 0, 10);
 
@@ -148,9 +137,8 @@ window.Dashboard = {
 
         add(type) {
             let column = 0;
-            const sortables = findAll('.uk-sortable[data-column]', $('#dashboard'));// $('#dashboard').find('.uk-sortable[data-column]');
+            const sortables = findAll('.uk-sortable[data-column]', $('#dashboard'));
 
-            // sortables.each(function (idx) {
             sortables.forEach((el, idx) => {
                 column = (el.children.length < toNodes(sortables)[0].children.length) ? idx : column;
             });

@@ -531,10 +531,10 @@ export default {
 
     components: {
         'template-table': {
-        	template: require('../templates/table.html').default
+        	template: require('../templates/table.html')
         },
         'template-thumbnail': {
-        	template: require('../templates/thumbnail.html').default
+        	template: require('../templates/thumbnail.html')
         },
     },
 

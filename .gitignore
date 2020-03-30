@@ -17,7 +17,6 @@
 /pagekit*.zip
 /pagekit.db
 /config.php
-/composer.lock
 /yarn.lock
 /package-lock.json
 node_modules
