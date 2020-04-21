@@ -36,7 +36,7 @@ Marketplace functionality like install, update and remove works the same like in
 
 ### Major changes:
 
-- **Required PHP Version - 7.2 or higher(7.4+).**
+- **Required PHP Version - 7.3 or higher(7.4+).**
 - **[Updated Composer dependencies](https://github.com/uatrend/pagekit/blob/develop/composer.json).**
 - **[Updated Node dependencies](https://github.com/uatrend/pagekit/blob/develop/package.json).**
 - **Updated PHP core components for compatibility**.
