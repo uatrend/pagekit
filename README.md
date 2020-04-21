@@ -1,6 +1,3 @@
-Updated some Pagekit extensions: [Pagekit News](https://github.com/cssailing/pagekit-news),
-[Pagekit Search](https://github.com/cssailing/pagekit-search), [Pagekit Highlight](https://github.com/cssailing/pagekit-highlight). AS IS. Need testing. Thanks to [cssailing](https://github.com/cssailing)!
-
 <table width="100%" cellspacing="0" cellpadding="0" border="0">
   <tr>
     <td width="45%">
@@ -14,7 +11,11 @@ Updated some Pagekit extensions: [Pagekit News](https://github.com/cssailing/pag
 
 # Pagekit
 
+[![Symfony](https://img.shields.io/badge/symfony-5.0.7-blue)](https://github.com/symfony/symfony)
+[![Vue](https://img.shields.io/badge/vue-2.6.11-lightgreen)](https://github.com/vuejs/vue)
+[![UIkit](https://img.shields.io/badge/uikit-3.4.2-blue)](https://github.com/uikit/uikit)
 [![Discord](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/e7Kw47E)
+[![BuildPassed](https://img.shields.io/badge/build-passed-green)](https://github.com/uatrend/pagekit)
 
 [Homepage](http://pagekit.com) - Official home page.
 
@@ -25,6 +26,7 @@ Build includes:
 - Pagekit CMS 1.0.18
 - Blog extension
 - Theme One
+- New Admin Template
 
 Download the latest [build](https://github.com/uatrend/pagekit/releases) or [install from source](#install) before installation.  
 The installation procedure is the same as in the official [documentation](https://pagekit.com/docs/getting-started/installation).
@@ -193,6 +195,8 @@ Adding side menu items through PHP - ```$view->$data()```
     ]);
 }
 ```
+**Updated extensions:**
+- [Pagekit News](https://github.com/cssailing/pagekit-news), [Pagekit Search](https://github.com/cssailing/pagekit-search), [Pagekit Highlight](https://github.com/cssailing/pagekit-highlight). AS IS. Need testing. Thanks to [cssailing](https://github.com/cssailing)! (Be aware change 'systemApp' to '@system/app')
 
 ------
 
