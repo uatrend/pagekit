@@ -37,8 +37,10 @@ Marketplace functionality like install, update and remove works the same like in
 ### Major changes:
 
 - **Required PHP Version - 7.2 or higher(7.4+).**
-- **[Updated all project dependencies](https://github.com/uatrend/pagekit/blob/develop/package.json).**
-- **Updated all core javascript components**.
+- **[Updated Composer dependencies](https://github.com/uatrend/pagekit/blob/develop/composer.json).**
+- **[Updated Node dependencies](https://github.com/uatrend/pagekit/blob/develop/package.json).**
+- **Updated PHP core components for compatibility**.
+- **Updated all core Javascript components, views, libs**.
 - **Removed jQuery**.
 
 Several bugs that are present in the original assembly have been fixed, some styles have been changed for ease of use. The mobile version has remained the same with minor changes.
