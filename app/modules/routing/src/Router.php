@@ -7,11 +7,12 @@ use Pagekit\Routing\Generator\UrlGeneratorDumper;
 use Pagekit\Routing\Generator\UrlGeneratorInterface;
 use Pagekit\Routing\Loader\LoaderInterface;
 use Pagekit\Routing\RequestContext as Context;
+use Pagekit\Routing\Matcher\Dumper\PhpMatcherDumper; // added to 1.0.18
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\Routing\Exception\RouteNotFoundException;
-use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper;
+// use Symfony\Component\Routing\Matcher\Dumper\PhpMatcherDumper; // deprecated since 4.3
 use Symfony\Component\Routing\Matcher\UrlMatcher;
 use Symfony\Component\Routing\RequestContext;
 use Symfony\Component\Routing\RouteCollection;

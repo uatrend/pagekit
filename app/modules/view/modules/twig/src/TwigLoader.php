@@ -6,7 +6,7 @@ use Pagekit\View\Loader\FilesystemLoader;
 use Symfony\Component\Templating\TemplateNameParser;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 
-class TwigLoader extends \Twig_Loader_Filesystem
+class TwigLoader extends \Twig\Loader\FilesystemLoader
 {
     protected $loader;
     protected $parser;
@@ -39,7 +39,7 @@ class TwigLoader extends \Twig_Loader_Filesystem
         $file = $this->loader->load($this->parser->parse($template));
 
         if (false === $file || null === $file) {
-            throw new \Twig_Error_Loader(sprintf('Unable to find template "%s".', $key));
+            throw new \Twig\Error\LoaderError(sprintf('Unable to find template "%s".', $key));
         }
 
         return $this->cache[$key] = $file;

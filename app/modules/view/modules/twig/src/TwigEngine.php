@@ -15,10 +15,10 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     /**
      * Constructor.
      *
-     * @param \Twig_Environment           $environment
+     * @param \Twig\Environment           $environment
      * @param TemplateNameParserInterface $parser
      */
-    public function __construct(\Twig_Environment $environment, TemplateNameParserInterface $parser)
+    public function __construct(\Twig\Environment $environment, TemplateNameParserInterface $parser)
     {
         $this->environment = $environment;
         $this->parser = $parser;
@@ -47,7 +47,7 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     {
         try {
             $this->environment->getLoader()->getSource((string) $name);
-        } catch (\Twig_Error_Loader $e) {
+        } catch (\Twig\Error\LoaderError $e) {
             return false;
         }
 
@@ -75,7 +75,7 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     {
         try {
             return $this->environment->loadTemplate((string) $name);
-        } catch (\Twig_Error_Loader $e) {
+        } catch (\Twig\Error\LoaderError $e) {
             throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }

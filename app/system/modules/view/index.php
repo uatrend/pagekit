@@ -11,8 +11,8 @@ return [
 
         $app->extend('twig', function ($twig) use ($app) {
 
-            $twig->addFilter(new Twig_SimpleFilter('trans', '__'));
-            $twig->addFilter(new Twig_SimpleFilter('transChoice', '_c'));
+            $twig->addFilter(new \Twig\TwigFilter('trans', '__'));
+            $twig->addFilter(new \Twig\TwigFilter('transChoice', '_c'));
 
             return $twig;
 

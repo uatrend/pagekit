@@ -40,7 +40,7 @@
 
 <script>
 
-import VInput from 'SystemApp/components/validation.vue';
+import VInput from '@system/app/components/validation.vue';
 
 export default {
 

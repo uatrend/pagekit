@@ -15,9 +15,18 @@ if (!function_exists('__')) {
 if (!function_exists('_c')) {
 
     /**
+     * Deprecated transChoice(). Since Symfony 4.2
      * Translates the given choice message by choosing a translation according to a number, alias for method transChoice()
      */
     function _c($id, $number, array $parameters = [], $domain = null, $locale = null) {
-        return App::translator()->transChoice($id, $number, $parameters, $domain, $locale);
+        
+        // return App::translator()->transChoice($id, $number, $parameters, $domain, $locale);
+
+        $params = [];
+        foreach ($parameters as $key => $value) {
+            $params[preg_replace('/(%)(.*?)(%)/', '%count%', $key)] = $value;
+        }
+
+        return App::translator()->trans($id, $params, $domain, $locale);
     }
 }

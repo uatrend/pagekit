@@ -3,7 +3,7 @@ import SiteMeta from '../components/site-meta.vue';
 import SiteGeneral from '../components/site-general.vue';
 import SiteMaintenance from '../components/site-maintenance.vue';
 
-import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 
 window.Site = {
 

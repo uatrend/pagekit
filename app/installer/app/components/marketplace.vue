@@ -149,7 +149,7 @@ export default {
 
         search() {
             if (this.page) {
-                this.page = 0;
+                this.$parent.page = 0;
             } else {
                 this.query();
             }
@@ -157,7 +157,7 @@ export default {
 
         type() {
             if (this.page) {
-                this.page = 0;
+                this.$parent.page = 0;
             } else {
                 this.query();
             }

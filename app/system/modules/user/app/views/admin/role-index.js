@@ -1,6 +1,6 @@
 import util from 'uikit-util';
 import Permissions from '../../lib/permissions';
-import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 
 var UserRoles =  {
 

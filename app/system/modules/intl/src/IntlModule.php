@@ -10,7 +10,8 @@ use Pagekit\Intl\Loader\PoFileLoader;
 use Pagekit\Module\Module;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Translator;
-use Symfony\Component\Translation\TranslatorInterface;
+// use Symfony\Component\Translation\TranslatorInterface; // Deprecated 4.2
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IntlModule extends Module
 {

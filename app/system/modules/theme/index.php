@@ -108,8 +108,7 @@ return [
     		}
 
             $event['subset'] = $subsets;
-            $event['pageClass'] = str_replace('/','-', str_replace('/admin/', '', parse_url( $app['url']->current(true),PHP_URL_PATH )));
-
+            $event['pageClass'] = implode('-', explode('/', preg_replace('/^\/admin\//','', $app['request']->getPathInfo())));
         }
 
     ],

@@ -13,7 +13,7 @@ const common  = {
     },
     resolve: {
         alias: {
-            SystemApp: path.resolve(__dirname, 'app/system/app'),
+            '@system': path.resolve(__dirname, 'app/system'),
         }
     },
     externals: {"vue": "Vue", "uikit": "UIkit", "uikit-util": "UIkit.util"}

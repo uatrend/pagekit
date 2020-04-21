@@ -1,6 +1,6 @@
 import { on, css } from 'uikit-util';
 import { VueNestable, VueNestableHandle } from 'vue-nestable';
-import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 
 import isMobile from 'ismobilejs';
 

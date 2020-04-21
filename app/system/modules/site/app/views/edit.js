@@ -2,7 +2,7 @@ import NodeSettings from '../components/node-settings.vue';
 import NodeLink from '../components/node-link.vue';
 import TemplateSettings from '../components/template-settings';
 
-import { ValidationObserver, VInput } from 'SystemApp/components/validation.vue';
+import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 
 var Site = {
 

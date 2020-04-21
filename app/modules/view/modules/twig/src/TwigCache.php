@@ -2,7 +2,7 @@
 
 namespace Pagekit\Twig;
 
-class TwigCache extends \Twig_Cache_Filesystem
+class TwigCache extends \Twig\Cache\FilesystemCache
 {
     protected $dir;
 
@@ -19,7 +19,7 @@ class TwigCache extends \Twig_Cache_Filesystem
     /**
      * {@inheritdoc}
      */
-    public function generateKey($name, $className)
+    public function generateKey(string $name, string $className): string
     {
         return $this->dir.'/'.sha1($className).'.twig.cache';
     }
