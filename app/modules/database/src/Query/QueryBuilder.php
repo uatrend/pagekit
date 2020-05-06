@@ -764,7 +764,8 @@ class QueryBuilder
         $types = [];
         foreach ($params as $key => $param) {
             if ($param instanceof \DateTimeInterface) {
-                $types[is_int($key) ? $key + 1 : $key] = Type::DATETIME;
+                // DBAL 2.10.2 - Make sure that the $types array has the same keys $params. https://github.com/doctrine/dbal/pull/3894
+                $types[$key] = Type::DATETIME;
             }
         }
         return $types;
