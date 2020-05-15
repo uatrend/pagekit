@@ -4,7 +4,7 @@ namespace Pagekit\Filter\Tests;
 
 use Pagekit\Filter\AlphaFilter;
 
-class AlphaTest extends \PHPUnit_Framework_TestCase
+class AlphaTest extends \PHPUnit\Framework\TestCase
 {
     public function testFilter()
     {

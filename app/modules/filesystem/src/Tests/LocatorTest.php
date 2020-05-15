@@ -5,12 +5,12 @@ namespace Pagekit\Filesystem\Tests;
 use Pagekit\Filesystem\Filesystem;
 use Pagekit\Filesystem\Locator;
 
-class LocatorTest extends \PHPUnit_Framework_TestCase
+class LocatorTest extends \PHPUnit\Framework\TestCase
 {
     protected $file;
     protected $locator;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->file    = new Filesystem;
         $this->locator = new Locator(__DIR__);

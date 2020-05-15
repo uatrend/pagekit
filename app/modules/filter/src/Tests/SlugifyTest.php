@@ -4,7 +4,7 @@ namespace Pagekit\Filter\Tests;
 
 use Pagekit\Filter\SlugifyFilter;
 
-class SlugifyTest extends \PHPUnit_Framework_TestCase
+class SlugifyTest extends \PHPUnit\Framework\TestCase
 {
     public function testFilter()
     {

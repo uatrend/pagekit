@@ -4,7 +4,7 @@ namespace Pagekit\Filter\Tests;
 
 use Pagekit\Filter\FilterChain;
 
-class FilterChainTest extends \PHPUnit_Framework_TestCase
+class FilterChainTest extends \PHPUnit\Framework\TestCase
 {
     public function testAttach()
     {
@@ -14,11 +14,10 @@ class FilterChainTest extends \PHPUnit_Framework_TestCase
         $this->assertCount(1, $chain->getFilters());
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testAttachFailed()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $chain = new FilterChain;
 
         $chain->attach(new \stdClass);
@@ -59,7 +58,7 @@ class FilterChainTest extends \PHPUnit_Framework_TestCase
 
     protected function getFilterMock()
     {
-        $filter = $this->getMock('Pagekit\Filter\FilterInterface');
+        $filter = $this->createMock('Pagekit\Filter\FilterInterface');
         $filter->expects($this->any())
                ->method('filter');
 

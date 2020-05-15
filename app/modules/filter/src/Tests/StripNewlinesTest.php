@@ -4,7 +4,7 @@ namespace Pagekit\Filter\Tests;
 
 use Pagekit\Filter\StripNewlinesFilter;
 
-class StripNewlinesTest extends \PHPUnit_Framework_TestCase
+class StripNewlinesTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @dataProvider provideNewLineStrings

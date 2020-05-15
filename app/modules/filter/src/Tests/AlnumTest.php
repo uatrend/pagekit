@@ -4,7 +4,7 @@ namespace Pagekit\Filter\Tests;
 
 use Pagekit\Filter\AlnumFilter;
 
-class AlnumTest extends \PHPUnit_Framework_TestCase
+class AlnumTest extends \PHPUnit\Framework\TestCase
 {
     public function testFilter()
     {

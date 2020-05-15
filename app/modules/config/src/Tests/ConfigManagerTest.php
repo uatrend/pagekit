@@ -5,8 +5,11 @@ namespace Pagekit\Config\Tests;
 use Doctrine\Common\Cache\ArrayCache;
 use Pagekit\Config\ConfigManager;
 
-class ConfigManagerTest extends \PHPUnit_Framework_TestCase
+class ConfigManagerTest extends \PHPUnit\Framework\TestCase
 {
+    /**
+     * @doesNotPerformAssertions
+     */
     public function testGet()
     {
     }
@@ -61,11 +64,9 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
 
     // }
 
-    // /**
-    //  * @expectedException \InvalidArgumentException
-    //  */
     // public function testGetEmptyOptionName()
     // {
+    //     $this->expectException(\InvalidArgumentException::class);
     //     $options = $this->getConfig();
     //     $options->get(null);
     // }
@@ -106,20 +107,16 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
     //     $this->assertEquals('bar', $options->get('foo'));
     // }
 
-    // /**
-    //  * @expectedException \InvalidArgumentException
-    //  */
     // public function testSetEmptyOptionName()
     // {
+    //     $this->expectException(\InvalidArgumentException::class);
     //     $options = $this->getConfig();
     //     $options->set(null, null);
     // }
 
-    // /**
-    //  * @expectedException \InvalidArgumentException
-    //  */
     // public function testSetProtectedOption()
     // {
+    //     $this->expectException(\InvalidArgumentException::class);
     //     $options = $this->getConfig();
     //     $options->set('Autoload', null);
     // }
@@ -141,20 +138,16 @@ class ConfigManagerTest extends \PHPUnit_Framework_TestCase
     //     $this->assertNull($options->get('foo'));
     // }
 
-    // /**
-    //  * @expectedException \InvalidArgumentException
-    //  */
     // public function testRemoveEmptyOptionName()
     // {
+    //     $this->expectException(\InvalidArgumentException::class);
     //     $options = $this->getConfig();
     //     $options->remove(null);
     // }
 
-    // /**
-    //  * @expectedException \InvalidArgumentException
-    //  */
     // public function testRemoveProtectedOption()
     // {
+    //     $this->expectException(\InvalidArgumentException::class);
     //     $options = $this->getConfig();
     //     $options->remove('Autoload');
     // }

@@ -4,7 +4,7 @@ namespace Pagekit\Filter\Tests;
 
 use Pagekit\Filter\IntFilter;
 
-class IntTest extends \PHPUnit_Framework_TestCase
+class IntTest extends \PHPUnit\Framework\TestCase
 {
     public function testFilter()
     {

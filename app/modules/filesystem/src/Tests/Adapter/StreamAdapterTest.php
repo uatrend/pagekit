@@ -6,7 +6,7 @@ use Pagekit\Filesystem\Adapter\StreamAdapter;
 use Pagekit\Filesystem\Filesystem;
 use Pagekit\Filesystem\StreamWrapper;
 
-class StreamAdapterTest extends \PHPUnit_Framework_TestCase
+class StreamAdapterTest extends \PHPUnit\Framework\TestCase
 {
     use \Pagekit\Tests\FileUtil;
 
@@ -14,7 +14,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
     protected $fixtures;
     protected $workspace;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->file      = new Filesystem;
         $this->fixtures  = dirname(__DIR__).'/Fixtures';
@@ -25,7 +25,7 @@ class StreamAdapterTest extends \PHPUnit_Framework_TestCase
         StreamWrapper::setFilesystem($this->file);
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->removeDir($this->workspace);
         stream_wrapper_unregister('temp');

@@ -4,47 +4,43 @@ namespace Pagekit\Filter\Tests;
 
 use Pagekit\Filter\PregReplaceFilter;
 
-class PregReplaceTest extends \PHPUnit_Framework_TestCase
+class PregReplaceTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var PregReplace
      **/
     protected $filter;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->filter = new PregReplaceFilter;
     }
 
-    /**
-     * @expectedException \RuntimeException
-     */
     public function testRuntimeException()
     {
+        $this->expectException(\RuntimeException::class);
+
         $this->filter->filter('foo');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testModifierE()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->filter->setPattern('/foo/e');
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testPatternArgument()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->filter->setPattern(null);
     }
 
-    /**
-     * @expectedException \InvalidArgumentException
-     */
     public function testReplacementArgument()
     {
+        $this->expectException(\InvalidArgumentException::class);
+
         $this->filter->setReplacement(null);
     }
 

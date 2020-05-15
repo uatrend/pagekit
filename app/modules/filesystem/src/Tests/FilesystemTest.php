@@ -5,7 +5,7 @@ namespace Pagekit\Filesystem\Tests;
 use Pagekit\Filesystem\Adapter\FileAdapter;
 use Pagekit\Filesystem\Filesystem;
 
-class FileTest extends \PHPUnit_Framework_TestCase
+class FileTest extends \PHPUnit\Framework\TestCase
 {
     use \Pagekit\Tests\FileUtil;
 
@@ -13,7 +13,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
     protected $fixtures;
     protected $workspace;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->file      = new Filesystem;
         $this->fixtures  = __DIR__.'/Fixtures';
@@ -22,7 +22,7 @@ class FileTest extends \PHPUnit_Framework_TestCase
         $this->file->registerAdapter('file', new FileAdapter(__DIR__, 'http://localhost'));
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->removeDir($this->workspace);
     }

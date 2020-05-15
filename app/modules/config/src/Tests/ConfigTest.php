@@ -5,7 +5,7 @@ namespace Pagekit\Config\Tests;
 use Pagekit\Config\Config;
 use Pagekit\Config\Loader\PhpLoader;
 
-class ConfigTest extends \PHPUnit_Framework_TestCase
+class ConfigTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Config
@@ -17,7 +17,7 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
      */
     protected $values;
 
-    public function setUp()
+    public function setUp(): void
 	{
 		$values = [
 	    	'foo' => [
@@ -58,6 +58,6 @@ class ConfigTest extends \PHPUnit_Framework_TestCase
 
 	public function testDump()
 	{
-		$this->config->dump();
+		$this->assertIsString($this->config->dump());
 	}
 }

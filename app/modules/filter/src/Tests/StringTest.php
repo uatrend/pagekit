@@ -4,7 +4,7 @@ namespace Pagekit\Filter\Tests;
 
 use Pagekit\Filter\StringFilter;
 
-class StringTest extends \PHPUnit_Framework_TestCase
+class StringTest extends \PHPUnit\Framework\TestCase
 {
     public function testFilter()
     {

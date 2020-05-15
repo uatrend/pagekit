@@ -5,7 +5,7 @@ namespace Pagekit\Cookie\Tests;
 use Pagekit\Cookie\CookieJar;
 use Symfony\Component\HttpFoundation\Cookie;
 
-class CookieJarTest extends \PHPUnit_Framework_TestCase
+class CookieJarTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Cookie
@@ -17,7 +17,8 @@ class CookieJarTest extends \PHPUnit_Framework_TestCase
      */
     protected $cookieJar;
 
-	public function setUp() {
+	public function setUp(): void
+	{
 		$this->cookieJar = new CookieJar();
 	}
 
