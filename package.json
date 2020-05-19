@@ -51,7 +51,7 @@
         "codemirror": "uatrend/codemirror#master",
         "flatpickr": "~4.6.3",
         "ismobilejs": "~1.1.0",
-        "marked": "~1.0.0",
+        "marked": "~1.1.0",
         "md5": "blueimp/JavaScript-MD5#1.1.1",
         "tinymce": "~5.2.2",
         "uikit": "~3.4.4",
