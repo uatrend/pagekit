@@ -48,7 +48,7 @@
     "dependencies": {
         "Codemirror": "github:uatrend/codemirror#master",
         "JSONStorage": "github:uatrend/JSONStorage#master",
-        "blueimp-md5": "github:blueimp/JavaScript-MD5#1.1.1",
+        "blueimp-md5": "^2.16.0",
         "codemirror": "uatrend/codemirror#master",
         "flatpickr": "~4.6.3",
         "ismobilejs": "~1.1.0",
