@@ -1,7 +1,7 @@
 import UIkit from 'uikit';
 import {$, on, toNodes, each, findAll} from 'uikit-util';
 
-import Version from '../../../../../installer/app/lib/version';
+import Version from '@installer/app/lib/version';
 
 import Panel from '../components/widget-panel.vue';
 import Feed from '../components/widget-feed.vue';

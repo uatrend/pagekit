@@ -11,9 +11,9 @@
 
 # Pagekit
 
-[![Symfony](https://img.shields.io/badge/symfony-5.0.7-blue)](https://github.com/symfony/symfony)
+[![Symfony](https://img.shields.io/badge/symfony-5.0.8-blue)](https://github.com/symfony/symfony)
 [![Vue](https://img.shields.io/badge/vue-2.6.11-lightgreen)](https://github.com/vuejs/vue)
-[![UIkit](https://img.shields.io/badge/uikit-3.4.2-blue)](https://github.com/uikit/uikit)
+[![UIkit](https://img.shields.io/badge/uikit-3.4.6-blue)](https://github.com/uikit/uikit)
 [![Discord](https://img.shields.io/badge/chat-on%20discord-7289da.svg)](https://discord.gg/e7Kw47E)
 
 [Homepage](http://pagekit.com) - Official home page.
