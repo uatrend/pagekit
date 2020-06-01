@@ -54,7 +54,7 @@
         "marked": "~1.1.0",
         "blueimp-md5": "~2.16.0",
         "tinymce": "~5.3.0",
-        "uikit": "~3.4.6",
+        "uikit": "~3.5.3",
         "vee-validate": "~3.3.0",
         "vue-event-manager": "~2.1.3",
         "vue-intl": "github:uatrend/vue-intl#master",
