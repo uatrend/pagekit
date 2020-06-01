@@ -24,7 +24,7 @@
         "swiftmailer/swiftmailer": "~6.2",
         "symfony/debug": "~4.4.8",
         "symfony/finder": "~5.0.8",
-        "symfony/http-foundation": "~5.0.8",
+        "symfony/http-foundation": "~5.1.0",
         "symfony/routing": "~5.0.8",
         "symfony/stopwatch": "~5.0.8",
         "symfony/templating": "~5.0.8",
