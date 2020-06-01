@@ -25,7 +25,7 @@
         "symfony/debug": "~4.4.8",
         "symfony/finder": "~5.0.8",
         "symfony/http-foundation": "~5.0.8",
-        "symfony/routing": "~5.0.8",
+        "symfony/routing": "~5.1.0",
         "symfony/stopwatch": "~5.0.8",
         "symfony/templating": "~5.0.8",
         "symfony/translation": "~5.0.8",
