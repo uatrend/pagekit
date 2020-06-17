@@ -1,13 +1,26 @@
-//
-// Core
-//
+/* Core
+ ============================================================================================== */
+
 @import "components/_import.less";
-//
-// Theme
-//
+
+/* Pagekit
+ ============================================================================================== */
+
 @import "../../../assets/less/pagekit.less";
+
+/* Theme
+ ============================================================================================== */
+
 @import "theme/_import.less";
+
+/* Theme Misc
+ ============================================================================================== */
+
 @import "misc/theme-layout.less";
+
+/* Theme Variables
+ ============================================================================================== */
+
 @global-image-path: '../../images';
 @theme-sidebar-min-width: 55px;
 @theme-link-color: rgba(97, 131, 222, 1.000);
@@ -78,7 +91,7 @@
 
 /* ========================================================================
    Theme
- ========================================================================== */
+ ============================================================================================== */
 
 /*
  * Force vertical scrollbar
@@ -88,7 +101,7 @@ html {
     overflow-y: scroll;
 }
 /* Font smoothing
- ========================================================================== */
+ ============================================================================================== */
 
 body {
     -webkit-font-smoothing: antialiased;
@@ -149,7 +162,7 @@ html, .tm-page, .uk-section-default {
     opacity: 1;
 }
 /* Contrast
- ========================================================================== */
+ ============================================================================================== */
 
 .tm-contrast a {
     color: rgba(255, 255, 255, 0.7);
@@ -168,7 +181,7 @@ html, .tm-page, .uk-section-default {
     color: @global-inverse-color;
 }
 /* `tm-panel-icon`
- ========================================================================== */
+ ============================================================================================== */
 
 .tm-panel-icon {
     padding: 10px 0;
@@ -185,7 +198,7 @@ html, .tm-page, .uk-section-default {
     white-space: nowrap;
 }
 /* Dropdown
- ========================================================================== */
+ ============================================================================================== */
 
 .tm-cursor-pointer:hover {
     cursor: pointer;
@@ -203,10 +216,10 @@ html, .tm-page, .uk-section-default {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.09);
 }
 /* Pages for login, error, etc
- ========================================================================== */
+ ============================================================================================== */
 
 .tm-background {
-    background: lighten(@global-primary-background, 10%) url("../images/background.jpg") 50% 50% no-repeat; // background: lighten(@global-muted-background, 10%) url("../images/background01.jpg") 50% 50% no-repeat;
+    background: lighten(@global-primary-background, 10%) url("../images/background.jpg") 50% 50% no-repeat;
     background-size: cover;
 }
 
@@ -223,10 +236,10 @@ html, .tm-page, .uk-section-default {
     width: 310px;
 }
 /* `tm-sortable-panel`
- ========================================================================== */
+ ============================================================================================== */
 
 .tm-sortable-panel {
-    padding: 0px; // background: #fff;
+    padding: 0px;
     margin-top: -1px;
     border-top: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
@@ -245,7 +258,7 @@ html, .tm-page, .uk-section-default {
     opacity: 1;
 }
 /* Vue-nestable
- ========================================================================== */
+ ============================================================================================== */
 
 /*
 * Style for nestable
@@ -333,7 +346,7 @@ html, .tm-page, .uk-section-default {
     vertical-align: middle;
 }
 /* Hover
- ========================================================================== */
+ ============================================================================================== */
 
 /*
  * Hidden
@@ -363,7 +376,7 @@ html, .tm-page, .uk-section-default {
     background: #f2f2f5;
 }
 /* Theme
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-offcanvas-content .uk-navbar-toggle-icon {
     color: rgba(255, 255, 255, 0.6);
@@ -384,16 +397,11 @@ body.dashboard .uk-card-title {
 body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace-themes):not(.system-package-themes) .tm-content {
     padding: 15px;
     background-color: #ffffff;
-    border: 1px solid @theme-border-content; // box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    border: 1px solid @theme-border-content;
 }
 @media(min-width: 768px) {
     body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace-themes):not(.system-package-themes) .tm-content {
         padding: 25px;
-    }
-}
-@media(min-width: 960px) {
-    body:not(.dashboard) .tm-content {
-        // padding: 45px;
     }
 }
 @media(min-width: 1220px) {
@@ -629,7 +637,8 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
     background-color: rgba(255, 255, 255, .2);
     border-color: rgba(255, 255, 255, .2)
 }
-// TopMenu
+/* TopMenu
+ ============================================================================================== */
 .tm-topmenu {
     margin-top: 5px;
     display: flex;
@@ -641,13 +650,6 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
 }
 .tm-topmenu-left, .tm-topmenu-right, .tm-topmenu-center:only-child {
     flex-wrap: wrap;
-}
-.uk-navbar-container>.uk-container .tm-topmenu-left {
-    // margin-left: -15px;
-    // margin-right: -15px;
-}
-.uk-navbar-container>.uk-container .tm-topmenu-right {
-    // margin-right: -15px;
 }
 .tm-topmenu-center:not(:only-child) {
     position: absolute;
@@ -687,9 +689,7 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
 .tm-action-menu .tm-topmenu-item:empty {
     padding: 0;
 }
-.js-toggle .uk-input, .js-toggle .uk-select:not([multiple]):not([size]) {
-    // padding: 0 10px;
-}
+
 /*
  *
  * Sortable
@@ -818,13 +818,13 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
 }
 .uk-card-default {
     border: 1px solid @theme-border-content;
-    box-shadow: none; //0 2px 4px rgba(0,0,0,0.1);
+    box-shadow: none;
 }
 .uk-sticky {
     border-bottom: 1px solid @theme-border-content;
 }
 .uk-sticky-fixed {
-    box-shadow: none; //0 6px 8px rgba(17,56,86,.1)
+    box-shadow: none;
 }
 .uk-navbar-dropbar-slide {
     box-shadow: 0 1px 0px @theme-border-content;
@@ -832,10 +832,8 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
 .uk-select:not([multiple]):not([size]) {
     background-position: calc(~'100% - @{form-select-padding-right} / 2') 50%;
 }
-/*
- * Theme Spinner
- */
-
+/* Theme Spinner
+ ============================================================================================== */
 .tm-navbar-container .tm-action-buttons .uk-button-primary>span, .tm-navbar-container .tm-action-buttons .uk-button-secondary>span, .tm-navbar-container .tm-action-buttons .tm-button-success>span {
     display: inline-flex;
     align-items: center;
@@ -905,30 +903,32 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
     height: 2px;
     background: @global-primary-background;
 }
-// Name:            HTML editor
-// Description:     Defines styles for an HTML editor
-//
-// Component:       `uk-htmleditor`
-//
-// Sub-objects:     `uk-htmleditor-navbar`
-//                  `uk-htmleditor-navbar-nav`
-//                  `uk-htmleditor-navbar-flip`
-//                  `uk-htmleditor-button-code
-//                  `uk-htmleditor-button-preview`
-//                  `uk-htmleditor-content`
-//                  `uk-htmleditor-code`
-//                  `uk-htmleditor-preview`
-//                  `uk-htmleditor-iframe`
-//
-// Modifier:        `uk-htmleditor-fullscreen`
-//                  `[data-mode='tab']`
-//                  `[data-mode='split']`
-//
-// States:          `uk-active`
-//
-// ========================================================================
-// Variables
-// ========================================================================
+/* ============================================================================================
+   Name:            HTML editor
+   Description:     Defines styles for an HTML editor
+
+   Component:       `uk-htmleditor`
+
+   Sub-objects:     `uk-htmleditor-navbar`
+                    `uk-htmleditor-navbar-nav`
+                    `uk-htmleditor-navbar-flip`
+                    `uk-htmleditor-button-code
+                    `uk-htmleditor-button-preview`
+                    `uk-htmleditor-content`
+                    `uk-htmleditor-code`
+                    `uk-htmleditor-preview`
+                    `uk-htmleditor-iframe`
+
+   Modifier:        `uk-htmleditor-fullscreen`
+                    `[data-mode='tab']`
+                    `[data-mode='split']`
+
+   States:          `uk-active`
+ ============================================================================================== */
+
+/* ============================================================================================
+   Variables
+ ============================================================================================== */
 @htmleditor-navbar-background: #eee;
 @htmleditor-navbar-nav-height: 40px;
 @htmleditor-navbar-nav-padding-horizontal: 15px;
@@ -947,24 +947,24 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
 @htmleditor-fullscreen-z-index: 990;
 @htmleditor-fullscreen-content-top: @htmleditor-navbar-nav-height;
 @htmleditor-fullscreen-icon-resize: "\f066";
-/* ========================================================================
+
+/* ============================================================================================
    Component: HTML editor
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor {
     border: 1px solid #e5e5e5;
     .hook-htmleditor;
 }
 /* Sub-object `uk-htmleditor-navbar`
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor-navbar {
-    background: #fff; //@htmleditor-navbar-background;
+    background: #fff;
     .hook-htmleditor-navbar;
 }
-/*
- * Micro clearfix
- */
+/* Micro clearfix
+ ============================================================================================== */
 
 .uk-htmleditor-navbar:before, .uk-htmleditor-navbar:after {
     content: "";
@@ -974,7 +974,7 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
     clear: both;
 }
 /* Sub-object `uk-htmleditor-navbar-nav`
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor-navbar-nav {
     margin: 0;
@@ -1011,11 +1011,9 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
  */
 
 .uk-htmleditor-navbar-nav>li:hover>a, .uk-htmleditor-navbar-nav>li>a:focus {
-    // 1
     background-color: @htmleditor-navbar-nav-hover-background;
     color: @htmleditor-navbar-nav-hover-color;
     outline: none;
-    /* 2 */
     .hook-htmleditor-navbar-nav-hover;
 }
 /* OnClick */
@@ -1033,24 +1031,21 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
     .hook-htmleditor-navbar-nav-active;
 }
 /* Sub-object: `uk-htmleditor-navbar-flip`
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor-navbar-flip {
     float: right;
 }
 /* Sub-object for special buttons
- ========================================================================== */
+ ============================================================================================== */
 
 [data-mode='split'] .uk-htmleditor-button-code, [data-mode='split'] .uk-htmleditor-button-preview {
     display: none;
 }
 /* Sub-object `uk-htmleditor-content`
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor-content {
-    // border-left: 1px solid @htmleditor-content-border;
-    // border-right: 1px solid @htmleditor-content-border;
-    // border-bottom: 1px solid @htmleditor-content-border;
     background: @htmleditor-content-background;
     border-top: 1px solid #e5e5e5;
     .hook-htmleditor-content;
@@ -1067,15 +1062,15 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
     clear: both;
 }
 /* Modifier `uk-htmleditor-fullscreen`
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor-fullscreen {
-    position: absolute; // fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    z-index: 990; //@htmleditor-fullscreen-z-index;
+    z-index: 990;
 }
 .uk-htmleditor-fullscreen .uk-htmleditor-content {
     position: absolute;
@@ -1102,7 +1097,7 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
     content: @htmleditor-fullscreen-icon-resize;
 }
 /* Sub-objects `uk-htmleditor-code` and `uk-htmleditor-preview`
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor-code, .uk-htmleditor-preview {
     box-sizing: border-box;
@@ -1128,11 +1123,10 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
     width: 50%;
 }
 [data-mode='split'] .uk-htmleditor-code {
-    // border-right: 1px solid @htmleditor-content-split-border;
-    border-right: 1px solid #e5e5e5; //@htmleditor-content-split-border;
+    border-right: 1px solid #e5e5e5;
 }
 /* Sub-object `uk-htmleditor-iframe`
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor-iframe {
     position: absolute;
@@ -1142,14 +1136,14 @@ body:not(.dashboard):not(.system-marketplace-extensions):not(.system-marketplace
     height: 100%;
 }
 /* CodeMirror modifications
- ========================================================================== */
+ ============================================================================================== */
 
 .uk-htmleditor .CodeMirror {
     padding: 10px;
     box-sizing: border-box;
 }
-// Hooks
-// ========================================================================
+/* HTMLEditor Hooks
+ ============================================================================================== */
 .hook-htmleditor-misc;
 .hook-htmleditor() {}
 .hook-htmleditor-navbar() {}

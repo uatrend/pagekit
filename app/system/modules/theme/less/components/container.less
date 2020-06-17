@@ -20,7 +20,8 @@
 @container-max-width:                   1200px;
 @container-xsmall-max-width:            750px;
 @container-small-max-width:             900px;
-@container-large-max-width:             1600px;
+@container-large-max-width:             1400px;
+@container-xlarge-max-width:            1600px;
 
 @container-padding-horizontal:          15px;
 @container-padding-horizontal-s:        @global-gutter;
@@ -37,6 +38,7 @@
  */
 
 .uk-container {
+    display: flow-root;
     /* 1 */
     box-sizing: content-box;
     max-width: @container-max-width;
@@ -67,18 +69,6 @@
 }
 
 /*
- * Micro clearfix
- */
-
-.uk-container::before,
-.uk-container::after {
-    content: "";
-    display: table;
-}
-
-.uk-container::after { clear: both; }
-
-/*
  * Remove margin from the last-child
  */
 
@@ -102,6 +92,8 @@
 .uk-container-small { max-width: @container-small-max-width; }
 
 .uk-container-large { max-width: @container-large-max-width; }
+
+.uk-container-xlarge { max-width: @container-xlarge-max-width; }
 
 .uk-container-expand { max-width: none; }
 
@@ -141,6 +133,9 @@
 
     .uk-container-expand-left.uk-container-large,
     .uk-container-expand-right.uk-container-large { max-width: ~'calc(50% + (@{container-large-max-width} / 2) - @{container-padding-horizontal-m})'; }
+
+    .uk-container-expand-left.uk-container-xlarge,
+    .uk-container-expand-right.uk-container-xlarge { max-width: ~'calc(50% + (@{container-xlarge-max-width} / 2) - @{container-padding-horizontal-m})'; }
 
 }
 
