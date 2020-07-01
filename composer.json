@@ -19,7 +19,7 @@
         "paragonie/random-lib": "~2.0.1",
         "maximebf/debugbar": "~1.16.3",
         "monolog/monolog": "~2.1.0",
-        "nikic/php-parser": "~4.4.0",
+        "nikic/php-parser": "~4.5.0",
         "psr/log": "~1.1.3",
         "swiftmailer/swiftmailer": "~6.2.3",
         "symfony/debug": "~4.4.10",
