@@ -6,7 +6,7 @@
  * lint: runs jshint on all .js files
  */
 
-var _       = require('lodash'),
+let map     = require('lodash/map'),
     merge   = require('merge-stream'),
     gulp    = require('gulp'),
     header  = require('gulp-header'),
@@ -18,15 +18,15 @@ var _       = require('lodash'),
     path    = require('path');
 
 // paths of the packages for the compile-task
-var pkgs = [
+let pkgs = [
     {path: 'app/installer/', data: '../../composer.json'},
     {path: 'app/system/modules/theme/', data: '../../../../composer.json'}
 ];
 
 // banner for the css files
-var banner = "/*! <%= data.title %> <%= data.version %> | (c) 2014 Pagekit | MIT License */\n";
+let banner = "/*! <%= data.title %> <%= data.version %> | (c) 2014 Pagekit | MIT License */\n";
 
-var cldr = {
+let cldr = {
     cldr: path.join(__dirname, 'node_modules/cldr-core/supplemental/'),
     intl: path.join(__dirname, 'app/system/modules/intl/data/'),
     locales: path.join(__dirname, 'node_modules/cldr-localenames-modern/main/'),
@@ -35,31 +35,47 @@ var cldr = {
 };
 
 // general error handler for plumber
-var errhandler = function (error) {
+let errhandler = function (error) {
     this.emit('end');
     return console.error(error.toString());
 };
 
 /**
- * Copy required asset files to app/assets/** folder
+ * Copy specified "assets" from "node_modules" to the specified dirs.
  */
 gulp.task('assets', function() {
-    var modules_dirname = 'node_modules',
-        config = {
-            'app': { uikit: '*', vue: '*', flatpickr: '*', lodash: { files: 'lodash*.js', dest: '/dist' } },
-            'app/system/modules/editor/app': { tinymce: '*', marked: '*', codemirror: '*' }
-        };
+    let dirs = [
+        {
+            path: 'app/assets/',
+            assets: {uikit: '*', vue: '*', flatpickr: '*', lodash: {files: 'lodash*.js', folder: 'dist'}}
+        },
+        {
+            path: 'app/system/modules/editor/app/assets/',
+            assets: {tinymce: '*', marked: '*', codemirror: '*'}
+        }
+    ];
 
-    return merge.apply(null, _.map(config, (assets, module) => {
-        var files, assets_dirname = module + '/assets';
-        return _.map(assets, (cfg, asset) => {
-            var source = modules_dirname + '/' + asset,
-                dest   = assets_dirname + '/' + asset;
-            files = (typeof cfg === 'object' && cfg.files) ? source + '/' + cfg.files : source + '/' + '**';
-            dest  = (typeof cfg === 'object' && cfg.dest) ? dest + cfg.dest : dest;
+    return merge.apply(null, [].concat.apply([], dirs.map((dir) => {  // Multiple stream from flatten array
+        return map(dir.assets, (options, asset) => {
+            let base  = asset + '/',                                  // Base path, e.g 'asset/'
+                src   = path.join(__dirname, 'node_modules/') + base, // Source path of "asset" in "node_modules"
+                dest  = path.join(__dirname, dir.path) + base;        // Destination path
+                files = src + '**';                                   // By default - copy all files, including directories
+
+            // Check options
+            if ((typeof options === 'string') && (options !== '*')) {
+                files = src + options;
+            }
+
+            // If you have options such as "files" and "folder" - the specified "files" will be copied to the specified "folder"
+            if (typeof options === 'object') {
+                if (options.files)  files = src  + options.files;
+                if (options.folder) dest  = dest + options.folder;
+            }
+
             return gulp.src([files]).pipe(gulp.dest(dest));
         })
-    }));
+    })));
 });
 
 /**
@@ -124,7 +140,7 @@ gulp.task('lint', function () {
 gulp.task('cldr', function (done) {
 
     // territoryContainment
-    var data = {}, json = JSON.parse(fs.readFileSync(cldr.cldr + 'territoryContainment.json', 'utf8')).supplemental.territoryContainment;
+    let data = {}, json = JSON.parse(fs.readFileSync(cldr.cldr + 'territoryContainment.json', 'utf8')).supplemental.territoryContainment;
     Object.keys(json).forEach(function (key) {
         if (isNaN(key)) return;
         data[key] = json[key]._contains;
@@ -137,13 +153,13 @@ gulp.task('cldr', function (done) {
         })
         .forEach(function (src) {
 
-            var id = src.replace('_', '-'), shortId = id.substr(0, id.indexOf('-')), found;
+            let id = src.replace('_', '-'), shortId = id.substr(0, id.indexOf('-')), found;
 
             ['languages', 'territories'].forEach(function (name) {
 
                 found = false;
                 [id, shortId, 'en'].forEach(function (locale) {
-                    var file = cldr.locales + locale + '/' + name + '.json';
+                    let file = cldr.locales + locale + '/' + name + '.json';
                     if (!found && fs.existsSync(file)) {
                         found = true;
                         fs.writeFileSync(cldr.languages + src + '/' + name + '.json', JSON.stringify(JSON.parse(fs.readFileSync(file, 'utf8')).main[locale].localeDisplayNames[name]));
@@ -154,7 +170,7 @@ gulp.task('cldr', function (done) {
 
             found = false;
             [id.toLowerCase(), shortId, 'en'].forEach(function (locale) {
-                var file = cldr.formats + locale + '.json';
+                let file = cldr.formats + locale + '.json';
                 if (!found && fs.existsSync(file)) {
                     found = true;
                     fs.writeFileSync(cldr.languages + src + '/formats.json', fs.readFileSync(file, 'utf8'));
