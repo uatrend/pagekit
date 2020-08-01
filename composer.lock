@@ -3205,16 +3205,16 @@
         },
         {
             "name": "symfony/templating",
-            "version": "v5.1.2",
+            "version": "v5.1.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/templating.git",
-                "reference": "d3f0347e70029067ab690bfa9ff121c1c929ee4e"
+                "reference": "e999847b7584a8d3f364eecd444615604b0d831c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/templating/zipball/d3f0347e70029067ab690bfa9ff121c1c929ee4e",
-                "reference": "d3f0347e70029067ab690bfa9ff121c1c929ee4e",
+                "url": "https://api.github.com/repos/symfony/templating/zipball/e999847b7584a8d3f364eecd444615604b0d831c",
+                "reference": "e999847b7584a8d3f364eecd444615604b0d831c",
                 "shasum": ""
             },
             "require": {
@@ -3271,7 +3271,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-05-28T08:20:44+00:00"
+            "time": "2020-07-23T08:36:24+00:00"
         },
         {
             "name": "symfony/translation",
