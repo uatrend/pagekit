@@ -60,7 +60,7 @@
         "vee-validate": "^3.3.7",
         "vue-event-manager": "~2.1.3",
         "vue-intl": "github:uatrend/vue-intl#master",
-        "vue-nestable": "~2.5.3",
+        "vue-nestable": "~2.6.0",
         "vue-resource": "~1.5.1"
     }
 }
