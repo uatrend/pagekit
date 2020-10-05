@@ -56,10 +56,6 @@ gulp.task('assets', () => {
         {
             path: 'app/system/modules/editor/app/assets/',
             assets: { tinymce: '*', marked: '*', codemirror: '*' }
-        },
-        {
-            path: 'app/system/modules/theme/assets/less/',
-            assets: { uikit: { files: '/src/less/components/*', folder: 'components', directly: true } }
         }
     ];
 
@@ -79,7 +75,7 @@ gulp.task('assets', () => {
             // If you have options such as "files" and "folder" - the specified "files" will be copied to the specified "folder"
             if (typeof options === 'object') {
                 if (options.files) files = src + options.files;
-                if (options.folder) dest = !options.directly ? dest : path.join(__dirname, dir.path) + options.folder;
+                if (options.folder) dest = dest + options.folder;
             }
 
             return gulp.src([files]).pipe(gulp.dest(dest));
