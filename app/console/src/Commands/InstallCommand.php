@@ -35,14 +35,17 @@ class InstallCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $packages = [];
+        // TODO
+        return (int) $this->error("The feature is disabled during development.");
 
-        foreach ((array) $this->argument('packages') as $argument) {
-            $argument = explode(':', $argument);
-            $packages[$argument[0]] = isset($argument[1]) && $argument[1] ? $argument[1] : '*';
-        }
+        // $packages = [];
 
-        $installer = new PackageManager($output);
-        $installer->install($packages, true, $this->option('prefer-source'));
+        // foreach ((array) $this->argument('packages') as $argument) {
+        //     $argument = explode(':', $argument);
+        //     $packages[$argument[0]] = isset($argument[1]) && $argument[1] ? $argument[1] : '*';
+        // }
+
+        // $installer = new PackageManager($output);
+        // $installer->install($packages, true, $this->option('prefer-source'));
     }
 }

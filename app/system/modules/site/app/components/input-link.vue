@@ -1,40 +1,33 @@
 <template>
     <div>
-        <v-input :id="id"
-            :name="name"
-            type="text"
-            :rules="{required: isRequired}"
-            :view="view"
-            v-model.lazy="link"
-            :message="required"
-        />
+        <v-input :id="id" v-model.lazy="link" :name="name" type="text" :rules="{required: isRequired}" :view="view" :message="required" />
 
         <div v-show="url" class="uk-text-muted uk-text-small">
             {{ url }}
         </div>
 
-        <div uk-modal ref="modal">
-            <div class="uk-modal-dialog">
-                <form class="uk-margin" @submit.prevent="update">
-                    <div class="uk-modal-header">
-                        <h2>{{ 'Select Link' | trans }}</h2>
-                    </div>
+        <v-modal ref="modal">
+            <form class="uk-margin" @submit.prevent="update">
+                <div class="uk-modal-header">
+                    <h2 class="uk-h4">
+                        {{ 'Select Link' | trans }}
+                    </h2>
+                </div>
 
-                    <div class="uk-modal-body">
-                        <panel-link ref="links"></panel-link>
-                    </div>
+                <div class="uk-modal-body">
+                    <panel-link @link-changed="changed" />
+                </div>
 
-                    <div class="uk-modal-footer uk-text-right">
-                        <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
-                            {{ 'Cancel' | trans }}
-                        </button>
-                        <button class="uk-button uk-button-primary" type="submit" :disabled="!showUpdate()" autofocus="">
-                            {{ 'Update' | trans }}
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
+                <div class="uk-modal-footer uk-text-right">
+                    <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
+                        {{ 'Cancel' | trans }}
+                    </button>
+                    <button class="uk-button uk-button-primary" type="submit" :disabled="!disabled()" autofocus="">
+                        {{ 'Update' | trans }}
+                    </button>
+                </div>
+            </form>
+        </v-modal>
     </div>
 </template>
 
@@ -42,20 +35,22 @@
 
 import VInput from '@system/app/components/validation.vue';
 
-export default {
+const InputLink = {
 
-    name: 'input-link',
+    name: 'InputLink',
 
-    props: ['name', 'inputClass', 'id', 'required', 'value'],
+    components: { VInput },
+
+    props: ['name', 'className', 'id', 'required', 'value'],
 
     data() {
         return {
             link: this.value,
             url: false,
-            isMounted: false,
+            selected: false,
             view: {
                 type: 'icon',
-                class: ['uk-input', this.inputClass],
+                class: ['uk-input', this.className],
                 icon: 'link',
                 iconClick: this.open,
                 iconTag: 'a',
@@ -63,15 +58,6 @@ export default {
                 iconLabel: 'Select'
             }
         };
-    },
-
-    watch: {
-
-        link: {
-            handler: 'load',
-            immediate: true,
-        }
-
     },
 
     computed: {
@@ -82,9 +68,13 @@ export default {
 
     },
 
-    mounted() {
-        this.modal = UIkit.modal(this.$refs.modal, {escClose: true, bgClose: false, stack: true});
-        this.isMounted = true;
+    watch: {
+
+        link: {
+            handler: 'load',
+            immediate: true
+        }
+
     },
 
     methods: {
@@ -102,29 +92,31 @@ export default {
         },
 
         open() {
-            this.modal.show();
+            this.$refs.modal.open();
+        },
+
+        changed(link) {
+            this.selected = link;
         },
 
         update() {
-            this.$set(this, 'link', this.$refs.links.link);
+            this.link = this.selected;
             this.$emit('input', this.link);
-            this.modal.hide();
+            this.$refs.modal.close();
         },
 
-        showUpdate: function () {
-            return this.isMounted && this.$refs.links && this.$refs.links.link;
+        disabled() {
+            return this.selected;
         }
 
-    },
-
-    components: {
-        VInput
     }
 
 };
 
-Vue.component('input-link', (resolve) => {
-    resolve(require('./input-link.vue'));
+Vue.component('InputLink', (resolve) => {
+    resolve(InputLink);
 });
+
+export default InputLink;
 
 </script>

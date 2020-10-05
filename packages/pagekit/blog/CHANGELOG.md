@@ -1,9 +1,27 @@
 # Changelog
 
+## 1.0.7 (July 10, 2019)
+
+### Added
+- Added new translations
+
+## 1.0.6 (November 14, 2018)
+
+### Added
+- Added reCAPTCHA for comments
+
+### Fixed
+- Fixed closing <li> tag in pagination
+
+## 1.0.5 (August 31, 2017)
+
+### Fixed
+- Fixed Gravatar for frontend comments
+
 ## 1.0.4 (June 29, 2017)
 
 ### Fixed
- - Fixed MySQL <= 5.7.5 support (ONLY_FULL_GROUP_BY)
+- Fixed MySQL <= 5.7.5 support (ONLY_FULL_GROUP_BY)
 
 ## 1.0.3 (January 16, 2017)
 
@@ -13,7 +31,7 @@
 ## 1.0.2 (June 29, 2016)
 
 ### Fixed
-- Fixed access check for settings screen 
+- Fixed access check for settings screen
 
 ### Removed
 - Removed manual access check from controller actions

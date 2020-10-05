@@ -37,5 +37,5 @@
   'Header' => 'Capçalera',
   'Written by %name% on %date%' => 'Escrit per %name% el %date%',
   'Read more' => 'Llegeix-ne més',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} No hi ha comentaris|{1} %num% Comentari|]1,Inf[ %num% Comentaris',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} No hi ha comentaris|{1} %count% Comentari|]1,Inf[ %count% Comentaris',
 );

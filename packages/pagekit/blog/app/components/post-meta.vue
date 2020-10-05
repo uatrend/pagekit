@@ -18,14 +18,16 @@
 
 <script>
 
-var PostMeta = {
+import PostMixin from '../mixins/post-mixin';
+
+const PostMeta = {
+
+    mixins: [PostMixin],
 
     section: {
         label: 'Meta',
-        priority: 100,
-    },
-
-    props: ['post'],
+        priority: 100
+    }
 
 };
 

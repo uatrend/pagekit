@@ -8,24 +8,18 @@
             <h2 class="uk-h3 uk-margin-remove" v-if="!selected.length">{{ '{0} %count% Posts|{1} %count% Post|]1,Inf[ %count% Posts' | transChoice(count, {count:count}) }}</h2>
 
             <template v-else>
-                <h2 class="uk-h2 uk-margin-remove">{{ '{1} %count% Post selected|]1,Inf[ %count% Posts selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
+                <h2 class="uk-h3 uk-margin-remove">{{ '{1} %count% Post selected|]1,Inf[ %count% Posts selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
 
                 <div class="uk-margin-left" >
-                    <ul class="uk-subnav pk-subnav-icon">
-                        <li><a class="pk-icon-check pk-icon-hover" :uk-tooltip="'Publish' | trans" @click="status(2)"></a></li>
-                        <li><a class="pk-icon-block pk-icon-hover" :uk-tooltip="'Unpublish' | trans" @click="status(3)"></a></li>
-                        <li><a class="pk-icon-copy pk-icon-hover" :uk-tooltip="'Copy' | trans" @click="copy"></a></li>
-                        <li><a class="pk-icon-delete pk-icon-hover" :uk-tooltip="'Delete' | trans" @click="remove" v-confirm="'Delete Posts?'"></a></li>
+                    <ul class="uk-iconnav">
+                        <li><a uk-icon="check" :uk-tooltip="'Publish' | trans" @click="status(2)"></a></li>
+                        <li><a uk-icon="ban" :uk-tooltip="'Unpublish' | trans" @click="status(3)"></a></li>
+                        <li><a uk-icon="copy" :uk-tooltip="'Copy' | trans" @click="copy"></a></li>
+                        <li><a uk-icon="trash" :uk-tooltip="'Delete' | trans" @click="remove" v-confirm="'Delete Posts?'"></a></li>
                     </ul>
                 </div>
             </template>
-<!--
-            <div class="pk-search">
-                <div class="uk-search">
-                    <input class="uk-search-field" type="text" v-model="config.filter.search" debounce="300">
-                </div>
-            </div>
- -->
+
             <div class="uk-search uk-search-default pk-search">
                 <span uk-search-icon></span>
                 <input class="uk-search-input" type="search" v-model="config.filter.search" debounce="300">
@@ -64,19 +58,20 @@
                         <a :href="$url.route('admin/blog/post/edit', { id: post.id })">{{ post.title }}</a>
                     </td>
                     <td class="uk-text-center">
-                        <a :title="getStatusText(post)" :class="{
+                        <a :title="getStatusText(post)" class="uk-icon-link uk-display-inline-block uk-position-relative tm-avatar" :class="{
                                 'pk-icon-circle': post.status == 0,
                                 'pk-icon-circle-warning': post.status == 1,
                                 'pk-icon-circle-success': post.status == 2 && post.published,
-                                'pk-icon-circle-danger': post.status == 3,
-                                'pk-icon-schedule': post.status == 2 && !post.published
-                            }" @click="toggleStatus(post)"></a>
+                                'pk-icon-circle-danger': post.status == 3
+                            }" :uk-icon="post.status == 2 && !post.published ? 'schedule' : false" @click="toggleStatus(post)">
+                            <div v-if="post.status == 2 && !post.published" class="uk-badge uk-position-bottom-right uk-label-success"></div>
+                        </a>
                     </td>
                     <td>
                         <a :href="$url.route('admin/user/edit', { id: post.user_id })">{{ post.author }}</a>
                     </td>
                     <td class="uk-text-center">
-                        <a class="uk-text-nowrap" :class="{'pk-link-icon': !post.comments_pending}" :href="$url.route('admin/blog/comment', { post: post.id })" :uk-tooltip="'{0} No pending|{1} One pending|]1,Inf[ %comments% pending' | transChoice(post.comments_pending, {comments:post.comments_pending})"><i class="pk-icon-comment uk-margin-small-right" :class="{'pk-icon-primary': post.comments_pending}"></i> {{ post.comment_count }}</a>
+                        <a class="uk-text-nowrap" :class="{'uk-icon-link': !post.comments_pending}" :href="$url.route('admin/blog/comment', { post: post.id })" :uk-tooltip="'{0} No pending|{1} One pending|]1,Inf[ %comments% pending' | transChoice(post.comments_pending, {comments:post.comments_pending})"><i uk-icon="comment" :class="{'uk-text-primary': post.comments_pending}"></i> {{ post.comment_count }}</a>
                     </td>
                     <td class="pk-table-width-100">
                         {{ post.date | date }}
@@ -93,7 +88,6 @@
 
     <h3 class="uk-h2 uk-text-muted uk-text-center" v-show="posts && !posts.length">{{ 'No posts found.' | trans }}</h3>
 
-    <!-- <v-pagination :current.sync="config.page" :pages="pages" v-show="pages > 1 || config.page > 0" v-model="config.page"></v-pagination> -->
     <v-pagination :pages="pages" v-model="config.page" v-show="pages > 1 || config.page > 0"></v-pagination>
 
 </div>

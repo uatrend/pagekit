@@ -1,107 +1,102 @@
-var util = UIkit.util,
-    $ = util.$,
-    on = util.on,
-    attr = util.attr,
-    before = util.before,
-    css = util.css,
-    each = util.each,
-    addClass = util.addClass,
-    hasAttr = util.hasAttr,
-    offset = util.offset,
-    ready = util.ready;
+const { $, $$, addClass, attr, closest, css, hasClass, on, offset, ready, removeClass } = UIkit.util;
 
-var selector = '.tm-header ~ [class*="uk-section"], .tm-header ~ * > [class*="uk-section"]';
-
-UIkit.component('header', {
+UIkit.component('Header', {
 
     update: [
 
         {
-            read: function(data) {
-
-                var section = $(selector);
-                var modifier = attr(section, 'tm-header-transparent');
-
-                if (!modifier || !section) {
-                    return false;
-                }
-
-                data.prevHeight = this.height;
-                data.height = this.$el.offsetHeight;
-
-                var sticky = UIkit.getComponent($('[uk-sticky]', this.$el), 'sticky');
-
-                if (sticky) {
-
-                    var dat = sticky.$options.data;
-
-                    if (dat.animation !== 'uk-animation-slide-top') {
-                        each({
-                            top: selector,
-                            animation: 'uk-animation-slide-top',
-                            clsInactive: `uk-navbar-transparent uk-${modifier}`
-                        }, function(value, key) { return dat[key] = sticky[key] = sticky.$props[key] = value});
-                    }
-
-                    sticky.$props.top = section.offsetHeight <= window.innerHeight ? selector : offset(section).top + 300;
-                }
-
+            read() {
+                return getSection() ? { height: this.$el.offsetHeight } : false;
             },
 
-            write: function(data) {
+            write({ height }) {
+                const [section, modifier] = getSection();
 
-                if (!this.placeholder) {
-
-                    var section = $(selector);
-                    var modifier = attr(section, 'tm-header-transparent');
-
-                    addClass(this.$el, 'tm-header-transparent');
-                    addClass($('.tm-headerbar-top, .tm-headerbar-bottom'), `uk-${modifier}`);
-
-                    this.placeholder = hasAttr(section, 'tm-header-transparent-placeholder')
-                        && before($('[uk-grid]', section), '<div class="tm-header-placeholder uk-margin-remove-adjacent"></div>');
-
-                    var navbar = $('[uk-navbar]', this.$el);
-                    if (attr(navbar, 'dropbar-mode') === 'push') {
-                        attr(navbar, 'dropbar-mode', 'slide');
-                    }
+                if (!hasClass(this.$el, 'tm-header-transparent')) {
+                    addClass(this.$el, 'tm-header-transparent tm-header-overlay');
+                    addClass($$('.tm-headerbar-top, .tm-headerbar-bottom, .tm-toolbar-transparent'), `uk-${modifier}`);
+                    removeClass($('.tm-toolbar-transparent.tm-toolbar-default'), 'tm-toolbar-default');
 
                     if (!$('[uk-sticky]', this.$el)) {
                         addClass($('.uk-navbar-container', this.$el), `uk-navbar-transparent uk-${modifier}`);
                     }
-
                 }
 
-                if (this.placeholder && data.prevHeight !== data.height) {
-                    css(this.placeholder, {height: data.height});
-                }
+                css($('.tm-header-placeholder', section), { height });
             },
 
-            events: ['load', 'resize']
+            events: ['resize']
         }
 
     ]
 
 });
 
-(function(UIkit){
+UIkit.mixin({
 
-    var sel = '#tm-main';
+    update: {
 
-    ready(function(){
-        (function(main, meta, fn){
+        read() {
+            const [section, modifier] = getSection() || [];
 
+            if (!modifier || !closest(this.$el, '[uk-header]')) {
+                return;
+            }
+
+            this.animation = 'uk-animation-slide-top';
+            this.clsInactive = `uk-navbar-transparent uk-${modifier}`;
+            this.top = section.offsetHeight <= window.innerHeight
+                ? offset(section).bottom
+                : offset(section).top + 300;
+        },
+
+        write() {
+            const [modifier] = getSection() || [];
+
+            if (!this.matchMedia && modifier && !hasClass(`uk-navbar-transparent uk-${modifier}`, $('.uk-navbar-container', this.$el))) {
+                addClass($('.uk-navbar-container', this.$el), `uk-navbar-transparent uk-${modifier}`);
+            }
+        },
+
+        events: ['resize']
+
+    }
+
+}, 'sticky');
+
+UIkit.mixin({
+
+    computed: {
+
+        dropbarMode({ dropbarMode }) {
+            return getSection() || closest(this.$el, '[uk-sticky]') ? 'slide' : dropbarMode;
+        }
+
+    }
+
+}, 'navbar');
+
+function getSection() {
+    const section = $('.tm-header ~ [class*="uk-section"], .tm-header ~ :not(.tm-page) > [class*="uk-section"]');
+    const modifier = attr(section, 'tm-header-transparent');
+    return section && modifier && [section, modifier];
+}
+
+(function (UIkit) {
+    const sel = '#tm-main';
+
+    ready(() => {
+        (function (main, meta, fn) {
             if (!main) return;
 
-            fn = function() {
-
-               css(main, 'min-height','');
+            fn = function () {
+                css(main, 'min-height', '');
 
                 meta = document.body.getBoundingClientRect();
 
                 if (meta.height < window.innerHeight) {
                     css(main, {
-                        'minHeight': (main.offsetHeight + (window.innerHeight - meta.height))
+                        minHeight: (main.offsetHeight + (window.innerHeight - meta.height))
                     });
                 }
 
@@ -109,8 +104,6 @@ UIkit.component('header', {
             };
 
             on(window, 'load resize', fn());
-
-        })($(sel));
+        }($(sel)));
     });
-
-})(UIkit);
+}(UIkit));

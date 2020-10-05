@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Yorum yapmak için lütfen oturum açın.',
   'Written by %name% on %date%' => '%date% tarihinde %name% tarafından yazılmıştır.',
   'Read more' => 'Devamını oku',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Yorum Yok|{1} %num% Yorum|]1,Inf[ %num% Yorum',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Yorum Yok|{1} %count% Yorum|]1,Inf[ %count% Yorum',
 );

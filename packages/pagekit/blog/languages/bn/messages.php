@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'একটি মন্তব্য করার জন্য লগইন করুন।',
   'Written by %name% on %date%' => 'লিখেছেন %name% %date% তারিখে',
   'Read more' => 'আরও পড়ুন',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} কমেন্ট নাই|{1} %num% কমেন্ট|]1,Inf[ %num% কমেন্টগুলি',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} কমেন্ট নাই|{1} %count% কমেন্ট|]1,Inf[ %count% কমেন্টগুলি',
 );

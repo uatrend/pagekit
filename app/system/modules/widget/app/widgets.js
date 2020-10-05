@@ -1,9 +1,7 @@
-var Widgets = {
+const Widgets = {
 
     data() {
-        return {
-            widgets: [],
-        };
+        return { widgets: [] };
     },
 
     created() {
@@ -14,7 +12,7 @@ var Widgets = {
         /*
          * Moved to widget/app/views/edit.js
          */
-    },
+    }
 
 };
 

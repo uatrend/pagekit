@@ -1,4 +1,4 @@
-var Widgets = {
+const Widgets = {
 
     name: 'widgets',
 
@@ -12,37 +12,33 @@ var Widgets = {
             selected: [],
             config: { positions: [], filter: this.$session.get('widget.filter', {}) },
             unassignedWidgets: [],
-            type: {},
+            type: {}
         }, window.$data);
     },
 
     theme: {
-        hiddenHtmlElements: ['.pk-width-content > div:first-child'],
+        hideEls: ['.pk-width-content > div:first-child'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'title': {
+                title: {
                     scope: 'breadcrumbs',
                     type: 'caption',
-                    caption: () => {
-                        return vm.position ? vm.position.label : vm.$trans('All')
-                    }
+                    caption: () => (vm.position ? vm.position.label : vm.$trans('All'))
                 },
                 addwidget: {
                     scope: 'topmenu-left',
                     type: 'dropdown',
                     caption: 'Add',
                     class: 'uk-button uk-button-text',
-                    icon: { attrs:{ 'uk-icon': 'triangle-down' }},
+                    icon: { attrs: { 'uk-icon': 'triangle-down' } },
                     dropdown: { options: () => 'mode: click' },
                     items: () => Object.values(vm.types).map((type) => {
-                        let props = {
+                        const props = {
                             caption: type.label || type.name,
-                            attrs: {
-                                href: () => vm.$url.route('admin/site/widget/edit', {type: type.name, position:(vm.position ? vm.position.name:'')}),
-                            }
-                        }
-                        return Object.assign({}, type, props)
+                            attrs: { href: () => vm.$url.route('admin/site/widget/edit', { type: type.name, position: (vm.position ? vm.position.name : '') }) }
+                        };
+                        return { ...type, ...props };
                     }),
                     priority: 0
                 },
@@ -50,66 +46,58 @@ var Widgets = {
                     scope: 'navbar-right',
                     type: 'search',
                     class: 'uk-text-small',
-                    domProps: {
-                        value: () => vm.config.filter.search || ''
-                    },
+                    domProps: { value: () => vm.config.filter.search || '' },
                     on: {
-                        input: function(e) {
+                        input(e) {
                             !vm.config.filter.search && vm.$set(vm.config.filter, 'search', '');
-                            vm.config.filter.search = e.target.value
+                            vm.config.filter.search = e.target.value;
                         }
                     }
                 },
-                'actions': {
+                actions: {
                     scope: 'topmenu-left',
                     type: 'dropdown',
                     caption: 'Actions',
                     class: 'uk-button uk-button-text',
-                    icon: {
-                        attrs:{ 'uk-icon': 'triangle-down' },
-                    },
+                    icon: { attrs: { 'uk-icon': 'triangle-down' } },
                     dropdown: { options: () => 'mode:click' },
                     actionIcons: true,
-                    items:() => {
-                        return {
-                            publish: {
-                                on: {click: () => vm.status(1)},
-                            },
-                            unpublish: {
-                                on: { click: () => vm.status(0)} },
-                            copy: {
-                                on: {click: () => vm.copy},
-                            },
-                            move: {
-                                type: 'dropdown',
-                                dropdown: { options: () => 'pos: right-top; delayHide: 0; offset: 25' },
-                                items: () => vm.config.positions.map((pos) => {
-                                    let props = {
-                                        caption: pos.label,
-                                        on: {click: () => vm.move(pos.name, vm.selected)},
-                                    }
-                                    return Object.assign({}, pos, props);
-                                })
-                            },
-                            trash: {
-                                on: {click: () => vm.remove},
-                            }
+                    items: () => ({
+                        publish: { on: { click: () => vm.status(1) } },
+                        unpublish: { on: { click: () => vm.status(0) } },
+                        copy: { on: { click: () => vm.copy } },
+                        move: {
+                            type: 'dropdown',
+                            dropdown: { options: () => 'pos: right-top; delayHide: 0; offset: 0' },
+                            items: () => vm.config.positions.map((pos) => {
+                                const props = {
+                                    caption: `${pos.label} `,
+                                    on: { click: () => vm.move(pos.name, vm.selected) }
+                                };
+                                return { ...pos, ...props };
+                            })
+                        },
+                        remove: {
+                            on: { click: () => vm.remove },
+                            directives: [
+                                {
+                                    name: 'confirm',
+                                    value: 'Delete widget(s)?'
+                                }
+                            ]
                         }
-                    },
+                    }),
                     priority: 2,
-                    // vif: () => vm.selected.length,
-                    disabled: () => !vm.selected.length,
+                    disabled: () => !vm.selected.length
                 },
-                'selected': {
+                selected: {
                     scope: 'topmenu-right',
                     type: 'caption',
-                    caption: () => {
-                        return vm.$transChoice('{1} %count% Widget selected|]1,Inf[ %count% Widgets selected', vm.selected.length, {count:vm.selected.length})
-                    },
+                    caption: () => vm.$transChoice('{1} %count% Widget selected|]1,Inf[ %count% Widgets selected', vm.selected.length, { count: vm.selected.length }),
                     class: 'uk-text-small',
                     vif: !vm.selected.length
-                },
-            }
+                }
+            };
         }
     },
 
@@ -120,10 +108,9 @@ var Widgets = {
     computed: {
 
         filtered_positions() {
-            // replace index.php - positions" track-by="name" v-if="pos | show"
             return _.filter(this.positions, (position) => {
                 if (!this.position) {
-                    return position.name != '_unassigned' ? position.widgets.length : 0;
+                    return position.name !== '_unassigned' ? position.widgets.length : 0;
                 }
 
                 return this.active(position);
@@ -135,9 +122,7 @@ var Widgets = {
         },
 
         unassigned() {
-            return {
-                name: '_unassigned', label: this.$trans('Unassigned'), assigned: _.map(this.unassignedWidgets, 'id'), widgets: this.unassignedWidgets,
-            };
+            return { name: '_unassigned', label: this.$trans('Unassigned'), assigned: _.map(this.unassignedWidgets, 'id'), widgets: this.unassignedWidgets };
         },
 
         empty() {
@@ -157,12 +142,16 @@ var Widgets = {
 
                 options.push({
                     label: menu.label,
-                    options: _.map(opts, node => ({ text: node.title, value: node.id })),
+                    options: _.map(opts, (node) => ({ text: node.title, value: node.id }))
                 });
             }, this);
 
             return options;
         },
+
+        totalWidgets() {
+            return this.unassigned.widgets.length + _.reduce(this.config.positions, (a, b) => a + b.widgets.length, 0);
+        }
 
     },
 
@@ -176,12 +165,12 @@ var Widgets = {
                 },
 
                 assigned(widget) {
-                    return this.positions.some(position => position.assigned.indexOf(widget.id) !== -1);
+                    return this.positions.some((position) => position.assigned.indexOf(widget.id) !== -1);
                 },
 
                 unassigned(widget) {
-                    return !this.positions.some(position => position.assigned.indexOf(widget.id) !== -1);
-                },
+                    return !this.positions.some((position) => position.assigned.indexOf(widget.id) !== -1);
+                }
 
             };
 
@@ -196,7 +185,7 @@ var Widgets = {
         },
 
         active(position) {
-            return this.position === position || (position && this.position && this.position.name == position.name);
+            return this.position === position || (position && this.position && this.position.name === position.name);
         },
 
         select(position) {
@@ -268,7 +257,7 @@ var Widgets = {
 
         infilter(widget) {
             if (this.config.filter.search) {
-                return widget.title.toLowerCase().indexOf(this.config.filter.search.toLowerCase()) != -1;
+                return widget.title.toLowerCase().indexOf(this.config.filter.search.toLowerCase()) !== -1;
             }
 
             if (this.config.filter.node && widget.nodes.length) {
@@ -294,7 +283,8 @@ var Widgets = {
             } if (widget.nodes.length > 1) {
                 return this.$trans('Selected');
             }
-            return (_.find(this.config.nodes, 'id', widget.nodes[0]) || {}).title;
+
+            return (_.find(this.config.nodes, { id: widget.nodes[0] }) || {}).title;
         },
 
         isSelected(id) {
@@ -309,7 +299,7 @@ var Widgets = {
             }
 
             return type.label || type.name;
-        },
+        }
 
     },
 
@@ -318,15 +308,15 @@ var Widgets = {
             handler(filter) {
                 this.$session.set('widget.filter', filter);
             },
-            deep: true,
-        },
+            deep: true
+        }
     },
 
     filters: {
 
         show(position) {
             if (!this.position) {
-                return position.name != '_unassigned' ? position.widgets.length : 0;
+                return position.name !== '_unassigned' ? position.widgets.length : 0;
             }
 
             return this.active(position);
@@ -345,8 +335,8 @@ var Widgets = {
         assigned(ids) {
             return ids.map(function (id) {
                 return _.find(this.widgets, 'id', id);
-            }, this).filter(widget => widget !== undefined);
-        },
+            }, this).filter((widget) => widget !== undefined);
+        }
 
     },
 
@@ -357,21 +347,19 @@ var Widgets = {
             params: ['group'],
 
             bind(el, binding, vnode) {
-                const vm = this;
-
                 // disable sorting on unassigned position
-                if (el.getAttribute('data-position') == '_unassigned') {
+                if (el.getAttribute('data-position') === '_unassigned') {
                     return;
                 }
 
                 binding.handler = function (e, sortable, element) {
                     const action = e.type;
-                    if (action == 'added' || action == 'moved') {
+                    if (action === 'added' || action === 'moved') {
                         vnode.context.assign(UIkit.util.data(el, 'position'), _.map(binding.def.serialize(el, binding, vnode), 'id'));
                     }
-                    if (action == 'removed') {
+                    if (action === 'removed') {
                         if (!sortable.$el.children.length) {
-                            console.log('!!!'); element.remove();
+                            element.remove();
                         }
                     }
                 };
@@ -393,12 +381,12 @@ var Widgets = {
 
                 UIkit.util.toNodes(el.children).forEach((child, j) => {
                     item = {};
-                    for (var i = 0, attr, val; i < child.attributes.length; i++) {
+                    for (let i = 0, attr, val; i < child.attributes.length; i++) {
                         attribute = child.attributes[i];
                         if (attribute.name.indexOf('data-') === 0) {
                             attr = attribute.name.substr(5);
                             val = vm.str2json(attribute.value);
-                            item[attr] = (val || attribute.value == 'false' || attribute.value == '0') ? val : attribute.value;
+                            item[attr] = (val || attribute.value === 'false' || attribute.value === '0') ? val : attribute.value;
                         }
                     }
                     data.push(item);
@@ -416,13 +404,13 @@ var Widgets = {
                             // replacing single quote wrapped ones to double quote
                             .replace(/'([^']+)'/g, (_, $1) => `"${$1}"`));
                     }
-                    return (new Function('', `var json = ${str}; return JSON.parse(JSON.stringify(json));`))();
+                    return (new Function('', `var json = ${str}; return JSON.parse(JSON.stringify(json));`))(); // eslint-disable-line no-new-func
                 } catch (e) { return false; }
-            },
+            }
 
-        },
+        }
 
-    },
+    }
 
 };
 

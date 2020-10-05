@@ -1,59 +1,55 @@
+import LocaleComponent from './components/locale.vue';
+import SystemComponent from './components/system.vue';
+import MiscComponent from './components/misc.vue';
+
 window.Settings = {
 
     name: 'settings',
 
     el: '#settings',
 
-    mixins: [Theme.Mixins.Helper, Theme.Mixins.Elements],
+    mixins: [Theme.Mixins.Helper, Theme.Mixins.UIElements],
 
     data() {
-        return _.extend({
-            keysDict: {},
-        }, window.$settings);
+        return {
+            settings: _.merge({}, window.$settings)
+        };
     },
 
     theme: {
-        hiddenHtmlElements: ['.pk-width-content li > div > div.uk-flex'],
+        hideEls: ['.pk-width-content li > div > div.uk-flex'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'title': {
+                title: {
                     scope: 'breadcrumbs',
                     type: 'caption',
                     caption: () => {
-                        let trans = vm.$options.filters.trans,
-                            activeTab = vm.$theme.activeTab('leftTab', vm),
-                            section = vm.sections.filter((section)=>section.name === activeTab)[0];
-
-                        return vm.$trans(section.label);
+                        const activeTab = vm.$theme.getActiveTab('leftTab', vm);
+                        const section = vm.sections.filter((s) => s.name === activeTab)[0];
+                        return section && vm.$trans(section.label);
                     }
                 },
-                'submit': {
+                submit: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Save',
                     class: 'uk-button uk-button-primary',
-                    on: {click: () => vm.save()},
-                    priority: 0,
+                    on: { click: () => vm.save() },
+                    priority: 0
                 }
-            }
-        },
-    },
-
-    created() {
-        this.toHtml5Keys(this.config, this.options);
-        this.$theme.$tabs('leftTab', '#settings .uk-nav', { connect: '.settings-tab', state: true });
+            };
+        }
     },
 
     mounted() {
-        // UIkit.switcher(this.$refs.tab, { connect: '.settings-tab' });
+        this.$ui.tab('leftTab', this.$refs.tab, { connect: this.$refs.content, state: true });
     },
 
     computed: {
 
         sections() {
             const sections = [];
-
             _.forIn(this.$options.components, (component, name) => {
                 const { section } = component;
 
@@ -62,59 +58,43 @@ window.Settings = {
                     sections.push(section);
                 }
             });
-
-            return sections;
-        },
+            return _.orderBy(sections, 'priority');
+        }
 
     },
 
     methods: {
-        toHtml5Keys() {
-            const vm = this;
-            Array.from(arguments).forEach((obj) => {
-                Object.keys(obj).forEach((key) => {
-                    if (key.indexOf('/') != -1) {
-                        new_key = key.replace(/\//g, '-');
-                        vm.keysDict[new_key] = key;
-                        obj[new_key] = obj[key];
-                        delete obj[key];
-                    }
-                });
-            });
-        },
-
-        toOrigin(data) {
-            const vm = this; const
-                origin = _.extend({}, data);
-            Object.keys(origin).forEach((key) => {
-                if (vm.keysDict.hasOwnProperty(key)) {
-                    origin[vm.keysDict[key]] = origin[key];
-                    delete origin[key];
-                }
-            });
-
-            return origin;
-        },
 
         save() {
-            this.$trigger('save:settings', this.$data);
-
-            this.$resource('admin/system/settings/save').save({ config: this.toOrigin(this.config), options: this.toOrigin(this.options) }).then(function () {
+            this.$trigger('settings-save', this.settings);
+            this.$resource('admin/system/settings/save').save({ config: this.settings.config, options: this.settings.options }).then(function () {
                 this.$notify('Settings saved.');
             }, function (res) {
                 this.$notify(res.data, 'danger');
             });
         },
 
+        get(name) {
+            return name.replace('-', '/');
+        },
+
+        changed($event, settings) {
+            this.$set(this.settings, settings.key, settings.data);
+        }
+
     },
 
     components: {
-
-        locale: require('./components/locale.vue').default,
-        system: require('./components/system.vue').default,
-        misc  : require('./components/misc.vue').default
-
+        locale: LocaleComponent,
+        system: SystemComponent,
+        misc: MiscComponent
     },
+
+    events: {
+
+        'settings-changed': 'changed'
+
+    }
 
 };
 

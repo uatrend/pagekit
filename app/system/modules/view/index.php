@@ -71,7 +71,7 @@ return [
             $scripts->register('vue-dist', 'app/assets/vue/dist/' . ($app->debug() ? 'vue.js' : 'vue.min.js'));
             $scripts->register('locale', $app->url('@system/intl', ['locale' => $app->module('system/intl')->getLocale(), 'v' => $scripts->getFactory()->getVersion()]), [], ['type' => 'url']);
             $scripts->register('uikit', 'app/assets/uikit/dist/js/' . ($app->debug() ? 'uikit.js' : 'uikit.min.js'));
-            $scripts->register('uikit-icons', 'app/assets/uikit/dist/js/' . ($app->debug() ? 'uikit-icons.js' : 'uikit-icons.min.js'), 'uikit');
+            $scripts->register('uikit-icons', 'app/system/assets/js/' . ($app->debug() ? 'uikit-icons.js' : 'uikit-icons.min.js'), 'uikit');
         }
 
     ]

@@ -4,74 +4,68 @@
 
 export default {
 
-    name: "plugin-image",
+    name: 'plugin-image',
 
     plugin: true,
 
     created() {
-
         if (typeof tinyMCE === 'undefined') {
             return;
         }
 
-        var vm = this;
+        const vm = this;
+        let image;
 
         this.$parent.editor.plugins.push('-pagekitImage');
-        tinyMCE.PluginManager.add('pagekitImage', function (editor) {
-
-            var showDialog = function () {
-
-                var element = editor.selection.getNode();
+        tinyMCE.PluginManager.add('pagekitImage', (editor) => {
+            const showDialog = function () {
+                let element = editor.selection.getNode();
 
                 if (element.nodeName === 'IMG' && !element.hasAttribute('data-mce-object')) {
                     editor.selection.select(element);
-                    var image = {src: element.attributes.src.nodeValue, alt: element.attributes.alt.nodeValue};
+                    image = { src: element.attributes.src.nodeValue, alt: element.attributes.alt.nodeValue };
                 } else {
                     element = new Image() || document.createElement('img');
                     image = {};
                 }
 
-                var Picker = Vue.extend(vm.$parent.$options.utils['image-picker']);
+                const Picker = Vue.extend(vm.$parent.$options.utils['image-picker']);
 
                 new Picker({
                     name: 'image-picker',
                     parent: vm,
-                    data: {
-                        image: {data: image}
-                    }
+                    data: { image: { data: image } }
                 }).$mount()
-                  .$on('select', function (image) {
-
+                    .$on('select', (img) => {
                         element.setAttribute('src', '');
                         element.setAttribute('alt', '');
 
-                        var attributes = Object.keys(element.attributes).reduce(function (previous, key) {
-                            var name = element.attributes[key].name;
+                        const attributes = Object.keys(element.attributes).reduce((previous, key) => {
+                            const name = element.attributes[key].name;
 
                             if (name === 'data-mce-src') {
                                 return previous;
                             }
 
-                            return previous + ' ' + name + '="' + (image.data[name] || element.attributes[key].nodeValue) + '"';
+                            return `${previous} ${name}="${img.data[name] || element.attributes[key].nodeValue}"`;
                         }, '');
 
                         editor.selection.setContent(
-                            '<img' + attributes + '>'
+                            `<img${attributes}>`
                         );
 
                         editor.fire('change');
-
                     });
             };
 
             editor.ui.registry.addToggleButton('image', {
                 tooltip: 'Insert/edit image',
                 icon: 'image',
-                onAction: function () {
+                onAction() {
                     showDialog();
                 },
-                onSetup: function(api) {
-                    return editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', function(state){
+                onSetup(api) {
+                    return editor.selection.selectorChangedWithUnbind('img:not([data-mce-object],[data-mce-placeholder]),figure.image', (state) => {
                         api.setActive(state);
                         if (state) showDialog();
                     }).unbind;
@@ -82,11 +76,10 @@ export default {
                 icon: 'image',
                 text: 'Insert/edit image',
                 context: 'insert',
-                onAction: function() {
+                onAction() {
                     showDialog();
                 }
             });
-
         });
     }
 

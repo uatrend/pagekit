@@ -24,7 +24,7 @@
             <div class="uk-margin">
                 <label for="form-meta-image" class="uk-form-label">{{ 'Image' | trans }}</label>
                 <div class="uk-form-controls">
-                    <input-image v-model="config.meta.image" :source.sync="config.meta.image" input-class="uk-form-width-large" />
+                    <input-image v-model="config.meta.image" :source.sync="config.meta.image" class-name="uk-form-width-large" />
                 </div>
             </div>
 
@@ -47,15 +47,17 @@
 
 <script>
 
+import SiteMixin from '../mixins/site-mixin';
+
 export default {
+
+    mixins: [SiteMixin],
 
     section: {
         label: 'Meta',
-        icon: 'pk-icon-large-meta',
-        priority: 50,
-    },
-
-    props: ['config'],
+        icon: 'meta',
+        priority: 50
+    }
 
 };
 

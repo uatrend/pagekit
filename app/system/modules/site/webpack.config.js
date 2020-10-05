@@ -1,18 +1,16 @@
 module.exports = [
 
     {
-        entry: {
-            'panel-link': './app/components/panel-link.vue',
-        },
+        entry: { 'panel-link': './app/components/panel-link.vue' },
         output: {
             filename: './app/bundle/[name].js',
-            library: 'Links',
+            library: 'Links'
         },
         module: {
             rules: [
-                { test: /\.vue$/, use: 'vue-loader' },
-            ],
-        },
+                { test: /\.vue$/, use: 'vue-loader' }
+            ]
+        }
     },
 
     {
@@ -26,17 +24,15 @@ module.exports = [
             'node-meta': './app/components/node-meta.vue',
             settings: './app/views/settings',
             'widget-menu': './app/components/widget-menu.vue',
-            'widget-text': './app/components/widget-text.vue',
+            'widget-text': './app/components/widget-text.vue'
         },
-        output: {
-            filename: './app/bundle/[name].js',
-        },
+        output: { filename: './app/bundle/[name].js' },
         module: {
             rules: [
                 { test: /\.html$/, use: 'html-loader' },
-                { test: /\.vue$/, use: 'vue-loader' },
-            ],
-        },
-    },
+                { test: /\.vue$/, use: 'vue-loader' }
+            ]
+        }
+    }
 
 ];

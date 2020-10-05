@@ -37,5 +37,5 @@
   'Header' => 'Intestazione',
   'Written by %name% on %date%' => 'Scritto da %name% il %date%',
   'Read more' => 'Leggi tutto',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} 0 Commenti|{1} %num% Commenti|]1,Inf[ %num% Commenti',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} 0 Commenti|{1} %count% Commenti|]1,Inf[ %count% Commenti',
 );

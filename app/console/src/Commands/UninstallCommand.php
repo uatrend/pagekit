@@ -35,5 +35,8 @@ class UninstallCommand extends Command
     {
         $updater = new PackageManager($output);
         $updater->uninstall((array) $this->argument('packages'));
+
+        // TODO: Callback
+        return 0;
     }
 }

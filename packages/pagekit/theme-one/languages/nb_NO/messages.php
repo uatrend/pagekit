@@ -37,5 +37,5 @@
   'Header' => 'Overskrift',
   'Written by %name% on %date%' => 'Skrevet av %name% den %date%',
   'Read more' => 'Les mer',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Ingen kommentarer|{1} %num% kommentar|]1,Inf[ %num% kommentarer',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Ingen kommentarer|{1} %count% kommentar|]1,Inf[ %count% kommentarer',
 );

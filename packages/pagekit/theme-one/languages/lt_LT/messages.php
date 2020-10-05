@@ -37,5 +37,5 @@
   'Header' => 'Viršutinė sekcija',
   'Written by %name% on %date%' => 'Parašyta pagal %name%, %date%',
   'Read more' => 'Skaityti toliau',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Komentarų nėra|{1} %num% komentaras|]1,Inf[ %num% komentarų',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Komentarų nėra|{1} %count% komentaras|]1,Inf[ %count% komentarų',
 );

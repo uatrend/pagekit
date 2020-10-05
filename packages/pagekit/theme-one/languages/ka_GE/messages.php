@@ -37,5 +37,5 @@
   'Header' => 'სათაური',
   'Written by %name% on %date%' => 'პოსტის ავტორი: %name%, გამოქვეყნების თარიღი:  %date% ',
   'Read more' => 'კიდევ...',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '0} უკომენტაროდ |{1} %num% კომენტარი|]1,Inf[ %num% კომენტარი',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '0} უკომენტაროდ |{1} %count% კომენტარი|]1,Inf[ %count% კომენტარი',
 );

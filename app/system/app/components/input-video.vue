@@ -1,33 +1,23 @@
 <template>
     <div>
-        <a v-if="!source" class="uk-placeholder uk-text-center uk-display-block uk-margin-remove" @click.prevent="pick">
-            <img width="60" height="60" :alt="'Placeholder Image' | trans" :src="$url('app/system/assets/images/placeholder-video.svg')">
-            <p class="uk-text-muted uk-margin-small-top">{{ 'Select Video' | trans }}</p>
+        <a v-if="!source" class="uk-placeholder uk-display-block uk-text-muted uk-text-center uk-margin-remove" @click.prevent="pick">
+            <span uk-icon="video" ratio="3" />
+            <p class="uk-text-small uk-margin-small-top">{{ 'Select Video' | trans }}</p>
         </a>
 
-        <div v-else :class="getClass()">
+        <div v-else :class="['uk-form-width-large uk-inline-clip uk-visible-toggle', className]">
             <img v-if="image" :src="image">
             <video v-if="video" controls class="uk-width-1-1" :src="video" uk-video="autoplay: false" />
-
-            <div class="uk-card-badge pk-panel-badge uk-invisible-hover">
-                <ul class="uk-subnav pk-subnav-icon">
+            <div class="uk-invisible-hover uk-position-top-right pk-panel-badge">
+                <ul class="uk-iconnav">
                     <li><a class="uk-icon-link" uk-icon="icon: file-edit" :title="'Edit' | trans" uk-tooltip="delay: 500" @click.prevent="pick" /></li>
-                    <li>
-                        <a
-                            v-confirm="'Reset video?'"
-                            class="uk-icon-link"
-                            uk-icon="icon: trash"
-                            :title="'Delete' | trans"
-                            uk-tooltip="delay: 500"
-                            @click.prevent="remove"
-                        />
-                    </li>
+                    <li><a v-confirm="'Reset video?'" class="uk-icon-link" uk-icon="icon: trash" :title="'Delete' | trans" uk-tooltip="delay: 500" @click.prevent="remove" /></li>
                 </ul>
             </div>
         </div>
 
         <v-modal ref="modal" large>
-            <panel-finder ref="finder" :root="storage" :modal="true" @select:finder="selectFinder" />
+            <panel-finder ref="finder" :root="storage" :modal="true" @finder-select="selectFinder" />
 
             <div class="uk-modal-footer">
                 <div class="uk-flex uk-flex-middle uk-flex-between">
@@ -53,16 +43,17 @@
 
 <script>
 
-export default {
+const InputVideo = {
 
-    props: ['source'],
+    props: ['value', 'className'],
 
     data() {
         return _.merge({
             image: undefined,
             video: undefined,
+            source: this.value,
             choice: '',
-            finder: {},
+            finder: {}
         }, $pagekit);
     },
 
@@ -70,8 +61,16 @@ export default {
 
         isFinder() {
             return !!((this.finder.hasOwnProperty('selected') && this.finder.selected));
-        },
+        }
 
+    },
+
+    watch: {
+
+        source: {
+            handler: 'update',
+            immediate: true
+        }
     },
 
     mounted() {
@@ -79,13 +78,6 @@ export default {
         UIkit.util.on(this.$refs.modal.$el, 'shown', () => {
             vm.finder = vm.$refs.finder;
         });
-    },
-
-    watch: {
-        source: {
-            handler: 'update',
-            immediate: true,
-        },
     },
 
     methods: {
@@ -99,56 +91,56 @@ export default {
             return selected && selected.length === 1 && this.$refs.finder.isVideo(selected[0]);
         },
 
-        getClass() {
-            return `uk-form-width-large uk-inline-clip uk-transition-toggle uk-visible-toggle ${this.class}`;
-        },
-
         pick() {
             this.$refs.modal.open();
         },
 
         select() {
-            const source = decodeURI(this.$refs.finder.getSelected()[0]);
-            this.$emit('input', source);
+            this.source = decodeURI(this.$refs.finder.getSelected()[0]);
+            this.$emit('input', this.source);
+            this.$emit('video-selected', this.source);
             this.$refs.finder.removeSelection();
             this.$refs.modal.close();
         },
 
         remove() {
-            // this.source = '';
-            this.$emit('input', '');
+            this.source = '';
+            this.$emit('input', this.source);
+            this.$emit('video-removed');
         },
 
         update(src) {
-            let matches;
+            const matches = (src.match(/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/));
 
-            this.$set(this, 'image', undefined);
-            this.$set(this, 'video', undefined);
+            this.image = undefined;
+            this.video = undefined;
 
-            if (matches = (src.match(/.*(?:youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=)([^#\&\?]*).*/))) {
+            if (matches) {
                 this.image = `//img.youtube.com/vi/${matches[1]}/hqdefault.jpg`;
             } else if (src.match(/https?:\/\/(?:www\.|player\.)?vimeo.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)(?:$|\/|\?)/)) {
-                this.$http.get('http://vimeo.com/api/oembed.json', { params: { url: src }, cache: 10 }).then(function (res) {
+                this.$http.get('http://vimeo.com/api/oembed.json', { params: { url: src }, cache: 10 }).then((res) => {
                     const { data } = res;
                     this.image = data.thumbnail_url;
                 });
             } else {
                 this.video = this.$url(src);
             }
-        },
+        }
 
-    },
+    }
 
 };
 
-Vue.component('input-video', (resolve, reject) => {
+Vue.component('InputVideo', (resolve, reject) => {
     Vue.asset({
         js: [
-            'app/system/modules/finder/app/bundle/panel-finder.js',
-        ],
+            'app/system/modules/finder/app/bundle/panel-finder.js'
+        ]
     }).then(() => {
-        resolve(require('./input-video.vue'));
+        resolve(InputVideo);
     });
 });
+
+export default InputVideo;
 
 </script>

@@ -2,7 +2,7 @@
     <div>
         <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
             <div>
-                <h2 class="uk-margin-remove">
+                <h2 class="uk-h3 uk-margin-remove">
                     {{ 'Cache' | trans }}
                 </h2>
             </div>
@@ -17,10 +17,7 @@
             <label class="uk-form-label">{{ 'Cache' | trans }}</label>
             <div class="uk-form-controls uk-form-controls-text">
                 <p v-for="(cache, key) in caches" :key="key" class="uk-margin-small">
-                    <label>
-                        <input v-model="config.caches.cache.storage" class="uk-radio" type="radio" :value="key" :disabled="!cache.supported" />
-                        <span class="uk-margin-small-left">{{ cache.name }}</span>
-                    </label>
+                    <label><input v-model="moduleConfig.caches.cache.storage" class="uk-radio" type="radio" :value="key" :disabled="!cache.supported"> {{ cache.name }}</label>
                 </p>
             </div>
         </div>
@@ -29,7 +26,7 @@
             <label class="uk-form-label">{{ 'Developer' | trans }}</label>
             <div class="uk-form-controls uk-form-controls-text">
                 <p class="uk-margin-small">
-                    <label><input v-model="config.nocache" class="uk-checkbox" type="checkbox" value="1" /><span class="uk-margin-small-left">{{ 'Disable cache' | trans }}</span></label>
+                    <label><input v-model="moduleConfig.nocache" class="uk-checkbox" type="checkbox" value="1"> {{ 'Disable cache' | trans }}</label>
                 </p>
                 <p>
                     <button class="uk-button uk-button-primary" type="button" @click.prevent="open">
@@ -42,17 +39,19 @@
         <v-modal ref="modal">
             <form class="uk-form-stacked">
                 <div class="uk-modal-header">
-                    <h2>{{ 'Select Cache to Clear' | trans }}</h2>
+                    <h2 class="uk-h4">
+                        {{ 'Select Cache to Clear' | trans }}
+                    </h2>
                 </div>
 
                 <div class="uk-modal-body">
                     <div class="uk-margin">
                         <p class="uk-margin-small">
-                            <label><input v-model="cache.cache" class="uk-checkbox" type="checkbox" /><span class="uk-margin-small-left">{{ 'System Cache' | trans }}</span></label>
+                            <label><input v-model="cache.cache" class="uk-checkbox" type="checkbox"> {{ 'System Cache' | trans }}</label>
                         </p>
 
                         <p class="uk-margin-small">
-                            <label><input v-model="cache.temp" class="uk-checkbox" type="checkbox" /><span class="uk-margin-small-left">{{ 'Temporary Files' | trans }}</span></label>
+                            <label><input v-model="cache.temp" class="uk-checkbox" type="checkbox"> {{ 'Temporary Files' | trans }}</label>
                         </p>
                     </div>
                 </div>
@@ -72,17 +71,17 @@
 
 <script>
 
-var Cache = {
+import SettingsMixin from '@system/modules/settings/app/mixins/settings-mixin';
 
-    mixins: [Theme.Mixins.Helper],
+const Cache = {
+
+    mixins: [SettingsMixin, Theme.Mixins.Helper],
 
     section: {
         label: 'Cache',
-        icon: 'pk-icon-large-bolt',
-        priority: 30,
+        icon: 'bolt',
+        priority: 30
     },
-
-    props: ['config', 'options'],
 
     data() {
         return {
@@ -92,24 +91,25 @@ var Cache = {
     },
 
     theme: {
-        hiddenHtmlElements() {
+        hideEls() {
             return this.$el.querySelectorAll('.uk-button-primary');
         },
         elements() {
-            var vm = this;
+            const vm = this;
+
             return {
-                'clearcache': {
+                clearcache: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Clear Cache',
                     class: 'uk-button tm-button-success',
-                    on: {click: () => vm.open()},
+                    on: { click: () => vm.open() },
                     priority: 0,
-                    vif: () => vm.$theme.activeTab('leftTab', true),
-                    watch: () => vm.$theme.activeTab('leftTab')
+                    vif: () => vm.$theme.getActiveTab('leftTab', true),
+                    watch: () => vm.$theme.getActiveTab('leftTab')
                 }
-            }
-        },
+            };
+        }
     },
 
     methods: {
@@ -125,9 +125,9 @@ var Cache = {
             });
 
             this.$refs.modal.close();
-        },
+        }
 
-    },
+    }
 
 };
 

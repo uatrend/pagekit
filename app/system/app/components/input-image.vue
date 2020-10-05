@@ -1,30 +1,25 @@
 <template>
     <div>
-        <div v-if="!source" :class="[inputClass, 'uk-inline-clip']" @click.prevent="pick">
-            <a>
-                <div class="uk-placeholder uk-text-center uk-margin-remove">
-                    <img width="60" height="60" :alt="'Placeholder Image' | trans" :src="$url('app/system/assets/images/placeholder-image.svg')">
-                    <p class="uk-text-muted uk-margin-small-top">{{ title | trans }}</p>
-                </div>
+        <div v-if="!source" :class="['uk-inline-clip', className]" @click.prevent="pick">
+            <a class="uk-placeholder uk-display-block uk-text-muted uk-text-center uk-margin-remove">
+                <span uk-icon="image" ratio="3" />
+                <p class="uk-text-small uk-margin-small-top">{{ title | trans }}</p>
             </a>
         </div>
 
-        <div v-else :class="[inputClass, 'uk-inline-clip uk-position-relative uk-transition-toggle uk-visible-toggle']">
-            <img :src="source.indexOf('blob:') !== 0 ? $url(source) : source">
-
-            <a class="uk-transition-fade uk-position-cover pk-thumbnail-overlay uk-flex uk-flex-center uk-flex-middle" @click.prevent="pick" />
-
-            <div class="uk-card-badge pk-panel-badge uk-invisible-hover">
-                <ul class="uk-subnav pk-subnav-icon">
-                    <li>
-                        <a class="uk-icon-link" uk-icon="trash" :title="'Delete' | trans" uk-tooltip="delay: 500" @click.prevent="remove" v-confirm="'Reset image?'"></a>
-                    </li>
+        <div v-else :class="['uk-inline-clip uk-transition-toggle uk-visible-toggle', className]">
+            <img :data-src="source.indexOf('blob:') !== 0 ? $url(source) : source" uk-img>
+            <div class="uk-transition-fade uk-position-cover uk-overlay uk-overlay-default" />
+            <a class="uk-position-cover" @click.prevent="pick" />
+            <div class="uk-invisible-hover uk-position-top-right pk-panel-badge">
+                <ul class="uk-iconnav">
+                    <li><a v-confirm="'Reset image?'" class="uk-icon-link" uk-icon="trash" :title="'Delete' | trans" uk-tooltip="delay: 500" @click.prevent="remove" /></li>
                 </ul>
             </div>
         </div>
 
         <div v-if="inputField" class="uk-margin-small-top">
-            <div :class="[inputClass, 'uk-inline']">
+            <div :class="['uk-inline', className]">
                 <a class="uk-form-icon" uk-icon="icon: image" @click.prevent="pick" />
                 <a v-if="source" v-confirm="'Reset image?'" class="uk-form-icon uk-form-icon-flip" uk-icon="icon: close" @click.prevent="source=''" />
                 <input v-model="source" type="text" class="uk-input">
@@ -32,7 +27,7 @@
         </div>
 
         <v-modal ref="modal" large :options="{bgClose: false}">
-            <panel-finder ref="finder" :root="storage" :modal="true" @select:finder="selectFinder" />
+            <panel-finder ref="finder" :root="storage" :modal="true" @finder-select="selectFinder" />
 
             <div class="uk-modal-footer">
                 <div class="uk-flex uk-flex-middle uk-flex-between">
@@ -58,27 +53,37 @@
 
 <script>
 
-export default {
+import FinderHelperMixin from '@system/modules/finder/app/mixins/finder-helper-mixin';
+
+const InputImage = {
+
+    mixins: [FinderHelperMixin],
 
     props: {
-        inputClass: { default: '' },
+        className: { default: '' },
         value: { default: '' },
         title: { default: 'Select Image' },
-        inputField: { default: true, type: Boolean },
+        inputField: { default: true, type: Boolean }
     },
 
     data() {
         return _.merge({
-            choice: '',
             source: this.value,
-            finder: {},
+            choice: '',
+            finder: {}
         }, $pagekit);
     },
 
     computed: {
         isFinder() {
             return !!((this.finder.hasOwnProperty('selected') && this.finder.selected));
-        },
+        }
+    },
+
+    watch: {
+        source(src) {
+            this.$emit('input', src);
+        }
     },
 
     mounted() {
@@ -99,41 +104,37 @@ export default {
 
         select() {
             const old_source = this.source;
-            this.source = decodeURI(this.$refs.finder.getSelected()[0]);
+            this.source = decodeURIComponent(this.$refs.finder.getSelected()[0]);
             this.$emit('input', this.source);
-            this.$emit('image:selected', this.source, old_source);
+            this.$emit('image-selected', this.source, old_source);
             this.$refs.finder.removeSelection();
             this.$refs.modal.close();
         },
 
         remove() {
             this.source = '';
-            // this.$dispatch('image-removed');
-            this.$emit('image:removed');
+            this.$emit('input', this.source);
+            this.$emit('image-removed');
         },
 
         hasSelection() {
             const selected = this.$refs.finder.getSelected();
             return selected.length === 1 && this.$refs.finder.isImage(selected[0]);
-        },
-    },
-
-    watch: {
-        source(src) {
-            this.$emit('input', src);
-        },
-    },
+        }
+    }
 
 };
 
-Vue.component('input-image', (resolve, reject) => {
+Vue.component('InputImage', (resolve, reject) => {
     Vue.asset({
         js: [
-            'app/system/modules/finder/app/bundle/panel-finder.js',
-        ],
+            'app/system/modules/finder/app/bundle/panel-finder.js'
+        ]
     }).then(() => {
-        resolve(require('./input-image.vue'));
+        resolve(InputImage);
     });
 });
+
+export default InputImage;
 
 </script>

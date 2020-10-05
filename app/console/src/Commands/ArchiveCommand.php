@@ -72,12 +72,23 @@ class ArchiveCommand extends Command
         $tempTarget = sys_get_temp_dir().'/composer_archive'.uniqid().'.zip';
         $filesystem->ensureDirectoryExists(dirname($tempTarget));
 
+        if (!is_dir($sourcePath)) {
+            $this->error(sprintf('Package \'%s\' doesn\'t exist.', $this->argument('name')));
+            return 1;
+        }
+
+        $this->info(sprintf('Archiving \'%s\'', $this->argument('name')));
+
         $archivePath = (new PharArchiver())->archive($sourcePath, $tempTarget, 'zip', $excludes);
         rename($archivePath, $target);
 
         $filesystem->remove($tempTarget);
 
-        return $target;
+        $name = basename($target);
+        $size = filesize($target) / 1024 / 1024;
+
+        //TODO: Callback. Prev - return $target;
+        return (int) $this->line(sprintf('Archive created: %s (%.2f MB)', $name, $size));
     }
 
     protected function getPackageFilename($name)

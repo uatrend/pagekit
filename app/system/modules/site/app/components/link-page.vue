@@ -1,6 +1,6 @@
 <template>
     <div class="uk-margin">
-        <label class="uk-form-label">{{ 'View' | trans }}</label>
+        <label class="uk-form-label">{{ 'Pages' | trans }}</label>
         <div class="uk-form-controls">
             <select v-model="page" class="uk-width-1-1 uk-select">
                 <option v-for="p in pages" :key="p.id" :value="p.id">
@@ -13,18 +13,14 @@
 
 <script>
 
-var LinkPage = {
+const LinkPage = {
 
-    link: {
-        label: 'Page',
-    },
-
-    props: ['link'],
+    link: { label: 'Page' },
 
     data() {
         return {
             pages: [],
-            page: '',
+            page: ''
         };
     },
 
@@ -41,10 +37,10 @@ var LinkPage = {
     watch: {
 
         page(page) {
-            this.$parent.link = `@page/${page}`;
-        },
+            this.$emit('input', `@page/${page}`);
+        }
 
-    },
+    }
 
 };
 

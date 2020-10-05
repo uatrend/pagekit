@@ -1,4 +1,4 @@
-var Settings = {
+const Settings = {
 
     el: '#settings',
 
@@ -9,19 +9,19 @@ var Settings = {
     },
 
     theme: {
-        hiddenHtmlElements: ['.pk-width-content li > div.uk-flex'],
+        hideEls: ['.pk-width-content li > div.uk-flex'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'submit': {
+                submit: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Save',
                     class: 'uk-button uk-button-primary',
-                    on: {click: () => vm.save()},
-                    priority: 0,
+                    on: { click: () => vm.save() },
+                    priority: 0
                 }
-            }
+            };
         }
     },
 
@@ -33,9 +33,9 @@ var Settings = {
             }, function (res) {
                 this.$notify(res.data, 'danger');
             });
-        },
+        }
 
-    },
+    }
 
 };
 

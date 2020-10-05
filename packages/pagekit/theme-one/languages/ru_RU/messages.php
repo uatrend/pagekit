@@ -37,5 +37,6 @@
   'Header' => 'Header',
   'Written by %name% on %date%' => '%name%, %date%',
   'Read more' => 'Читать далее',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Нет комментариев|{1} %num% комментарий|]1,Inf[ %num% комментариев',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Нет комментариев|{1} %count% комментарий|]1,Inf[ %count% комментариев',
+  '{apples, plural, =0 {There are no apples} one {There is one apple...} other {There are # apples!} }' => '{apples, plural, =0 {Нет яблок} one {Одно яблоко...} other {Тут # яблок!} }'
 );

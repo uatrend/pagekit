@@ -37,5 +37,5 @@
   'Header' => 'الرأس',
   'Written by %name% on %date%' => 'الكتابة على الشكل %name% الى %date%',
   'Read more' => 'إقرأ المزيد',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} لا تعليق {1} %num% التعليق ',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} لا تعليق {1} %count% التعليق ',
 );

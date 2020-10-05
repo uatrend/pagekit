@@ -4,20 +4,20 @@
     <div class="pk-width-sidebar">
 
         <div class="uk-panel">
-            <ul class="uk-nav uk-nav-default pk-nav-large" uk-switcher="connect: #tab-content">
-                <li class="uk-active"><a><span class="pk-icon-large-server uk-margin-right"></span><span class="uk-text-middle">{{ 'System' | trans }}</span></a></li>
-                <li><a><span class="pk-icon-large-code uk-margin-right"></span><span class="uk-text-middle">{{ 'PHP' | trans }}</span></a></li>
-                <li><a><span class="pk-icon-large-database uk-margin-right"></span><span class="uk-text-middle">{{ 'Database' | trans }}</span></a></li>
-                <li><a><span class="pk-icon-large-lock-file uk-margin-right"></span><span class="uk-text-middle">{{ 'Permissions' | trans }}</span></a></li>
+            <ul class="uk-nav uk-nav-default pk-nav-large" uk-switcher="connect: .uk-switcher">
+                <li><a><span class="uk-margin-right" uk-icon="server" ratio="1.25"></span><span class="uk-text-middle">{{ 'System' | trans }}</span></a></li>
+                <li><a><span class="uk-margin-right" uk-icon="code" ratio="1.25"></span><span class="uk-text-middle">{{ 'PHP' | trans }}</span></a></li>
+                <li><a><span class="uk-margin-right" uk-icon="database" ratio="1.25"></span><span class="uk-text-middle">{{ 'Database' | trans }}</span></a></li>
+                <li><a><span class="uk-margin-right" uk-icon="lock-file" ratio="1.25"></span><span class="uk-text-middle">{{ 'Permissions' | trans }}</span></a></li>
             </ul>
         </div>
 
     </div>
     <div class="pk-width-content">
 
-        <ul id="tab-content" class="uk-switcher uk-margin">
+        <ul class="uk-switcher uk-margin">
             <li>
-                <h2>{{ 'System' | trans }}</h2>
+                <h2 class="uk-h3">{{ 'System' | trans }}</h2>
                 <div class="uk-overflow-auto">
                     <table class="uk-table uk-table-hover">
                         <thead>
@@ -29,15 +29,7 @@
                         <tbody>
                             <tr>
                                 <td class="uk-text-nowrap">{{ 'Pagekit Version' | trans }}</td>
-                                <td>{{ info.version }}</td>
-                            </tr>
-                            <tr>
-                                <td class="uk-text-nowrap">{{ 'UIkit Version' | trans }}</td>
-                                <td>{{ UIkitVersion }}</td>
-                            </tr>
-                            <tr>
-                                <td class="uk-text-nowrap">{{ 'Vue Version' | trans }}</td>
-                                <td>{{ VueVersion }}</td>
+                                <td>{{ info.version }} (UIkit {{ UIkitVersion }}, Vue {{ VueVersion }})</td>
                             </tr>
                             <tr>
                                 <td class="uk-text-nowrap">{{ 'Web Server' | trans }}</td>
@@ -52,7 +44,7 @@
                 </div>
             </li>
             <li>
-                <h2>{{ 'PHP' | trans }}</h2>
+                <h2 class="uk-h3">{{ 'PHP' | trans }}</h2>
                 <div class="uk-overflow-auto">
                     <table class="uk-table uk-table-hover">
                         <thead>
@@ -83,7 +75,7 @@
                 </div>
             </li>
             <li>
-                <h2>{{ 'Database' | trans }}</h2>
+                <h2 class="uk-h3">{{ 'Database' | trans }}</h2>
                 <div class="uk-overflow-auto">
                     <table class="uk-table uk-table-hover">
                         <thead>
@@ -110,7 +102,7 @@
                 </div>
             </li>
             <li>
-                <h2>{{ 'Permission' | trans }}</h2>
+                <h2 class="uk-h3">{{ 'Permission' | trans }}</h2>
                 <div class="uk-overflow-auto">
                     <table class="uk-table uk-table-hover">
                         <thead>

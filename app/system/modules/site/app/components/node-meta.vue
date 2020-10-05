@@ -17,11 +17,7 @@
         <div class="uk-margin">
             <label for="form-meta-image" class="uk-form-label">{{ 'Image' | trans }}</label>
             <div class="uk-form-controls">
-                <input-image
-                    v-model="node.data.meta['og:image']"
-                    :source.sync="node.data.meta['og:image']"
-                    input-class="uk-form-width-large"
-                />
+                <input-image v-model="node.data.meta['og:image']" :source.sync="node.data.meta['og:image']" class-name="uk-form-width-large" />
             </div>
         </div>
     </div>
@@ -29,25 +25,27 @@
 
 <script>
 
-var Meta = {
+import NodeMixin from '../mixins/node-mixin';
+
+const NodeMeta = {
+
+    mixins: [NodeMixin],
 
     section: {
         label: 'Meta',
-        priority: 100,
+        priority: 100
     },
-
-    props: ['node'],
 
     created() {
         if (!this.node.data.meta) {
             this.$set(this.node.data, 'meta', { 'og:title': '' });
         }
-    },
+    }
 
 };
 
-export default Meta;
+export default NodeMeta;
 
-window.Site.components['node-meta'] = Meta;
+window.Site.components['node-meta'] = NodeMeta;
 
 </script>

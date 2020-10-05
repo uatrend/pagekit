@@ -232,7 +232,7 @@
   'Add Page' => 'Seite hinzufügen',
   'No pages found.' => 'Keine Seiten gefunden.',
   'Menu Positions' => 'Menü-Positionen',
-  '(Currently set to: %menu%)' => '(Aktuell: %menu)',
+  '(Currently set to: %menu%)' => '(Aktuell: %menu%)',
   'Hidden' => 'Versteckt',
   '_subset' => '_subset',
   'Error' => 'Fehler',

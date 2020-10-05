@@ -315,6 +315,6 @@ msgstr ""
 msgid "Read more"
 msgstr ""
 
-msgid "{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments"
+msgid "{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments"
 msgstr ""
 

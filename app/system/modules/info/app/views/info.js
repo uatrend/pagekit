@@ -1,11 +1,15 @@
-var Info = {
+const Info = {
 
     name: 'info',
 
     el: '#info',
 
-    data: {
-        info: window.$info,
+    mixins: [Theme.Mixins.Helper],
+
+    data: { info: window.$info },
+
+    theme: {
+        hideEls: ['.pk-width-content li > h2']
     },
 
     computed: {
@@ -14,8 +18,8 @@ var Info = {
         },
         UIkitVersion() {
             return window.UIkit ? UIkit.version : '-';
-        },
-    },
+        }
+    }
 
 };
 

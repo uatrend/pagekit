@@ -33,23 +33,23 @@ export default {
             },
             function (e) {
                 e.stopImmediatePropagation();
-                if (!(util.isInput(e.target) || e.target.tagName == 'A') && !window.getSelection().toString()) {
+                if (!(util.isInput(e.target) || e.target.tagName === 'A') && !window.getSelection().toString()) {
                     binding.selectors = Array.from(util.findAll(subSelector, this));
 
                     if (!binding.selectors.length) return;
 
-                    if (binding.selectors.length == 1) {
+                    if (binding.selectors.length === 1) {
                         binding.selectors[0].click();
                     } else {
                         for (let i = 1; i < binding.selectors.length; i++) {
-                            if (binding.selectors[i].checked == binding.selectors[0].checked) {
+                            if (binding.selectors[i].checked === binding.selectors[0].checked) {
                                 binding.selectors[i].click();
                             }
                         }
                         binding.selectors[0].click();
                     }
                 }
-            },
+            }
         ];
 
         vnode.context.$nextTick(() => {
@@ -98,8 +98,9 @@ export default {
     },
 
     selected(update, el, binding, vnode) {
-        const selected = []; const values = []; let
-            value;
+        const selected = [];
+        const values = [];
+        let value;
 
         util.findAll(binding.selector, vnode.context.$el).forEach((elem) => {
             value = binding.def.toNumber(elem.value, el, binding, vnode);
@@ -111,13 +112,13 @@ export default {
         });
 
         if (update) {
-            update = _.get(vnode.context, binding.keypath).filter(value => values.indexOf(value) === -1);
+            update = _.get(vnode.context, binding.keypath).filter((val) => values.indexOf(val) === -1);
             _.set(vnode.context, binding.keypath, update.concat(selected));
         }
 
         if (selected.length === 0) {
             binding.checked = false;
-        } else if (selected.length == values.length) {
+        } else if (selected.length === values.length) {
             binding.checked = true;
         } else {
             binding.checked = undefined;
@@ -126,6 +127,6 @@ export default {
 
     toNumber(value, el, binding, vnode) {
         return binding.number ? Number(value) : value;
-    },
+    }
 
 };

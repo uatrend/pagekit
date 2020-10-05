@@ -37,5 +37,5 @@
   'Header' => 'Hlavička',
   'Written by %name% on %date%' => 'Napísal/a %name% dňa %date%',
   'Read more' => 'Čítať viac',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Žiadny komentár|{1} %num% komentár]1,Inf[ %num% komentárov',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Žiadny komentár|{1} %count% komentár]1,Inf[ %count% komentárov',
 );

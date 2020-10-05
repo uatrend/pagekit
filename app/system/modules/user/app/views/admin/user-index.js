@@ -1,4 +1,4 @@
-var UserIndex = {
+const UserIndex = {
 
     name: 'user-index',
 
@@ -9,80 +9,75 @@ var UserIndex = {
     data() {
         return _.merge({
             users: false,
-            config: {
-                filter: this.$session.get('user.filter', { order: 'username asc' }),
-            },
+            config: { filter: this.$session.get('user.filter', { order: 'username asc' }) },
             pages: 0,
             count: '',
-            selected: [],
+            selected: []
         }, window.$data);
     },
 
     theme: {
-        hiddenHtmlElements: ['#users > div:first-child'],
+        hideEls: ['#users > div:first-child'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'adduser': {
+                adduser: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Add User',
                     class: 'uk-button uk-button-primary',
-                    attrs: {
-                        href: () => vm.$url.route('admin/user/edit')
-                    },
-                    priority: 0,
+                    attrs: { href: () => vm.$url.route('admin/user/edit') },
+                    priority: 0
                 },
                 search: {
                     scope: 'navbar-right',
                     type: 'search',
                     class: 'uk-text-small',
-                    domProps: {
-                        value: () => vm.config.filter.search || ''
-                    },
+                    domProps: { value: () => vm.config.filter.search || '' },
                     on: {
-                        input: function(e) {
+                        input(e) {
                             !vm.config.filter.search && vm.$set(vm.config.filter, 'search', '');
-                            vm.config.filter.search = e.target.value
+                            vm.config.filter.search = e.target.value;
                         }
                     }
                 },
-                'actions': {
+                actions: {
                     scope: 'topmenu-left',
                     type: 'dropdown',
                     caption: 'Actions',
                     class: 'uk-button uk-button-text',
-                    icon: {
-                        attrs:{ 'uk-icon': 'triangle-down' },
-                    },
+                    icon: { attrs: { 'uk-icon': 'triangle-down' } },
                     dropdown: { options: () => 'mode:click' },
                     actionIcons: true,
-                    items:() => {
-                        return {
-                            publish: {
-                                caption: 'Activate',
-                                on: {click: () => vm.status(1)},
-                            },
-                            unpublish: {
-                                caption: 'Block',
-                                on: { click: () => vm.status(0)}
-                            },
-                            delete: {
-                                on: {click: (e) => vm.remove(e)},
-                            }
+                    items: () => ({
+                        publish: {
+                            caption: 'Activate',
+                            on: { click: () => vm.status(1) }
+                        },
+                        unpublish: {
+                            caption: 'Block',
+                            on: { click: () => vm.status(0) }
+                        },
+                        remove: {
+                            on: { click: (e) => vm.remove(e) },
+                            directives: [
+                                {
+                                    name: 'confirm',
+                                    value: 'Delete user(s)?'
+                                }
+                            ]
                         }
-                    },
+                    }),
                     priority: 2,
                     // vif: () => vm.selected.length,
-                    disabled: () => !vm.selected.length,
+                    disabled: () => !vm.selected.length
                 },
-                'selected': {
+                selected: {
                     scope: 'topmenu-right',
                     type: 'caption',
                     caption: () => {
-                        if (!vm.selected.length)
-                            return vm.$transChoice('{0} %count% Users|{1} %count% User|]1,Inf[ %count% Users', vm.count, {count: vm.count});
-                        return vm.$transChoice('{1} %count% User selected|]1,Inf[ %count% Users selected', vm.selected.length, {count:vm.selected.length})
+                        if (!vm.selected.length) return vm.$transChoice('{0} %count% Users|{1} %count% User|]1,Inf[ %count% Users', vm.count, { count: vm.count });
+                        return vm.$transChoice('{1} %count% User selected|]1,Inf[ %count% Users selected', vm.selected.length, { count: vm.selected.length });
                     },
                     class: 'uk-text-small',
                     priority: 1
@@ -99,7 +94,7 @@ var UserIndex = {
                             lblPrev: '<span uk-pagination-previous></span>',
                             lblNext: '<span uk-pagination-next></span>',
                             displayedPages: 3,
-                            edges: 1,
+                            edges: 1
                         })
                     },
                     on: {
@@ -111,9 +106,9 @@ var UserIndex = {
                     },
                     watch: () => vm.users,
                     vif: () => (vm.pages > 1 || vm.config.page > 0),
-                    priority: 0,
+                    priority: 0
                 }
-            }
+            };
         }
     },
 
@@ -134,8 +129,8 @@ var UserIndex = {
 
                 this.$session.set('user.filter', filter);
             },
-            deep: true,
-        },
+            deep: true
+        }
 
     },
 
@@ -143,22 +138,20 @@ var UserIndex = {
 
         statuses() {
             const options = [{ text: this.$trans('New'), value: 'new' }].concat(_.map(this.config.statuses, (status, id) => ({ text: status, value: id })));
-
             return [{ label: this.$trans('Filter by'), options }];
         },
 
         roles() {
-            const options = this.config.roles.map(role => ({ text: role.name, value: role.id }));
-
+            const options = this.config.roles.map((role) => ({ text: role.name, value: role.id }));
             return [{ label: this.$trans('Filter by'), options }];
-        },
+        }
 
     },
 
     methods: {
 
         active(user) {
-            return this.selected.indexOf(user.id) != -1;
+            return this.selected.indexOf(user.id) !== -1;
         },
 
         save(user) {
@@ -234,7 +227,7 @@ var UserIndex = {
             return this.users.filter(function (user) {
                 return this.selected.indexOf(user.id) !== -1;
             }, this);
-        },
+        }
 
     }
 

@@ -1,7 +1,7 @@
 import Comment from './comment.vue';
 import Reply from './reply.vue';
 
-var Comments = {
+const Comments = {
 
     el: '#comments',
 
@@ -36,10 +36,9 @@ var Comments = {
             messages: [],
             count: 0,
             replyForm: false,
-            root: this,
+            root: this
         }, window.$comments);
     },
-
 
     beforeCreate() {},
 
@@ -66,9 +65,7 @@ var Comments = {
                     const anchor = window.location.hash;
 
                     if (anchor) {
-                        document.querySelector(anchor).scrollIntoView({
-                            behavior: 'smooth'
-                        });
+                        document.querySelector(anchor).scrollIntoView({ behavior: 'smooth' });
                     }
                 });
 
@@ -92,24 +89,20 @@ var Comments = {
                 data() {
                     return {
                         config: parent.config,
-                        parent: parent.comment && parent.comment.id || 0,
+                        parent: parent.comment && parent.comment.id || 0
                     };
-                },
+                }
             });
-            const instance = new ReplyComponent({
-                propsData: {
-                    root: this,
-                },
-            });
+            const instance = new ReplyComponent({ propsData: { root: this } });
             this.replyForm = instance.$mount();
             parent.$refs.reply.appendChild(this.replyForm.$el);
-        },
+        }
 
     },
 
     components: {
         comment: Comment,
-        reply: Reply,
+        reply: Reply
     }
 };
 

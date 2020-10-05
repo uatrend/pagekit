@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Molimo prijavite se da bi ostaviti komentar.',
   'Written by %name% on %date%' => 'Napisao %name%  %date%',
   'Read more' => 'Pročitajte Više',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Nema komentara|{1} %num% Komentar|]1,Inf[ %num% Komentara',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Nema komentara|{1} %count% Komentar|]1,Inf[ %count% Komentara',
 );

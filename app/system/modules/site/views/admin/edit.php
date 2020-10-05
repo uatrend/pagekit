@@ -3,10 +3,10 @@
 <validation-observer tag="form" id="site-edit" ref="observer" @submit.prevent="submit" v-cloak>
 
     <div class="uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
-        <div class="">
+        <div>
 
-            <h2 class="uk-margin-remove" v-if="node.id">{{ 'Edit %type%' | trans({type:type.label}) }}</h2>
-            <h2 class="uk-margin-remove" v-else>{{ 'Add %type%' | trans({type:type.label}) }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-if="node.id">{{ 'Edit %type%' | trans({type:type.label}) }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-else>{{ 'Add %type%' | trans({type:type.label}) }}</h2>
 
         </div>
         <div class="uk-margin">
@@ -20,13 +20,13 @@
         </div>
     </div>
 
-    <ul ref="tab" v-show="sections.length > 1" id="page-tab">
+    <ul ref="tab" v-show="sections.length > 1">
         <li v-for="section in sections" :key="section.name"><a>{{ section.label | trans }}</a></li>
     </ul>
 
-    <div ref="content" class="uk-switcher uk-margin" id="page-content">
+    <div ref="content" class="uk-switcher uk-margin">
         <div v-for="section in sections" :key="section.name">
-            <component :is="section.name" :node.sync="node" :roles.sync="roles"></component>
+            <component :is="section.name" :roles.sync="roles" v-model="node"></component>
         </div>
     </div>
 

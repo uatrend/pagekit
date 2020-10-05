@@ -3,7 +3,7 @@
         <div class="pf-navbar">
             <ul v-if="data" class="pf-navbar-nav">
                 <li v-for="section in sections" :key="section.name">
-                    <component :is="section.name" :data="data[section.name == 'time-component' ? 'time' : section.name]" @click.native="open(section.name)" />
+                    <component :is="section.name" :data="data[section.name == 'TimeComponent' ? 'Time' : section.name]" @click.native="open(section.name)" />
                 </li>
             </ul>
 
@@ -21,25 +21,32 @@
 
 <script>
 
-const _ = require('lodash');
+import _ from 'lodash';
 
 const config = window.$debugbar;
 
-module.exports = {
+export default {
 
-    name: 'debug-bar',
+    name: 'DebugBar',
 
     data() {
         return {
             request: null,
             data: null,
             panel: null,
-            sections: {},
+            sections: {}
         };
     },
 
+    computed: {
+
+        height() {
+            return `${Math.ceil(window.innerHeight / 2)}px`;
+        }
+
+    },
+
     created() {
-        const vm = this;
         const sections = {};
 
         _.forIn(this.$options.components, (component, name) => {
@@ -48,34 +55,28 @@ module.exports = {
             }
         }, this);
 
-        this.sections = _.fromPairs(_.map(_.orderBy(sections, 'priority'), s => [s.name, s]));
+        this.sections = _.fromPairs(_.map(_.orderBy(sections, 'priority'), (s) => [s.name, s]));
 
-        this.load(config.current).then(function (res) {
+        this.load(config.current).then((res) => {
             this.$set(this, 'request', res.data.__meta);
         });
-    },
-
-    computed: {
-
-        height() {
-            return `${Math.ceil(window.innerHeight / 2)}px`;
-        },
-
     },
 
     methods: {
 
         load(id) {
-            // return this.$http.get('_debugbar/{id}', {id: id}).then(function (res) {
-            return this.$http.get('_debugbar/{id}', { params: { id } }).then(function (res) {
-                this.$set(this, 'data', res.data);
+            return this.$http.get('_debugbar/{id}', { params: { id } }).then((res) => {
+                const entries = Object.entries(res.data).map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
+                const data = Object.fromEntries(entries);
+
+                this.$set(this, 'data', data);
                 return res;
             });
         },
 
         open(name) {
-            const section = this.sections[name]; var panel; const
-                vm = _.find(this.$children, ['$options.name', name]);
+            const section = this.sections[name];
+            const vm = _.find(this.$children, ['$options.name', name]);
 
             if (!section.template) {
                 return;
@@ -85,13 +86,13 @@ module.exports = {
                 this.close();
             }
 
-            var panel = new Vue({
+            const panel = new Vue({
                 name: 'Data',
                 parent: vm,
-                template: section.template,
+                filters: vm.$options.filters,
                 data: this.data[section.name],
                 computed: vm.$options.computed,
-                filters: vm.$options.filters,
+                template: section.template
             });
 
             panel.$mount();
@@ -106,9 +107,9 @@ module.exports = {
             }
 
             this.$set(this, 'panel', null);
-        },
+        }
 
-    },
+    }
 
 };
 

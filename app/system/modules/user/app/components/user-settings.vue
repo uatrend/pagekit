@@ -3,31 +3,22 @@
         <div class="uk-width-2-3@s">
             <div class="uk-margin">
                 <label for="form-username" class="uk-form-label">{{ 'Username' | trans }}</label>
-                <v-input id="form-username" name="username" type="text"
-                    view="class: uk-form-width-large uk-input"
-                    v-model="user.username"
-                    :rules="{required: true, regex: /^[a-zA-Z0-9._\-]+$/}"
-                    autocomplete="new-username"
-                    message='Username cannot be blank and may only contain alphanumeric characters (A-Z, 0-9) and some special characters ("._-")'
-                />
+                <v-input id="form-username" v-model="user.username" name="username" type="text" view="class: uk-form-width-large uk-input" :rules="{required: true, regex: /^[a-zA-Z0-9._\-]+$/}" autocomplete="new-username" message="Username cannot be blank and may only contain alphanumeric characters (A-Z, 0-9) and some special characters (&quot;._-&quot;)" />
             </div>
 
             <div class="uk-margin">
                 <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
-                <v-input id="form-name" name="name" type="text"
-                    view="class: uk-form-width-large uk-input"
-                    v-model="user.name"
-                    :rules="{required: true}"
-                    autocomplete="new-name"
-                    message='Name cannot be blank.'
-                />
+                <v-input id="form-name" v-model="user.name" name="name" type="text" view="class: uk-form-width-large uk-input" :rules="{required: true}" autocomplete="new-name" message="Name cannot be blank." />
             </div>
 
             <div class="uk-margin">
                 <label for="form-email" class="uk-form-label">{{ 'Email' | trans }}</label>
-                <v-input id="form-email" name="email" type="email"
-                    view="class: uk-form-width-large uk-input"
+                <v-input
+                    id="form-email"
                     v-model.lazy="user.email"
+                    name="email"
+                    type="email"
+                    view="class: uk-form-width-large uk-input"
                     :rules="{required: true, email: true}"
                     autocomplete="new-email"
                     message="Field must be a valid email address."
@@ -37,15 +28,13 @@
             <div class="uk-margin">
                 <label for="form-password" class="uk-form-label">{{ 'Password' | trans }}</label>
                 <div v-show="user.id && !editingPassword" class="uk-form-controls uk-form-controls-text">
-                    <a href="#" @click.prevent="editingPassword = true" class="uk-text-small">{{ 'Change password' | trans }}</a>
+                    <a href="#" class="uk-text-small" @click.prevent="editingPassword = true">{{ 'Change password' | trans }}</a>
                 </div>
                 <div class="uk-form-controls" :class="{'uk-hidden' : (user.id && !editingPassword)}">
                     <div class="uk-form-password">
-                        <div class="uk-margin">
-                            <div class="uk-inline">
-                                <a @click.prevent="hidePassword = !hidePassword" :uk-tooltip="hidePassword ? 'Show' : 'Hide' | trans" delay="500" pos="right" class="uk-form-icon uk-form-icon-flip" href="#" :uk-icon="hidePassword ? 'lock': 'unlock'"></a>
-                                <input id="form-password" v-model="password" autocomplete="new-password" class="uk-form-width-large uk-input" :type="hidePassword ? 'password' : 'text'">
-                            </div>
+                        <div class="uk-inline">
+                            <a :uk-tooltip="hidePassword ? 'Show' : 'Hide' | trans" delay="500" pos="right" class="uk-form-icon uk-form-icon-flip" href="#" :uk-icon="hidePassword ? 'eye-closed': 'eye'" @click.prevent="hidePassword = !hidePassword" />
+                            <input id="form-password" v-model="password" autocomplete="new-password" class="uk-form-width-large uk-input" :type="hidePassword ? 'password' : 'text'">
                         </div>
                     </div>
                 </div>
@@ -55,7 +44,7 @@
                 <label class="uk-form-label">{{ 'Status' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
                     <p v-for="(status, key) in config.statuses" :key="key" class="uk-margin-small">
-                        <label><input v-model="user.status" class="uk-radio" type="radio" :value="parseInt(key)" :disabled="config.currentUser == user.id"><span class="uk-margin-small-left">{{ status }}</span></label>
+                        <label><input v-model="user.status" class="uk-radio" type="radio" :value="parseInt(key)" :disabled="config.currentUser == user.id"> {{ status }}</label>
                     </p>
                 </div>
             </div>
@@ -64,7 +53,7 @@
                 <label class="uk-form-label">{{ 'Roles' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
                     <p v-for="role in config.roles" :key="role.id" class="uk-margin-small">
-                        <label><input v-model="user.roles" class="uk-checkbox" type="checkbox" :value="role.id" :disabled="role.disabled"><span class="uk-margin-small-left">{{ role.name }}</span></label>
+                        <label><input v-model="user.roles" class="uk-checkbox" type="checkbox" :value="role.id" :disabled="role.disabled"> {{ role.name }}</label>
                     </p>
                 </div>
             </div>
@@ -119,41 +108,37 @@
 
 <script>
 
+import UserMixin from '../mixins/user-mixin';
+
 export default {
 
-    section: {
-        label: 'User',
-    },
+    mixins: [UserMixin],
 
-    props: ['user', 'config', 'form'],
-
-    inject: ['$components'],
+    section: { label: 'User' },
 
     data() {
-        return { password: '', hidePassword: true, editingPassword: false };
+        return {
+            password: '',
+            hidePassword: true,
+            editingPassword: false
+        };
     },
-
-    created() {
-        _.extend(this.$options.components, this.$components);
-    },
-
-    mounted() {},
 
     computed: {
 
         isNew() {
             return !this.user.login && this.user.status;
-        },
+        }
 
     },
 
     events: {
 
-        'save:user': function (e, data) {
+        'user-save': function (e, data) {
             data.password = this.password;
-        },
+        }
 
-    },
+    }
 
 };
 

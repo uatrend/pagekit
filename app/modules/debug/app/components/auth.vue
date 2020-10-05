@@ -29,13 +29,20 @@
 
 <script>
 
-module.exports = {
+export default {
 
-    section: {
-        priority: 60,
+    section: { priority: 60 },
+
+    filters: { json: (value) => JSON.stringify(value, null, 2) },
+
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
     },
-
-    props: ['data'],
 
     replace: false,
 
@@ -47,13 +54,9 @@ module.exports = {
             }
 
             return this.data.enabled ? 'You are not authenticated.' : 'Authentication is disabled.';
-        },
+        }
 
-    },
-
-    filters: {
-        json: value => JSON.stringify(value, null, 2),
-    },
+    }
 
 };
 

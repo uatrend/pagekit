@@ -21,7 +21,6 @@ exports.compare = function (v1, v2, operator) {
     // END REDUNDANT
     // Important: compare must be initialized at 0.
     let i;
-    let x;
     let compare = 0;
     // vm maps textual PHP versions to negatives so they're less than 0.
     // PHP currently defines these as CASE-SENSITIVE. It is important to
@@ -40,7 +39,7 @@ exports.compare = function (v1, v2, operator) {
         rc: -3,
         '#': -2,
         p: 1,
-        pl: 1,
+        pl: 1
     };
     // This function will be called to prepare each version argument.
     // It replaces every _, -, and + with a dot.
@@ -67,10 +66,10 @@ exports.compare = function (v1, v2, operator) {
     };
     v1 = prepVersion(v1);
     v2 = prepVersion(v2);
-    x = Math.max(v1.length, v2.length);
+    const x = Math.max(v1.length, v2.length);
     for (i = 0; i < x; i++) {
-        if (v1[i] == v2[i]) {
-            continue;
+        if (v1[i] === v2[i]) {
+            continue; // eslint-disable-line no-continue
         }
         v1[i] = numVersion(v1[i]);
         v2[i] = numVersion(v2[i]);
@@ -90,28 +89,28 @@ exports.compare = function (v1, v2, operator) {
     // "No operator" seems to be treated as "<."
     // Any other values seem to make the function return null.
     switch (operator) {
-    case '>':
-    case 'gt':
-        return (compare > 0);
-    case '>=':
-    case 'ge':
-        return (compare >= 0);
-    case '<=':
-    case 'le':
-        return (compare <= 0);
-    case '==':
-    case '=':
-    case 'eq':
-        return (compare === 0);
-    case '<>':
-    case '!=':
-    case 'ne':
-        return (compare !== 0);
-    case '':
-    case '<':
-    case 'lt':
-        return (compare < 0);
-    default:
-        return null;
+        case '>':
+        case 'gt':
+            return (compare > 0);
+        case '>=':
+        case 'ge':
+            return (compare >= 0);
+        case '<=':
+        case 'le':
+            return (compare <= 0);
+        case '==':
+        case '=':
+        case 'eq':
+            return (compare === 0);
+        case '<>':
+        case '!=':
+        case 'ne':
+            return (compare !== 0);
+        case '':
+        case '<':
+        case 'lt':
+            return (compare < 0);
+        default:
+            return null;
     }
 };

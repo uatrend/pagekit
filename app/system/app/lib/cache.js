@@ -22,7 +22,7 @@ export default function (bucket, adapter) {
 
         flush() {
             return db.flushdb.apply(db, arguments);
-        },
+        }
 
     };
 }

@@ -37,5 +37,5 @@
   'Header' => 'Kepala',
   'Written by %name% on %date%' => 'Ditulis oleh %name% pada %date%',
   'Read more' => 'Baca selanjutnya',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Tiada komen|{1} %num% Komen|]1,Inf[ %num% Komen',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Tiada komen|{1} %count% Komen|]1,Inf[ %count% Komen',
 );

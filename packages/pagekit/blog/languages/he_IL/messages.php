@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'אנא התחבר בשביל להגיב',
   'Written by %name% on %date%' => '',
   'Read more' => '',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '',
 );

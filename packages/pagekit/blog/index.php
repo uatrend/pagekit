@@ -147,9 +147,7 @@ return [
         'feed' => [
             'type' => 'rss2',
             'limit' => 20
-        ],
-
-        'ck_node_single_id' => '10001'
+        ]
 
     ],
 
@@ -177,9 +175,7 @@ return [
                     'additem' => [
                         'addpost' => [
                             'caption' => 'Add Post',
-                            'attrs' => [
-                                'href' => $app['url']->get('admin/blog/post/edit')
-                            ],
+                            'attrs' => [ 'href' => $app['url']->get('admin/blog/post/edit') ],
                             'priority' => 1
                         ]
                     ]

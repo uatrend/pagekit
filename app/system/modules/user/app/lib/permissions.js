@@ -21,8 +21,8 @@ export default {
     computed: {
 
         authenticated() {
-            return this.roles.filter(role => role.authenticated)[0];
-        },
+            return this.roles.filter((role) => role.authenticated)[0];
+        }
 
     },
 
@@ -50,8 +50,8 @@ export default {
 
         showFakeCheckbox(role, permission) {
             return role.administrator || (this.isInherited(role, permission) && !this.hasPermission(role, permission));
-        },
+        }
 
-    },
+    }
 
 };

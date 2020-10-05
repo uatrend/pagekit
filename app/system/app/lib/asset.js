@@ -6,27 +6,33 @@ export default function (Vue) {
      * Asset provides a promise based assets manager.
      */
     function Asset(assets) {
-        const promises = []; const $url = (this.$url || Vue.url); let
-            _assets = [];
+        const promises = [];
+        const $url = (this.$url || Vue.url);
+        let _assets = [];
 
         Object.keys(assets).forEach((type) => {
             if (!Asset[type]) {
                 return;
             }
 
-            // _assets = _.isArray(assets[type]) ? assets[type] : [assets[type]];
             _assets = Array.isArray(assets[type]) ? assets[type] : [assets[type]];
 
+            // Clear from cache
+            if (type === 'clearCache') {
+                if (cache[_assets[0]]) {
+                    delete cache[_assets[0]];
+                }
+                return;
+            }
+
             for (let i = 0; i < _assets.length; i++) {
-                if (!_assets[i]) {
-                    continue;
-                }
+                if (_assets[i]) {
+                    if (!cache[_assets[i]]) {
+                        cache[_assets[i]] = Asset[type]($url(_assets[i]));
+                    }
 
-                if (!cache[_assets[i]]) {
-                    cache[_assets[i]] = Asset[type]($url(_assets[i]));
+                    promises.push(cache[_assets[i]]);
                 }
-
-                promises.push(cache[_assets[i]]);
             }
         });
 
@@ -61,7 +67,7 @@ export default function (Vue) {
                 script.onload = function () {
                     resolve(url);
                 };
-                script.onerror = function () {
+                script.onerror = function (err) {
                     reject(url);
                 };
                 script.src = url;
@@ -85,13 +91,15 @@ export default function (Vue) {
             }));
         },
 
+        clearCache() {}
+
     });
 
     Object.defineProperty(Vue.prototype, '$asset', {
 
         get() {
             return _.extend(Asset.bind(this), Asset);
-        },
+        }
 
     });
 

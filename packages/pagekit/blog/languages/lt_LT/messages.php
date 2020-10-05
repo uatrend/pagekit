@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Norėdami palikti komentarą, turite prisijungti.',
   'Written by %name% on %date%' => 'Parašė %name%, %date%',
   'Read more' => 'Skaityti toliau',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Nėra komentarų.|{1} komentaras.|]1,Inf[ komentarai.',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Nėra komentarų.|{1} komentaras.|]1,Inf[ komentarai.',
 );

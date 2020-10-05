@@ -26,5 +26,8 @@ class ClearCacheCommand extends Command
         foreach ((array) glob($this->container['path.cache'] . '/*.cache') as $file) {
             @unlink($file);
         }
+
+        // TODO: Callback
+        return (int) $this->line('Cache cleared.');
     }
 }

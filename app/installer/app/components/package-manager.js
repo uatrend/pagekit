@@ -12,30 +12,28 @@ export default {
             view: false,
             updates: null,
             search: this.$session.get(`${this.$options.name}.search`, ''),
-            status: '',
+            status: ''
         }, window.$data);
     },
 
     theme: {
-        hiddenHtmlElements: ['#extensions > div:first-child','#themes > div:first-child'],
+        hideEls: ['#extensions > div:first-child', '#themes > div:first-child'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
                 search: {
                     scope: 'navbar-right',
                     type: 'search',
                     class: 'uk-text-small',
-                    domProps: {
-                        value: () => vm.search || ''
-                    },
+                    domProps: { value: () => vm.search || '' },
                     on: {
-                        input: function(e) {
+                        input(e) {
                             !vm.search && vm.$set(vm, 'search', '');
-                            vm.search = e.target.value
+                            vm.search = e.target.value;
                         }
                     }
                 }
-            }
+            };
         }
     },
 
@@ -46,7 +44,7 @@ export default {
     watch: {
         search(search) {
             this.$session.set(`${this.$options.name}.search`, search);
-        },
+        }
     },
 
     methods: {
@@ -55,11 +53,11 @@ export default {
             this.$set(this, 'status', 'loading');
 
             if (this.packages) {
-                this.queryUpdates(this.packages).then(function (res) {
+                this.queryUpdates(this.packages).then((res) => {
                     const { data } = res;
                     this.$set(this, 'updates', data.packages.length ? _.keyBy(data.packages, 'name') : null);
                     this.$set(this, 'status', '');
-                }, function () {
+                }, () => {
                     this.$set(this, 'status', 'error');
                 });
             }
@@ -111,13 +109,13 @@ export default {
 
         empty(packages) {
             return this.filterBy(packages, this.search, 'title').length === 0;
-        },
+        }
 
     },
 
     components: {
         'package-upload': PackageUpload,
         'package-details': PackageDetails
-    },
+    }
 
 };

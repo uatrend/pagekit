@@ -5,8 +5,8 @@
     <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
         <div>
 
-            <h2 class="uk-margin-remove" v-if="post.id">{{ 'Edit Post' | trans }}</h2>
-            <h2 class="uk-margin-remove" v-else>{{ 'Add Post' | trans }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-if="post.id">{{ 'Edit Post' | trans }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-else>{{ 'Add Post' | trans }}</h2>
 
         </div>
         <div class="uk-margin">
@@ -20,13 +20,13 @@
         </div>
     </div>
 
-    <ul ref="tab" v-show="sections.length > 1" id="post-tab">
+    <ul ref="tab" v-show="sections.length > 1">
         <li v-for="section in sections" :key="section.name"><a>{{ section.label | trans }}</a></li>
     </ul>
 
-    <div class="uk-switcher uk-margin" ref="content" id="post-content">
+    <div ref="content" class="uk-switcher uk-margin">
         <div v-for="section in sections" :key="section.name">
-            <component :is="section.name" :post.sync="post" :data.sync="data" :form="form"></component>
+            <component :is="section.name" v-model="post" :data.sync="data"></component>
         </div>
     </div>
 

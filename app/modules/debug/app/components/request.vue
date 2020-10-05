@@ -4,15 +4,20 @@
 
 <script>
 
-module.exports = {
+export default {
 
-    section: {
-        priority: 10,
-    },
+    section: { priority: 10 },
 
     replace: false,
 
-    props: ['data'],
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
+    }
 
 };
 

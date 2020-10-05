@@ -1,25 +1,18 @@
 <template>
     <div class="package-details">
         <div class="uk-modal-header uk-flex uk-flex-middle">
-            <img
-                v-if="package.extra && package.extra.icon"
-                class="uk-margin-right"
-                width="50"
-                height="50"
-                :alt="package.title"
-                :src="package | icon"
-            >
+            <img v-if="pkg.extra && pkg.extra.icon" class="uk-margin-right" width="50" height="50" :alt="pkg.title" :src="pkg | icon">
 
             <div class="uk-flex-1">
-                <h2 class="uk-margin-remove">
-                    {{ package.title }}
+                <h2 class="uk-h3 uk-margin-remove">
+                    {{ pkg.title }}
                 </h2>
                 <ul class="uk-subnav uk-subnav-divider uk-margin-remove-bottom uk-margin-remove-top">
-                    <li v-if="package.authors && package.authors[0]" class="uk-text-muted">
-                        {{ package.authors[0].name }}
+                    <li v-if="pkg.authors && pkg.authors[0]" class="uk-text-muted">
+                        <span>{{ pkg.authors[0].name }}</span>
                     </li>
                     <li class="uk-text-muted">
-                        {{ 'Version %version%' | trans({version:package.version}) }}
+                        <span>{{ 'Version %version%' | trans({version:pkg.version}) }}</span>
                     </li>
                 </ul>
             </div>
@@ -30,31 +23,31 @@
         </div>
 
         <div v-show="messages.update" class="uk-alert uk-alert-primary uk-margin-remove">
-            {{ 'There is an update available for the package.' | trans }}
+            {{ 'There is an update available for the pkg.' | trans }}
         </div>
 
         <div class="uk-modal-body">
-            <p v-if="package.description">
-                {{ package.description }}
+            <p v-if="pkg.description">
+                {{ pkg.description }}
             </p>
 
-            <ul class="uk-list">
-                <li v-if="package.license">
-                    <strong>{{ 'License:' | trans }}</strong> {{ package.license }}
+            <ul class="uk-list uk-list-collapse uk-text-small">
+                <li v-if="pkg.license">
+                    <strong>{{ 'License:' | trans }}</strong> {{ pkg.license }}
                 </li>
-                <template v-if="package.authors && package.authors[0]">
-                    <li v-if="package.authors[0].homepage">
+                <template v-if="pkg.authors && pkg.authors[0]">
+                    <li v-if="pkg.authors[0].homepage">
                         <strong>{{ 'Homepage:' | trans }}</strong>
-                        <a :href="package.authors[0].homepage" target="_blank">{{ package.authors[0].homepage }}</a>
+                        <a :href="pkg.authors[0].homepage" target="_blank">{{ pkg.authors[0].homepage }}</a>
                     </li>
-                    <li v-if="package.authors[0].email">
+                    <li v-if="pkg.authors[0].email">
                         <strong>{{ 'Email:' | trans }}</strong>
-                        <a :href="'mailto:' + package.authors[0].email">{{ package.authors[0].email }}</a>
+                        <a :href="'mailto:' + pkg.authors[0].email">{{ pkg.authors[0].email }}</a>
                     </li>
                 </template>
             </ul>
 
-            <img v-if="package.extra && package.extra.image" width="1200" height="800" :alt="package.title" :src="package | image">
+            <img v-if="pkg.extra && pkg.extra.image" width="1200" height="800" :alt="pkg.title" :src="pkg | image">
         </div>
     </div>
 </template>
@@ -64,25 +57,6 @@
 import Version from '../lib/version';
 
 export default {
-
-    props: {
-        api: {
-            type: String,
-            default: '',
-        },
-        package: {
-            type: Object,
-            default() {
-                return {};
-            },
-        },
-    },
-
-    data() {
-        return {
-            messages: {},
-        };
-    },
 
     filters: {
 
@@ -108,63 +82,84 @@ export default {
             }
 
             return extra.image;
-        },
+        }
 
+    },
+
+    props: {
+        api: {
+            type: String,
+            default: ''
+        },
+        package: {
+        // pkg: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
+    },
+
+    data() {
+        return {
+            pkg: {},
+            messages: {}
+        };
     },
 
     watch: {
 
-        package: {
+        pkg: {
 
             handler() {
-                if (!this.package.name) {
+                if (!this.pkg.name) {
                     return;
                 }
 
-                if (_.isArray(this.package.authors)) {
-                    this.package.author = this.package.authors[0];
+                if (_.isArray(this.pkg.authors)) {
+                    this.pkg.author = this.pkg.authors[0];
                 }
 
                 this.$set(this, 'messages', {});
 
-                this.queryPackage(this.package, function (res) {
+                this.queryPackage(this.pkg, (res) => {
                     const { data } = res;
 
-                    let { version } = this.package;
+                    let { version } = this.pkg;
                     const pkg = data.versions[version];
 
                     // verify checksum
-                    if (pkg && this.package.shasum) {
-                        this.$set(this.messages, 'checksum', pkg.dist.shasum != this.package.shasum);
+                    if (pkg && this.pkg.shasum) {
+                        this.$set(this.messages, 'checksum', pkg.dist.shasum !== this.pkg.shasum);
                     }
 
                     // check version
-                    _.each(data.versions, (pkg) => {
-                        if (Version.compare(pkg.version, version, '>')) {
-                            version = pkg.version;
+                    _.each(data.versions, (p) => {
+                        if (Version.compare(p.version, version, '>')) {
+                            version = p.version;
                         }
                     });
 
-                    this.$set(this.messages, 'update', version != this.package.version);
+                    this.$set(this.messages, 'update', version !== this.pkg.version);
                 });
             },
 
-            immediate: true,
+            immediate: true
 
-        },
+        }
+    },
+
+    created() {
+        this.pkg = this.package;
     },
 
     methods: {
 
         queryPackage(pkg, success) {
-            return this.$http.get(`${this.api}/api/package/{+name}`, {
-                params: {
-                    name: _.isObject(pkg) ? pkg.name : pkg,
-                },
-            }).then(success, this.error);
-        },
+            return this.$http.get(`${this.api}/api/package/{+name}`, { params: { name: _.isObject(pkg) ? pkg.name : pkg } }).then(success, this.error);
+        }
 
-    },
+    }
 
 };
 

@@ -10,16 +10,17 @@ export default {
 
         binding.options = {
             title: false,
+            text: false,
             labels: {
                 ok: buttons[0] || vm.$trans('Ok'),
-                cancel: buttons[1] || vm.$trans('Cancel'),
+                cancel: buttons[1] || vm.$trans('Cancel')
             },
-            stack: true,
+            stack: true
         };
 
         // vue-confirm="'Text...?'"
         if (typeof binding.value === 'string') {
-            binding.options.text = binding.value;
+            binding.options.title = binding.value;
         }
 
         // vue-confirm="{title:'Title', text:'Text...?'}"
@@ -28,16 +29,16 @@ export default {
         }
 
         _.forEach(['title', 'text'], (item) => {
-            binding.options[item] && vm.$trans(binding.options[item])
-        })
+            binding.options[item] = vm.$trans(binding.options[item]);
+        });
 
         binding.handler = vnode.data.on.click.fns;
 
-        vnode.data.on.click.fns = function(e) {
+        vnode.data.on.click.fns = (e) => {
             UIkit.modal.confirm(binding.options.text, binding.options)
-            .then(function() {
-                binding.handler(e);
-            }, function(){});
-        }
+                .then(() => {
+                    binding.handler(e);
+                }, () => {});
+        };
     }
-}
+};

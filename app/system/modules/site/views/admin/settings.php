@@ -4,26 +4,20 @@
 
     <div class="pk-grid-large" uk-grid>
         <div class="pk-width-sidebar">
-
             <div class="uk-panel">
-
                 <ul class="uk-nav uk-nav-default pk-nav-large" ref="tab">
                     <li :class="{'uk-active': section.active}" v-for="section in orderBy(sections, 'priority')" :key="section.name">
-                        <a><span :class="section.icon ? 'uk-margin-right ' + section.icon : ''"></span><span class="uk-text-middle">{{ section.label | trans }}</span></a>
+                        <a><span class="uk-margin-right" :uk-icon="section.icon" ratio="1.25"></span><span class="uk-text-middle">{{ section.label | trans }}</span></a>
                     </li>
                 </ul>
-
             </div>
-
         </div>
         <div class="pk-width-content">
-
             <ul class="uk-switcher settings-tab uk-margin" ref="content">
                 <li v-for="section in orderBy(sections, 'priority')" :key="section.name">
-                    <component :is="section.name" :config.sync="config"></component>
+                    <component :is="section.name" v-model="config"></component>
                 </li>
             </ul>
-
         </div>
     </div>
 

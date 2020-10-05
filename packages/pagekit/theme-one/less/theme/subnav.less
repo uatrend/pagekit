@@ -11,7 +11,7 @@
 // New
 //
 
-@subnav-item-font-size:                         @global-small-font-size;
+@subnav-item-font-size:                         @global-font-size;//@global-small-font-size;
 @subnav-item-text-transform:                    uppercase;
 
 
@@ -22,12 +22,14 @@
 
 .hook-subnav-item() {
     font-size: @subnav-item-font-size;
-    text-transform: @subnav-item-text-transform;
+    // text-transform: @subnav-item-text-transform;
     transition: 0.1s ease-in-out;
     transition-property: color, background-color;
 }
 
-.hook-subnav-item-hover() {}
+.hook-subnav-item-hover() {
+    text-decoration: underline;
+}
 
 .hook-subnav-item-active() {}
 

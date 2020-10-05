@@ -4,7 +4,7 @@ let config = window.$locale || { translations: {} };
  * Copyright (c) William DURAND <william.durand1@gmail.com> (https://github.com/willdurand/BazingaJsTranslationBundle)
  */
 
-var Translator = (function (document, undefined) {
+const Translator = (function (document, undef) {
     let _messages = {};
     let _domains = [];
     const _sPluralRegex = new RegExp(/^\w+\: +(.+)$/);
@@ -22,19 +22,30 @@ var Translator = (function (document, undefined) {
      * @api private
      */
     function replace_placeholders(message, placeholders) {
-        let _i;
         const _prefix = Translator.placeHolderPrefix;
         const _suffix = Translator.placeHolderSuffix;
 
-        for (_i in placeholders) {
+        Object.keys(placeholders).forEach((_i) => {
             const _r = new RegExp(_prefix + _i + _suffix, 'g');
 
             if (_r.test(message)) {
                 message = message.replace(_r, placeholders[_i]);
             }
-        }
+        });
 
         return message;
+    }
+
+    function getId(...args) {
+        const [parameters] = args;
+        let [id] = args;
+
+        if (parameters && parameters.replace && (typeof parameters.replace === 'boolean')) {
+            id = replace_placeholders(id, parameters || {});
+            delete parameters.replace;
+        }
+
+        return id;
     }
 
     /**
@@ -53,15 +64,15 @@ var Translator = (function (document, undefined) {
         let _locale = locale || currentLocale || localeFallback;
         let _domain = domain;
 
-        if (undefined == _messages[_locale]) {
-            if (undefined == _messages[localeFallback]) {
+        if (undef === _messages[_locale]) {
+            if (undef === _messages[localeFallback]) {
                 return id;
             }
 
             _locale = localeFallback;
         }
 
-        if (undefined === _domain || _domain === null) {
+        if (undef === _domain || _domain === null) {
             for (let i = 0; i < _domains.length; i++) {
                 if (has_message(_locale, _domains[i], id)
                     || has_message(localeFallback, _domains[i], id)) {
@@ -115,15 +126,15 @@ var Translator = (function (document, undefined) {
      * @api private
      */
     function has_message(locale, domain, id) {
-        if (undefined == _messages[locale]) {
+        if (undef === _messages[locale]) {
             return false;
         }
 
-        if (undefined == _messages[locale][domain]) {
+        if (undef === _messages[locale][domain]) {
             return false;
         }
 
-        if (undefined == _messages[locale][domain][id]) {
+        if (undef === _messages[locale][domain][id]) {
             return false;
         }
 
@@ -178,16 +189,18 @@ var Translator = (function (document, undefined) {
             }
         }
 
-        for (_e in _explicitRules) {
+        for (let i = 0; i < Object.keys(_explicitRules).length; i++) {
+            _e = Object.keys(_explicitRules)[i];
             if (_iPluralRegex.test(_e)) {
                 _matches = _e.match(_iPluralRegex);
 
                 if (_matches[1]) {
                     const _ns = _matches[2].split(',');
-                    var _n;
+                    let _n;
 
-                    for (_n in _ns) {
-                        if (number == _ns[_n]) {
+                    for (let k = 0; k < Object.keys(_ns).length; k++) {
+                        _n = Object.keys(_ns)[k];
+                        if (number === Number.parseInt(_ns[_n])) {
                             return _explicitRules[_e];
                         }
                     }
@@ -203,7 +216,7 @@ var Translator = (function (document, undefined) {
             }
         }
 
-        return _standardRules[plural_position(number, locale)] || _standardRules[0] || undefined;
+        return _standardRules[plural_position(number, locale)] || _standardRules[0] || undef;
     }
 
     /**
@@ -248,132 +261,132 @@ var Translator = (function (document, undefined) {
         }
 
         switch (_locale) {
-        case 'bo':
-        case 'dz':
-        case 'id':
-        case 'ja':
-        case 'jv':
-        case 'ka':
-        case 'km':
-        case 'kn':
-        case 'ko':
-        case 'ms':
-        case 'th':
-        case 'tr':
-        case 'vi':
-        case 'zh':
-            return 0;
-        case 'af':
-        case 'az':
-        case 'bn':
-        case 'bg':
-        case 'ca':
-        case 'da':
-        case 'de':
-        case 'el':
-        case 'en':
-        case 'eo':
-        case 'es':
-        case 'et':
-        case 'eu':
-        case 'fa':
-        case 'fi':
-        case 'fo':
-        case 'fur':
-        case 'fy':
-        case 'gl':
-        case 'gu':
-        case 'ha':
-        case 'he':
-        case 'hu':
-        case 'is':
-        case 'it':
-        case 'ku':
-        case 'lb':
-        case 'ml':
-        case 'mn':
-        case 'mr':
-        case 'nah':
-        case 'nb':
-        case 'ne':
-        case 'nl':
-        case 'nn':
-        case 'no':
-        case 'om':
-        case 'or':
-        case 'pa':
-        case 'pap':
-        case 'ps':
-        case 'pt':
-        case 'so':
-        case 'sq':
-        case 'sv':
-        case 'sw':
-        case 'ta':
-        case 'te':
-        case 'tk':
-        case 'ur':
-        case 'zu':
-            return (number == 1) ? 0 : 1;
+            case 'bo':
+            case 'dz':
+            case 'id':
+            case 'ja':
+            case 'jv':
+            case 'ka':
+            case 'km':
+            case 'kn':
+            case 'ko':
+            case 'ms':
+            case 'th':
+            case 'tr':
+            case 'vi':
+            case 'zh':
+                return 0;
+            case 'af':
+            case 'az':
+            case 'bn':
+            case 'bg':
+            case 'ca':
+            case 'da':
+            case 'de':
+            case 'el':
+            case 'en':
+            case 'eo':
+            case 'es':
+            case 'et':
+            case 'eu':
+            case 'fa':
+            case 'fi':
+            case 'fo':
+            case 'fur':
+            case 'fy':
+            case 'gl':
+            case 'gu':
+            case 'ha':
+            case 'he':
+            case 'hu':
+            case 'is':
+            case 'it':
+            case 'ku':
+            case 'lb':
+            case 'ml':
+            case 'mn':
+            case 'mr':
+            case 'nah':
+            case 'nb':
+            case 'ne':
+            case 'nl':
+            case 'nn':
+            case 'no':
+            case 'om':
+            case 'or':
+            case 'pa':
+            case 'pap':
+            case 'ps':
+            case 'pt':
+            case 'so':
+            case 'sq':
+            case 'sv':
+            case 'sw':
+            case 'ta':
+            case 'te':
+            case 'tk':
+            case 'ur':
+            case 'zu':
+                return (number === 1) ? 0 : 1;
 
-        case 'am':
-        case 'bh':
-        case 'fil':
-        case 'fr':
-        case 'gun':
-        case 'hi':
-        case 'ln':
-        case 'mg':
-        case 'nso':
-        case 'xbr':
-        case 'ti':
-        case 'wa':
-            return ((number === 0) || (number == 1)) ? 0 : 1;
+            case 'am':
+            case 'bh':
+            case 'fil':
+            case 'fr':
+            case 'gun':
+            case 'hi':
+            case 'ln':
+            case 'mg':
+            case 'nso':
+            case 'xbr':
+            case 'ti':
+            case 'wa':
+                return ((number === 0) || (number === 1)) ? 0 : 1;
 
-        case 'be':
-        case 'bs':
-        case 'hr':
-        case 'ru':
-        case 'sr':
-        case 'uk':
-            return ((number % 10 == 1) && (number % 100 != 11)) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
+            case 'be':
+            case 'bs':
+            case 'hr':
+            case 'ru':
+            case 'sr':
+            case 'uk':
+                return ((number % 10 === 1) && (number % 100 !== 11)) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
 
-        case 'cs':
-        case 'sk':
-            return (number == 1) ? 0 : (((number >= 2) && (number <= 4)) ? 1 : 2);
+            case 'cs':
+            case 'sk':
+                return (number === 1) ? 0 : (((number >= 2) && (number <= 4)) ? 1 : 2);
 
-        case 'ga':
-            return (number == 1) ? 0 : ((number == 2) ? 1 : 2);
+            case 'ga':
+                return (number === 1) ? 0 : ((number === 2) ? 1 : 2);
 
-        case 'lt':
-            return ((number % 10 == 1) && (number % 100 != 11)) ? 0 : (((number % 10 >= 2) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
+            case 'lt':
+                return ((number % 10 === 1) && (number % 100 !== 11)) ? 0 : (((number % 10 >= 2) && ((number % 100 < 10) || (number % 100 >= 20))) ? 1 : 2);
 
-        case 'sl':
-            return (number % 100 == 1) ? 0 : ((number % 100 == 2) ? 1 : (((number % 100 == 3) || (number % 100 == 4)) ? 2 : 3));
+            case 'sl':
+                return (number % 100 === 1) ? 0 : ((number % 100 === 2) ? 1 : (((number % 100 === 3) || (number % 100 === 4)) ? 2 : 3));
 
-        case 'mk':
-            return (number % 10 == 1) ? 0 : 1;
+            case 'mk':
+                return (number % 10 === 1) ? 0 : 1;
 
-        case 'mt':
-            return (number == 1) ? 0 : (((number === 0) || ((number % 100 > 1) && (number % 100 < 11))) ? 1 : (((number % 100 > 10) && (number % 100 < 20)) ? 2 : 3));
+            case 'mt':
+                return (number === 1) ? 0 : (((number === 0) || ((number % 100 > 1) && (number % 100 < 11))) ? 1 : (((number % 100 > 10) && (number % 100 < 20)) ? 2 : 3));
 
-        case 'lv':
-            return (number === 0) ? 0 : (((number % 10 == 1) && (number % 100 != 11)) ? 1 : 2);
+            case 'lv':
+                return (number === 0) ? 0 : (((number % 10 === 1) && (number % 100 !== 11)) ? 1 : 2);
 
-        case 'pl':
-            return (number == 1) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 12) || (number % 100 > 14))) ? 1 : 2);
+            case 'pl':
+                return (number === 1) ? 0 : (((number % 10 >= 2) && (number % 10 <= 4) && ((number % 100 < 12) || (number % 100 > 14))) ? 1 : 2);
 
-        case 'cy':
-            return (number == 1) ? 0 : ((number == 2) ? 1 : (((number == 8) || (number == 11)) ? 2 : 3));
+            case 'cy':
+                return (number === 1) ? 0 : ((number === 2) ? 1 : (((number === 8) || (number === 11)) ? 2 : 3));
 
-        case 'ro':
-            return (number == 1) ? 0 : (((number === 0) || ((number % 100 > 0) && (number % 100 < 20))) ? 1 : 2);
+            case 'ro':
+                return (number === 1) ? 0 : (((number === 0) || ((number % 100 > 0) && (number % 100 < 20))) ? 1 : 2);
 
-        case 'ar':
-            return (number === 0) ? 0 : ((number == 1) ? 1 : ((number == 2) ? 2 : (((number >= 3) && (number <= 10)) ? 3 : (((number >= 11) && (number <= 99)) ? 4 : 5))));
+            case 'ar':
+                return (number === 0) ? 0 : ((number === 1) ? 1 : ((number === 2) ? 2 : (((number >= 3) && (number <= 10)) ? 3 : (((number >= 11) && (number <= 99)) ? 4 : 5))));
 
-        default:
-            return 0;
+            default:
+                return 0;
         }
     }
 
@@ -485,7 +498,6 @@ var Translator = (function (document, undefined) {
             return this;
         },
 
-
         /**
          * Translates the given message.
          *
@@ -498,11 +510,11 @@ var Translator = (function (document, undefined) {
          */
         trans(id, parameters, domain, locale) {
             const _message = get_message(
-                id,
+                getId(id, parameters, domain, locale),
                 domain,
                 locale,
                 this.locale,
-                this.fallback,
+                this.fallback
             );
 
             return replace_placeholders(_message, parameters || {});
@@ -521,20 +533,20 @@ var Translator = (function (document, undefined) {
          */
         transChoice(id, number, parameters, domain, locale) {
             let _message = get_message(
-                id,
+                getId(id, number, parameters, domain, locale),
                 domain,
                 locale,
                 this.locale,
-                this.fallback,
+                this.fallback
             );
 
             const _number = parseInt(number, 10) || 0;
 
-            if (undefined != _message) {
+            if (undef !== _message) {
                 _message = pluralize(
                     _message,
                     _number,
-                    locale || this.locale || this.fallback,
+                    locale || this.locale || this.fallback
                 );
             }
 
@@ -566,13 +578,13 @@ var Translator = (function (document, undefined) {
             }
 
             if (data.translations) {
-                for (const locale in data.translations) {
-                    for (const domain in data.translations[locale]) {
-                        for (const id in data.translations[locale][domain]) {
+                Object.keys(data.translations).forEach((locale) => {
+                    Object.keys(data.translations[locale]).forEach((domain) => {
+                        Object.keys(data.translations[locale][domain]).forEach((id) => {
                             this.add(id, data.translations[locale][domain][id], domain, locale);
-                        }
-                    }
-                }
+                        });
+                    });
+                });
             }
 
             return this;
@@ -585,7 +597,7 @@ var Translator = (function (document, undefined) {
             _messages = {};
             _domains = [];
             this.locale = get_current_locale();
-        },
+        }
     };
 }(document, undefined));
 
@@ -603,7 +615,7 @@ export default function (Vue) {
             config = locale;
             Translator.fromJSON(locale);
             Translator.locale = locale.locale;
-        },
+        }
 
     });
 

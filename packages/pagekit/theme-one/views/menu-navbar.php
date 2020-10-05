@@ -1,5 +1,5 @@
 <?php if ($root->getDepth() === 0) : ?>
-<ul class="uk-navbar-nav">
+<ul class="<?= implode(' ', (array) @$class) ?>">
 <?php endif ?>
 
     <?php foreach ($root->getChildren() as $node) : ?>

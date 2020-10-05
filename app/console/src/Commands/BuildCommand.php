@@ -32,7 +32,7 @@ class BuildCommand extends Command
         '^app\/vendor\/lusitanian\/oauth\/examples',
         '^app\/vendor\/maximebf\/debugbar\/src\/DebugBar\/Resources',
         '^app\/vendor\/nickic\/php-parser\/(grammar|test_old)',
-        '^app\/vendor\/(phpdocumentor|phpspec|phpunit|sebastian|symfony\/yaml)',
+        '^app\/vendor\/(phpdocumentor|phpspec|sebastian|symfony\/yaml)',
         '^app\/vendor\/[^\/]+\/[^\/]+\/(build|docs?|tests?|changelog|phpunit|upgrade?)',
         'node_modules'
     ];
@@ -55,12 +55,13 @@ class BuildCommand extends Command
             $config[$key] = $this->container->get($key);
         }
 
-        $composer = new Composer($config, $output);
-        $composer->install($packages);
+        // TODO: Don't install packages from repo during development.
+        // $composer = new Composer($config, $output);
+        // $composer->install($packages);
 
         $this->line(sprintf('Starting: webpack'));
 
-        exec('webpack -p');
+        exec('node_modules/.bin/webpack -p');
 
         $this->line(sprintf('Building Package.'));
 
@@ -93,6 +94,7 @@ class BuildCommand extends Command
         $name = basename($zipFile);
         $size = filesize($zipFile) / 1024 / 1024;
 
-        $this->line(sprintf('Build: %s (%.2f MB)', $name, $size));
+        // TODO: Callback
+        return (int) $this->line(sprintf('Build: %s (%.2f MB)', $name, $size));
     }
 }

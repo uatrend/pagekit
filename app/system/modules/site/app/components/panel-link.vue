@@ -11,19 +11,37 @@
             </div>
         </div>
 
-        <component :is="type" v-if="type" :link.sync="link" />
+        <component :is="type" v-if="type" v-model="link" />
     </div>
 </template>
 
 <script>
 
-export default {
+const PanelLink = {
+
+    components: {},
 
     data() {
         return {
             type: false,
-            link: '',
+            link: ''
         };
+    },
+
+    computed: {
+
+        types() {
+            const types = [];
+
+            _.forIn(this.$options.components, (component, name) => {
+                if (component.link) {
+                    types.push({ text: component.link.label, value: name });
+                }
+            });
+
+            return _.sortBy(types, 'text');
+        }
+
     },
 
     watch: {
@@ -34,34 +52,21 @@ export default {
                     this.type = this.types[0].value;
                 }
             },
-            immediate: true,
-        }
-
-    },
-
-    computed: {
-
-        types() {
-            const types = []; let
-                options;
-
-            _.forIn(this.$options.components, (component, name) => {
-                if (component.link) {
-                    types.push({ text: component.link.label, value: name });
-                }
-            });
-
-            return _.sortBy(types, 'text');
+            immediate: true
         },
 
-    },
+        link(link) {
+            this.$emit('link-changed', link);
+        }
 
-    components: {},
+    }
 
 };
 
-Vue.component('panel-link', (resolve) => {
-    resolve(require('./panel-link.vue'));
+Vue.component('PanelLink', (resolve) => {
+    resolve(PanelLink);
 });
+
+export default PanelLink;
 
 </script>

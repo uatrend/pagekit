@@ -4,7 +4,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         priority: 15,
@@ -78,20 +78,27 @@ module.exports = {
                             </tbody>
                         </table>
                     </template>
-                </div>`,
+                </div>`
     },
-
-    props: ['data'],
-
-    replace: false,
 
     filters: {
 
         short(name) {
             return name.split('\\').pop();
-        },
+        }
 
     },
+
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
+    },
+
+    replace: false
 
 };
 

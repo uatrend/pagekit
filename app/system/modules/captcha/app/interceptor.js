@@ -1,11 +1,9 @@
 const config = window.$captcha;
-let requestResolve; let
-    requestReject;
+let requestResolve;
+let requestReject;
 
 if (config.grecaptcha) {
-    Vue.asset({
-        js: ['https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit'],
-    });
+    Vue.asset({ js: ['https://www.google.com/recaptcha/api.js?onload=onRecaptchaLoad&render=explicit'] });
 
     let resolveLoad;
     const loadPromise = new Vue.Promise(((resolve) => {
@@ -21,39 +19,39 @@ if (config.grecaptcha) {
             callback: onSubmit,
             'expired-callback': onExpire,
             'error-callback': onError,
-            size: 'invisible',
+            size: 'invisible'
         });
         resolveLoad();
     };
 
-    Vue.http.interceptors.push((request) => {
+    Vue.http.interceptors.push((request, response) => {
         if (!config.routes || request.method.toLowerCase() !== 'post' || !config.routes.some((route) => {
             const exp = new RegExp(route.replace(/{.+?}/, '.+?'));
             return exp.test(request.url);
         })) {
+            return response; // TODO
+        }
 
-        } else if (!request.body.gRecaptchaResponse) {
-            return new Vue.Promise(((resolve, reject) => {
-                requestResolve = function (gRecaptchaResponse) {
-                    grecaptcha.reset();
-                    try {
-                        var body = JSON.parse(request.getBody());
-                    } catch (e) {
-                        var body = request.getBody();
-                    }
-                    body.gRecaptchaResponse = gRecaptchaResponse;
-                    request.body = body;
-                    resolve(Vue.http(request));
-                };
-                requestReject = function (error) {
-                    return reject({
-                        data: error,
-                    });
-                };
-                loadPromise.then(() => {
-                    grecaptcha.execute();
-                });
-            }));
+        if (!request.body.gRecaptchaResponse) {
+            return new Vue.Promise(
+                (resolve, reject) => {
+                    requestResolve = function (gRecaptchaResponse) {
+                        let body;
+                        grecaptcha.reset();
+                        try {
+                            body = JSON.parse(request.getBody());
+                        } catch (e) {
+                            body = request.getBody();
+                        }
+                        body.gRecaptchaResponse = gRecaptchaResponse;
+                        request.body = body;
+                        resolve(Vue.http(request));
+                    };
+                    requestReject = (error) => reject({ data: error });
+
+                    loadPromise.then(() => grecaptcha.execute());
+                }
+            );
         }
     });
 }

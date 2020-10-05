@@ -21,16 +21,16 @@
             <p>{{ 'You have the latest version of Pagekit. You do not need to update. However, if you want to re-install version %version%, you can download the package and re-install manually.' | trans(update) }}</p>
         </div>
 
-        <p>
+        <p class="uk-disabled">
             <a class="uk-button uk-button-primary" @click.prevent="install" v-show="hasUpdate">
                 <span>{{ 'Update' | trans }}</span>
             </a>
             <a class="uk-button uk-button-default" :href="update.url">{{ 'Download %version%' | trans(update) }}</a>
         </p>
 
-        <hr class="uk-margin-medium">
+        <hr class="uk-margin">
 
-        <h2 class="uk-h3" v-show="hasUpdate">{{ 'Changelog' | trans }}</h2>
+        <h2 class="uk-h3 uk-margin" v-show="hasUpdate">{{ 'Changelog' | trans }}</h2>
         <div v-for="release in releases" v-if="showChangelog(release.version)">
 
             <h2 class="uk-h3">{{ release.version }} <small class="uk-text-muted">/ <time :datetime="release.published_at" :title="release.published_at | date">{{ release.published_at | relativeDate({max:2592000}) }}</time></small></h2>

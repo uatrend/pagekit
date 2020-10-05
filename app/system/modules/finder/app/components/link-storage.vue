@@ -3,15 +3,15 @@
         <div class="uk-margin">
             <label class="uk-form-label">{{ 'File' | trans }}</label>
             <div class="uk-form-controls">
-                <div class="pk-form-link uk-width-1-1">
-                    <input ref="input" v-model.lazy="file" class="uk-width-1-1 uk-input" type="text">
-                    <a class="pk-form-link-toggle pk-link-icon uk-flex-middle" @click.prevent="pick">{{ 'Select' | trans }} <i class="pk-icon-link pk-icon-hover uk-margin-small-left" /></a>
+                <div class="uk-inline uk-width-expand">
+                    <a class="uk-form-icon uk-form-icon-flip uk-width-auto uk-text-small" @click.prevent="pick">{{ 'Select' | trans }}<i class="uk-margin-small-left uk-margin-small-right" uk-icon="icon: link" /></a>
+                    <input ref="input" v-model.lazy="file" class="uk-input" type="text">
                 </div>
             </div>
         </div>
 
         <v-modal ref="modal" large>
-            <panel-finder ref="finder" :root="storage" :modal="true" @select:finder="selectFinder" />
+            <panel-finder ref="finder" :root="storage" :modal="true" @finder-select="selectFinder" />
 
             <div class="uk-modal-footer">
                 <div class="uk-flex uk-flex-middle uk-flex-between">
@@ -37,33 +37,29 @@
 
 <script>
 
-var LinkStorage = {
+const LinkStorage = {
 
-    link: {
-        label: 'Storage',
-    },
-
-    props: ['link'],
+    link: { label: 'Storage' },
 
     data() {
         return _.merge({
             file: undefined,
             choice: '',
-            finder: {},
+            finder: {}
         }, $pagekit);
     },
 
     computed: {
         isFinder() {
             return !!((this.finder.hasOwnProperty('selected') && this.finder.selected));
-        },
+        }
     },
 
     created() {
         this.assets = this.$asset({
             js: [
-                'app/system/modules/finder/app/bundle/panel-finder.js',
-            ],
+                'app/system/modules/finder/app/bundle/panel-finder.js'
+            ]
         }).then(function () {
             this.file = '';
         });
@@ -78,8 +74,8 @@ var LinkStorage = {
 
     watch: {
         file(file) {
-            this.$parent.link = file;
-        },
+            this.$emit('input', this.file);
+        }
     },
 
     methods: {
@@ -94,7 +90,7 @@ var LinkStorage = {
         },
 
         select() {
-            this.file = this.$refs.finder.getSelected()[0];
+            this.file = decodeURIComponent(unescape(this.$refs.finder.getSelected()[0]));
             this.$refs.finder.removeSelection();
             this.$refs.modal.close();
         },
@@ -102,9 +98,9 @@ var LinkStorage = {
         hasSelection() {
             const selected = this.$refs.finder.getSelected();
             return selected.length === 1;
-        },
+        }
 
-    },
+    }
 
 };
 

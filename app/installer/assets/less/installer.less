@@ -1,5 +1,8 @@
 @import "../../../assets/uikit/src/less/uikit.theme.less";
 
+@uikit-path: "../../../../../assets/uikit";
+@internal-form-select-image: "@{uikit-path}/src/images/icons/chevron-down.svg";
+
 /* ========================================================================
    Theme
  ========================================================================== */
@@ -27,9 +30,12 @@ body {
  ========================================================================== */
 
 .tm-background {
-    background: lighten(@global-primary-background, 10%) url("../../../system/modules/theme/images/background.jpg") 50% 50% no-repeat;
+    background: lighten(@global-primary-background, 10%) url("../../../system/modules/theme/assets/images/background.jpg") 50% 50% no-repeat;
     background-size: cover;
-}
+    overflow: hidden;
+    position: relative;
+    min-height: 100vh;
+ }
 
 /* Not used at the moment */
 .tm-background-clip:before {
@@ -39,7 +45,7 @@ body {
     bottom: -10px;
     left: -10px;
     right: -10px;
-    background: lighten(@global-primary-background, 10%) url("../../../system/modules/theme/images/background.jpg") 50% 50% no-repeat;
+    background: lighten(@global-primary-background, 10%) url("../../../system/modules/theme/assets/images/background.jpg") 50% 50% no-repeat;
     background-size: cover;
     -webkit-clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%, 0 50%, 25% 50%, 50% 75%, 75% 50%, 50% 25%, 25% 50%, 0 50%);
     -webkit-filter: blur(5px);
@@ -57,13 +63,29 @@ body {
  ========================================================================== */
 
 .tm-container {
-    width: 500px;
-    max-width: ~"calc(100% - 40px)";
-    padding: 20px;
+    position: fixed;
+    display: flex;
+    flex-wrap: nowrap;
+    top: 0;
+    left: 0;
+    right: 100vw;
+    bottom: 0;
 }
 
-.tm-container .uk-panel-box { padding: 50px; }
+.tm-container > div {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-width: 100vw;
+    height: 100vh;
+    overflow: auto;
+}
 
+.tm-container > div > div {
+    width: 500px;
+    max-width: calc(100% - 40px);
+    margin: 0 auto;
+}
 
 /* Modifier: `tm-form-horizontal`
  ========================================================================== */
@@ -76,9 +98,13 @@ body {
         margin-top: @form-horizontal-label-margin-top;
         float: left;
         /* Theme Reset */
-        font-size: 15px;//@global-font-size;
+        font-size: 15px;
         line-height: @global-line-height;
         text-transform: none;
+    }
+
+    .tm-form-horizontal label {
+        font-size: 15px;
     }
 
     .tm-form-horizontal .uk-form-controls { margin-left: 135px; }
@@ -117,7 +143,6 @@ body {
 .tm-loader > * > * {
     stroke-dasharray: @offset;
     stroke-dashoffset: 0;
-    // transform-origin: center;
     -webkit-animation: tm-loader-dash @duration ease-in-out infinite,
                        tm-loader-color (@duration*4) ease-in-out infinite;
     animation: tm-loader-dash @duration ease-in-out infinite,
@@ -221,6 +246,44 @@ body {
     100% { stroke-dashoffset: 0; }
 }
 
+/* Transition slide left and right
+ ========================================================================== */
+
+.slide-enter:nth-child(1) {
+  opacity: 0;
+  transform: translateX(-100%);
+  transition: all 0.5s ease-out;
+}
+.slide-enter-to:nth-child(1) {
+  opacity: 1;
+  transform: translateX(0);
+  transition: all 0.5s ease-out;
+}
+.slide-leave-to:nth-child(1) {
+    opacity: 0;
+    transform: translateX(-100%);
+    transition: all 0.5s ease-out;
+}
+.slide-enter:nth-child(2) {
+  opacity: 0;
+  transform: translateX(0%);
+  transition: all 0.5s ease-out;
+}
+.slide-enter-to:nth-child(2) {
+    opacity: 1;
+    transform: translateX(-100%);
+    transition: all 0.5s ease-out;
+}
+.slide-leave:nth-child(2) {
+  transform:translateX(-100%);
+}
+.slide-leave-to:nth-child(2) {
+    opacity: 0;
+    transform: translateX(0);
+    transition: all 0.5s ease-out;
+}
+
+
 
 /* UIkit modifications
  ========================================================================== */
@@ -292,22 +355,149 @@ body {
     }
 }
 
-.uk-card-body {
-    padding: 30px;
-}
+/*
+ * Form
+ */
 
+.uk-select:not([multiple]):not([size]) {
+    background-position: calc(~"100% - @{form-select-padding-right} / 2") 50%;
+}
+.uk-select:not([multiple]):not([size]):hover {
+    .svg-fill(@internal-form-select-image, "#333", @form-select-icon-color);
+    cursor: pointer;
+}
+.uk-label {
+    font-size: 12px;
+}
 .uk-select {
     padding: 0 4px;
 }
+.uk-card-header,
+.uk-card-body,
+.uk-card-footer {
+    padding: 20px 30px;
+}
+.uk-card-default .uk-card-header,
+.uk-card-default .uk-card-footer,
+.uk-modal-footer {
+    border: 0;
+}
+.uk-card-header {
+    padding-bottom: 0;
+}
+.uk-modal-header {
+    padding: 10px 30px;
+}
+.uk-button {
+    padding: 0 20px;
+    border-radius: 2px;
+    text-shadow: 0 1px 0px #eee;
+    text-transform: none;
+}
+.uk-input,
+.uk-select,
+.uk-textarea,
+.uk-radio,
+.uk-checkbox {
+    border-radius: 2px;
+}
+.uk-radio, .uk-checkbox {
+    width: 18px;
+    height: 18px;
+}
+.uk-alert.uk-alert-danger {
+    margin-left: -30px;
+    margin-right: -30px;
+}
 
-.slide-enter-active {
-  transition: all .3s ease;
+/*
+ * Icon navigation and icon button
+ */
+
+.uk-icon-button {
+    width: 46px;
+    height: 46px;
+    background: transparent;
+    border: 2px solid #999;
+    transition: .2s ease-in-out;
+    box-shadow: inset 0 1px 0px #eee;
 }
-.slide-leave-active {
-  display: none;
+.uk-iconnav {
+    margin-left: -20px;
 }
-.slide-enter, .slide-leave-to {
-  transform: translateX(100%);
-  opacity: 0;
+.uk-iconnav > * {
+    position: relative;
+    padding-left: 20px;
+    padding-right: 20px;
+    height: 66px;
+}
+@media(max-width: 639px) {
+    .uk-iconnav {
+        margin-left: -15px;
+    }
+    .uk-iconnav > * {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+}
+@media(max-width: 420px) {
+    .uk-iconnav {
+        margin-left: -10px;
+    }
+    .uk-iconnav > * {
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .uk-iconnav {
+        justify-content: flex-end;
+    }
+}
+.uk-iconnav > *:not(:first-child) > a > div {
+    position: absolute !important;
+    max-width: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.uk-iconnav > li > a {
+    text-decoration: none;
+}
+.uk-iconnav > li > a,
+.uk-iconnav > li > a > .uk-icon-button {
+    transition: .2s ease-in-out;
+    color: #999;
+    text-shadow: 0 1px 0px #eee;
+}
+.uk-iconnav > li > a:hover,
+.uk-iconnav > li > a:focus,
+.uk-iconnav > li > a:hover >.uk-icon-button,
+.uk-iconnav > li > a:focus > .uk-icon-button {
+    color: #666;
+}
+.uk-iconnav > li > a:hover > .uk-icon-button,
+.uk-iconnav > li > a:focus > .uk-icon-button {
+    border-color: #666;
+    background: none;
+}
+.passed {
+    color: #666 !important;
+}
+.passed > .uk-icon-button {
+    color: #666 !important;
+    border-color: #666 !important;
 }
 
+/*
+ * Base
+ */
+
+.uk-h3,
+.uk-h4,
+.uk-card-title {
+    font-weight: 300;
+}

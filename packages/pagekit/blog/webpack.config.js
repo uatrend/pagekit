@@ -12,14 +12,12 @@ module.exports = [
             'link-blog': './app/components/link-blog.vue',
             'post-meta': './app/components/post-meta.vue'
         },
-        output: {
-            filename: './app/bundle/[name].js',
-        },
+        output: { filename: './app/bundle/[name].js' },
         module: {
             rules: [
-                { test: /\.vue$/, use: 'vue-loader' },
-            ],
-        },
-    },
+                { test: /\.vue$/, use: 'vue-loader' }
+            ]
+        }
+    }
 
 ];

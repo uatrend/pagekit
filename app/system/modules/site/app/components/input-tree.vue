@@ -1,12 +1,12 @@
 <template>
     <div>
-        <label><input v-model="all" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'All Pages' | trans }}</span></label>
+        <label><input v-model="all" class="uk-checkbox" type="checkbox"> {{ 'All Pages' | trans }}</label>
 
         <ul class="uk-list">
             <li v-for="(menu, key) in treelist" v-show="menu.list.length" :key="key">
                 <span class="uk-h5">{{ menu.label }}</span>
                 <vue-nestable :value="menu.list">
-                    <label slot-scope="{ item }" :item="item"><input v-model="c_active" class="uk-checkbox" type="checkbox" :value="item.id" number><span class="uk-margin-small-left">{{ item.title }}</span></label>
+                    <label slot-scope="{ item }" :item="item"><input v-model="c_active" class="uk-checkbox" type="checkbox" :value="item.id" number> {{ item.title }}</label>
                 </vue-nestable>
             </li>
         </ul>
@@ -17,21 +17,23 @@
 
 import { VueNestable } from 'vue-nestable';
 
-export default {
+const InputTree = {
 
-    name: 'input-tree',
+    name: 'InputTree',
+
+    components: { VueNestable },
 
     props: {
         trash: {
             type: Boolean,
-            default: false,
+            default: false
         },
         active: {
             type: Array,
             default() {
                 return [];
-            },
-        },
+            }
+        }
     },
 
     data() {
@@ -40,13 +42,16 @@ export default {
             nodes: [],
             all: true,
             c_active: [],
-            treelist: [],
+            treelist: []
         };
     },
 
-    created() {
-        this.c_active = this.active;
-        this.all = !this.active || !this.active.length;
+    computed: {
+
+        grouped() {
+            return _(this.nodes).groupBy('menu').mapValues((nodes) => _(nodes || {}).sortBy('priority').groupBy('parent_id').value()).value();
+        }
+
     },
 
     watch: {
@@ -60,8 +65,13 @@ export default {
             if (all) {
                 this.c_active = [];
             }
-        },
+        }
 
+    },
+
+    created() {
+        this.c_active = this.active;
+        this.all = !this.active || !this.active.length;
     },
 
     mounted() {
@@ -69,7 +79,7 @@ export default {
 
         Vue.Promise.all([
             this.$http.get('api/site/node'),
-            this.$http.get('api/site/menu'),
+            this.$http.get('api/site/menu')
         ])
             .then((responses) => {
                 vm.$set(vm, 'nodes', responses[0].data);
@@ -86,16 +96,16 @@ export default {
 
     methods: {
         unflatten() {
-            let [array, parent, tree] = arguments; const
-                self = this;
+            let [array, parent, tree] = arguments; // eslint-disable-line prefer-const
+            const self = this;
 
             tree = typeof tree !== 'undefined' ? tree : [];
             parent = typeof parent !== 'undefined' ? parent : { id: 0 };
 
-            const children = _.filter(array, child => child.parent_id == parent.id);
+            const children = _.filter(array, (child) => child.parent_id === parent.id);
 
             if (!_.isEmpty(children)) {
-                if (parent.id == 0) {
+                if (parent.id === 0) {
                     tree = children;
                 } else {
                     parent.children = children;
@@ -104,24 +114,14 @@ export default {
             }
 
             return tree;
-        },
-    },
-
-    computed: {
-
-        grouped() {
-            return _(this.nodes).groupBy('menu').mapValues(nodes => _(nodes || {}).sortBy('priority').groupBy('parent_id').value()).value();
-        },
-
-    },
-
-    components: {
-        VueNestable
+        }
     }
 };
 
-Vue.component('input-tree', (resolve) => {
-    resolve(require('./input-tree.vue'));
+Vue.component('InputTree', (resolve) => {
+    resolve(InputTree);
 });
+
+export default InputTree;
 
 </script>

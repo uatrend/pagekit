@@ -19,7 +19,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         priority: 80,
@@ -54,12 +54,19 @@ module.exports = {
                             </tr>
                         </tbody>
                     </table>
-                </div>`,
+                </div>`
     },
 
     replace: false,
 
-    props: ['data'],
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
+    }
 
 };
 

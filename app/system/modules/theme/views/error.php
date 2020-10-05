@@ -8,7 +8,7 @@
         <meta name="robots" content="noindex,nofollow">
         <link href="<?= $view->url()->getStatic('system/theme:favicon.ico') ?>" rel="shortcut icon" type="image/x-icon">
         <link href="<?= $view->url()->getStatic('system/theme:apple_touch_icon.png') ?>" rel="apple-touch-icon-precomposed">
-        <link href="<?= $view->url()->getStatic('system/theme:css/theme.css') ?>" rel="stylesheet">
+        <link href="<?= $view->url()->getStatic('system/theme:assets/css/theme.css') ?>" rel="stylesheet">
     </head>
     <body>
 

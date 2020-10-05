@@ -6,10 +6,10 @@
                     <label class="uk-form-label">{{ 'User Type' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.show" class="uk-radio" type="radio" value="login"><span class="uk-margin-small-left">{{ 'Logged in' | trans }}</span></label>
+                            <label><input v-model="widget.show" class="uk-radio" type="radio" value="login"> {{ 'Logged in' | trans }}</label>
                         </p>
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.show" class="uk-radio" type="radio" value="registered"><span class="uk-margin-small-left">{{ 'Last registered' | trans }}</span></label>
+                            <label><input v-model="widget.show" class="uk-radio" type="radio" value="registered"> {{ 'Last registered' | trans }}</label>
                         </p>
                     </div>
                 </div>
@@ -18,10 +18,10 @@
                     <label class="uk-form-label">{{ 'Display' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.display" class="uk-radio" type="radio" value="thumbnail"><span class="uk-margin-small-left">{{ 'Thumbnail' | trans }}</span></label>
+                            <label><input v-model="widget.display" class="uk-radio" type="radio" value="thumbnail"> {{ 'Thumbnail' | trans }}</label>
                         </p>
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.display" class="uk-radio" type="radio" value="list"><span class="uk-margin-small-left">{{ 'List' | trans }}</span></label>
+                            <label><input v-model="widget.display" class="uk-radio" type="radio" value="list"> {{ 'List' | trans }}</label>
                         </p>
                     </div>
                 </div>
@@ -30,10 +30,10 @@
                     <label class="uk-form-label">{{ 'Total Users' | trans }}</label>
                     <div class="uk-form-controls uk-form-controls-text">
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.total" class="uk-radio" type="radio" value="1"><span class="uk-margin-small-left">{{ 'Show' | trans }}</span></label>
+                            <label><input v-model="widget.total" class="uk-radio" type="radio" value="1"> {{ 'Show' | trans }}</label>
                         </p>
                         <p class="uk-margin-small">
-                            <label><input v-model="widget.total" class="uk-radio" type="radio" value=""><span class="uk-margin-small-left">{{ 'Hide' | trans }}</span></label>
+                            <label><input v-model="widget.total" class="uk-radio" type="radio" value=""> {{ 'Hide' | trans }}</label>
                         </p>
                     </div>
                 </div>
@@ -104,32 +104,35 @@
 
 <script>
 
-module.exports = {
+import WidgetMixin from '@system/modules/dashboard/app/mixins/widget-mixin';
+
+const WidgetUser = {
+
+    mixins: [WidgetMixin],
 
     type: {
 
         id: 'user',
         label: 'User',
-        description() {
-
-        },
+        description: () => {},
         defaults: {
             show: 'login',
             display: 'thumbnail',
             total: true,
-            count: 12,
-        },
+            count: 12
+        }
 
     },
 
     replace: false,
 
-    props: ['widget', 'editing'],
+    props: ['value', 'editing'],
 
     data() {
         return {
+            widget: this.value,
             users: [],
-            userscount: null,
+            userscount: null
         };
     },
 
@@ -137,10 +140,10 @@ module.exports = {
 
         'widget.show': {
             handler: 'load',
-            immediate: true,
+            immediate: true
         },
 
-        'widget.count': 'load',
+        'widget.count': 'load'
 
     },
 
@@ -150,17 +153,9 @@ module.exports = {
             let query;
 
             if (this.widget.show === 'registered') {
-                query = {
-                    	params: {
-                        	filter: { order: 'registered DESC' },
-                    	},
-                };
+                query = { params: { filter: { order: 'registered DESC' } } };
             } else {
-                query = {
-                    	params: {
-                        	filter: { access: 300, order: 'login DESC' },
-                    	},
-                };
+                query = { params: { filter: { access: 300, order: 'login DESC' } } };
             }
 
             this.$http.get('api/user/count', query).then(function (res) {
@@ -172,12 +167,14 @@ module.exports = {
             this.$http.get('api/user{/id}', query).then(function (res) {
                 this.$set(this, 'users', res.data.users.slice(0, this.widget.count));
             });
-        },
+        }
 
-    },
+    }
 
 };
 
-window.Dashboard.components.user = module.exports;
+export default WidgetUser;
+
+window.Dashboard.components.user = WidgetUser;
 
 </script>

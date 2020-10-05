@@ -27,7 +27,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         priority: 20,
@@ -51,21 +51,7 @@ module.exports = {
                             </tr>
                         </tbody>
                     </table>
-                </div>`,
-    },
-
-    props: ['data'],
-
-    replace: false,
-
-    computed: {
-
-        active() {
-            return this.data.routes.filter(function (route) {
-                return route.name === this.data.route;
-            }, this)[0];
-        },
-
+                </div>`
     },
 
     filters: {
@@ -76,9 +62,28 @@ module.exports = {
 
         short(controller) {
             return controller.split('\\').pop();
-        },
+        }
 
     },
+
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
+    },
+
+    replace: false,
+
+    computed: {
+
+        active() {
+            return this.data.routes.filter((route) => route.name === this.data.route, this)[0];
+        }
+
+    }
 
 };
 

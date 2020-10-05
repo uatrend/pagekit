@@ -37,5 +37,5 @@
   'Header' => '헤더',
   'Written by %name% on %date%' => '%date%에 %name% 작성',
   'Read more' => '더보기',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} 코멘트가 없습니다|{1} %num%개 코멘트|]1,Inf[ %num%개 코멘트',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} 코멘트가 없습니다|{1} %count%개 코멘트|]1,Inf[ %count%개 코멘트',
 );

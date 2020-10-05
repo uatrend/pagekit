@@ -1,46 +1,45 @@
 <template>
     <div class="js-comment-reply uk-margin-auto">
-        <h3 class="uk-h4 uk-margin-medium-top">
-            {{ 'Leave a comment' | trans }}
-            <small>
-                <a v-if="parent" href="#" accesskey="c" class="uk-text-muted uk-margin-small-left" @click.prevent="cancel">{{ 'Cancel' | trans }}</a>
-            </small>
-        </h3>
+        <div class="uk-flex uk-flex-middle uk-margin-medium-top uk-margin-medium-bottom">
+            <h3 class="uk-h4 uk-margin-remove">
+                {{ 'Leave a comment' | trans }}
+            </h3>
+            <a v-if="parent && user.canComment" href="#" accesskey="c" class="uk-text-small uk-margin-small-left" @click.prevent="cancel">{{ 'Cancel' | trans }}</a>
+        </div>
 
         <div v-show="error" class="uk-alert uk-alert-danger">
             {{ error }}
         </div>
 
-        <validation-observer v-if="user.canComment" v-slot="{ invalid, passes }" slim>
-        <form class="uk-form-stacked" @submit.prevent="passes(save)">
-            <p v-if="user.isAuthenticated">
-                {{ 'Logged in as %name%' | trans({name:user.name}) }}
-            </p>
+        <validation-observer v-if="user.canComment" v-slot="{ passes }" slim>
+            <form class="uk-form-stacked" @submit.prevent="passes(save)">
+                <p v-if="user.isAuthenticated">
+                    {{ 'Logged in as %name%' | trans({name:user.name}) }}
+                </p>
 
-            <template v-else>
+                <template v-else>
+                    <div class="uk-margin">
+                        <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
+                        <v-input id="form-name" v-model="author" name="author" type="text" view="class: uk-input uk-form-width-large" rules="required" message="Name cannot be blank." />
+                    </div>
+
+                    <div class="uk-margin">
+                        <label for="form-email" class="uk-form-label">{{ 'Email' | trans }}</label>
+                        <v-input id="form-email" v-model="email" name="email" type="email" view="class: uk-input uk-form-width-large" rules="required|email" message="Email invalid." />
+                    </div>
+                </template>
+
                 <div class="uk-margin">
-                    <label for="form-name" class="uk-form-label">{{ 'Name' | trans }}</label>
-                    <v-input id="form-name" name="author" type="text" v-model="author" view="class: uk-input uk-form-width-large" rules="required" message="Name cannot be blank." />
+                    <label for="form-comment" class="uk-form-label">{{ 'Comment' | trans }}</label>
+                    <v-input id="form-comment" v-model="content" name="content" rows="10" view="tag: textarea, class: uk-textarea uk-form-width-large" rules="required" message="Comment cannot be blank." />
                 </div>
 
                 <div class="uk-margin">
-                    <label for="form-email" class="uk-form-label">{{ 'Email' | trans }}</label>
-                    <v-input id="form-email" name="email" type="email" v-model="email" view="class: uk-input uk-form-width-large" rules="required|email" message="Email invalid." />
+                    <button class="uk-button uk-button-primary" type="submit" accesskey="s">
+                        <span>{{ 'Submit' | trans }}</span>
+                    </button>
                 </div>
-            </template>
-
-            <div class="uk-margin">
-                <label for="form-comment" class="uk-form-label">{{ 'Comment' | trans }}</label>
-                <v-input id="form-comment" name="content" v-model="content" rows="10" view="tag: textarea, class: uk-textarea uk-form-width-large" rules="required" message="Comment cannot be blank." />
-            </div>
-
-            <div class="uk-margin">
-                <button class="uk-button uk-button-primary" type="submit" accesskey="s">
-                    <span>{{ 'Submit' | trans }}</span>
-                </button>
-            </div>
-
-        </form>
+            </form>
         </validation-observer>
 
         <template v-else>
@@ -62,13 +61,18 @@ export default {
 
     name: 'Reply',
 
+    components: {
+        ValidationObserver,
+        VInput
+    },
+
     data() {
         return {
             author: '',
             email: '',
             content: '',
             error: false,
-            form: false,
+            form: false
         };
     },
 
@@ -80,18 +84,28 @@ export default {
 
         login() {
             return this.$url('user/login', { redirect: window.location.href });
-        },
+        }
 
+    },
+
+    created() {
+        if (this.$parent.hasOwnProperty('replyVisible')) {
+            this.$on('hook:mounted', () => {
+                this.$parent.replyVisible = true;
+            });
+            this.$on('hook:beforeDestroy', () => {
+                this.$parent.replyVisible = false;
+            });
+        }
     },
 
     methods: {
 
         save() {
-
             const comment = {
                 parent_id: this.parent,
                 post_id: this.config.post,
-                content: this.content,
+                content: this.content
             };
 
             if (!this.user.isAuthenticated) {
@@ -121,13 +135,7 @@ export default {
 
         cancel() {
             this.root.reply();
-        },
-
-    },
-
-    components: {
-        ValidationObserver,
-        VInput
+        }
     }
 
 };

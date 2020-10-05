@@ -53,7 +53,7 @@
   'E-mail' => 'E-mail',
   'Field must be a valid email address.' => 'O campo debe conter un enderezo de e-mail válido.',
   'Save' => 'Salvar',
-  '{0} %count% Comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} %count% comentarios|{1} %num% comentario|]1,Inf[ %num% comentarios',
+  '{0} %count% Comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} %count% comentarios|{1} %count% comentario|]1,Inf[ %count% comentarios',
   '{1} %count% Comment selected|]1,Inf[ %count% Comments selected' => '{1} %count% comentario seleccionado|]1,Inf[ %count% comentarios seleccionados',
   'Title' => 'Título',
   'Date' => 'Data',
@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Por favor, inicia sesión para deixar un comentario.',
   'Written by %name% on %date%' => 'Escrito por %name% no %date%',
   'Read more' => 'Ler mais',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Ningún comentario|{1} %num% comentario|]1,Inf[ %num% comentarios',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Ningún comentario|{1} %count% comentario|]1,Inf[ %count% comentarios',
 );

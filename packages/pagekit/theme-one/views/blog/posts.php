@@ -5,8 +5,8 @@
     <?php foreach ($posts as $post) : ?>
     <article class="uk-article">
 
-        <?php if ($image = $post->get('image.src')): ?>
-        <a class="uk-display-block" href="<?= $view->url('@blog/id', ['id' => $post->id]) ?>"><img src="<?= $image ?>" alt="<?= $post->get('image.alt') ?>"></a>
+        <?php if ($image = $post->get('image.src')) : ?>
+        <a class="uk-display-block" href="<?= $view->url('@blog/id', ['id' => $post->id]) ?>"><img data-src="<?= $view->url($image) ?>" alt="<?= $post->get('image.alt') ?>" uk-img></a>
         <?php endif ?>
 
         <h1 class="uk-article-title"><a href="<?= $view->url('@blog/id', ['id' => $post->id]) ?>"><?= $post->title ?></a></h1>
@@ -17,7 +17,7 @@
 
         <div class="uk-margin"><?= $post->excerpt ?: $post->content ?></div>
 
-        <div class="uk-margin-top uk-float-right">
+        <div class="uk-margin-top">
             <ul class="uk-subnav uk-margin-remove-bottom">
 
                 <?php if (isset($post->readmore) && $post->readmore || $post->excerpt) : ?>
@@ -25,7 +25,8 @@
                 <?php endif ?>
 
                 <?php if ($post->isCommentable() || $post->comment_count) : ?>
-                <li><a href="<?= $view->url('@blog/id#comments', ['id' => $post->id]) ?>"><?= _c('{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments', $post->comment_count, ['%num%' => $post->comment_count]) ?></a></li>
+                <li><a href="<?= $view->url('@blog/id#comments', ['id' => $post->id]) ?>"><?= __('{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments', ['%count%' => $post->comment_count]) ?></a></li>
+                <!-- <li><a href="<?= $view->url('@blog/id#comments', ['id' => $post->id]) ?>"><?= _i('{apples, plural, =0 {There are no apples} one {There is one apple...} other {There are # apples!} }', ['apples' => $post->comment_count]) ?></a></li> -->
                 <?php endif ?>
 
             </ul>

@@ -5,7 +5,7 @@
     <div class="uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
         <div>
             <div class="uk-margin" v-show="hasUpdate">
-                <span class="pk-icon-bell uk-margin-small-right"></span>
+                <span class="uk-margin-small-right uk-icon-button uk-button-danger" uk-icon="bell"></span>
                 {{ 'Pagekit %version% is available.' | trans(update) }} <a href="admin/system/update">{{ 'Update now!' | trans }}</a>
             </div>
         </div>

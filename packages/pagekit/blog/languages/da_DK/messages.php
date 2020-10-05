@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Venligst login for at efterlade en kommentar.',
   'Written by %name% on %date%' => 'Skrevet af %name% d. %date%',
   'Read more' => 'Læs mere',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Ingen kommentarer|{1} %num% Kommentar|]1,Inf[ %num% Kommentarer',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Ingen kommentarer|{1} %count% Kommentar|]1,Inf[ %count% Kommentarer',
 );

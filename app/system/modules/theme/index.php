@@ -85,7 +85,7 @@ return [
             $user = $app['user'];
 
             $view->data('$pagekit', [
-                'editor' => $app->module('system/editor')->config(),//->config('editor')
+                'editor' => $app->module('system/editor')->config(),
                 'storage' => $app->module('system/finder')->config('storage'),
                 'user' => [
                     'id' => $user->id,

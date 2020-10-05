@@ -7,15 +7,14 @@
         <link href="<?= $view->url()->getStatic('system/theme:favicon.ico') ?>" rel="shortcut icon" type="image/x-icon">
         <link href="<?= $view->url()->getStatic('system/theme:apple_touch_icon.png') ?>" rel="apple-touch-icon-precomposed">
         <?= $view->render('head') ?>
-        <?php $view->style('theme', 'system/theme:css/theme.css') ?>
-        <?php $view->script('login', 'system/theme:js/login.js', ['uikit']) ?>
+        <?php $view->style('theme', 'system/theme:assets/css/theme.css') ?>
+        <?php $view->script('login', 'system/theme:app/bundle/login.js', ['uikit']) ?>
     </head>
     <body>
 
         <div class="uk-section-secondary">
-            <div class="uk-flex uk-flex-center uk-flex-middle uk-text-center tm-background" uk-height-viewport>
-                <div class="uk-background-cover uk-position-absolute uk-width-1-1" uk-height-viewport></div>
-                <div class="tm-container tm-container-small uk-position-z-index">
+            <div class="tm-background uk-background-cover uk-flex uk-flex-middle uk-flex-center" uk-height-viewport>
+                <div class="uk-panel uk-width-medium uk-text-center">
 
                     <img class="uk-margin-large-bottom" src="<?= $view->url()->getStatic('app/system/assets/images/pagekit-logo-text.svg') ?>" alt="Pagekit">
 
@@ -30,7 +29,7 @@
                             </div>
 
                             <div class="uk-margin">
-                                <input class="uk-width-1-1 uk-input" type="password" name="credentials[password]" value="" placeholder="<?= __('Password') ?>">
+                                <input class="uk-width-1-1 uk-input" type="password" name="credentials[password]" value="" placeholder="<?= __('Password') ?>" autocomplete="off">
                             </div>
 
                             <p class="uk-margin">

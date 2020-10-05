@@ -4,6 +4,15 @@ return [
 
     'name' => 'theme-one',
 
+    'main' => function($app) {
+
+        if ($app->isAdmin()) {
+            return;
+        }
+
+        require __DIR__.'/functions.php';
+    },
+
     /**
      * Menu positions
      */
@@ -19,11 +28,16 @@ return [
      */
     'positions' => [
 
+        'header' => 'Header',
         'navbar' => 'Navbar',
         'hero' => 'Hero',
-        'top' => 'Top',
+        'top-a' => 'Top A',
+        'top-b' => 'Top B',
+        'top-c' => 'Top C',
         'sidebar' => 'Sidebar',
-        'bottom' => 'Bottom',
+        'bottom-a' => 'Bottom A',
+        'bottom-b' => 'Bottom B',
+        'bottom-c' => 'Bottom C',
         'footer' => 'Footer',
         'offcanvas' => 'Offcanvas'
 
@@ -33,20 +47,59 @@ return [
      * Node defaults
      */
     'node' => [
-
+        // Predefinite params for all nodes.
         'title_hide' => false,
         'title_large' => false,
         'alignment' => '',
         'html_class' => '',
+        'content_hide' => false,
         'sidebar_first' => false,
-        'hero_image' => '',
-        'hero_viewport' => '',
-        'hero_contrast' => '',
-        'hero_parallax' => '',
-        'navbar_transparent' => '',
-        'top_style' => 'uk-section-muted',
-        'main_style' => 'uk-section-default',
-        'bottom_style' => 'uk-section-muted'
+        'positions' => [
+            'hero' => [
+                'height' => 'full',
+                'style' => 'uk-section-secondary',
+                'size'  => 'uk-section-large',
+            ],
+            'top-a' => [
+                'style' => 'uk-section-muted',
+            ],
+            'top-c' => [
+                'style' => 'uk-section-muted',
+            ],
+            'bottom-a' => [
+                'style' => 'uk-section-muted',
+            ],
+            'bottom-c' => [
+                'style' => 'uk-section-muted',
+            ]
+        ],
+
+
+    ],
+
+    /**
+     * Position defaults
+     */
+    'position' => [
+        // Order is important, choose position to edit default options.
+        'customizable' => ['hero', 'top-a', 'top-b', 'top-c', 'main', 'bottom-a', 'bottom-b', 'bottom-c'],
+        'defaults' => [
+            'image' => '',
+            'image_position' => '',
+            'effect' => '',
+            'width' => '',
+            'height' => '',
+            'vertical_align' => 'middle',
+            'style' => 'uk-section-default',
+            'size'  => '',
+            'padding_remove_top' => false,
+            'padding_remove_bottom' => false,
+            'preserve_color' => false,
+            'overlap' => false,
+            'header_transparent' => false,
+            'header_preserve_color' => false,
+            'header_transparent_noplaceholder' => false
+        ]
 
     ],
 
@@ -56,7 +109,7 @@ return [
     'widget' => [
 
         'title_hide' => false,
-        'title_size' => 'uk-card-title',
+        'title_size' => 'uk-h3',
         'alignment' => '',
         'html_class' => '',
         'panel' => ''
@@ -74,7 +127,23 @@ return [
     'config' => [
 
         'logo_contrast' => '',
-        'logo_offcanvas' => ''
+        'logo_offcanvas' => '',
+        'header' => [
+            'layout' => 'horizontal-right',
+            'fullwidth' => false,
+            'logo_padding_remove' => false
+        ],
+        'navbar' => [
+            'sticky' => 1,
+            'dropbar' => '',
+            'dropbar_align' => 'left',
+            'dropdown_boundary' => false,
+            'offcanvas' => [
+                'mode' => 'reveal',
+                'overlay' => false,
+                'flip' => false
+            ]
+        ]
 
     ],
 
@@ -90,6 +159,7 @@ return [
 
         'view.system/site/admin/edit' => function ($event, $view) {
             $view->script('node-theme', 'theme:app/bundle/node-theme.js', 'site-edit');
+            $view->data('$theme', $this->options);
         },
 
         'view.system/widget/edit' => function ($event, $view) {
@@ -107,15 +177,9 @@ return [
 
             $params = $view->params;
 
-            $classes = [
-                // 'navbar' => 'tm-navbar',
-                'hero' => '',
-                'parallax' => ''
-            ];
-
             $sticky = [
-                'media' => 768,
-                'show-on-up' => 1,
+                'media' => '@m',
+                'show-on-up' => 'true',
                 'animation' => 'uk-animation-slide-top',
                 'cls-active' => 'uk-navbar-sticky',
                 'sel-target' => '.uk-navbar-container'
@@ -124,38 +188,9 @@ return [
             $sticky_args = "";
             array_walk($sticky, function ($item, $key) use (&$sticky_args) { $sticky_args .= $key .": " . $item . "; "; } );
 
-            if ($params['hero_viewport']) {
-                $classes['viewport'] = 'uk-height-viewport="offset-top: true"';
-            }
-
-            // Sticky overlay navbar if hero position exists
-            if ($params['navbar_transparent'] && $view->position()->exists('hero') && $params['hero_image']) {
-
-                $classes['header_transparent'] = 'tm-header-transparent="dark"';
-
-                if ($params['hero_viewport']) {
-                    $classes['viewport'] = 'uk-height-viewport';
-                } else {
-                    $classes['hero'] = 'tm-hero-padding';
-                }
-
-                if ($params['hero_contrast']) {
-                    $classes['header_transparent'] = 'tm-header-transparent="light"';
-                }
-
-            }
-
-            if ($params['hero_parallax'] && $view->position()->exists('hero') && $params['hero_image']) {
-                $classes['parallax'] = 'uk-parallax="bgy: -400"';
-            }
-
-            if ($params['hero_contrast'] && $params['hero_image']) {
-                $classes['hero'] .= ' uk-section-secondary';
-            }
-
             $classes['sticky'] = 'uk-sticky="'. $sticky_args .'"';
-
             $params['classes'] = $classes;
+            $params['position'] = $this->options['position'];
         },
 
         'view.system/site/widget-menu' => function ($event, $view) {

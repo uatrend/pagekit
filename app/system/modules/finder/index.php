@@ -38,7 +38,6 @@ return [
     'events' => [
 
         'view.scripts' => function ($event, $scripts) {
-            //$scripts->register('panel-finder', 'system/finder:app/bundle/panel-finder.js', ['vue', 'uikit-upload']);
             $scripts->register('panel-finder', 'system/finder:app/bundle/panel-finder.js', ['vue']);
             $scripts->register('input-image', 'system/finder:app/bundle/input-image.js', ['vue', 'panel-finder']);
             $scripts->register('input-video', 'system/finder:app/bundle/input-video.js', ['vue', 'panel-finder']);
@@ -92,7 +91,7 @@ return [
 
         'storage' => false,
 
-        'extensions' => 'bmp,gif,jpeg,jpg,mp4,ogg,pdf,png,svgz,svg,swf'
+        'extensions' => 'bmp,gif,jpeg,jpg,png,svgz,svg,ico,webp,mpeg,ogv,mp4,m4v,webm,wmv,ogg,wma,mp3,m4a,aac,pdf,txt,xls,xlsx,doc,docx,zip,7z,rar,tar.gz'
 
     ]
 

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div v-if="!type.disableToolbar" class="uk-card-badge">
+        <div v-if="!type.disableToolbar" class="uk-position-top-right uk-position-small">
             <ul class="uk-iconnav uk-invisible-hover">
                 <li v-show="type.editable !== false && !editing">
                     <a uk-icon="file-edit" :title="'Edit' | trans" uk-tooltip="delay: 500" @click.prevent="edit" />
@@ -17,7 +17,7 @@
             </ul>
         </div>
 
-        <component :is="type.component" :widget="widget" :editing="editing" />
+        <component :is="type.component" v-model="current" :editing="editing" />
     </div>
 </template>
 
@@ -25,27 +25,36 @@
 
 export default {
 
-    name: 'panel',
+    name: 'Panel',
 
-    props: { widget: {} },
+    inject: ['$components'],
+
+    props: {
+        widget: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
+    },
 
     data() {
         return {
-            editing: false,
+            current: this.widget,
+            editing: false
         };
     },
-
-    created() {
-        this.$options.components = this.$parent.$options.components;
-    },
-
 
     computed: {
 
         type() {
-            return this.$root.getType(this.widget.type);
-        },
+            return this.$parent.getType(this.current.type);
+        }
 
+    },
+
+    created() {
+        _.extend(this.$options.components, this.$components);
     },
 
     methods: {
@@ -55,15 +64,15 @@ export default {
         },
 
         save() {
-            this.$root.save(this.widget);
+            this.$parent.save(this.current);
             this.$set(this, 'editing', false);
         },
 
         remove() {
-            this.$root.remove(this.widget);
-        },
+            this.$root.remove(this.current);
+        }
 
-    },
+    }
 
 };
 

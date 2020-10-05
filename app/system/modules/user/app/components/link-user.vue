@@ -1,6 +1,6 @@
 <template>
     <div class="uk-margin">
-        <label class="uk-form-label">{{ 'View' | trans }}</label>
+        <label class="uk-form-label">{{ 'Redirect' | trans }}</label>
         <div class="uk-form-controls">
             <select v-model="url" class="uk-width-1-1 uk-select">
                 <option value="@user/login">
@@ -25,18 +25,12 @@
 
 <script>
 
-var LinkUser = {
+const LinkUser = {
 
-    link: {
-        label: 'User',
-    },
-
-    props: ['link'],
+    link: { label: 'User' },
 
     data() {
-        return {
-            url: '',
-        };
+        return { url: '' };
     },
 
     created() {
@@ -45,10 +39,9 @@ var LinkUser = {
 
     watch: {
         url(url) {
-            this.$parent.link = url;
-        },
-    },
-
+            this.$emit('input', url);
+        }
+    }
 
 };
 

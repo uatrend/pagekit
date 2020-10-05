@@ -1,20 +1,31 @@
-const Debugbar = Vue.extend(require('./debugbar.vue').default);
+import DebugBarInstance from './debugbar.vue';
 
-Debugbar.component('time-component', require('./components/time.vue').default);
-Debugbar.component('system', require('./components/system.vue').default);
-Debugbar.component('events', require('./components/events.vue').default);
-Debugbar.component('routes', require('./components/routes.vue').default);
-Debugbar.component('memory', require('./components/memory.vue').default);
-Debugbar.component('database', require('./components/database.vue').default);
+import TimeComponent from './components/time.vue';
+import SystemComponent from './components/system.vue';
+import Events from './components/events.vue';
+import Routes from './components/routes.vue';
+import Memory from './components/memory.vue';
+import Database from './components/database.vue';
+import Auth from './components/auth.vue';
+import Log from './components/log.vue';
+import Profile from './components/profile.vue';
+
+const Debugbar = Vue.extend(DebugBarInstance);
+
+Debugbar.component('TimeComponent', TimeComponent);
+Debugbar.component('System', SystemComponent);
+Debugbar.component('Events', Events);
+Debugbar.component('Routes', Routes);
+Debugbar.component('Memory', Memory);
+Debugbar.component('Database', Database);
 // Debugbar.component('request', require('./components/request.vue'));
-Debugbar.component('auth', require('./components/auth.vue').default);
-Debugbar.component('log', require('./components/log.vue').default);
-Debugbar.component('profile', require('./components/profile.vue').default);
+Debugbar.component('Auth', Auth);
+Debugbar.component('Log', Log);
+Debugbar.component('Profile', Profile);
 
 Vue.ready(() => {
-    // new Debugbar().$mount().$appendTo('body');
     const debugbar = new Debugbar().$mount();
     UIkit.util.append(UIkit.util.$('body'), debugbar.$el);
 });
 
-module.exports = Debugbar;
+export default Debugbar;

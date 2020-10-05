@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'فضلا سجل دخولك لترك تعليق.',
   'Written by %name% on %date%' => 'كتبت من قبل %name% في %date%',
   'Read more' => 'إقرأ المزيد',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} لا توجد تعليقات|{1} %num% تعليق|]1,Inf[ %num% تعليقات',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} لا توجد تعليقات|{1} %count% تعليق|]1,Inf[ %count% تعليقات',
 );

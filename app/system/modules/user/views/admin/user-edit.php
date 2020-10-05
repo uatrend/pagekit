@@ -4,13 +4,10 @@
 
     <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap" >
         <div >
-
-            <h2 class="uk-margin-remove" v-if="user.id">{{ 'Edit User' | trans }}</h2>
-            <h2 class="uk-margin-remove" v-else>{{ 'Add User' | trans }}</h2>
-
+            <h2 class="uk-h3 uk-margin-remove" v-if="user.id">{{ 'Edit User' | trans }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-else>{{ 'Add User' | trans }}</h2>
         </div>
         <div class="uk-margin">
-
             <a v-if="!processing" class="uk-button uk-button-text uk-margin-right" :href="$url.route('admin/user')">{{ user.id ? 'Close' : 'Cancel' | trans }}</a>
             <button class="uk-button uk-button-primary" type="submit" :disabled="processing">
                 <span v-if="processing" uk-spinner ratio=".8" class="uk-margin-small-right"></span>
@@ -19,13 +16,13 @@
         </div>
     </div>
 
-    <ul ref="tab" id="user-tab">
+    <ul ref="tab">
         <li v-for="section in sections"><a>{{ section.label | trans }}</a></li>
     </ul>
 
-    <div class="uk-switcher uk-margin" ref="content" id="user-content">
+    <div class="uk-switcher uk-margin" ref="content">
         <div v-for="(section, key) in sections" :key="key">
-            <component :is="section.name" :user="user" :config="config" :form="form"></component>
+            <component :is="section.name" :config="config" v-model="user"></component>
         </div>
     </div>
 

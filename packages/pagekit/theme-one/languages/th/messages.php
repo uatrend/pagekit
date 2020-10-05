@@ -37,5 +37,5 @@
   'Header' => 'ส่วนหัว',
   'Written by %name% on %date%' => 'เขียนโดย %name% เมื่อ %date%',
   'Read more' => 'อ่านต่อ',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} ไม่มีความเห็น|{1} %num% ความเห็น|]1,Inf[ %num% ความเห็น',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} ไม่มีความเห็น|{1} %count% ความเห็น|]1,Inf[ %count% ความเห็น',
 );

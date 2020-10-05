@@ -13,16 +13,17 @@
 
             <div class="uk-panel">
 
-                <ul class="uk-nav uk-nav-default">
+                <ul class="uk-nav uk-nav-default pk-nav-large">
                     <li :class="{'uk-active': active()}">
-                        <a @click="select()">{{ 'All' | trans }}</a>
+                        <a @click="select()">{{ 'All' | trans }} <span class="uk-float-right uk-text-emphasis">{{ totalWidgets }}</span></a>
                     </li>
                     <li :class="{'uk-active': active(unassigned)}" v-show="unassigned.widgets.length">
-                        <a @click="select(unassigned)">{{ 'Unassigned' | trans }} <span class="uk-text-muted uk-float-right">{{ unassigned.widgets.length }}</span></a>
+                        <a @click="select(unassigned)">{{ 'Unassigned' | trans }} <span class="uk-float-right uk-text-emphasis">{{ unassigned.widgets.length }}</span></a>
                     </li>
-                    <li class="uk-nav-header">{{ 'Positions' | trans }}</li>
+                    <li class="uk-nav-divider"></li>
+                    <li class="uk-nav-header uk-margin-small-top">{{ 'Positions' | trans }}</li>
                     <li :class="{'uk-active': active(pos)}" v-for="pos in config.positions" :key="pos.name">
-                        <a @click="select(pos)">{{ pos.label }}  <span class="uk-text-muted uk-float-right" v-show="pos.widgets.length">{{ pos.widgets.length }}</span></a>
+                        <a @click="select(pos)">{{ pos.label }}  <span class="uk-float-right uk-text-emphasis" v-show="pos.widgets.length">{{ pos.widgets.length }}</span></a>
                     </li>
                 </ul>
 
@@ -89,7 +90,7 @@
                         <div class="pk-table-width-100 uk-text-center">{{ 'Status' | trans }}</div>
                         <div class="pk-table-width-100 pk-table-text-truncate">{{ 'Type' | trans }}</div>
                         <div class="pk-table-width-150 pk-table-text-truncate">
-                            <input-filter :title="$trans('Pages')" :value.sync="config.filter.node" :options="nodes" v-model="config.filter.node" number></input-filter>
+                            <input-filter :title="$trans('Pages')" v-model.number="config.filter.node" :options="nodes"></input-filter>
                         </div>
                     </div>
 
@@ -99,21 +100,21 @@
 
                 <div class="uk-margin-bottom" :data-pos="pos.name" v-for="pos in filtered_positions" :key="pos.name">
 
-                    <div class="pk-table-fake pk-table-fake-header" :class="{'pk-table-fake-border': !pos.widgets.length || (position && emptyafterfilter(pos.widgets))}" v-show="position || !emptyafterfilter(pos.widgets)">
+                    <div class="pk-table-fake pk-table-fake-header pk-table-fake-border" :class="{'pk-table-fake-border': !pos.widgets.length || (position && emptyafterfilter(pos.widgets))}" v-show="position || !emptyafterfilter(pos.widgets)">
                         <div class="pk-table-width-minimum"><input class="uk-checkbox" type="checkbox" v-check-all:selected="{ selector: 'input[name=id]', group: '[data-pos='+ pos.name +']' }" number></div>
                         <div class="pk-table-min-width-150" v-if="position">{{ 'Title' | trans }}</div>
                         <div class="pk-table-min-width-150" v-if="!position">{{ pos.label }}</div>
                         <div class="pk-table-width-100 uk-text-center">{{ 'Status' | trans }}</div>
                         <div class="pk-table-width-100 pk-table-text-truncate">{{ 'Type' | trans }}</div>
                         <div class="pk-table-width-150 pk-table-text-truncate">
-                            <input-filter :title="$trans('Pages')" :value.sync="config.filter.node" :options="nodes" v-model="config.filter.node" number></input-filter>
+                            <input-filter :title="$trans('Pages')" v-model.number="config.filter.node" :options="nodes"></input-filter>
                         </div>
                     </div>
 
                     <h3 class="uk-h2 uk-text-muted uk-text-center" v-if="!pos.widgets.length || (position && emptyafterfilter(pos.widgets))">{{ 'No widgets found.' | trans }}</h3>
 
-                    <ul class="uk-list uk-margin-remove" v-sortable v-if="!emptyafterfilter(pos.widgets)" :data-position="pos.name">
-                        <li class="check-item uk-margin-remove-top" :class="{'uk-active': isSelected(widget.id)}" v-for="widget in pos.widgets" :key="widget.id" :data-id="widget.id" v-show="infilter(widget)">
+                    <ul class="uk-list uk-list-collapse uk-margin-remove" v-sortable v-if="!emptyafterfilter(pos.widgets)" :data-position="pos.name">
+                        <li class="check-item" :class="{'uk-active': isSelected(widget.id)}" v-for="widget in pos.widgets" :key="widget.id" :data-id="widget.id" v-show="infilter(widget)">
 
                             <div class="tm-sortable-panel pk-table-fake">
                                 <div class="pk-table-width-minimum"><input class="uk-checkbox" type="checkbox" name="id" :value="widget.id"></div>

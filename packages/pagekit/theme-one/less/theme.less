@@ -1,0 +1,81 @@
+//
+// Core
+//
+
+@import "../app/assets/uikit/src/less/components/_import.less";
+
+//
+// Theme
+//
+
+@import "theme/_import.less";
+
+@image-path: "../app/assets/uikit/src/images";
+@internal-divider-icon-image:                   "@{image-path}/backgrounds/divider-icon.svg";
+@internal-form-select-image:                    "@{image-path}/backgrounds/form-select.svg";
+@internal-form-datalist-image:                  "@{image-path}/backgrounds/form-datalist.svg";
+@internal-form-radio-image:                     "@{image-path}/backgrounds/form-radio.svg";
+@internal-form-checkbox-image:                  "@{image-path}/backgrounds/form-checkbox.svg";
+@internal-form-checkbox-indeterminate-image:    "@{image-path}/backgrounds/form-checkbox-indeterminate.svg";
+@internal-list-bullet-image:                    "@{image-path}/backgrounds/list-bullet.svg";
+@internal-nav-parent-close-image:               "@{image-path}/backgrounds/nav-parent-close.svg";
+@internal-nav-parent-open-image:                "@{image-path}/backgrounds/nav-parent-open.svg";
+
+@offcanvas-bar-background:                      #333;
+@offcanvas-bar-padding-vertical:                25px;
+@offcanvas-bar-padding-horizontal:              25px;
+@nav-primary-item-font-size:                    1.15rem;
+@nav-primary-item-line-height:                  @global-line-height;
+
+[v-cloak] { display: none; }
+
+html {
+    -webkit-font-smoothing: antialiased;
+    -webkit-text-size-adjust: 100% !important;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.tm-header .uk-sticky-fixed > .uk-navbar-container:not(.uk-navbar-transparent) {
+    transition: .2s linear;
+    transition-property: padding;
+}
+
+.tm-header-overlay {
+    position: absolute;
+    z-index: 980;
+    left: 0;
+    right: 0
+}
+
+.uk-navbar-container:not(.uk-navbar-transparent) {
+  background: #fff;
+}
+
+/* Blog
+ ========================================================================== */
+
+.tm-container-small {
+    max-width: 800px;
+    margin: auto;
+}
+
+.tm-reply-visible,
+.tm-reply-visible > * {
+    position: relative;
+    z-index:1;
+}
+
+.tm-reply-visible:before {
+    content: '';
+    display: block;
+    position: absolute;
+    box-sizing: border-box;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: -15px;
+    background: rgba(245, 245, 245, 0.4);
+    border: 1px solid #e5e5e5;
+    z-index:0;
+}

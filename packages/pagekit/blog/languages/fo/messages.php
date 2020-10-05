@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Vinaliga rita inn fyri at viðmerkja.',
   'Written by %name% on %date%' => 'Skrivað av %name% tann %date%',
   'Read more' => 'Les meira',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Eingin viðmerking|{1} %num% Viðmerking|]1,Inf[ %num% Viðmerkingar',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Eingin viðmerking|{1} %count% Viðmerking|]1,Inf[ %count% Viðmerkingar',
 );

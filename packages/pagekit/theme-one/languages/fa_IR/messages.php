@@ -37,5 +37,5 @@
   'Header' => 'سر صفحه',
   'Written by %name% on %date%' => 'نوشته شده توسط %name% در %date%',
   'Read more' => 'بیشتر بخوانید',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} بدون نظر|{1} %num% نظر|]1,Inf[ %num% نظرها',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} بدون نظر|{1} %count% نظر|]1,Inf[ %count% نظرها',
 );

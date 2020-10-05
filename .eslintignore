@@ -4,5 +4,5 @@
 **/assets/**
 **/vendor/**
 **/bundle/**
-**/modules/editor/**
-**/theme.js
+**/theme/**/theme.js
+**/theme/**/components/**

@@ -5,22 +5,22 @@ export default {
     props: {
         value: {
             default: 0,
-            type: Number,
+            type: Number
         },
 
         pages: {
             default: 1,
-            type: Number,
+            type: Number
         },
 
         replaceState: {
             type: Boolean,
-            default: true,
+            default: true
         },
 
         options: {
             type: Object,
-            default: function() {return {}}
+            default() { return {}; }
         },
 
         name: {
@@ -30,14 +30,11 @@ export default {
     },
 
     data() {
-        return {
-            page: this.value,
-        };
+        return { page: this.value };
     },
 
     created() {
-
-        var name = this.name || this.$parent.$options.name || this.$parent.$options._componentTag;
+        const name = this.name || this.$parent.$options.name || this.$parent.$options._componentTag;
 
         this.key = `${name}.pagination`;
 
@@ -77,8 +74,8 @@ export default {
         pages(pages) {
             if (!this.pages) this.page = 0;
             this.pagination.render(pages);
-        },
+        }
 
-    },
+    }
 
 };

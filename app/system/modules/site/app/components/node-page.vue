@@ -2,8 +2,8 @@
     <div class="pk-grid-large pk-width-sidebar-large uk-form-stacked" uk-grid>
         <div class="pk-width-content">
             <div class="uk-margin">
-                <label class="uk-form-label">{{ 'Title' | trans }}</label>
-                <v-input name="page[title]" type="text" rules="required" view="class: uk-input uk-form-large" v-model.lazy="page.title" placeholder="Enter Title" message="Title cannot be blank." />
+                <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
+                <v-input id="form-title" v-model.lazy="page.title" name="page[title]" type="text" rules="required" view="class: uk-input uk-form-large" placeholder="Enter Title" message="Title cannot be blank." />
             </div>
 
             <div class="uk-margin">
@@ -19,55 +19,7 @@
         </div>
         <div class="pk-width-sidebar">
             <div class="uk-panel">
-                <div class="uk-margin">
-                    <label for="form-menu-title" class="uk-form-label">{{ 'Menu Title' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input id="form-menu-title" v-model="node.title" class="uk-form-width-large uk-input" type="text" name="title">
-                    </div>
-                </div>
-
-                <div class="uk-margin">
-                    <label for="form-slug" class="uk-form-label">{{ 'Slug' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <input id="form-slug" v-model="node.slug" class="uk-form-width-large uk-input" type="text">
-                    </div>
-                </div>
-
-                <div class="uk-margin">
-                    <label for="form-status" class="uk-form-label">{{ 'Status' | trans }}</label>
-                    <div class="uk-form-controls">
-                        <select id="form-status" v-model="node.status" class="uk-form-width-large uk-select">
-                            <option value="0">
-                                {{ 'Disabled' | trans }}
-                            </option>
-                            <option value="1">
-                                {{ 'Enabled' | trans }}
-                            </option>
-                        </select>
-                    </div>
-                </div>
-
-                <div class="uk-margin">
-                    <label class="uk-form-label">{{ 'Restrict Access' | trans }}</label>
-                    <div class="uk-form-controls uk-form-controls-text">
-                        <div v-for="role in roles" :key="role.id" class="uk-margin-small">
-                            <label>
-                                <input v-model.number="node.roles" class="uk-checkbox" type="checkbox" :value="role.id">
-                                <span class="uk-margin-small-left">{{ role.name }}</span>
-                            </label>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="uk-margin">
-                    <label class="uk-form-label">{{ 'Menu' | trans }}</label>
-                    <div class="uk-form-controls uk-form-controls-text">
-                        <label>
-                            <input v-model="node.data.menu_hide" class="uk-checkbox" type="checkbox" value="center-content">
-                            <span class="uk-margin-small-left">{{ 'Hide in menu' | trans }}</span>
-                        </label>
-                    </div>
-                </div>
+                <component :is="'template-settings'" v-model="node" :roles="roles" :title-required="false" />
             </div>
         </div>
     </div>
@@ -75,42 +27,26 @@
 
 <script>
 
-var PageSettings = {
+import NodeMixin from '../mixins/node-mixin';
 
-    section: {
-        label: 'Content',
-    },
+const NodePage = {
 
-    inject: ['$components'],
+    mixins: [NodeMixin],
 
-    props: ['node', 'roles', 'form'],
+    section: { label: 'Content' },
 
     data() {
         return {
             page: {
-                data: { title: true },
-            },
+                data: {
+                    title: true
+                }
+            }
         };
-    },
-
-    created(){
-        _.extend(this.$options.components, this.$components);
     },
 
     mounted() {
         if (!this.node.id) this.node.status = 1;
-    },
-
-    events: {
-
-        'save:node': function (event, data) {
-            data.page = this.page;
-
-            if (!this.node.title) {
-                this.node.title = this.page.title;
-            }
-        },
-
     },
 
     watch: {
@@ -125,16 +61,25 @@ var PageSettings = {
                 }
             },
 
-            immediate: true,
+            immediate: true
 
-        },
+        }
 
     },
 
+    events: {
+        'node-save': function (event, data) {
+            data.page = this.page;
+            if (!data.node.title) {
+                data.node.title = data.page.title;
+            }
+        }
+    }
+
 };
 
-export default PageSettings;
+export default NodePage;
 
-window.Site.components['page.settings'] = PageSettings;
+window.Site.components['page.settings'] = NodePage;
 
 </script>

@@ -7,7 +7,7 @@
         <link href="<?= $view->url()->getStatic('system/theme:favicon.ico') ?>" rel="shortcut icon" type="image/x-icon">
         <link href="<?= $view->url()->getStatic('system/theme:apple_touch_icon.png') ?>" rel="apple-touch-icon-precomposed">
         <?= $view->render('head') ?>
-        <?php $view->style('theme', 'system/theme:css/theme.css') ?>
+        <?php $view->style('theme', 'system/theme:assets/css/theme.css') ?>
         <?php $view->script('uikit') ?>
     </head>
     <body>

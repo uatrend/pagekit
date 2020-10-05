@@ -1,6 +1,6 @@
 import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 
-var Registration = {
+const Registration = {
 
     name: 'registration',
 
@@ -15,12 +15,12 @@ var Registration = {
                 type: 'icon',
                 containerClass: 'uk-margin',
                 class: 'uk-input uk-form-width-large',
-                icon: () => this.hidePassword ? 'lock' : 'unlock',
-                iconClick: () => { this.hidePassword = !this.hidePassword },
+                icon: () => (this.hidePassword ? 'lock' : 'unlock'),
+                iconClick: () => { this.hidePassword = !this.hidePassword; },
                 iconTag: 'a',
-                iconDir: 'right',
+                iconDir: 'right'
             }
-        }
+        };
     },
 
     methods: {
@@ -40,7 +40,7 @@ var Registration = {
             }, function (error) {
                 this.error = error.data;
             });
-        },
+        }
 
     },
 

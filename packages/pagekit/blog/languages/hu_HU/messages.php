@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Be kell jelentkezni a hozzászóláshoz.',
   'Written by %name% on %date%' => '%name% írta, %date%',
   'Read more' => 'Bővebben',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} nincs hozzászólás|{1} %num% hozzászólás|]1,Inf[ %num% hozzászólás',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} nincs hozzászólás|{1} %count% hozzászólás|]1,Inf[ %count% hozzászólás',
 );

@@ -9,41 +9,38 @@ export default {
 
     name: 'image-plugin',
 
-    data: () => ({images: []}),
+    data: () => ({ images: [] }),
 
     plugin: true,
 
     created() {
-
-        var vm = this, editor = this.$parent.editor;
+        const vm = this;
+        const editor = this.$parent.editor;
 
         if (!editor || !editor.htmleditor) {
             return;
         }
 
         // editor
-        on(editor.$el, 'action.image', function (e, editor) {
+        on(editor.$el, 'action.image', (e, edtr) => {
             e.stopImmediatePropagation();
-            vm.openModal(_.find(vm.images, function (img) {
-                return img.inRange(editor.getCursor());
-            }));
+            vm.openModal(_.find(vm.images, (img) => img.inRange(edtr.getCursor())));
         });
 
-        on(editor.$el, 'render', function () {
-            var regexp = editor.getMode() != 'gfm' ? /<img(.+?)>/gi : /(?:<img(.+?)>|!(?:\[([^\n\]]*)])(?:\(([^\n\]]*?)\))?)/gi;
+        on(editor.$el, 'render', () => {
+            const regexp = editor.getMode() !== 'gfm' ? /<img(.+?)>/gi : /(?:<img(.+?)>|!(?:\[([^\n\]]*)])(?:\(([^\n\]]*?)\))?)/gi;
             vm.images = editor.replaceInPreview(regexp, vm.replaceInPreview);
         });
 
-        on(editor.$el, 'renderLate', function () {
-
+        on(editor.$el, 'renderLate', () => {
             while (vm.$children.length) {
                 vm.$children[0].$destroy();
             }
 
-            Vue.nextTick(function () {
-                findAll('image-preview', editor.preview).forEach(function (el) {
-                    var Wrapper = vm.getWrapper(attr(el, 'index')),
-                        Component = new Wrapper();
+            Vue.nextTick(() => {
+                findAll('image-preview', editor.preview).forEach((el) => {
+                    const Wrapper = vm.getWrapper(attr(el, 'index'));
+                    const Component = new Wrapper();
                     Component.$mount(el);
                 });
             });
@@ -53,63 +50,69 @@ export default {
     methods: {
         getWrapper(index) {
             return Vue.extend({
-                name      : 'wrapper',
-                parent    : this,
+                name: 'Wrapper',
+                parent: this,
                 components: this.$options.components,
-                data      : () => this.$data,
-                render    : (h) => h('image-preview',{props: {index: index}}),
-                methods   : { openModal(image) { return this.$parent.openModal(image) } }
-            })
+                data: () => this.$data,
+                methods: { openModal(image) { return this.$parent.openModal(image); } },
+                render: (h) => h('image-preview', { props: { index } })
+            });
         },
 
         openModal(image) {
-
-            var parser = new DOMParser(), editor = this.$parent.editor, cursor = editor.editor.getCursor();
+            const parser = new DOMParser();
+            const editor = this.$parent.editor;
+            const cursor = editor.editor.getCursor();
 
             if (!image) {
                 image = {
-                    replace: function (value) {
+                    replace(value) {
                         editor.editor.replaceRange(value, cursor);
                     }
                 };
             }
 
-            var imagePicker = new this.$parent.$options.utils['image-picker']({
+            const imagePicker = new this.$parent.$options.utils['image-picker']({
                 parent: this,
-                data: {
-                    image: image
-                }
+                data: { image }
             }).$mount();
 
-            imagePicker.$on('select', function (image) {
+            imagePicker.$on('select', (img) => {
+                let content;
 
-                var content;
-
-                if ((image.tag || editor.getCursorMode()) == 'html') {
-
-                    if (!image.anchor) {
-                        image.anchor = parser.parseFromString('<img>', "text/html").body.childNodes[0];;
+                if ((img.tag || editor.getCursorMode()) === 'html') {
+                    if (!img.anchor) {
+                        img.anchor = parser.parseFromString('<img>', 'text/html').body.childNodes[0];
                     }
 
-                    image.anchor.setAttribute('src', image.data.src);
-                    image.anchor.setAttribute('alt', image.data.alt);
+                    img.anchor.setAttribute('src', img.data.src);
+                    img.anchor.setAttribute('alt', img.data.alt);
 
-                    content = image.anchor.outerHTML;
-
+                    content = img.anchor.outerHTML;
                 } else {
-                    content = '![' + image.data.alt + '](' + image.data.src + ')';
+                    content = `![${img.data.alt}](${img.data.src})`;
                 }
 
-                image.replace(content);
+                img.replace(content);
             });
         },
 
         replaceInPreview(data, index) {
-            var parser = new DOMParser();
+            const parser = new DOMParser();
 
             data.data = {};
-            if (data.matches[0][0] == '<') {
-                data.anchor = parser.parseFromString(data.matches[0], "text/html").body.childNodes[0];
+            if (data.matches[0][0] === '<') {
+                data.anchor = parser.parseFromString(data.matches[0], 'text/html').body.childNodes[0];
+                if (data.anchor.attributes['uk-img']) {
+                    data.data['uk-img'] = data.anchor.attributes['uk-img'].nodeValue;
+                }
+                if (data.anchor.attributes['uk-svg']) {
+                    data.data['uk-svg'] = data.anchor.attributes['uk-svg'].nodeValue;
+                }
+                if (data.anchor.attributes['uk-img'] || data.anchor.attributes['uk-svg']) {
+                    data.data['data-src'] = data.anchor.attributes['data-src'].nodeValue;
+                //     data.anchor.attributes.src = data.anchor.attributes['data-src'] ? data.anchor.attributes['data-src'] : data.anchor.attributes.src;
+                }
                 data.data.src = data.anchor.attributes.src ? data.anchor.attributes.src.nodeValue : '';
                 data.data.alt = data.anchor.attributes.alt ? data.anchor.attributes.alt.nodeValue : '';
                 data.tag = 'html';
@@ -119,13 +122,11 @@ export default {
                 data.tag = 'gfm';
             }
 
-            return '<image-preview index="' + index + '"></image-preview>';
+            return `<image-preview index="${index}"></image-preview>`;
         }
 
     },
 
-    components: {
-        'image-preview': ImagePreview
-    }
+    components: { 'image-preview': ImagePreview }
 
 };

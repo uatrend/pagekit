@@ -1,21 +1,24 @@
-import { $, on, append, addClass, removeClass, remove, find } from 'uikit-util';
+import { $, on, append, addClass, removeClass, remove, find, attr, removeAttr } from 'uikit-util';
 
 export default {
 
     bind(el, binding, vnode) {
         binding.dir = '';
         binding.active = false;
-        binding.indicator = $('<i class="uk-margin-small-left"></i>');
+        binding.indicator = $('<i></i>');
 
         addClass(el, 'pk-table-order uk-visible-toggle');
         el._off = on(el, 'click', () => {
-            binding.dir = (binding.dir == 'asc') ? 'desc' : 'asc';
+            if (!binding.dir) {
+                binding.dir = binding.value.split(' ')[1];
+            }
+            binding.dir = (binding.dir === 'asc') ? 'desc' : 'asc';
             _.set(vnode.context, binding.expression, [binding.arg, binding.dir].join(' '));
         });
         append(el, binding.indicator);
     },
 
-    update(el, binding, vnode) {
+    componentUpdated(el, binding, vnode) {
         const data = binding.value;
 
         const parts = data.split(' ');
@@ -24,18 +27,19 @@ export default {
 
         binding.indicator = find('i', el);
 
-        removeClass(binding.indicator, 'pk-icon-arrow-up pk-icon-arrow-down');
+        removeAttr(binding.indicator, 'uk-icon');
         removeClass(el, 'uk-active');
 
-        if (field == binding.arg) {
+        if (field === binding.arg) {
             binding.active = true;
             binding.dir = dir;
 
             addClass(el, 'uk-active');
             removeClass(binding.indicator, 'uk-invisible-hover');
-            addClass(binding.indicator, dir == 'asc' ? 'pk-icon-arrow-down' : 'pk-icon-arrow-up');
+            attr(binding.indicator, 'uk-icon', dir === 'asc' ? 'arrow-down' : 'arrow-up');
         } else {
-            addClass(binding.indicator, 'pk-icon-arrow-down uk-invisible-hover');
+            addClass(binding.indicator, 'uk-invisible-hover');
+            attr(binding.indicator, 'uk-icon', 'arrow-down');
             binding.active = false;
             binding.dir = '';
         }

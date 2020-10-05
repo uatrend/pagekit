@@ -3,40 +3,55 @@
         <div class="pk-width-content uk-form-stacked">
             <div class="uk-margin">
                 <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
-                <v-input id="form-title" type="text" name="title" placeholder="Enter Title" view="class: uk-width-1-1 uk-form-large uk-input" rules="required" v-model="widget.title" message="Title cannot be blank."/>
+                <v-input id="form-title" v-model="widget.title" type="text" name="title" placeholder="Enter Title" view="class: uk-width-1-1 uk-form-large uk-input" rules="required" message="Title cannot be blank." />
             </div>
 
             <div class="uk-margin">
                 <label for="form-title" class="uk-form-label">{{ 'Content' | trans }}</label>
                 <v-editor v-model="widget.data.content" :options="{markdown : widget.data.markdown}" />
                 <p class="uk-margin-small-top">
-                    <label><input v-model="widget.data.markdown" class="uk-checkbox" type="checkbox"><span class="uk-margin-small-left">{{ 'Enable Markdown' | trans }}</span></label>
+                    <label><input v-model="widget.data.markdown" class="uk-checkbox" type="checkbox"> {{ 'Enable Markdown' | trans }}</label>
                 </p>
             </div>
         </div>
         <div class="pk-width-sidebar">
-            <component :is="'template-settings'" :widget.sync="widget" :config.sync="config" :form="form" />
+            <component :is="'template-settings'" v-model="widget" :config="config" />
         </div>
     </div>
 </template>
 
 <script>
 
-var WidgetText = {
+const WidgetText = {
 
     name: 'widget-text',
 
-    section: {
-        label: 'Settings',
-    },
+    section: { label: 'Settings' },
 
     inject: ['$components'],
 
-    props: ['widget', 'config', 'form'],
+    props: ['config', 'value'],
+
+    data() {
+        return {
+            widget: this.value
+        };
+    },
+
+    watch: {
+
+        value(widget) {
+            this.widget = widget;
+        },
+
+        widget(widget) {
+            this.$emit('input', widget);
+        }
+    },
 
     created() {
         _.extend(this.$options.components, this.$components);
-    },
+    }
 
 };
 

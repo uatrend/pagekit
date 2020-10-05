@@ -37,5 +37,5 @@
   'Header' => 'Pennyn',
   'Written by %name% on %date%' => 'Ysgrifennwyd gan %name% ar %date%',
   'Read more' => 'Darllen mwy',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Dim sylw|{1} %num% Sylw|]1,Inf[ %num% Sylw',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Dim sylw|{1} %count% Sylw|]1,Inf[ %count% Sylw',
 );

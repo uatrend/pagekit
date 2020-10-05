@@ -18,7 +18,7 @@ export default function (Vue) {
             if (hit) {
                 return request.respondWith(hit.body, {
                     status: 200,
-                    statusText: 'Cached',
+                    statusText: 'Cached'
                 });
             }
         }

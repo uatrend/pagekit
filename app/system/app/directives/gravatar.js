@@ -11,7 +11,7 @@ export default {
     },
 
     update(el, value, vnode) {
-        var el = el; const vm = this; const cache = vnode.context.$session;
+        const cache = vnode.context.$session;
         const hash = value.value.indexOf('@') !== -1 ? md5(value.value.toLowerCase()) : value.value;
         const name = el.getAttribute('title') || el.getAttribute('alt');
         const { colored } = value.def.params;
@@ -36,15 +36,15 @@ export default {
                 const img = new Image();
                 if (img.crossOrigin !== undefined) {
                     img.crossOrigin = 'anonymous';
-                    url += '&d=blank';
-                    img.onload = function () {
+                    url = `${url}&d=blank`;
+                    img.onload = () => {
                         cache.set(key, value.def.draw(name, size, colored, img));
                         resolve();
                     };
                 } else {
                     // IE Fallback (no CORS support for img):
-                    url += '&d=404';
-                    img.onload = function () {
+                    url = `${url}&d=404`;
+                    img.onload = () => {
                         resolve(url);
                     };
                 }
@@ -53,8 +53,8 @@ export default {
             }));
         }
 
-        mutex[key].then((url) => {
-            el.setAttribute('src', url || cache.get(key));
+        mutex[key].then((uri) => {
+            el.setAttribute('src', uri || cache.get(key));
             return url;
         });
     },
@@ -65,30 +65,29 @@ export default {
 
         const colours = [
             '#1abc9c', '#2ecc71', '#3498db', '#9b59b6', '#34495e', '#16a085', '#27ae60', '#2980b9', '#8e44ad', '#2c3e50',
-            '#f1c40f', '#e67e22', '#e74c3c', '#ecf0f1', '#95a5a6', '#f39c12', '#d35400', '#c0392b', '#bdc3c7', '#7f8c8d',
+            '#f1c40f', '#e67e22', '#e74c3c', '#ecf0f1', '#95a5a6', '#f39c12', '#d35400', '#c0392b', '#bdc3c7', '#7f8c8d'
         ];
 
         const nameSplit = String(name).toUpperCase().split(' ');
-        let initials; let charIndex; let colourIndex; let canvas; let context; let
-            dataURI;
+        let initials;
+        let canvas;
 
-
-        if (nameSplit.length == 1) {
+        if (nameSplit.length === 1) {
             initials = nameSplit[0] ? nameSplit[0].charAt(0) : '?';
         } else {
             initials = nameSplit[0].charAt(0) + nameSplit[1].charAt(0);
         }
 
         if (window.devicePixelRatio) {
-            size *= window.devicePixelRatio;
+            size = size * window.devicePixelRatio;
         }
 
-        charIndex = (initials == '?' ? 72 : initials.charCodeAt(0)) - 64;
-        colourIndex = charIndex % 20;
+        const charIndex = (initials === '?' ? 72 : initials.charCodeAt(0)) - 64;
+        const colourIndex = charIndex % 20;
         canvas = document.createElement('canvas');
         canvas.width = size;
         canvas.height = size;
-        context = canvas.getContext('2d');
+        const context = canvas.getContext('2d');
 
         context.fillStyle = colored ? colours[colourIndex - 1] : '#cfd2d7';
         context.fillRect(0, 0, canvas.width, canvas.height);
@@ -101,10 +100,10 @@ export default {
             context.drawImage(img, 0, 0, size, size);
         }
 
-        dataURI = canvas.toDataURL();
+        const dataURI = canvas.toDataURL();
         canvas = null;
 
         return dataURI;
-    },
+    }
 
 };

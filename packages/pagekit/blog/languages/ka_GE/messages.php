@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'კომენტარის დასატოვებლად საჭიროა სისტემაში შესვლა.',
   'Written by %name% on %date%' => 'ავტორი: %name%, გამოქვეყნების თარიღი: %date%',
   'Read more' => 'ვრცლად...',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} კომენტარები არ აქვს, იყავი პირველი.. |{1} %num% კომენტარი|]1,Inf[ %num% კომენტარი',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} კომენტარები არ აქვს, იყავი პირველი.. |{1} %count% კომენტარი|]1,Inf[ %count% კომენტარი',
 );

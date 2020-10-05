@@ -20,11 +20,11 @@
             <thead>
                 <tr>
                     <th colspan="2">{{ 'Name' | trans }}</th>
-                    <th class="pk-table-width-minimum"></th>
-                    <th class="pk-table-width-minimum uk-text-center">{{ 'Status' | trans }}</th>
+                    <th class="uk-table-shrink"></th>
+                    <th class="uk-table-shrink uk-text-center">{{ 'Status' | trans }}</th>
                     <th class="pk-table-width-100 uk-text-center">{{ 'Version' | trans }}</th>
                     <th class="pk-table-width-150">{{ 'Folder' | trans }}</th>
-                    <th class="pk-table-width-minimum"></th>
+                    <th class="uk-table-shrink"></th>
                 </tr>
             </thead>
             <tbody>
@@ -49,14 +49,12 @@
                     </td>
                     <td class="uk-text-center">{{ pkg.version }}</td>
                     <td class="uk-text-truncate">/{{ pkg.name }}</td>
-                    <td class="uk-text-right">
-                        <div class="uk-invisible-hover">
-                            <ul class="uk-subnav pk-subnav-icon">
-                                <li><a class="pk-icon-info pk-icon-hover" :uk-tooltip="'View Details' | trans" @click.prevent="details(pkg)"></a></li>
-                                <li v-show="pkg.enabled && pkg.permissions"><a class="pk-icon-permission pk-icon-hover" :uk-tooltip="'View Permissions' | trans" :href="$url.route('admin/user/permissions#{name}', {name:pkg.module})"></a></li>
-                                <li v-show="!pkg.enabled"><a class="pk-icon-delete pk-icon-hover" :uk-tooltip="'Delete' | trans" @click="uninstall(pkg, packages)" v-confirm="'Uninstall extension?'"></a></li>
-                            </ul>
-                        </div>
+                    <td class="uk-preserve-width">
+                        <ul class="uk-invisible-hover uk-iconnav uk-flex-nowrap">
+                            <li><a uk-icon="info" :uk-tooltip="'View Details' | trans" @click.prevent="details(pkg)"></a></li>
+                            <li v-show="pkg.enabled && pkg.permissions"><a uk-icon="lock" :uk-tooltip="'View Permissions' | trans" :href="$url.route('admin/user/permissions#{name}', {name:pkg.module})"></a></li>
+                            <li v-show="!pkg.enabled"><a uk-icon="trash" :uk-tooltip="'Delete' | trans" @click="uninstall(pkg, packages)" v-confirm="'Uninstall extension?'"></a></li>
+                        </ul>
                     </td>
                 </tr>
             </tbody>

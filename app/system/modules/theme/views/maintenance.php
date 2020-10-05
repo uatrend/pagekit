@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <?= $view->render('head') ?>
-        <?php $view->style('theme', 'system/theme:css/theme.css') ?>
+        <?php $view->style('theme', 'system/theme:assets/css/theme.css') ?>
     </head>
     <body>
 

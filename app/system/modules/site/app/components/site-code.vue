@@ -35,15 +35,17 @@
 
 <script>
 
+import SiteMixin from '../mixins/site-mixin';
+
 export default {
+
+    mixins: [SiteMixin],
 
     section: {
         label: 'Code',
-        icon: 'pk-icon-large-code',
-        priority: 20,
-    },
-
-    props: ['config'],
+        icon: 'code',
+        priority: 20
+    }
 
 };
 

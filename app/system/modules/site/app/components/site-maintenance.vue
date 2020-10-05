@@ -17,7 +17,7 @@
             <div class="uk-margin">
                 <label class="uk-form-label">{{ 'Offline' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
-                    <label><input v-model="config.maintenance.enabled" class="uk-checkbox" type="checkbox" value="1"><span class="uk-margin-small-left">{{ 'Put the site offline and show the offline message.' | trans }}</span></label>
+                    <label><input v-model="config.maintenance.enabled" class="uk-checkbox" type="checkbox" value="1"> {{ 'Put the site offline and show the offline message.' | trans }}</label>
                 </div>
             </div>
 
@@ -31,7 +31,7 @@
             <div class="uk-margin">
                 <label for="form-logo" class="uk-form-label">{{ 'Logo' | trans }}</label>
                 <div class="uk-form-controls">
-                    <input-image v-model="config.maintenance.logo" :source.sync="config.maintenance.logo" input-class="uk-form-width-large" />
+                    <input-image v-model="config.maintenance.logo" :source.sync="config.maintenance.logo" class-name="uk-form-width-large" />
                 </div>
             </div>
         </div>
@@ -40,15 +40,17 @@
 
 <script>
 
+import SiteMixin from '../mixins/site-mixin';
+
 export default {
+
+    mixins: [SiteMixin],
 
     section: {
         label: 'Maintenance',
-        icon: 'pk-icon-large-cone',
-        priority: 30,
-    },
-
-    props: ['config'],
+        icon: 'cone',
+        priority: 30
+    }
 
 };
 

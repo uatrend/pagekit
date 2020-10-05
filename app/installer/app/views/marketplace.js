@@ -1,4 +1,6 @@
-var Marketplace = {
+import MarketplaceComponent from '../components/marketplace.vue';
+
+const Marketplace = {
 
     name: 'marketplace',
 
@@ -7,31 +9,27 @@ var Marketplace = {
     mixins: [Theme.Mixins.Helper],
 
     data() {
-        return _.extend({
-            search: this.$session.get('marketplace.search', ''),
-        }, window.$data);
+        return _.extend({ search: this.$session.get('marketplace.search', '') }, window.$data);
     },
 
     theme: {
-        hiddenHtmlElements: ['#marketplace > div:first-child'],
+        hideEls: ['#marketplace > div:first-child'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
                 search: {
                     scope: 'navbar-right',
                     type: 'search',
                     class: 'uk-text-small',
-                    domProps: {
-                        value: () => vm.search || ''
-                    },
+                    domProps: { value: () => vm.search || '' },
                     on: {
-                        input: function(e) {
+                        input(e) {
                             !vm.search && vm.$set(vm, 'search', '');
-                            vm.search = e.target.value
+                            vm.search = e.target.value;
                         }
                     }
                 }
-            }
+            };
         }
     },
 
@@ -39,13 +37,11 @@ var Marketplace = {
 
         search(search) {
             this.$session.set('marketplace.search', search);
-        },
+        }
 
     },
 
-    components: {
-        marketplace: require('../components/marketplace.vue').default,
-    },
+    components: { marketplace: MarketplaceComponent }
 
 };
 

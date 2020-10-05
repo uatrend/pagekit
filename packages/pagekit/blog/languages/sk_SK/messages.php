@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Prosím, prihláste sa pre zanechania komentára.',
   'Written by %name% on %date%' => 'Napísal %name% dňa %date%',
   'Read more' => 'Čítať viac',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Žiadne komentáre.|{1} %num% komentár.|{2,3,4} %num% komentáre.|]4,Inf[ %num% komentárov.',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Žiadne komentáre.|{1} %count% komentár.|{2,3,4} %count% komentáre.|]4,Inf[ %count% komentárov.',
 );

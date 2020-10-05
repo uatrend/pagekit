@@ -3,7 +3,7 @@
         <div class="pk-width-content uk-form-horizontal">
             <div class="uk-margin">
                 <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
-            	<v-input id="form-title" type="text" name="title" placeholder="Enter Title" view="class: uk-form-width-large uk-input" rules="required" v-model="widget.title" message="Title cannot be blank."/>
+                <v-input id="form-title" v-model="widget.title" type="text" name="title" placeholder="Enter Title" view="class: uk-form-width-large uk-input" rules="required" message="Title cannot be blank." />
             </div>
 
             <div class="uk-margin">
@@ -26,35 +26,8 @@
 
                 <div class="uk-form-controls">
                     <select id="form-level" v-model="widget.data.start_level" class="uk-form-width-large uk-select" number>
-                        <option value="1">
-                            1
-                        </option>
-                        <option value="2">
-                            2
-                        </option>
-                        <option value="3">
-                            3
-                        </option>
-                        <option value="4">
-                            4
-                        </option>
-                        <option value="5">
-                            5
-                        </option>
-                        <option value="6">
-                            6
-                        </option>
-                        <option value="7">
-                            7
-                        </option>
-                        <option value="8">
-                            8
-                        </option>
-                        <option value="9">
-                            9
-                        </option>
-                        <option value="10">
-                            10
+                        <option v-for="i in 10" :key="i" :value="i">
+                            {{ i }}
                         </option>
                     </select>
                 </div>
@@ -68,35 +41,8 @@
                         <option value="">
                             {{ 'No Limit' | trans }}
                         </option>
-                        <option value="1">
-                            1
-                        </option>
-                        <option value="2">
-                            2
-                        </option>
-                        <option value="3">
-                            3
-                        </option>
-                        <option value="4">
-                            4
-                        </option>
-                        <option value="5">
-                            5
-                        </option>
-                        <option value="6">
-                            6
-                        </option>
-                        <option value="7">
-                            7
-                        </option>
-                        <option value="8">
-                            8
-                        </option>
-                        <option value="9">
-                            9
-                        </option>
-                        <option value="10">
-                            10
+                        <option v-for="i in 10" :key="i" :value="i">
+                            {{ i }}
                         </option>
                     </select>
                 </div>
@@ -106,46 +52,40 @@
                 <label class="uk-form-label">{{ 'Sub Items' | trans }}</label>
                 <div class="uk-form-controls uk-form-controls-text">
                     <p class="uk-margin-small">
-                        <label><input v-model="widget.data.mode" class="uk-radio" type="radio" value="all"><span class="uk-margin-small-left">{{ 'Show all' | trans }}</span></label>
+                        <label><input v-model="widget.data.mode" class="uk-radio" type="radio" value="all"> {{ 'Show all' | trans }}</label>
                     </p>
 
                     <p class="uk-margin-small">
-                        <label><input v-model="widget.data.mode" class="uk-radio" type="radio" value="active"><span class="uk-margin-small-left">{{ 'Show only for active item' | trans }}</span></label>
+                        <label><input v-model="widget.data.mode" class="uk-radio" type="radio" value="active"> {{ 'Show only for active item' | trans }}</label>
                     </p>
                 </div>
             </div>
         </div>
         <div class="pk-width-sidebar">
-            <component :is="'template-settings'" :widget.sync="widget" :config.sync="config" :form="form" />
+            <component :is="'template-settings'" v-model="widget" :config.sync="config" />
         </div>
     </div>
 </template>
 
 <script>
 
-var WidgetMenu = {
+import WidgetMixin from '@system/modules/widget/app/mixins/widget-mixin';
 
-    section: {
-        label: 'Settings',
-    },
+const WidgetMenu = {
 
-    props: ['widget', 'config', 'form'],
+    mixins: [WidgetMixin],
+
+    section: { label: 'Settings' },
 
     data() {
-        return {
-            menus: {},
-        };
+        return { menus: {} };
     },
-
-    inject: ['$components'],
 
     created() {
-        _.extend(this.$options.components, this.$components);
-
         this.$http.get('api/site/menu').then(function (res) {
-            this.$set(this, 'menus', res.data.filter(menu => menu.id !== 'trash'));
+            this.$set(this, 'menus', res.data.filter((menu) => menu.id !== 'trash'));
         });
-    },
+    }
 
 };
 

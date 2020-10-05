@@ -7,15 +7,28 @@
     "globals": {
         "_": true,
         "Vue": true,
-        "UIkit": true
+        "UIkit": true,
+        "Theme": true,
+        "marked": true,
+        "flatpickr": true,
+        "grecaptcha": true,
+        "$pagekit": true,
+        "$editor": true,
+        "CodeMirror": true,
+        "tinyMCE": true
     },
+    "parser": "vue-eslint-parser",
     "parserOptions": {
         "parser": "babel-eslint",
-        "ecmaVersion": 6,
+        "ecmaVersion": 2020,
+        "sourceType": "module"
     },
+    "plugins": [
+        "vue"
+    ],
     "extends": [
         "airbnb-base",
-        "plugin:vue/recommended",
+        "plugin:vue/recommended"
     ],
     "rules": {
         "quotes": [2, "single", "avoid-escape"],
@@ -33,7 +46,28 @@
         "no-alert": 0,
         "no-use-before-define": 0,
         "consistent-return": 0,
-        "indent": ["error", 4],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "comma-dangle": ["error", "never"],
+        "arrow-body-style": ["error", "as-needed"],
+        "max-len": 0,
+        "no-console": ["error", { allow: ["warn", "error"] }],
+        "prefer-spread": 0,
+        "operator-assignment": ["error", "never"],
+        "no-plusplus": 0,
+        "no-nested-ternary": 0,
+        "no-param-reassign": 0,
+        "no-restricted-globals": 0,
+        "import/no-unresolved": 0,
+        "no-unused-expressions": ["error", { "allowShortCircuit": true, "allowTernary": true }],
+        "prefer-destructuring": 0,
+        "no-control-regex": 0,
+        "no-prototype-builtins": 0,
+        "no-useless-escape": 0,
+        "prefer-rest-params": 0,
+        "no-mixed-operators": 0,
+        "radix": 0,
+        "func-names": 0,
+        "object-curly-newline": ["error", { "consistent": true }],
         "vue/html-indent": ["error", 4, {
             "attribute": 1,
             "baseIndent": 1,
@@ -42,11 +76,13 @@
             "ignores": []
         }],
         "vue/max-attributes-per-line": ["error", {
-            "singleline": 5,
+            "singleline": 9,
             "multiline": {
                "max": 1,
                "allowFirstLine": false
             }
-        }]
+        }],
+        "vue/no-v-html": 0,
+        "vue/require-prop-types": 0
     }
 }

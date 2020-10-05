@@ -12,11 +12,11 @@
                 <h2 class="uk-h3 uk-margin-remove">{{ '{1} %count% Comment selected|]1,Inf[ %count% Comments selected' | transChoice(selected.length, {count:selected.length}) }}</h2>
 
                 <div class="uk-margin-left">
-                    <ul class="uk-subnav pk-subnav-icon">
-                        <li><a class="pk-icon-check pk-icon-hover" :title="'Approve' | trans" uk-tooltip="delay: 500" @click="status(1)"></a></li>
-                        <li><a class="pk-icon-block pk-icon-hover" :title="'Unapprove' | trans" uk-tooltip="delay: 500" @click="status(0)"></a></li>
-                        <li><a class="pk-icon-spam pk-icon-hover" :title="'Mark as spam' | trans" uk-tooltip="delay: 500" @click="status(2)"></a></li>
-                        <li><a class="pk-icon-delete pk-icon-hover" :title="'Delete' | trans" uk-tooltip="delay: 500" @click.prevent="remove"></a></li>
+                    <ul class="uk-iconnav">
+                        <li><a uk-icon="check" :title="'Approve' | trans" uk-tooltip="delay: 500" @click="status(1)"></a></li>
+                        <li><a uk-icon="ban" :title="'Unapprove' | trans" uk-tooltip="delay: 500" @click="status(0)"></a></li>
+                        <li><a uk-icon="hand" :title="'Mark as spam' | trans" uk-tooltip="delay: 500" @click="status(2)"></a></li>
+                        <li><a uk-icon="trash" :title="'Delete' | trans" uk-tooltip="delay: 500" @click.prevent="remove"></a></li>
                     </ul>
                 </div>
             </template>
@@ -34,7 +34,7 @@
         <table class="uk-table uk-table-hover pk-table-large">
             <thead>
                 <tr>
-                    <th class="pk-table-width-minimum"><input class="uk-checkbox" type="checkbox" v-check-all:selected="{ selector: 'input[name=id]' }" number></th>
+                    <th class="uk-table-shrink"><input class="uk-checkbox" type="checkbox" v-check-all:selected="{ selector: 'input[name=id]' }" number></th>
                     <th class="pk-table-min-width-300" colspan="2">{{ 'Comment' | trans }}</th>
                     <th class="pk-table-width-100 uk-text-center">
                         <input-filter :title="$trans('Status')" :value.sync="config.filter.status" :options="statusOptions" v-model="config.filter.status"></input-filter>
@@ -51,30 +51,30 @@
                 <template v-if="editComment.id !== comment.id">
                     <tr class="check-item" :class="{'uk-active': active(comment)}" v-for="post in filterBy(posts, comment.post_id, 'id')">
 
-                        <td class="pk-blog-comments-padding"><input class="uk-checkbox" type="checkbox" name="id" :value="comment.id"></td>
-                        <td class="pk-table-width-minimum">
+                        <td class="uk-table-shrink pk-blog-comments-padding"><input class="uk-checkbox" type="checkbox" name="id" :value="comment.id"></td>
+                        <td class="uk-table-shrink uk-preserve-width">
                             <img class="uk-img-preserve uk-border-circle" width="40" height="40" :alt="comment.author" v-gravatar="comment.email">
                         </td>
                         <td class="uk-visible-toggle">
-                            <div class="uk-position-relative">
-                            <div class="uk-margin-small uk-flex uk-flex-between uk-flex-wrap">
-                                <div>
-                                    <a :href="$url.route('admin/user/edit', { id: comment.user_id })" v-if="comment.user_id!=0">{{ comment.author }}</a>
-                                    <span v-else>{{ comment.author }}</span>
-                                    <br><a class="uk-link-muted" :href="'mailto:'+comment.email">{{ comment.email }}</a>
-                                </div>
-                                <div class="uk-flex uk-flex-middle">
-                                    <ul class="uk-subnav pk-subnav-icon uk-hidden-hover uk-margin-right">
-                                        <li><a class="pk-icon-edit pk-icon-hover" :title="'Edit' | trans" uk-tooltip="delay: 500" @click.prevent="edit(comment)"></a></li>
-                                        <li><a class="pk-icon-reply pk-icon-hover" :title="'Reply' | trans" uk-tooltip="delay: 500" @click.prevent="reply(comment)"></a></li>
-                                    </ul>
+                            <div class="pk-table-min-width-400 uk-position-relative">
+                                <div class="uk-margin-small uk-flex uk-flex-between uk-flex-wrap">
+                                    <div>
+                                        <a :href="$url.route('admin/user/edit', { id: comment.user_id })" v-if="comment.user_id!=0">{{ comment.author }}</a>
+                                        <span v-else>{{ comment.author }}</span>
+                                        <br><a class="uk-link-muted" :href="'mailto:'+comment.email">{{ comment.email }}</a>
+                                    </div>
+                                    <div class="uk-flex uk-flex-middle">
+                                        <ul class="uk-iconnav uk-invisible-hover uk-margin-right">
+                                            <li><a uk-icon="file-edit" :title="'Edit' | trans" uk-tooltip="delay: 500" @click.prevent="edit(comment)"></a></li>
+                                            <li><a uk-icon="reply" :title="'Reply' | trans" uk-tooltip="delay: 500" @click.prevent="reply(comment)"></a></li>
+                                        </ul>
 
-                                    <a class="uk-link-muted" v-if="post.accessible && post.url" :href="$url.route(post.url.substr(1))+'#comment-'+comment.id">{{ comment.created | relativeDate }}</a>
-                                    <span v-else>{{ comment.created | relativeDate }}</span>
+                                        <a class="uk-link-muted" v-if="post.accessible && post.url" :href="$url.route(post.url.substr(1))+'#comment-'+comment.id">{{ comment.created | relativeDate }}</a>
+                                        <span v-else>{{ comment.created | relativeDate }}</span>
+                                    </div>
                                 </div>
-                            </div>
-
-                            <div v-html="comment.content"></div>
+    
+                                <div v-html="comment.content"></div>
                             </div>
                             <div class="uk-margin-small-top" v-if="replyComment.parent_id === comment.id">
 
@@ -103,7 +103,7 @@
                         <td class="pk-blog-comments-padding">
                             <a :href="$url.route('admin/blog/post/edit', { id: post.id })">{{ post.title }}</a>
                             <div class="uk-margin-small">
-                                <a class="uk-text-nowrap" :class="{'pk-link-icon': !post.comments_pending}" :href="$url.route('admin/blog/comment', { post: post.id })" :title="'{0} No pending|{1} One pending|]1,Inf[ %comments_pending% pending' | transChoice(post.comments_pending, post)"><i class="pk-icon-comment" :class="{'pk-icon-primary': post.comments_pending}"></i> {{ post.comment_count }}</a>
+                                <a class="uk-text-nowrap" :class="{'uk-icon-link': !post.comments_pending}" :href="$url.route('admin/blog/comment', { post: post.id })" :title="'{0} No pending|{1} One pending|]1,Inf[ %comments_pending% pending' | transChoice(post.comments_pending, post)"><i uk-icon="comment" :class="{'uk-text-primary': post.comments_pending}"></i> {{ post.comment_count }}</a>
                             </div>
                         </td>
 

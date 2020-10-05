@@ -1,22 +1,23 @@
 <template>
     <li :id="'comment-'+comment.id">
-        <article class="uk-comment uk-visible-toggle" :class="{'uk-comment-primary': comment.special}">
-
+        <article :class="['uk-comment uk-visible-toggle', {'uk-comment-primary': comment.special}, {'tm-reply-visible': replyVisible && !comment.special}]">
             <header class="uk-comment-header uk-position-relative">
                 <div class="uk-grid-medium uk-flex-middle" uk-grid>
                     <div class="uk-width-auto">
                         <img v-gravatar="comment.email" class="uk-comment-avatar uk-border-rounded" width="60" height="60" :alt="comment.author">
                     </div>
                     <div class="uk-width-expand">
-                        <h4 class="uk-comment-title uk-margin-remove">{{ comment.author }}</h4>
+                        <h4 class="uk-comment-title uk-margin-remove">
+                            {{ comment.author }}
+                        </h4>
                         <p class="uk-comment-meta uk-margin-remove-top">
                             <time :datetime="comment.created">{{ comment.created | relativeDate({max:2592000}) }}</time>
                             | <a class="uk-link-muted" :href="permalink" uk-scroll>#</a>
                         </p>
                     </div>
                 </div>
-                <div v-if="comment.status" class="uk-comment-meta uk-position-top-right uk-position-small uk-hidden-hover">
-                    <a v-if="showReplyButton" class="uk-link-muted" href="#" @click.prevent="replyTo">{{ 'Reply' | trans }}</a>
+                <div v-if="comment.status" class="uk-text-small uk-position-top-right uk-position-small uk-hidden-hover">
+                    <a v-if="showReplyButton && user.canComment" href="#" @click.prevent="replyTo">{{ 'Reply' | trans }}</a>
                 </div>
                 <p v-else class="uk-comment-meta">
                     {{ 'The comment is awaiting approval.' }}
@@ -27,7 +28,7 @@
                 <p v-html="comment.content" />
             </div>
 
-            <div v-for="message in comment.messages" class="uk-alert">
+            <div v-for="(message, id) in comment.messages" :key="id" class="uk-alert">
                 {{ message }}
             </div>
 
@@ -35,14 +36,7 @@
         </article>
 
         <ul v-if="tree[comment.id] && depth < config.max_depth">
-            <comment
-                v-for="comment in tree[comment.id]"
-                :key="comment.id"
-                :comment="comment"
-                :config="config"
-                :tree="tree"
-                :root="root"
-            />
+            <comment v-for="c in tree[comment.id]" :key="c.id" :comment="c" :config="config" :tree="tree" :root="root" />
         </ul>
     </li>
 </template>
@@ -51,9 +45,15 @@
 
 export default {
 
-    name: 'comment',
+    name: 'Comment',
 
-    props: ['comment', 'config', 'tree', 'root'],
+    props: ['comments', 'comment', 'config', 'tree', 'root'],
+
+    data() {
+        return {
+            replyVisible: false
+        };
+    },
 
     computed: {
 
@@ -87,15 +87,19 @@ export default {
             return `#comment-${this.comment.id}`;
         },
 
+        user() {
+            return this.config.user;
+        }
+
     },
 
     methods: {
 
         replyTo() {
             this.root.reply(this);
-        },
+        }
 
-    },
+    }
 
 };
 

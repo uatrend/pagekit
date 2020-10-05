@@ -51,7 +51,22 @@
 // Miscellaneous
 // ========================================================================
 
-.hook-article-misc() {}
+.hook-article-misc() {
+    .uk-article > h1 > a {
+        text-decoration: none;
+    }
+    @media (min-width: 768px) {
+        .uk-article + .uk-article {
+            margin-top: 130px;
+            padding-top: 130px;
+        }
+    }
+    .uk-article + .uk-article {
+        margin-top: 80px;
+        padding-top: 80px;
+        border-top: 1px solid #e5e5e5;
+    }
+}
 
 
 // Inverse

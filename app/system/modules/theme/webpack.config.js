@@ -1,18 +1,16 @@
 module.exports = [
-
     {
         entry: {
-            theme: './js/main',
+            login: './app/views/login',
+            theme: './app/views/theme'
         },
-        output: {
-            filename: './js/[name].js',
-        },
+        output: { filename: './app/bundle/[name].js' },
         module: {
             rules: [
                 { test: /\.html$/, use: 'html-loader' },
-                { test: /\.vue$/, use: 'vue-loader' },
-            ],
-        },
-    },
+                { test: /\.vue$/, use: 'vue-loader' }
+            ]
+        }
+    }
 
 ];

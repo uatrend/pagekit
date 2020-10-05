@@ -1,4 +1,4 @@
-var Settings = {
+const Settings = {
 
     el: '#settings',
 
@@ -6,19 +6,19 @@ var Settings = {
 
     data: window.$data,
 
-    theme:{
-        hiddenHtmlElements: ['#settings > div:first-child'],
+    theme: {
+        hideEls: ['#settings > div:first-child'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
                 save: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Save',
                     class: 'uk-button uk-button-primary',
-                    on: {click: () => vm.save()}
+                    on: { click: () => vm.save() }
                 }
-            }
+            };
         }
     },
 
@@ -30,9 +30,9 @@ var Settings = {
             }, function (res) {
                 this.$notify(res.data, 'danger');
             });
-        },
+        }
 
-    },
+    }
 
 };
 

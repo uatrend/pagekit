@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => '请登录后发表评论。',
   'Written by %name% on %date%' => '作者 %name% 于 %date% 编写',
   'Read more' => '查看更多',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} 没有评论|{1} %num% 条评论|]1,Inf[ %num% 条评论',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} 没有评论|{1} %count% 条评论|]1,Inf[ %count% 条评论',
 );

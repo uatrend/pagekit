@@ -22,7 +22,7 @@
         <?php endif ?>
 
         <?php if ($post->isCommentable() || $post->comment_count) : ?>
-        <li><a href="<?= $view->url('@blog/id#comments', ['id' => $post->id]) ?>"><?= _c('{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments', $post->comment_count, ['%num%' => $post->comment_count]) ?></a></li>
+        <li><a href="<?= $view->url('@blog/id#comments', ['id' => $post->id]) ?>"><?= __('{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments', ['%count%' => $post->comment_count]) ?></a></li>
         <?php endif ?>
 
     </ul>

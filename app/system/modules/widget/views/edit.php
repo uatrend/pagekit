@@ -5,8 +5,8 @@
     <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
         <div class="">
 
-            <h2 class="uk-margin-remove" v-if="widget.id">{{ 'Edit Widget' | trans }}</h2>
-            <h2 class="uk-margin-remove" v-else>{{ 'Add Widget' | trans }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-if="widget.id">{{ 'Edit Widget' | trans }}</h2>
+            <h2 class="uk-h3 uk-margin-remove" v-else>{{ 'Add Widget' | trans }}</h2>
 
         </div>
         <div class="uk-margin">
@@ -19,13 +19,13 @@
         </div>
     </div>
 
-    <ul ref="tab" v-show="sections.length > 1" id="widget-tab">
+    <ul ref="tab" v-show="sections.length > 1">
         <li v-for="section in sections" :key="section.name" :id="section.label | lowercase"><a>{{ section.label | trans }}</a></li>
     </ul>
 
-    <div class="uk-switcher uk-margin" ref="content" id="widget-content">
+    <div class="uk-switcher uk-margin" ref="content">
         <div v-for="section in sections" :key="section.name">
-            <component :is="section.name" :widget.sync="widget" :config="config" :form="form"></component>
+            <component :is="section.name" :config="config" v-model="widget"></component>
         </div>
     </div>
 

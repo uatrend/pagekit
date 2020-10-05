@@ -1,6 +1,6 @@
 import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 
-var ResetConfirm =  {
+const ResetConfirm = {
 
     el: '#reset-confirm',
 
@@ -12,12 +12,12 @@ var ResetConfirm =  {
                 type: 'icon',
                 containerClass: 'uk-margin',
                 class: 'uk-input uk-form-width-large',
-                icon: () => this.hidePassword ? 'lock' : 'unlock',
-                iconClick: () => { this.hidePassword = !this.hidePassword },
+                icon: () => (this.hidePassword ? 'lock' : 'unlock'),
+                iconClick: () => { this.hidePassword = !this.hidePassword; },
                 iconTag: 'a',
-                iconDir: 'right',
+                iconDir: 'right'
             }
-        }
+        };
     },
 
     methods: {
@@ -25,7 +25,7 @@ var ResetConfirm =  {
         async valid() {
             const isValid = await this.$refs.resetform.validate();
             if (isValid) {
-                this.$el.submit()
+                this.$el.submit();
             }
         }
 

@@ -11,21 +11,22 @@
 
 <script>
 
+import WidgetMixin from '../mixins/widget-mixin';
+
 export default {
+
+    mixins: [WidgetMixin],
 
     section: {
         label: 'Visibility',
-        priority: 100,
+        priority: 100
     },
 
     data() {
         return {
-            menus: false,
+            menus: false
         };
-    },
-
-    props: ['widget', 'config', 'form'],
-
+    }
 };
 
 </script>

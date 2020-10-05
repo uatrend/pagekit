@@ -1,8 +1,8 @@
 import util from 'uikit-util';
-import Permissions from '../../lib/permissions';
 import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
+import Permissions from '../../lib/permissions';
 
-var UserRoles =  {
+const UserRoles = {
 
     name: 'user-roles',
 
@@ -15,29 +15,28 @@ var UserRoles =  {
 
     data: {
         role: {},
-        config: window.$config,
+        config: window.$config
     },
 
     theme: {
-        hiddenHtmlElements: ['#roles .pk-width-sidebar .uk-button.uk-button-default'],
+        hideEls: ['#roles .pk-width-sidebar .uk-button.uk-button-default'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'addmenu': {
+                addmenu: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Add Role',
                     class: 'uk-button uk-button-primary',
-                    on: {click: () => vm.edit()},
-                    priority: 0,
-                },
-            }
+                    on: { click: () => vm.edit() },
+                    priority: 0
+                }
+            };
         }
     },
 
     mounted() {
-        const vm = this;
-        const sortable = UIkit.sortable('#roles .uk-nav', { handle: 'pk-sortable-dragged-list' });
+        const sortable = UIkit.sortable(this.$refs.sortable, { clsCustom: 'pk-sortable-dragged-list' });
 
         util.on(sortable.$el, 'added moved', this.reorder);
     },
@@ -46,7 +45,7 @@ var UserRoles =  {
 
         current() {
             return _.find(this.roles, { id: this.config.role }) || this.roles[0];
-        },
+        }
 
     },
 
@@ -100,7 +99,7 @@ var UserRoles =  {
             e.stopPropagation();
 
             sortable.$el.childNodes.forEach((el, i) => {
-                const index = vm.roles.findIndex(role => role.id == util.data(el, 'id'));
+                const index = vm.roles.findIndex((role) => role.id === parseInt(util.data(el, 'id')));
                 vm.roles[index].priority = i;
             });
 
@@ -109,7 +108,7 @@ var UserRoles =  {
             }, function (data) {
                 this.$notify(data, 'danger');
             });
-        },
+        }
 
     },
 

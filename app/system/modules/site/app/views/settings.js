@@ -1,9 +1,8 @@
+import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 import SiteCode from '../components/site-code.vue';
 import SiteMeta from '../components/site-meta.vue';
 import SiteGeneral from '../components/site-general.vue';
 import SiteMaintenance from '../components/site-maintenance.vue';
-
-import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 
 window.Site = {
 
@@ -11,51 +10,42 @@ window.Site = {
 
     el: '#settings',
 
-    mixins: [Theme.Mixins.Helper, Theme.Mixins.Elements],
+    mixins: [Theme.Mixins.Helper, Theme.Mixins.UIElements],
 
-    provide: {
-        '$components': {
-            'v-input': VInput
-        }
-    },
+    provide: { $components: { 'v-input': VInput } },
 
     theme: {
-        hiddenHtmlElements: ['.pk-width-content li > div > div.uk-flex'],
+        hideEls: ['.pk-width-content li > div > div.uk-flex'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'title': {
+                title: {
                     scope: 'breadcrumbs',
                     type: 'caption',
                     caption: () => {
-                        let trans = vm.$options.filters.trans,
-                            activeTab = vm.$theme.activeTab('leftTab', vm),
-                            section = vm.sections.filter((section)=>section.name === activeTab)[0];
-                        return vm.$trans(section.label);
+                        const activeTab = vm.$theme.getActiveTab('leftTab', vm);
+                        const section = vm.sections.filter((s) => s.name === activeTab)[0];
+                        return section && vm.$trans(section.label);
                     }
                 },
-                'submit': {
+                submit: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Save',
                     class: 'uk-button uk-button-primary',
-                    on: {click: () => vm.submit()},
-                    priority: 0,
+                    on: { click: () => vm.submit() },
+                    priority: 0
                 }
-            }
-        },
+            };
+        }
     },
 
     data() {
         return _.merge({ form: {} }, window.$data);
     },
 
-    created() {
-        this.$theme.$tabs('leftTab', '#settings .uk-nav', { connect: '.settings-tab', state: true });
-    },
-
     mounted() {
-        // UIkit.switcher(this.$refs.tab, { connect: '.settings-tab' });
+        this.$ui.tab('leftTab', this.$refs.tab, { connect: this.$theme.getDomElement(this.$refs.content), state: true });
     },
 
     computed: {
@@ -69,13 +59,13 @@ window.Site = {
 
                 if (component.section) {
                     section.name = name;
-                    section.active = name == hash;
+                    section.active = name === hash;
                     sections.push(section);
                 }
             });
 
             return sections;
-        },
+        }
 
     },
 
@@ -89,14 +79,14 @@ window.Site = {
         },
 
         save() {
-            this.$trigger('save:settings', this.config);
+            this.$trigger('settings-save', this.config);
 
             this.$http.post('admin/system/settings/config', { name: 'system/site', config: this.config }).then(function () {
                 this.$notify('Settings saved.');
             }, function (res) {
                 this.$notify(res.data, 'danger');
             });
-        },
+        }
 
     },
 
@@ -106,7 +96,7 @@ window.Site = {
         'site-general': SiteGeneral,
         'site-maintenance': SiteMaintenance,
         'validation-observer': ValidationObserver
-    },
+    }
 
 };
 

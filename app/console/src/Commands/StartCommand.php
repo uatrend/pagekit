@@ -38,5 +38,8 @@ class StartCommand extends Command
         $this->line('Press Ctrl-C to quit');
 
         exec("php -S $server index.php");
+
+        // TODO: Callback
+        return 0;
     }
 }

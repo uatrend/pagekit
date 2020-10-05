@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'กรุณาเข้าสู่ระบบก่อนแสดงความคิดเห็น',
   'Written by %name% on %date%' => 'เขียนโดย %name% ใน %date%',
   'Read more' => 'อ่านต่อ',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} ไม่มีความเห็น|{1} %num% ความเห็น|]1,Inf[ %num% ความเห็น',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} ไม่มีความเห็น|{1} %count% ความเห็น|]1,Inf[ %count% ความเห็น',
 );

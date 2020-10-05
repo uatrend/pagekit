@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'لطفا برای ارسال دیدگاه وارد شوید.',
   'Written by %name% on %date%' => 'نوشته شده توسط %name% در %date%',
   'Read more' => 'بیشتر بخوانید',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} بدون دیدگاه|{1} %num% دیدگاه|]1,Inf[ %num% دیدگاه',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} بدون دیدگاه|{1} %count% دیدگاه|]1,Inf[ %count% دیدگاه',
 );

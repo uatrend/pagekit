@@ -1,7 +1,6 @@
 import { on, css } from 'uikit-util';
 import { VueNestable, VueNestableHandle } from 'vue-nestable';
 import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
-
 import isMobile from 'ismobilejs';
 
 Vue.ready({
@@ -13,7 +12,6 @@ Vue.ready({
     mixins: [Theme.Mixins.Helper],
 
     data() {
-        const vm = this;
         return _.merge({
             edit: {}, // undefined,
             menu: this.$session.get('site.menu', {}),
@@ -25,87 +23,73 @@ Vue.ready({
     },
 
     theme: {
-        hiddenHtmlElements: ['.pk-width-sidebar > .uk-card > p', '.pk-width-content > div:first-child'],
+        hideEls: ['.pk-width-sidebar > .uk-panel > p', '.pk-width-content > div:first-child'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'title': {
+                title: {
                     scope: 'breadcrumbs',
                     type: 'caption',
-                    caption: () => {
-                        return vm.menu.label
-                    }
+                    caption: () => vm.menu.label
                 },
-                'addpage': {
+                addpage: {
                     scope: 'topmenu-left',
                     type: 'dropdown',
                     caption: 'Add',
                     class: 'uk-button uk-button-text',
-                    icon: {
-                        attrs:{ 'uk-icon': 'triangle-down' },
-                    },
+                    icon: { attrs: { 'uk-icon': 'triangle-down' } },
                     dropdown: { options: () => 'mode: click' },
                     items: () => vm.orderBy(vm.protected(vm.types), 'label').map((type) => {
-                        let props = {
-                            attrs: {
-                                href: () => vm.$url.route('admin/site/page/edit', { id: type.id, menu: vm.menu.id }),
-                            },
+                        const props = {
+                            attrs: { href: () => vm.$url.route('admin/site/page/edit', { id: type.id, menu: vm.menu.id }) },
                             caption: () => type.label
                         };
-                        return {...type, ...props}
+                        return { ...type, ...props };
                     }),
-                    disabled:() => vm.menu.id === 'trash',
-                    priority: 1,
+                    disabled: () => vm.menu.id === 'trash',
+                    priority: 1
                 },
-                'addmenu': {
+                addmenu: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Add Menu',
                     class: 'uk-button uk-button-primary',
-                    on: {click: () => vm.editMenu},
-                    priority: 0,
+                    on: { click: () => vm.editMenu },
+                    priority: 0
                 },
-                'actions': {
+                actions: {
                     scope: 'topmenu-left',
                     type: 'dropdown',
                     caption: 'Actions',
                     class: 'uk-button uk-button-text',
-                    icon: {
-                        attrs:{ 'uk-icon': 'triangle-down' },
-                    },
+                    icon: { attrs: { 'uk-icon': 'triangle-down' } },
                     dropdown: { options: () => 'mode:click' },
                     actionIcons: true,
-                    items:() => {
-                        return {
-                            publish: {
-                                on: {click: () => vm.status(1)},
-                            },
-                            unpublish: {
-                                on: { click: () => vm.status(0)} },
-                            move: {
-                                type: 'dropdown',
-                                dropdown: { options: () => 'pos: right-top; delayHide: 0; offset: 25' },
-                                items: () => vm.trash(vm.menus).map((item) => {
-                                    let props = {
-                                        caption: item.label,
-                                        on: {click: () => vm.moveNodes(item.id)},
-                                        class: item.id === vm.menu.id ? 'uk-disabled uk-text-muted': '',
-                                        style: item.id === vm.menu.id ? 'text-decoration: line-through': ''
-                                    }
-                                    return Object.assign({}, item, props);
-                                }),
-                                vif: () => vm.showMove
-                            },
-                            trash: {
-                                on: {click: () => vm.removeNodes},
-                                vif: () => vm.showDelete
-                            }
+                    items: () => ({
+                        publish: { on: { click: () => vm.status(1) } },
+                        unpublish: { on: { click: () => vm.status(0) } },
+                        move: {
+                            type: 'dropdown',
+                            dropdown: { options: () => 'pos: right-top; delayHide: 0; offset: 0' },
+                            items: () => vm.trash(vm.menus).map((item) => {
+                                const props = {
+                                    caption: item.label,
+                                    on: { click: () => vm.moveNodes(item.id) },
+                                    class: item.id === vm.menu.id ? 'uk-disabled uk-text-lighter' : ''
+                                };
+                                return { ...item, ...props };
+                            }),
+                            vif: () => vm.showMove
+                        },
+                        trash: {
+                            on: { click: () => vm.removeNodes },
+                            vif: () => vm.showDelete
                         }
-                    },
+                    }),
                     priority: 2,
-                    disabled: () => !vm.selected.length,
-                },
-            }
+                    disabled: () => !vm.selected.length
+                }
+            };
         }
     },
 
@@ -114,11 +98,12 @@ Vue.ready({
         this.Nodes = this.$resource('api/site/node{/id}');
 
         const vm = this;
+
         this.load().then(() => {
             vm.$set(vm, 'menu', _.find(vm.menus, { id: vm.menu.id }) || vm.menus[0]);
         });
 
-        this.$watch(vm => (vm.menu, vm.nodes, Date.now()), () => {
+        this.$watch((_vm) => (_vm.menu, _vm.nodes, Date.now()), () => { // eslint-disable-line no-sequences
             this.tree('update');
         }, { deep: true });
 
@@ -135,7 +120,7 @@ Vue.ready({
             css(this.$refs['table-header'], {
                 minWidth: '100%',
                 width: this.$refs.nestable.$el.offsetWidth ? this.$refs.nestable.$el.offsetWidth : '100%',
-                opacity: '1',
+                opacity: '1'
             });
         },
 
@@ -144,7 +129,7 @@ Vue.ready({
 
             const vm = this;
 
-            var updateTree = (tree, parent_id) => {
+            const updateTree = (tree, parent_id) => {
                 _.forEach(tree, (item, id) => {
                     item.priority = id;
                     item.parent_id = parent_id;
@@ -156,7 +141,7 @@ Vue.ready({
 
             vm.Nodes.save({ id: 'updateOrder' }, {
                 menu: vm.menu.id,
-                nodes: vm.tree('flatten'), // vm.nestableList(this.treedata)
+                nodes: vm.tree('flatten')
             }).then(vm.load, () => {
                 vm.$notify('Reorder failed.', 'danger');
             });
@@ -166,16 +151,16 @@ Vue.ready({
             const [fn, ...props] = arguments; const vm = this;
             const methods = {
                 unflatten() {
-                    let [array, parent, tree] = arguments; const
-                        self = this;
+                    let [array, parent, tree] = arguments; // eslint-disable-line prefer-const
+                    const self = this;
 
                     tree = typeof tree !== 'undefined' ? tree : [];
                     parent = typeof parent !== 'undefined' ? parent : { id: 0 };
 
-                    const children = _.filter(array, child => child.parent_id == parent.id);
+                    const children = _.filter(array, (child) => child.parent_id === parent.id);
 
                     if (!_.isEmpty(children)) {
-                        if (parent.id == 0) {
+                        if (parent.id === 0) {
                             tree = children;
                         } else {
                             parent.children = children;
@@ -189,13 +174,13 @@ Vue.ready({
                     const treeStructure = { children: vm.treedata };
 
                     const flatten = (children, extractChildren, level, order) => Array.prototype.concat.apply(
-                        children.map(x => ({ ...x, level: level || 1, order: x.priority || 0 })),
-                        children.map(x => flatten(extractChildren(x) || [], extractChildren, (level || 1) + 1)),
+                        children.map((x) => ({ ...x, level: level || 1, order: x.priority || 0 })),
+                        children.map((x) => flatten(extractChildren(x) || [], extractChildren, (level || 1) + 1))
                     );
 
-                    const extractChildren = x => x.children;
+                    const extractChildren = (x) => x.children;
 
-                    const flat = flatten(extractChildren(treeStructure), extractChildren).map(x => delete x.children && x);
+                    const flat = flatten(extractChildren(treeStructure), extractChildren).map((x) => delete x.children && x);
 
                     return flat;
                 },
@@ -206,7 +191,7 @@ Vue.ready({
                     vm.$nextTick(() => {
                         vm.propWidth();
                     });
-                },
+                }
             };
 
             return methods[fn] && (typeof methods[fn] === 'function') ? methods[fn](props) : false;
@@ -216,7 +201,7 @@ Vue.ready({
             const vm = this;
             return Vue.Promise.all([
                 this.Menus.query(),
-                this.Nodes.query(),
+                this.Nodes.query()
             ]).then((responses) => {
                 vm.$set(vm, 'menus', responses[0].data);
                 vm.$set(vm, 'nodes', responses[1].data);
@@ -225,7 +210,8 @@ Vue.ready({
                 if (!_.find(vm.menus, { id: vm.menu.id })) {
                     vm.$set(vm, 'menu', vm.menus[0]);
                 }
-            }, () => {
+            }, (res) => {
+                console.warn(res);
                 vm.$notify('Loading failed.', 'danger');
             });
         },
@@ -248,7 +234,7 @@ Vue.ready({
             if (!menu) {
                 menu = {
                     id: '',
-                    label: '',
+                    label: ''
                 };
             }
 
@@ -265,7 +251,7 @@ Vue.ready({
         },
 
         getMenu(position) {
-            return _.find(this.menus, menu => _.includes(menu.positions, position));
+            return _.find(this.menus, (menu) => _.includes(menu.positions, position));
         },
 
         cancel() {
@@ -289,11 +275,11 @@ Vue.ready({
             const vm = this;
             const nodes = this.getSelected();
 
-            var updateChilds = function (node) {
+            const updateChilds = function (node) {
                 _.forEach(node.children, (item) => {
-                    const search = _.filter(nodes, e => e.id == item.id);
+                    const search = _.filter(nodes, (e) => e.id === item.id);
                     if (!search.length) {
-                        const key = Object.keys(vm.nodes).find(key => vm.nodes[key].id === item.id);
+                        const key = Object.keys(vm.nodes).find((k) => vm.nodes[k].id === item.id);
                         vm.nodes[key].parent_id = null;
                         nodes.push(vm.nodes[key]);
                     }
@@ -312,8 +298,8 @@ Vue.ready({
                 this.$notify(this.$trans('Pages moved to %menu%.', {
                     menu: _.find(this.menus.concat({
                         id: 'trash',
-                        label: this.$trans('Trash'),
-                    }), { 'id': menu}).label,
+                        label: this.$trans('Trash')
+                    }), { id: menu }).label
                 }));
             });
         },
@@ -348,7 +334,7 @@ Vue.ready({
         isSelected(node, children) {
             const vm = this;
             if (_.isArray(node)) {
-                return _.every(node, node => vm.isSelected(node, children), this);
+                return _.every(node, (n) => vm.isSelected(n, children), this);
             }
 
             return this.selected.indexOf(node.id) !== -1 && (!children || !this.tree[node.id] || this.isSelected(this.tree[node.id], true));
@@ -357,7 +343,7 @@ Vue.ready({
         toggleSelect(node) {
             const index = this.selected.indexOf(node.id);
 
-            if (index == -1) {
+            if (index === -1) {
                 this.selected.push(node.id);
             } else {
                 this.selected.splice(index, 1);
@@ -406,7 +392,7 @@ Vue.ready({
                 this.load();
                 this.$notify('Page saved.');
             });
-        },
+        }
 
     },
 
@@ -414,7 +400,7 @@ Vue.ready({
 
         showDelete() {
             const vm = this;
-            return this.showMove && _.every(this.getSelected(), node => !(vm.getType(node) || {}).protected, this);
+            return this.showMove && _.every(this.getSelected(), (node) => !(vm.getType(node) || {}).protected, this);
         },
 
         showMove() {
@@ -423,7 +409,7 @@ Vue.ready({
 
         isMobile() {
             return isMobile(navigator.userAgent).any;
-        },
+        }
     },
 
     components: {
@@ -431,6 +417,6 @@ Vue.ready({
         VueNestableHandle,
         ValidationObserver,
         VInput
-    },
+    }
 
 });

@@ -1,17 +1,13 @@
 module.exports = [
 
     {
-        entry: {
-            index: './app/views/index',
-        },
-        output: {
-            filename: './app/bundle/[name].js',
-        },
+        entry: { index: './app/views/index' },
+        output: { filename: './app/bundle/[name].js' },
         module: {
             rules: [
-                { test: /\.vue$/, use: 'vue-loader' },
-            ],
-        },
-    },
+                { test: /\.vue$/, use: 'vue-loader' }
+            ]
+        }
+    }
 
 ];

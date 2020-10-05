@@ -1,6 +1,6 @@
 import { ValidationObserver, VInput } from '@system/app/components/validation.vue';
 
-var UserProfile = {
+const UserProfile = {
 
     el: '#user-profile',
 
@@ -13,10 +13,10 @@ var UserProfile = {
                 type: 'icon',
                 containerClass: 'uk-margin',
                 class: 'uk-input uk-form-width-large',
-                icon: () => this.hidePassword ? 'lock' : 'unlock',
-                iconClick: () => { this.hidePassword = !this.hidePassword },
+                icon: () => (this.hidePassword ? 'lock' : 'unlock'),
+                iconClick: () => { this.hidePassword = !this.hidePassword; },
                 iconTag: 'a',
-                iconDir: 'right',
+                iconDir: 'right'
             }
         }, window.$data);
     },
@@ -24,13 +24,13 @@ var UserProfile = {
     watch: {
         changePassword(val) {
             if (val) {
-                this.$nextTick(()=>{
-                    var icons  = this.$el.querySelectorAll('a.uk-form-icon'),
-                        height = this.$el.getElementsByClassName('uk-input')[0].offsetHeight;
+                this.$nextTick(() => {
+                    const icons = this.$el.querySelectorAll('a.uk-form-icon');
+                    const height = this.$el.getElementsByClassName('uk-input')[0].offsetHeight;
                     if (icons.length && height) {
-                        icons.forEach((icon) => { icon.style.height = height + 'px' })
+                        icons.forEach((icon) => { icon.style.height = `${height}px`; });
                     }
-                })
+                });
             }
         }
     },
@@ -50,7 +50,7 @@ var UserProfile = {
             }, function (res) {
                 this.$notify(res.data, 'danger');
             });
-        },
+        }
 
     },
 

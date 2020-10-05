@@ -8,7 +8,7 @@
             <div class="uk-panel">
 
                 <ul class="uk-nav uk-nav-default pk-nav-large" ref="tab">
-                    <li v-for="section in orderBy(sections, 'priority')" :key="section.name"><a><span :class="'uk-margin-right ' + section.icon"></span><span class="uk-text-middle">{{ section.label | trans }}</span></a></li>
+                    <li v-for="section in orderBy(sections, 'priority')" :key="section.name"><a><span class="uk-margin-right" :uk-icon="section.icon" ratio="1.25"></span><span class="uk-text-middle">{{ section.label | trans }}</span></a></li>
                 </ul>
 
             </div>
@@ -18,7 +18,7 @@
 
             <ul class="uk-switcher settings-tab uk-margin" ref="content">
                 <li v-for="section in orderBy(sections, 'priority')" :key="section.name">
-                    <component :is="section.name" :config="config[section.name]" :options="options[section.name]"></component>
+                    <component :is="section.name" :name="get(section.name)" :settings.sync="settings"></component>
                 </li>
             </ul>
 

@@ -6,16 +6,14 @@ module.exports = [
             extensions: './app/views/extensions',
             marketplace: './app/views/marketplace',
             themes: './app/views/themes',
-            update: './app/views/update',
+            update: './app/views/update'
         },
-        output: {
-            filename: './app/bundle/[name].js',
-        },
+        output: { filename: './app/bundle/[name].js' },
         module: {
             rules: [
-                { test: /\.vue$/, use: 'vue-loader' },
-            ],
-        },
-    },
+                { test: /\.vue$/, use: 'vue-loader' }
+            ]
+        }
+    }
 
 ];

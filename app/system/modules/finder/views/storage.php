@@ -1,6 +1,6 @@
 <?php $view->script('panel-finder') ?>
 
-<div id="storage">
+<div id="storage" v-cloak>
     <panel-finder root="<?= htmlentities($root) ?>" mode="<?= $mode ?>"></panel-finder>
 </div>
 

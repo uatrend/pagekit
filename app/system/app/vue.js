@@ -1,6 +1,4 @@
-import Vue from 'vue';
 import VueEventManager from 'vue-event-manager';
-
 import VueIntl from 'vue-intl';
 import VueResource from 'vue-resource';
 import Cache from './lib/cache';
@@ -11,11 +9,11 @@ import Csrf from './lib/csrf';
 import Notify from './lib/notify';
 import Trans from './lib/trans';
 import Filters from './lib/filters';
+
 import VLoader from './components/loader.vue';
 import VModal from './components/modal.vue';
 import VPagination from './components/pagination';
 import InputFilter from './components/input-filter.vue';
-
 import InputDate from './components/input-date.vue';
 import InputImage from './components/input-image.vue';
 import InputImageMeta from './components/input-image-meta.vue';
@@ -25,7 +23,6 @@ import CheckAll from './directives/check-all';
 import Confirm from './directives/confirm';
 import Gravatar from './directives/gravatar';
 import Order from './directives/order';
-import LazyBackground from './directives/lazy-background';
 
 import Theme from './lib/theme';
 
@@ -33,8 +30,8 @@ function Install(Vue) {
     const config = window.$pagekit;
 
     Vue.config.debug = false;
-    Vue.cache = Vue.prototype.$cache = Cache(config.url);
-    Vue.session = Vue.prototype.$session = Cache('session',
+    Vue.cache = Vue.prototype.$cache = Cache(config.url); // eslint-disable-line no-multi-assign
+    Vue.session = Vue.prototype.$session = Cache('session', // eslint-disable-line no-multi-assign
         {
 
             load(name) {
@@ -48,7 +45,7 @@ function Install(Vue) {
 
             store(name, data) {
                 return Vue.cache.set(name, data);
-            },
+            }
 
         });
 
@@ -56,6 +53,7 @@ function Install(Vue) {
      * Libraries
      */
 
+    Vue.use(VueEventManager);
     Vue.use(VueIntl);
     Vue.use(VueResource);
     Vue.use(Asset);
@@ -65,16 +63,16 @@ function Install(Vue) {
     Vue.use(Notify);
     Vue.use(Trans);
     Vue.use(Filters);
+    Vue.use(Theme);
 
     /**
      * Components
      */
 
-    Vue.component('v-loader', VLoader);
-    Vue.component('v-modal', VModal);
-    Vue.component('v-pagination', VPagination);
-    Vue.component('input-filter', InputFilter);
-
+    Vue.component('VLoader', VLoader);
+    Vue.component('VModal', VModal);
+    Vue.component('VPagination', VPagination);
+    Vue.component('InputFilter', InputFilter);
     Vue.use(InputDate);
     Vue.use(InputImage);
     Vue.use(InputImageMeta);
@@ -88,11 +86,6 @@ function Install(Vue) {
     Vue.directive('confirm', Confirm);
     Vue.directive('gravatar', Gravatar);
     Vue.directive('order', Order);
-    Vue.directive('lazy-background', LazyBackground);
-    Vue.directive('focus', { bind(el) { Vue.nextTick(() => { el.focus(); }); } });
-
-    // Theme
-    Vue.use(Theme);
 
     /**
      * Resource
@@ -109,9 +102,7 @@ function Install(Vue) {
             options = { url, params };
         }
 
-        Vue.util.extend(options, {
-            root: Vue.http.options.root,
-        });
+        Vue.util.extend(options, { root: Vue.http.options.root });
 
         return this(options);
     };
@@ -120,14 +111,14 @@ function Install(Vue) {
 
     Vue.ready = function (fn) {
         if ((fn !== null) && (typeof fn === 'object')) {
-            var options = fn;
+            const options = fn;
 
             fn = function () {
                 new Vue(options);
             };
         }
 
-        var handle = function () {
+        const handle = function () {
             document.removeEventListener('DOMContentLoaded', handle);
             window.removeEventListener('load', handle);
             fn();

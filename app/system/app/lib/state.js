@@ -12,8 +12,8 @@ export default function (Vue) {
             history.replaceState({ key, value: this[key] }, '', modifyQuery(location.search, key, value));
         }
 
-        this.$watch(key, (value) => {
-            history.pushState({ key, value }, '', modifyQuery(location.search, key, value));
+        this.$watch(key, (val) => {
+            history.pushState({ key, val }, '', modifyQuery(location.search, key, val));
         });
 
         window.onpopstate = function (event) {
@@ -27,7 +27,7 @@ export default function (Vue) {
 
         get() {
             return State.bind(this);
-        },
+        }
 
     });
 }
@@ -37,7 +37,7 @@ function modifyQuery(query, key, value) {
     query = query.replace(new RegExp(`${key}=[^&]*&?`), '');
 
     if (query.length && query[query.length - 1] !== '&') {
-        query += '&';
+        query = `${query}&`;
     }
 
     return `?${query}${[key, value].join('=')}`;

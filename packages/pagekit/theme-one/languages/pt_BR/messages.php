@@ -37,5 +37,5 @@
   'Header' => 'Cabeçalho',
   'Written by %name% on %date%' => 'Escrito por %name% em %date%',
   'Read more' => 'Leia mais',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Sem comentários|{1} %num% Comentário|]1,Inf[ %num% Comentários',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Sem comentários|{1} %count% Comentário|]1,Inf[ %count% Comentários',
 );

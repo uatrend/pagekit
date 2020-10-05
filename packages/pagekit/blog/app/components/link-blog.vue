@@ -1,13 +1,13 @@
 <template>
     <div class="uk-margin">
-        <label class="uk-form-label">{{ 'View' | trans }}</label>
+        <label class="uk-form-label">{{ 'Posts' | trans }}</label>
         <div class="uk-form-controls">
             <select v-model="post" class="uk-width-1-1 uk-select">
                 <option value="@blog">
                     {{ 'Posts View' | trans }}
                 </option>
                 <optgroup :label="'Posts' | trans">
-                    <option v-for="p in posts" :value="p | link">
+                    <option v-for="p in posts" :key="p.id" :value="p | link">
                         {{ p.title }}
                     </option>
                 </optgroup>
@@ -18,18 +18,14 @@
 
 <script>
 
-var LinkBlog = {
+const LinkBlog = {
 
-    link: {
-        label: 'Blog',
-    },
-
-    props: ['link'],
+    link: { label: 'Blog' },
 
     data() {
         return {
             posts: [],
-            post: '',
+            post: ''
         };
     },
 
@@ -47,8 +43,8 @@ var LinkBlog = {
     watch: {
 
         post(post) {
-            this.$parent.link = post;
-        },
+            this.$emit('input', post);
+        }
 
     },
 
@@ -56,9 +52,9 @@ var LinkBlog = {
 
         link(post) {
             return `@blog/id?id=${post.id}`;
-        },
+        }
 
-    },
+    }
 
 };
 

@@ -37,5 +37,5 @@
   'Header' => 'Antet',
   'Written by %name% on %date%' => 'Publicat de %name% la %date%',
   'Read more' => 'Citeste in continuare',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Fara comentarii|{1} %num% Comentariu|]1,Inf[ %num% Comentarii',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Fara comentarii|{1} %count% Comentariu|]1,Inf[ %count% Comentarii',
 );

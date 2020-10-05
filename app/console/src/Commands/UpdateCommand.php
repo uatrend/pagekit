@@ -35,27 +35,29 @@ class UpdateCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $packages = [];
+        // TODO
+        return (int) $this->error("The feature is disabled during development.");
+        // $packages = [];
 
-        foreach ((array) $this->argument('packages') as $package) {
+        // foreach ((array) $this->argument('packages') as $package) {
 
-            $path = $this->container->get('path.packages') . '/' . $package . '/composer.json';
-            if (file_exists($path)) {
-                $info = json_decode(file_get_contents($path), true);
-            }
+        //     $path = $this->container->get('path.packages') . '/' . $package . '/composer.json';
+        //     if (file_exists($path)) {
+        //         $info = json_decode(file_get_contents($path), true);
+        //     }
 
-            if (isset($info['require']) && is_array($info['require'])) {
-                $packages = array_merge($packages, $info['require']);
-            }
+        //     if (isset($info['require']) && is_array($info['require'])) {
+        //         $packages = array_merge($packages, $info['require']);
+        //     }
 
-        }
+        // }
 
-        $config = [];
-        foreach (['path.temp', 'path.cache', 'path.vendor', 'path.artifact', 'path.packages', 'system.api'] as $key) {
-            $config[$key] = $this->container->get($key);
-        }
+        // $config = [];
+        // foreach (['path.temp', 'path.cache', 'path.vendor', 'path.artifact', 'path.packages', 'system.api'] as $key) {
+        //     $config[$key] = $this->container->get($key);
+        // }
 
-        $composer = new Composer($config, $output);
-        $composer->install($packages, true, false, $this->option('prefer-source'));
+        // $composer = new Composer($config, $output);
+        // $composer->install($packages, true, false, $this->option('prefer-source'));
     }
 }

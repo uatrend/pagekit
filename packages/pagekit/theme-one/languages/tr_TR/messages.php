@@ -37,5 +37,5 @@
   'Header' => 'Üstbilgi',
   'Written by %name% on %date%' => '%name% tarafından, %date% tarihinde yazıldı',
   'Read more' => 'Devamını oku',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Yorum yok|{1} %num% Yorum|]1,Inf[ %num% Yorum',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Yorum yok|{1} %count% Yorum|]1,Inf[ %count% Yorum',
 );

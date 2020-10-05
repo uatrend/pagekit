@@ -25,7 +25,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         priority: 50,
@@ -48,16 +48,21 @@ module.exports = {
                         </p>
 
                     </div>
-                </div>`,
+                </div>`
     },
 
     replace: false,
 
-    props: ['data'],
+    filters: { json: (value) => JSON.stringify(value, null, 2) },
 
-    filters: {
-        json: value => JSON.stringify(value, null, 2),
-    },
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
+    }
 
 };
 

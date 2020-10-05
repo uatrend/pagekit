@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'ထင်မြင်ချက်ပေးရန် Login ဝင်ရောက်ပါ',
   'Written by %name% on %date%' => '%name% မှ %date% တွင်ရေးသားသည်',
   'Read more' => 'ဆက်ဖတ်ရန်',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} ထင်မြင်ချက်မရှိပါ|{1} ထင်မြင်ချက် %num% ခု|]1,Inf[ ထင်မြင်ချက် %num% ခု',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} ထင်မြင်ချက်မရှိပါ|{1} ထင်မြင်ချက် %count% ခု|]1,Inf[ ထင်မြင်ချက် %count% ခု',
 );

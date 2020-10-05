@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1 (July 10, 2019)
+
+### Added
+- Added new translations
+
 ## 1.0.0 (April 13, 2016)
 
 ### Changed

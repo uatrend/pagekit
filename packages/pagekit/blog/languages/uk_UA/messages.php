@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Щоб додати коментар необхідно авторизуватися >>',
   'Written by %name% on %date%' => 'Опублікував %name%, %date%',
   'Read more' => 'Детальніше',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Немає коментарів|{1} %num% коментар|]1,Inf[ %num% коментарів',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Немає коментарів|{1} %count% коментар|]1,Inf[ %count% коментарів',
 );

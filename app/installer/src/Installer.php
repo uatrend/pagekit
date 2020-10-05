@@ -97,6 +97,12 @@ class Installer
         $message = $status['message'];
         $status = $status['status'];
 
+        $demo_content =  false;
+        if (isset($option['demo_content']) && $option['demo_content']) {
+            $demo_content = true;
+            unset($option['demo_content']);
+        }
+
         try {
 
             if ('no-connection' == $status) {
@@ -134,8 +140,14 @@ class Installer
                 }
             }
 
-            if (file_exists(__DIR__.'/../install.php')) {
-                require_once __DIR__.'/../install.php';
+            if (!$demo_content) {
+                if (file_exists(__DIR__.'/../install.php')) {
+                    require_once __DIR__.'/../install.php';
+                }
+            } else {
+                if (file_exists(__DIR__.'/../install-demo.php')) {
+                    require_once __DIR__.'/../install-demo.php';
+                }
             }
 
             if (!$this->config) {

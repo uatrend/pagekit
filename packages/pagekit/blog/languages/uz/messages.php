@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Iltimos, izoh qoldirish uchun tizimga kiring.',
   'Written by %name% on %date%' => '%name% tomonidan %date% da yozilgan',
   'Read more' => 'Davomini o\'qish',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Izohsiz|{1} %num% Izoh|]1,Inf[ %num% Izohlar',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Izohsiz|{1} %count% Izoh|]1,Inf[ %count% Izohlar',
 );

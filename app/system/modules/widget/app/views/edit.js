@@ -1,9 +1,9 @@
 import settings from '../components/widget-settings.vue';
 import visibility from '../components/widget-visibility.vue';
 import TemplateSettings from '../components/template-settings';
-import { ValidationObserver, VInput} from '../../../../app/components/validation.vue';
+import { ValidationObserver, VInput } from '../../../../app/components/validation.vue';
 
-var WidgetEdit = {
+const WidgetEdit = {
 
     name: 'widget',
 
@@ -12,53 +12,49 @@ var WidgetEdit = {
     mixins: [window.Widgets, Theme.Mixins.Helper],
 
     provide: {
-        '$components': {
+        $components: {
             'template-settings': TemplateSettings,
-            'v-input' : VInput
+            'v-input': VInput
         }
     },
 
     theme: {
-        hiddenHtmlElements: ['#widget-edit > div:first-child'],
+        hideEls: ['#widget-edit > div:first-child'],
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'title': {
+                title: {
                     scope: 'breadcrumbs',
                     type: 'caption',
                     caption: () => {
-                        let trans = this.$options.filters.trans;
+                        const { trans } = this.$options.filters;
                         return vm.widget.id && trans ? trans('Edit Widget') : trans('Add Widget');
                     }
                 },
-                'savewidget': {
+                savewidget: {
                     scope: 'topmenu-left',
                     type: 'button',
                     caption: 'Save',
                     class: 'uk-button tm-button-success',
                     spinner: () => vm.processing,
-                    on: {click: () => vm.submit()},
-                    priority: 1,
+                    on: { click: () => vm.submit() },
+                    priority: 1
                 },
-                'close': {
+                close: {
                     scope: 'topmenu-left',
                     type: 'button',
-                    caption: vm.widget.title ? 'Close' : 'Cancel',
+                    caption: () => (vm.widget.id ? 'Close' : 'Cancel'),
                     class: 'uk-button uk-button-text',
-                    attrs: {
-                        href: () => vm.$url.route('/admin/site/widget')
-                    },
+                    attrs: { href: () => vm.$url.route('/admin/site/widget') },
                     disabled: () => vm.processing,
-                    priority: 0,
+                    priority: 0
                 }
-            }
+            };
         }
     },
 
     data() {
-        return _.merge({
-            form: {}, sections: [], active: 0, processing: false,
-        }, window.$data);
+        return _.merge({ sections: [], active: 0, processing: false }, window.$data);
     },
 
     created() {
@@ -72,28 +68,28 @@ var WidgetEdit = {
         });
 
         sections = _.sortBy(sections.filter((section) => {
-            // active = section.name.match('(.+)--(.+)');
-            let name = section.name;
-            active = (name.match(/\.[^.]/) && !name.match(/\s/)) ? name.match(/(.*(?=\.))\.(.*)/) : null
+            const { name } = section;
+            active = (name.match(/\.[^.]/) && !name.match(/\s/)) ? name.match(/(.*(?=\.))\.(.*)/) : null;
 
             if (active === null) {
                 return !_.find(sections, { name: `${type}.${section.name}` });
             }
 
-            return active[1] == type;
+            return active[1] === type;
         }, this), 'priority');
 
         this.$set(this, 'sections', sections);
     },
 
     mounted() {
-        this.tab = UIkit.tab('#widget-tab', { connect: '#widget-content' });
+        this.tab = UIkit.tab(this.$refs.tab, { connect: this.$theme.getDomElement(this.$refs.content) });
 
         const vm = this;
 
         UIkit.util.on(this.tab.connects, 'show', (e, tab, sel) => {
-            if (tab != vm.tab) return false;
-            for (const index in tab.toggles) {
+            if (tab !== vm.tab) return false;
+            for (let i = 0; i < Object.keys(tab.toggles).length; i++) {
+                const index = Object.keys(tab.toggles)[i];
                 if (tab.toggles[index].parentNode.classList.contains('uk-active')) {
                     vm.active = index;
                     break;
@@ -127,7 +123,7 @@ var WidgetEdit = {
         save() {
             const vm = this;
 
-            this.$trigger('save:widget', { widget: this.widget });
+            this.$trigger('widget-save', { widget: this.widget });
 
             this.$resource('api/site/widget{/id}').save({ id: this.widget.id }, { widget: this.widget }).then(function (res) {
                 const { data } = res;
@@ -151,8 +147,8 @@ var WidgetEdit = {
 
         cancel() {
             // TODO
-            this.$trigger('cancel:widget');
-        },
+            this.$trigger('widget-cancel');
+        }
 
     },
 

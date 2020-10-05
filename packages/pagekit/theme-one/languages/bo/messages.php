@@ -37,5 +37,5 @@
   'Header' => 'ཁ་བྱང་།',
   'Written by %name% on %date%' => '%name% ནས་on %date%ལ་བྲིས།',
   'Read more' => 'འཕྲོ་མའི་ནང་དོན།',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} དཔྱད་བརྗོད་མེད།|{1} %num% དཔྱད་བརྗོད།|]1,Inf[ %num% དཔྱད་བརྗོད།',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} དཔྱད་བརྗོད་མེད།|{1} %count% དཔྱད་བརྗོད།|]1,Inf[ %count% དཔྱད་བརྗོད།',
 );

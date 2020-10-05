@@ -4,32 +4,25 @@
             <div class="uk-margin">
                 <label for="form-title" class="uk-form-label">{{ 'Title' | trans }}</label>
                 <div class="uk-form-controls">
-                    <v-input id="form-title" type="text" name="title" placeholder="Enter Title" view="class: uk-input uk-form-width-large" rules="required" v-model="widget.title" message="Title cannot be blank."/>
+                    <v-input id="form-title" v-model="widget.title" type="text" name="title" placeholder="Enter Title" view="class: uk-input uk-form-width-large" rules="required" message="Title cannot be blank." />
                 </div>
             </div>
         </div>
         <div class="pk-width-sidebar">
-            <component :is="'template-settings'" :widget.sync="widget" :config.sync="config" :form="form" />
+            <component :is="'template-settings'" v-model="widget" :config="config" />
         </div>
     </div>
 </template>
 
 <script>
 
+import WidgetMixin from '../mixins/widget-mixin';
+
 export default {
 
-    section: {
-        label: 'Settings',
-    },
+    mixins: [WidgetMixin],
 
-    inject: ['$components'],
-
-    props: ['widget', 'config'],
-
-    created() {
-        _.extend(this.$options.components, this.$components)
-    },
-
+    section: { label: 'Settings' }
 };
 
 </script>

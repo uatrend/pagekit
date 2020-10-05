@@ -37,5 +37,5 @@
   'Header' => 'ヘッダー',
   'Written by %name% on %date%' => '',
   'Read more' => '続きを読む',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} コメントはありません |{1} %num% コメント|]1,Inf[ %num% コメント',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} コメントはありません |{1} %count% コメント|]1,Inf[ %count% コメント',
 );

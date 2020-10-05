@@ -16,10 +16,10 @@ window.Themes = _.merge(
                 }
 
                 return packages;
-            },
-        },
+            }
+        }
 
-    },
+    }
 );
 
 Vue.ready(window.Themes);

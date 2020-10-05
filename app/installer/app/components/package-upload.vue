@@ -2,7 +2,7 @@
     <div>
         <div ref="input" class="package-upload">
             <div uk-form-custom>
-                <input type="file" name="file" />
+                <input type="file" name="file">
                 <button class="uk-button uk-button-primary" type="button" tabindex="-1">
                     <span v-if="!progress">{{ 'Upload' | trans }}</span>
                     <span v-else><i uk-spinner /> {{ progress }}</span>
@@ -11,7 +11,8 @@
         </div>
 
         <v-modal ref="modal">
-            <package-details :api="api" :package="package" />
+            <!-- <package-details :api="api" :package="package" /> -->
+            <package-details :api="api" :package="pkg" />
 
             <div class="uk-modal-footer uk-text-right">
                 <button class="uk-button uk-button-text uk-margin-right uk-modal-close" type="button">
@@ -32,30 +33,44 @@ import PackageDetails from './package-details.vue';
 
 export default {
 
+    components: { 'package-details': PackageDetails },
+
     mixins: [Package, Theme.Mixins.Helper],
 
     props: {
-        api: { type: String, default: '' },
-        packages: Array,
-        type: String,
+        api: {
+            type: String,
+            default: ''
+        },
+        packages: {
+            type: Array,
+            default() {
+                return [];
+            }
+        },
+        type: {
+            type: String,
+            default: ''
+        }
     },
 
     data() {
         return {
-            package: {},
+            // package: {},
+            pkg: {},
             upload: null,
-            progress: '',
+            progress: ''
         };
     },
 
     theme: {
         elements() {
-            var vm = this;
+            const vm = this;
             return {
-                'upload': {
+                upload: {
                     scope: 'topmenu',
                     type: 'button',
-                    caption: () => !vm.progress ? 'Upload' : vm.progress,
+                    caption: () => (!vm.progress ? 'Upload' : vm.progress),
                     class: 'uk-button uk-button-primary',
                     icon: {
                         attrs: {
@@ -65,14 +80,10 @@ export default {
                         class: 'uk-margin-small-right',
                         vif: () => vm.progress
                     },
-                    on: {
-                        click: () => {
-                            return UIkit.util.$('input', vm.$refs.input).click();
-                        },
-                    },
-                    priority: 0,
+                    on: { click: () => UIkit.util.$('input', vm.$refs.input).click() },
+                    priority: 0
                 }
-            }
+            };
         }
     },
 
@@ -87,7 +98,7 @@ export default {
             },
             loadStart: this.onStart,
             progress: this.onProgress,
-            completeAll: this.onComplete,
+            completeAll: this.onComplete
         };
 
         UIkit.upload(this.$refs.input, settings);
@@ -104,15 +115,15 @@ export default {
         },
 
         onComplete(data) {
+            let message;
             try {
-                // var data = $.parseJSON(data.responseText);
-                var data = JSON.parse(data.responseText);
+                data = JSON.parse(data.responseText);
             } catch (e) {
                 try {
-                    var data = JSON.parse(data.responseText.substring(data.responseText.lastIndexOf('{'), data.responseText.lastIndexOf('}') + 1));
-                    var { message } = data;
-                } catch (e) {
-                    var message = 'Unable load package.';
+                    data = JSON.parse(data.responseText.substring(data.responseText.lastIndexOf('{'), data.responseText.lastIndexOf('}') + 1));
+                    message = data.message;
+                } catch (_e) {
+                    message = 'Unable load package.';
                 }
                 this.progress = '';
                 this.$notify(message, 'danger');
@@ -133,13 +144,13 @@ export default {
             }
 
             this.$set(this, 'upload', data);
-            this.$set(this, 'package', data.package);
+            this.$set(this, 'pkg', data.package);
 
             this.$refs.modal.open();
         },
 
         doInstall() {
-            this.$refs.modal.close()
+            this.$refs.modal.close();
 
             this.install(this.upload.package, this.packages,
                 (output) => {
@@ -149,13 +160,9 @@ export default {
                         }, 300);
                     }
                 }, true);
-        },
+        }
 
-    },
-
-    components: {
-        'package-details': PackageDetails
-    },
+    }
 };
 
 </script>

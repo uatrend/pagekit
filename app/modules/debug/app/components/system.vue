@@ -6,7 +6,7 @@
 
 <script>
 
-module.exports = {
+export default {
 
     section: {
         priority: 10,
@@ -80,12 +80,19 @@ module.exports = {
                     </tr>
                     </tbody>
                 </table>
-            </div>`,
+            </div>`
     },
 
     replace: false,
 
-    props: ['data'],
+    props: {
+        data: {
+            type: Object,
+            default() {
+                return {};
+            }
+        }
+    },
 
     computed: {
         VueVersion() {
@@ -93,8 +100,8 @@ module.exports = {
         },
         UIkitVersion() {
             return window.UIkit ? UIkit.version : '-';
-        },
-    },
+        }
+    }
 
 };
 

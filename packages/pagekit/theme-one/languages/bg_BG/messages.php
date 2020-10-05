@@ -37,5 +37,5 @@
   'Header' => 'Горна част',
   'Written by %name% on %date%' => 'Написан от %name% на %date%',
   'Read more' => 'Прочети още',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Няма коментари|{1} %num% коментар|]1,Inf[ %num% коментари',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Няма коментари|{1} %count% коментар|]1,Inf[ %count% коментари',
 );

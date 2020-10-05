@@ -10,7 +10,7 @@ export default function (Vue) {
             UIkit.notification({
                 message,
                 status,
-                pos: 'top-center',
+                pos: 'top-center'
             });
         } else if (msgs) {
             msgs.empty().append(`<div uk-alert><p class="uk-alert-${status}">${message}</p></div>`);

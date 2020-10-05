@@ -1,5 +1,5 @@
 import UIkit from 'uikit';
-import {$, on, toNodes, each, findAll} from 'uikit-util';
+import { $, on, toNodes, each, findAll } from 'uikit-util';
 
 import Version from '@installer/app/lib/version';
 
@@ -15,35 +15,41 @@ window.Dashboard = {
 
     el: '#dashboard',
 
+    provide() {
+        return {
+            $components: this.$options.components
+        };
+    },
+
     data() {
         return _.extend({
             editing: {},
-            update: {},
+            update: {}
         }, window.$data);
     },
 
     theme: {
-        hiddenHtmlElements: '#dashboard > div:first-child > div:last-child',
+        hideEls: '#dashboard > div:first-child > div:last-child',
         elements() {
-            var vm = this;
+            const vm = this;
             return {
                 addwidget: {
                     scope: 'topmenu-left',
                     type: 'dropdown',
                     caption: 'Add Widget',
                     class: 'uk-button uk-button-text',
-                    icon: { attrs: { 'uk-icon': 'triangle-down' }},
+                    icon: { attrs: { 'uk-icon': 'triangle-down' } },
                     dropdown: { options: () => 'mode: click' },
                     items: () => vm.getTypes().map((type) => {
-                        let props = {
-                            on: {click: () => vm.add(type)},
+                        const props = {
+                            on: { click: () => vm.add(type) },
                             caption: type.label,
                             class: 'uk-dropdown-close'
-                        }
-                        return {...type, ...props}
-                    }),
+                        };
+                        return { ...type, ...props };
+                    })
                 }
-            }
+            };
         }
     },
 
@@ -77,7 +83,7 @@ window.Dashboard = {
 
         hasUpdate() {
             return this.update && Version.compare(this.update.version, this.version, '>');
-        },
+        }
 
     },
 
@@ -87,43 +93,44 @@ window.Dashboard = {
             const self = this;
 
             // widget re-ordering
-            const sortables = findAll('.uk-sortable[data-column]', $(this.$el));
+            const sortables = findAll('.pk-sortable', $(this.$el));
 
             sortables.forEach((el) => {
-                const sortableItem = UIkit.sortable(el, { group: 'widgets', dragCustomClass: 'pk-sortable-dragged-panel', handleClass: 'pk-icon-handle' });
+                const sortableItem = UIkit.sortable(el, { group: 'widgets' });
 
-                on(sortableItem.$el, 'added moved removed', (e, sortable, item, mode) => {
-                    var mode = e.type;
+                on(sortableItem.$el, 'added moved removed', (e, sortable, item) => {
+                    const mode = e.type;
 
                     if (!mode) {
                         return;
                     }
 
                     switch (mode) {
-                    case 'added':
-                    case 'moved':
-                    case 'removed':
+                        case 'added':
+                        case 'moved':
+                        case 'removed': {
+                            const { widgets } = self;
+                            const column = Number.parseInt(UIkit.util.data(sortable.$el, 'column'), 10);
+                            const data = {};
+                            let widget;
 
-                        var widgets = self.widgets,
-                            column = parseInt(UIkit.util.data(sortable.$el, 'column'), 10),
-                            data = {}, widget;
+                            each(findAll('[data-idx]', $(sortable.$el)), (i, idx) => {
+                                widget = _.find(widgets, { id: i.getAttribute('data-id') });
+                                widget.column = column;
+                                widget.idx = idx;
+                            });
 
-                        each(findAll('[data-idx]', $(sortable.$el)), (item, idx) => {
-                            widget = _.find(widgets, {'id': item.getAttribute('data-id')});
-                            widget.column = column;
-                            widget.idx = idx;
-                        });
+                            widgets.forEach((w) => { data[w.id] = w; });
 
-                        widgets.forEach((widget) => {
-                            data[widget.id] = widget;
-                        });
-
-                        self.$http.post('admin/dashboard/savewidgets', { widgets: data }).then((res) => {
-                            // cleanup empty items - maybe fixed with future vue.js version
-                            // sortables.children().forEach(function () {
-                            // if (!this.children.length) $(this).remove();
-                            // });
-                        });
+                            self.$http.post('admin/dashboard/savewidgets', { widgets: data }).then((res) => {
+                                // cleanup empty items - maybe fixed with future vue.js version
+                                // sortables.children().forEach(function () {
+                                // if (!this.children.length) $(this).remove();
+                                // });
+                            });
+                            break;
+                        }
+                        default:
                     }
                 });
             });
@@ -131,8 +138,7 @@ window.Dashboard = {
 
         getColumn(column) {
             column = parseInt(column || 0, 10);
-
-            return _.sortBy(this.widgets.filter(widget => widget.column == column), 'idx');
+            return _.sortBy(this.widgets.filter((widget) => widget.column === column), 'idx');
         },
 
         add(type) {
@@ -152,9 +158,7 @@ window.Dashboard = {
 
         save(widget) {
             const data = { widget };
-
-            this.$emit('save', data);
-            this.$trigger('save:widget', data);
+            this.$trigger('widget-save', data);
             this.Widgets.save({ id: widget.id }, data);
         },
 
@@ -170,10 +174,8 @@ window.Dashboard = {
 
         getTypes() {
             const types = [];
-
             _.forIn(this.$options.components, (component, name) => {
                 const { type } = component;
-
                 if (type) {
                     type.component = name;
                     types.push(type);
@@ -185,13 +187,13 @@ window.Dashboard = {
 
         checkVersion() {
             this.$http.get(`${this.api}/api/update`, { params: { cache: 60 } }).then(function (res) {
-                const update = res.data[this.channel == 'nightly' ? 'nightly' : 'latest'];
+                const update = res.data[this.channel === 'nightly' ? 'nightly' : 'latest'];
 
                 if (update) {
                     this.$set(this, 'update', update);
                 }
             });
-        },
+        }
 
     },
 
@@ -199,9 +201,9 @@ window.Dashboard = {
 
         panel: Panel,
         feed: Feed,
-        location: Location,
+        location: Location
 
-    },
+    }
 
 };
 

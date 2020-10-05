@@ -1,28 +1,31 @@
 <template>
-
-    <a :class="link.class" :href="link.link" @click.prevent="$parent.openModal(link)">
-        <span v-html="link.txt" v-if="link.txt"></span>
+    <a :class="['uk-link', link.class]" :href="link.link" @click.prevent="$parent.openModal(link)">
+        <span v-if="link.txt" v-html="link.txt" />
         <span v-else>{{ 'Select Link' | trans }}</span>
-        <span class="pk-icon-link pk-icon-hover"></span>
+        <span uk-icon="link" />
     </a>
-
 </template>
 
 <script>
 
 export default {
 
-    name: 'link-preview',
+    name: 'LinkPreview',
 
-    props: ['index'],
+    props: {
+        index: {
+            type: String,
+            default: ''
+        }
+    },
 
     computed: {
 
-        link: function() {
+        link() {
             return this.$parent.links[this.index] || {};
         }
 
-    },
+    }
 
 };
 

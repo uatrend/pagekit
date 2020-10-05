@@ -1,4 +1,4 @@
-const on = UIkit.util.on;
+const { on } = UIkit.util;
 
 export default {
 
@@ -10,9 +10,9 @@ export default {
             status: 'loading',
             options: () => ({
                 bgClose: false,
-                escClose: false,
+                escClose: false
             }),
-            showOutput: false,
+            showOutput: false
         };
     },
 
@@ -46,6 +46,8 @@ export default {
         },
 
         open() {
+            if (this.$refs.output.opened) return;
+
             this.$refs.output.open();
             on(this.$refs.output.modal.$el, 'hidden', this.onClose);
         },
@@ -68,9 +70,9 @@ export default {
             if (this.status !== 'loading') {
                 // TODO
                 // this.$refs.output.modal.$options.props.bgClose = true;
-                //this.$refs.output.modal.$options.props.escClose = true;
+                // this.$refs.output.modal.$options.props.escClose = true;
             }
-        },
-    },
+        }
+    }
 
 };

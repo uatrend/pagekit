@@ -1,24 +1,18 @@
 <template>
     <div class="uk-form-horizontal">
-        <component :is="'template-settings'" :node="node" :roles="roles" />
+        <component :is="'template-settings'" v-model="node" :roles="roles" />
     </div>
 </template>
 
 <script>
 
+import NodeMixin from '../mixins/node-mixin';
+
 export default {
 
-    props: ['node', 'roles'],
+    mixins: [NodeMixin],
 
-    section: {
-        label: 'Settings',
-    },
-
-    inject: ['$components'],
-
-    created() {
-        _.extend(this.$options.components, this.$components);
-    },
+    section: { label: 'Settings' }
 
 };
 

@@ -6,27 +6,26 @@
  * lint: runs jshint on all .js files
  */
 
-let map     = require('lodash/map'),
-    merge   = require('merge-stream'),
-    gulp    = require('gulp'),
-    header  = require('gulp-header'),
-    less    = require('gulp-less'),
-    rename  = require('gulp-rename'),
-    eslint  = require('gulp-eslint'),
-    plumber = require('gulp-plumber'),
-    fs      = require('fs'),
-    path    = require('path');
+const merge = require('merge-stream');
+const gulp = require('gulp');
+const header = require('gulp-header');
+const less = require('gulp-less');
+const rename = require('gulp-rename');
+const eslint = require('gulp-eslint');
+const plumber = require('gulp-plumber');
+const fs = require('fs');
+const path = require('path');
 
 // paths of the packages for the compile-task
 let pkgs = [
-    {path: 'app/installer/', data: '../../composer.json'},
-    {path: 'app/system/modules/theme/', data: '../../../../composer.json'}
+    { path: 'app/installer/', data: '../../composer.json' },
+    { path: 'app/system/modules/theme/', data: '../../../../composer.json' }
 ];
 
 // banner for the css files
-let banner = "/*! <%= data.title %> <%= data.version %> | (c) 2014 Pagekit | MIT License */\n";
+const banner = '/*! <%= data.title %> <%= data.version %> | (c) 2014-2020 Pagekit | MIT License */\n';
 
-let cldr = {
+const cldr = {
     cldr: path.join(__dirname, 'node_modules/cldr-core/supplemental/'),
     intl: path.join(__dirname, 'app/system/modules/intl/data/'),
     locales: path.join(__dirname, 'node_modules/cldr-localenames-modern/main/'),
@@ -35,7 +34,7 @@ let cldr = {
 };
 
 // general error handler for plumber
-let errhandler = function (error) {
+const errhandler = function (error) {
     this.emit('end');
     return console.error(error.toString());
 };
@@ -43,24 +42,34 @@ let errhandler = function (error) {
 /**
  * Copy specified "assets" from "node_modules" to the specified dirs.
  */
-gulp.task('assets', function() {
-    let dirs = [
+gulp.task('assets', () => {
+    const dirs = [
         {
             path: 'app/assets/',
-            assets: {uikit: '*', vue: '*', flatpickr: '*', lodash: {files: 'lodash*.js', folder: 'dist'}}
+            assets: {
+                uikit: '*',
+                vue: '*',
+                flatpickr: '*',
+                lodash: { files: 'lodash*.js', folder: 'dist' }
+            }
         },
         {
             path: 'app/system/modules/editor/app/assets/',
-            assets: {tinymce: '*', marked: '*', codemirror: '*'}
+            assets: { tinymce: '*', marked: '*', codemirror: '*' }
+        },
+        {
+            path: 'app/system/modules/theme/assets/less/',
+            assets: { uikit: { files: '/src/less/components/*', folder: 'components', directly: true } }
         }
     ];
 
-    return merge.apply(null, [].concat.apply([], dirs.map((dir) => {  // Multiple stream from flatten array
-        return map(dir.assets, (options, asset) => {
-            let base  = asset + '/',                                  // Base path, e.g 'asset/'
-                src   = path.join(__dirname, 'node_modules/') + base, // Source path of "asset" in "node_modules"
-                dest  = path.join(__dirname, dir.path) + base;        // Destination path
-                files = src + '**';                                   // By default - copy all files, including directories
+    return merge.apply(null, [].concat.apply([], dirs.map((dir) => (
+        Object.keys(dir.assets).map((asset) => {
+            const options = dir.assets[asset];
+            const base = `${asset}/`;
+            const src = path.join(__dirname, 'node_modules/') + base;
+            let dest = path.join(__dirname, dir.path) + base;
+            let files = `${src}**`;
 
             // Check options
             if ((typeof options === 'string') && (options !== '*')) {
@@ -69,114 +78,100 @@ gulp.task('assets', function() {
 
             // If you have options such as "files" and "folder" - the specified "files" will be copied to the specified "folder"
             if (typeof options === 'object') {
-                if (options.files)  files = src  + options.files;
-                if (options.folder) dest  = dest + options.folder;
+                if (options.files) files = src + options.files;
+                if (options.folder) dest = !options.directly ? dest : path.join(__dirname, dir.path) + options.folder;
             }
 
             return gulp.src([files]).pipe(gulp.dest(dest));
         })
-    })));
+    ))));
 });
 
 /**
  * Compile all less files
  */
-gulp.task('compile', function () {
+gulp.task('compile', () => {
+    pkgs = pkgs.filter((pkg) => fs.existsSync(pkg.path));
 
-    pkgs = pkgs.filter(function (pkg) {
-        return fs.existsSync(pkg.path);
-    });
-
-    return merge.apply(null, pkgs.map(function (pkg) {
-        data = require('./' + pkg.path + pkg.data);
-        return gulp.src(pkg.path + '**/less/*.less', {base: pkg.path})
+    return merge.apply(null, pkgs.map((pkg) => (
+        gulp.src(`${pkg.path}**/less/*.less`, { base: pkg.path })
             .pipe(plumber(errhandler))
-            .pipe(less({compress: true, relativeUrls: true}))
-            .pipe(header(banner, {data: require('./' + pkg.path + pkg.data)}))
-            .pipe(rename(function (file) {
+            .pipe(less({ compress: true, relativeUrls: true }))
+            .pipe(header(banner, { data: require(`./${pkg.path}${pkg.data}`) })) // eslint-disable-line import/no-dynamic-require, global-require
+            .pipe(rename((file) => {
                 // the compiled less file should be stored in the css/ folder instead of the less/ folder
                 file.dirname = file.dirname.replace('less', 'css');
             }))
-            .pipe(gulp.dest(pkg.path));
-    }));
-
+            .pipe(gulp.dest(pkg.path))
+    )));
 });
 
 /**
  * Watch for changes in files
  */
-gulp.task('watch', function (cb) {
+gulp.task('watch', (cb) => {
     gulp.watch([
         './app/installer/**/*.less',
         './app/system/**/*.less'
-        ], gulp.series('compile'));
-
+    ], gulp.series('compile'));
 });
 
 /**
  * Lint all script files
  */
-gulp.task('lint', function () {
-    return gulp.src([
-        'app/modules/**/*.js',
-        'app/system/**/*.js',
-        'extensions/**/*.js',
-        'themes/**/*.js',
-        'app/modules/**/*.vue',
-        'app/system/**/*.vue',
-        'extensions/**/*.vue',
-        'themes/**/*.vue',
-        '!**/bundle/*',
-        '!**/vendor/**/*',
-        '!**/assets/**/*',
-        '!node_modules/**',
-        '!.git/**'
-        ])
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failOnError());
-});
+gulp.task('lint', () => gulp.src([
+    'app/modules/**/*.js',
+    'app/system/**/*.js',
+    'extensions/**/*.js',
+    'themes/**/*.js',
+    'app/modules/**/*.vue',
+    'app/system/**/*.vue',
+    'extensions/**/*.vue',
+    'themes/**/*.vue',
+    '!**/bundle/*',
+    '!**/vendor/**/*',
+    '!**/assets/**/*',
+    '!node_modules/**',
+    '!.git/**'
+]).pipe(eslint()).pipe(eslint.format()).pipe(eslint.failOnError()));
 
-gulp.task('cldr', function (done) {
-
+gulp.task('cldr', (done) => {
     // territoryContainment
-    let data = {}, json = JSON.parse(fs.readFileSync(cldr.cldr + 'territoryContainment.json', 'utf8')).supplemental.territoryContainment;
-    Object.keys(json).forEach(function (key) {
-        if (isNaN(key)) return;
+    const data = {};
+    const json = JSON.parse(fs.readFileSync(`${cldr.cldr}territoryContainment.json`, 'utf8')).supplemental.territoryContainment;
+    Object.keys(json).forEach((key) => {
+        if (Number.isNaN(key)) return;
         data[key] = json[key]._contains;
     });
-    fs.writeFileSync(cldr.intl + 'territoryContainment.json', JSON.stringify(data));
+
+    fs.writeFileSync(`${cldr.intl}territoryContainment.json`, JSON.stringify(data));
 
     fs.readdirSync(cldr.languages)
-        .filter(function (file) {
-            return fs.statSync(path.join(cldr.languages, file)).isDirectory();
-        })
-        .forEach(function (src) {
+        .filter((file) => fs.statSync(path.join(cldr.languages, file)).isDirectory())
+        .forEach((src) => {
+            const id = src.replace('_', '-');
+            const shortId = id.substr(0, id.indexOf('-'));
+            let found;
 
-            let id = src.replace('_', '-'), shortId = id.substr(0, id.indexOf('-')), found;
-
-            ['languages', 'territories'].forEach(function (name) {
-
+            ['languages', 'territories'].forEach((name) => {
                 found = false;
-                [id, shortId, 'en'].forEach(function (locale) {
-                    let file = cldr.locales + locale + '/' + name + '.json';
+                [id, shortId, 'en'].forEach((locale) => {
+                    const file = `${cldr.locales}${locale}/${name}.json`;
                     if (!found && fs.existsSync(file)) {
                         found = true;
-                        fs.writeFileSync(cldr.languages + src + '/' + name + '.json', JSON.stringify(JSON.parse(fs.readFileSync(file, 'utf8')).main[locale].localeDisplayNames[name]));
+                        fs.writeFileSync(`${cldr.languages}${src}/${name}.json`, JSON.stringify(JSON.parse(fs.readFileSync(file, 'utf8')).main[locale].localeDisplayNames[name]));
                     }
                 });
-
             });
 
             found = false;
-            [id.toLowerCase(), shortId, 'en'].forEach(function (locale) {
-                let file = cldr.formats + locale + '.json';
+            [id.toLowerCase(), shortId, 'en'].forEach((locale) => {
+                const file = `${cldr.formats}${locale}.json`;
                 if (!found && fs.existsSync(file)) {
                     found = true;
-                    fs.writeFileSync(cldr.languages + src + '/formats.json', fs.readFileSync(file, 'utf8'));
+                    fs.writeFileSync(`{cldr.languages}${src}/formats.json`, fs.readFileSync(file, 'utf8'));
                 }
             });
-
         });
 
     done();

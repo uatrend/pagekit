@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Siusplau inicia sessió per a deixar un comentari.',
   'Written by %name% on %date%' => 'Escrit per %name% el %date%',
   'Read more' => 'Llegir-ne més',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Cap comentari|{1} %num% Comentaris|]1,Inf[ %num% comentaris',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Cap comentari|{1} %count% Comentaris|]1,Inf[ %count% comentaris',
 );

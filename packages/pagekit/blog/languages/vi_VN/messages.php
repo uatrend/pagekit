@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Vui lòng đăng nhập để bình luận',
   'Written by %name% on %date%' => 'Được viết bởi %name% ngày %date%',
   'Read more' => 'Đọc thêm',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Không có các bình luận|{1} %num% Bình luận|]1,Inf[ %num% Các bình luận',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Không có các bình luận|{1} %count% Bình luận|]1,Inf[ %count% Các bình luận',
 );

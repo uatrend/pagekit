@@ -2,7 +2,7 @@
     <div>
         <div class="uk-margin uk-flex uk-flex-middle uk-flex-between uk-flex-wrap">
             <div>
-                <h2 class="uk-margin-remove">
+                <h2 class="uk-h3 uk-margin-remove">
                     {{ 'Localization' | trans }}
                 </h2>
             </div>
@@ -41,15 +41,17 @@
 
 <script>
 
+import SettingsMixin from '../mixins/settings-mixin';
+
 export default {
+
+    mixins: [SettingsMixin],
 
     section: {
         label: 'Localization',
-        icon: 'pk-icon-large-pin',
-        priority: 20,
+        icon: 'location',
+        priority: 20
     },
-
-    props: ['config', 'options'],
 
     data() {
         return { locales: window.$system.locales };
@@ -62,10 +64,10 @@ export default {
         },
 
         option() {
-            return this.$root.options.system;
-        },
+            return this.options.system;
+        }
 
-    },
+    }
 
 };
 

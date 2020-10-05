@@ -1,7 +1,7 @@
 <template>
     <div class="pk-filter" :class="['uk-form-custom', value ? 'uk-active' : '']" uk-form-custom>
         <span>{{ label }}</span>
-        <select v-if="isNumber" v-model.number="select" class="uk-select">
+        <select v-if="isNumber" v-model="select" class="uk-select">
             <template v-for="(option, key) in list">
                 <optgroup v-if="option.label" :key="key" :label="option.label">
                     <option v-for="opt in option.options" :key="opt.value" :value="opt.value">
@@ -32,11 +32,30 @@
 
 export default {
 
-    props: ['title', 'value', 'options', 'number'],
+    props: {
+        title: {
+            type: String,
+            default: ''
+        },
+        value: {
+            type: [Number, String],
+            default: undefined
+        },
+        options: {
+            type: Array,
+            default() {
+                return [];
+            }
+        },
+        number: {
+            type: Number,
+            default: 0
+        }
+    },
 
     data() {
         return {
-            select: this.value,
+            select: this.value
         };
     },
 
@@ -54,7 +73,7 @@ export default {
             const list = this.list.concat(_.flatten(_.map(this.list, 'options')));
             const value = _.find(list, { value: this.select });
             return value ? value.text : this.title;
-        },
+        }
 
     },
 
@@ -65,14 +84,14 @@ export default {
 
         value(value) {
             this.select = value;
-        },
+        }
     },
 
     created() {
         if (this.value === undefined) {
             this.select = '';
         }
-    },
+    }
 
 };
 

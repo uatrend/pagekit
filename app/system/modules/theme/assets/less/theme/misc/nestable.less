@@ -1,0 +1,114 @@
+/* Vue-nestable
+ ============================================================================================== */
+
+/*
+* Style for nestable
+*/
+
+.nestable {
+    position: relative;
+}
+.nestable .nestable-list {
+    margin: 0;
+    padding: 0 0 0 40px;
+    list-style-type: none;
+}
+.nestable > .nestable-list {
+    padding: 0;
+}
+.nestable-item:first-child,
+.nestable-item-copy:first-child {
+    margin-top: 0;
+}
+.nestable-item {
+    position: relative;
+}
+.nestable-item.is-dragging .nestable-list {
+    pointer-events: none;
+}
+.nestable-item.is-dragging * {
+    opacity: 0;
+    filter: alpha(opacity=0);
+}
+.nestable-item.is-dragging:before {
+    content: " ";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(106, 127, 233, 0.02);
+    border: 1px dashed rgba(73, 100, 241, 0.4);
+    z-index: 1;
+}
+.nestable-drag-layer {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 100;
+    pointer-events: none;
+}
+.nestable-drag-layer > .nestable-list {
+    position: absolute;
+    top: 0;
+    left: 0;
+    padding: 0;
+    background-color: @theme-background-menu-active-color;
+}
+.nestable-item-content > .nestable-handle,
+.nestable-item-content > div {
+    display: inline;
+}
+.nestable-item-content > .nestable-handle,
+.nestable-item-content > div {
+    padding: 16px 12px;
+    margin-top: -1px;
+    border-top: 1px solid @theme-border;
+    border-bottom: 1px solid @theme-border;
+}
+.nestable-item-content > .nestable-handle,
+.nestable-item-content > div {
+    position: relative;
+    display: table;
+    width: 100%;
+    padding: 0;
+}
+.nestable-item-content > .nestable-handle > div,
+.nestable-item-content > div > div {
+    display: table-cell;
+    padding: 16px 12px;
+    vertical-align: middle;
+}
+/* Hover
+ ============================================================================================== */
+
+/*
+ * Hidden
+ * Can't use `display: none` because it's not accessible through keyboard.
+ */
+
+.nestable-handle:not(:hover):not(.uk-hover) .uk-hidden-hover:not(:focus) {
+    position: absolute !important;
+    width: 0 !important;
+    height: 0 !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    overflow: hidden !important;
+}
+
+/*
+ * Invisible
+ * Can't use `visibility: hidden` because it's not accessible through keyboard.
+ */
+
+.nestable-item-content:not(:hover):not(.uk-hover) .uk-invisible-hover:not(:focus) {
+    opacity: 0 !important;
+}
+.nestable-item-content > .uk-active.nestable-handle,
+.nestable-item-content > div.uk-active {
+    background: @theme-background-menu-active-color;
+}
+.nestable-item-content:hover > .nestable-handle,
+.nestable-item-content:hover > div {
+    background: @theme-background-menu-active-color;
+}

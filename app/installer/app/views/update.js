@@ -1,6 +1,6 @@
 import Version from '../lib/version';
 
-var Update = {
+const Update = {
 
     name: 'update',
 
@@ -15,7 +15,7 @@ var Update = {
             output: '',
             progress: 0,
             releases: [],
-            errorsPagekit: [],
+            errorsPagekit: []
         }, window.$data);
     },
 
@@ -27,28 +27,26 @@ var Update = {
 
         hasUpdate() {
             return this.update && Version.compare(this.update.version, this.version, '>');
-        },
+        }
 
     },
 
     methods: {
 
         getVersions() {
-            this.$http.get(`${this.api}/api/update`, { params: { version: this.version } }).then(
-                function (res) {
-                    const { data } = res;
-                    const channel = data[this.channel == 'nightly' ? 'nightly' : 'latest'];
+            this.$http.get(`${this.api}/api/update`, { params: { version: this.version } }).then((res) => {
+                const { data } = res;
+                const channel = data[this.channel === 'nightly' ? 'nightly' : 'latest'];
 
-                    if (channel) {
-                        this.update = channel;
-                        this.releases = data.versions;
-                    } else {
-                        this.error(this.$trans('Cannot obtain versions. Please try again later.'));
-                    }
-                }, function () {
-                    this.error(this.$trans('Cannot connect to the server. Please try again later.'));
-                },
-            );
+                if (channel) {
+                    this.update = channel;
+                    this.releases = data.versions;
+                } else {
+                    this.error(this.$trans('Cannot obtain versions. Please try again later.'));
+                }
+            }, () => {
+                this.error(this.$trans('Cannot connect to the server. Please try again later.'));
+            });
         },
 
         install() {
@@ -69,17 +67,17 @@ var Update = {
                 xhr: {
                     onprogress() {
                         vm.setOutput(this.responseText);
-                    },
-                },
+                    }
+                }
             }).then(this.doMigration, this.error);
         },
 
         doMigration() {
             this.$set(this, 'progress', 100);
             if (this.status === 'success') {
-                this.$http.get('admin/system/migration/migrate').then(function (res) {
+                this.$http.get('admin/system/migration/migrate').then((res) => {
                     const { data } = res;
-                    this.output += `\n\n${data.message}`;
+                    this.output = `${this.output}\n\n${data.message}`;
                     this.finished = true;
                 }, this.error);
             } else {
@@ -122,18 +120,18 @@ var Update = {
 
             renderer.listitem = function (text) {
                 switch (section) {
-                case 'Added':
-                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-success uk-margin-right">${section}</span> <span>${text}</span></li>`;
-                case 'Deprecated':
-                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-warning uk-margin-right">${section}</span> <span>${text}</span></li>`;
-                case 'Removed':
-                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-warning uk-margin-right">${section}</span> <span>${text}</span></li>`;
-                case 'Fixed':
-                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-danger uk-margin-right">${section}</span> <span>${text}</span></li>`;
-                case 'Security':
-                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-danger uk-margin-right">${section}</span> <span>${text}</span></li>`;
-                default:
-                    return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-margin-right">${section}</span> ${text}</li>`;
+                    case 'Added':
+                        return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-success uk-margin-right">${section}</span> <span>${text}</span></li>`;
+                    case 'Deprecated':
+                        return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-warning uk-margin-right">${section}</span> <span>${text}</span></li>`;
+                    case 'Removed':
+                        return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-warning uk-margin-right">${section}</span> <span>${text}</span></li>`;
+                    case 'Fixed':
+                        return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-danger uk-margin-right">${section}</span> <span>${text}</span></li>`;
+                    case 'Security':
+                        return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-label-danger uk-margin-right">${section}</span> <span>${text}</span></li>`;
+                    default:
+                        return `<li class="uk-flex uk-flex-middle"><span class="uk-label pk-badge-justify uk-margin-right">${section}</span> ${text}</li>`;
                 }
             };
 
@@ -142,11 +140,11 @@ var Update = {
             };
 
             return marked(md, { renderer });
-        },
+        }
 
     },
 
-    filters: {},
+    filters: {}
 
 };
 

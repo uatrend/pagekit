@@ -37,5 +37,5 @@
   'Header' => 'Fejléc',
   'Written by %name% on %date%' => 'Írta %name% - %date%',
   'Read more' => 'Bővebben',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Nincs hozzászólás|{1} %num% hozzászólás|]1,Inf[ %num% hozzászólás',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Nincs hozzászólás|{1} %count% hozzászólás|]1,Inf[ %count% hozzászólás',
 );

@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => 'Kirjaudu sisään kommentoidaksesi',
   'Written by %name% on %date%' => 'Kirjoittanut %name% %date%',
   'Read more' => 'Lue lisää',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Ei kommentteja|{1} %num% kommentti|]1,Inf[ %num% kommenttia',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Ei kommentteja|{1} %count% kommentti|]1,Inf[ %count% kommenttia',
 );

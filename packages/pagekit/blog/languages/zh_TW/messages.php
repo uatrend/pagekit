@@ -53,7 +53,7 @@
   'E-mail' => 'E-mail',
   'Field must be a valid email address.' => '此欄位必須是個合法的 Email 地址。',
   'Save' => '儲存',
-  '{0} %count% Comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} 無評論|{1} %num% 則評論|]1,Inf[ %num% 則評論',
+  '{0} %count% Comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} 無評論|{1} %count% 則評論|]1,Inf[ %count% 則評論',
   '{1} %count% Comment selected|]1,Inf[ %count% Comments selected' => '{1} %count% 則評論被選取|]1,Inf[ %count% 則評論被選取',
   'Title' => '標題',
   'Date' => '日期',
@@ -93,5 +93,5 @@
   'Please login to leave a comment.' => '請登入來發表評論。',
   'Written by %name% on %date%' => '%name% 寫於 %date%',
   'Read more' => '閱讀更多',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} 無評論|{1} %num% 則評論|]1,Inf[ %num% 則評論',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} 無評論|{1} %count% 則評論|]1,Inf[ %count% 則評論',
 );

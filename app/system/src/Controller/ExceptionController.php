@@ -27,7 +27,7 @@ class ExceptionController
         if (is_subclass_of($exception->getClass(), 'Pagekit\Kernel\Exception\HttpException')) {
             $title = $exception->getMessage();
             if ($exception->getCode() == 404)
-                $title = __('Page not found');
+                $title = __('Page not found.');
             } else {
                 $title = __('Whoops, looks like something went wrong.');
         }

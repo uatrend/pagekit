@@ -23,6 +23,10 @@ return [
             'name' => '@system/intl',
             'controller' => 'Pagekit\\Intl\\Controller\\IntlController'
         ],
+        '/api/system/intl' => [
+            'name' => '@system/api/intl',
+            'controller' => 'Pagekit\\Intl\\Controller\\IntlApiController'
+        ]
     ],
 
     'config' => [

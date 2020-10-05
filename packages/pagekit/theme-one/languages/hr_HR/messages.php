@@ -37,5 +37,5 @@
   'Header' => 'Zaglavlje',
   'Written by %name% on %date%' => 'Napisao %name% na %date%',
   'Read more' => 'Pročitajte više',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Nema komentara|{1} %num% Komentar|]1,Inf[ %num% Komentara',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Nema komentara|{1} %count% Komentar|]1,Inf[ %count% Komentara',
 );

@@ -10,7 +10,6 @@ use Pagekit\Intl\Loader\PoFileLoader;
 use Pagekit\Module\Module;
 use Symfony\Component\Finder\Finder;
 use Symfony\Component\Translation\Translator;
-// use Symfony\Component\Translation\TranslatorInterface; // Deprecated 4.2
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 class IntlModule extends Module
@@ -71,9 +70,9 @@ class IntlModule extends Module
      *
      * @return array
      */
-    public function getAvailableLanguages()
+    public function getAvailableLanguages($locale = null)
     {
-        $languages = $this->getLanguages();
+        $languages = $this->getLanguages($locale);
         $territories = $this->getTerritories();
 
         $available = [];

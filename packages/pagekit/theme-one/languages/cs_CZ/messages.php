@@ -37,5 +37,5 @@
   'Header' => 'Header',
   'Written by %name% on %date%' => '%name%, %date%',
   'Read more' => 'Číst dál',
-  '{0} No comments|{1} %num% Comment|]1,Inf[ %num% Comments' => '{0} Bez komentářů|{1} %num% komentář|{2,3,4} %num% komentáře|]5,Inf[ %num% komentářů',
+  '{0} No comments|{1} %count% Comment|]1,Inf[ %count% Comments' => '{0} Bez komentářů|{1} %count% komentář|{2,3,4} %count% komentáře|]5,Inf[ %count% komentářů',
 );
