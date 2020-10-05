@@ -1,156 +1,164 @@
 <template>
-    <div class="tm-background">
+    <div class="tm-background uk-height-viewport">
         <installer-steps :steps="steps" :current="step">
             <template #start="{ step }">
-                <div>
-                    <div :step="step" class="uk-panel uk-text-center uk-padding-small">
-                        <a id="next" @click="gotoStep('language')">
-                            <img src="/app/system/assets/images/pagekit-logo-large.svg" alt="Pagekit">
-                            <div class="uk-margin">
-                                <svg class="tm-arrow" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
-                                    <line fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" x1="2" y1="18" x2="36" y2="18" />
-                                    <polyline fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="26.071,6.5 37.601,18.03 26,29.631 " />
-                                </svg>
-                            </div>
-                        </a>
+                <div :step="step" class="tm-slide">
+                    <div class="tm-container">
+                        <div class="uk-panel uk-text-center">
+                            <a id="next" @click="gotoStep('language')">
+                                <img src="/app/system/assets/images/pagekit-logo-large.svg" alt="Pagekit">
+                                <div class="uk-margin">
+                                    <svg class="tm-arrow" width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg">
+                                        <line fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-miterlimit="10" x1="2" y1="18" x2="36" y2="18" />
+                                        <polyline fill="none" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" stroke-miterlimit="10" points="26.071,6.5 37.601,18.03 26,29.631 " />
+                                    </svg>
+                                </div>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </template>
             <template #language="{ step }">
-                <div>
-                    <div :step="step" class="uk-card uk-card-default">
-                        <div class="uk-card-header">
-                            <h1 class="uk-card-title uk-text-center">
-                                {{ 'Choose language' | trans }}
-                            </h1>
-                        </div>
-                        <div class="uk-card-body">
-                            <div class="uk-margin uk-text-muted uk-text-center">
-                                {{ "Select your site language." | trans }}
+                <div :step="step" class="tm-slide">
+                    <div class="tm-container">
+                        <div class="uk-card uk-card-default">
+                            <div class="uk-card-header">
+                                <h1 class="uk-card-title uk-text-center">
+                                    {{ 'Choose language' | trans }}
+                                </h1>
                             </div>
-                            <select id="selectbox" v-model="locale" class="uk-select" size="10">
-                                <option v-for="(lang, key) in locales" :key="key" :value="key">
-                                    {{ lang }}
-                                </option>
-                            </select>
+                            <div class="uk-card-body">
+                                <div class="uk-margin uk-text-muted uk-text-center">
+                                    {{ "Select your site language." | trans }}
+                                </div>
+                                <select id="selectbox" v-model="locale" class="uk-select" size="10">
+                                    <option v-for="(lang, key) in locales" :key="key" :value="key">
+                                        {{ lang }}
+                                    </option>
+                                </select>
+                            </div>
+                            <buttons :next="stepLanguage" />
                         </div>
-                        <buttons :next="stepLanguage" />
                     </div>
                 </div>
             </template>
             <template #database="{ step, passes, valid }">
-                <div>
-                    <div :step="step" class="uk-card uk-card-default">
-                        <div class="uk-card-header">
-                            <h1 class="uk-card-title uk-text-center">
-                                {{ 'Connect database' | trans }}
-                            </h1>
+                <div :step="step" class="tm-slide">
+                    <div class="tm-container">
+                        <div class="uk-card uk-card-default">
+                            <div class="uk-card-header">
+                                <h1 class="uk-card-title uk-text-center">
+                                    {{ 'Connect database' | trans }}
+                                </h1>
+                            </div>
+                            <form class="uk-card-body uk-form-horizontal tm-form-horizontal">
+                                <div class="uk-margin uk-text-muted uk-text-center">
+                                    {{ 'Enter your database connection details.' | trans }}
+                                </div>
+                                <div v-show="message" class="uk-alert uk-alert-danger uk-margin uk-text-center">
+                                    <p>{{ message }}</p>
+                                </div>
+                                <div class="uk-margin">
+                                    <label for="form-dbdriver" class="uk-form-label">{{ 'Driver' | trans }}</label>
+                                    <div class="uk-form-controls">
+                                        <select id="form-dbdriver" v-model="config.database.default" class="uk-select" name="dbdriver">
+                                            <option v-if="sqlite" value="sqlite">
+                                                SQLite
+                                            </option>
+                                            <option value="mysql">
+                                                MySQL
+                                            </option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <template v-if="config.database.default === 'mysql'">
+                                    <div class="uk-margin">
+                                        <label for="form-mysql-dbhost" class="uk-form-label">{{ 'Hostname' | trans }}</label>
+                                        <v-input id="form-mysql-dbhost" v-model="config.database.connections.mysql.host" view="class: uk-input uk-form-width-large" type="text" name="host" rules="required" message="Host cannot be blank." />
+                                    </div>
+                                    <div class="uk-margin">
+                                        <label for="form-mysql-dbuser" class="uk-form-label">{{ 'User' | trans }}</label>
+                                        <v-input id="form-mysql-dbuser" v-model="config.database.connections.mysql.user" view="class: uk-input uk-form-width-large" type="text" name="user" rules="required" message="User cannot be blank." />
+                                    </div>
+                                    <div class="uk-margin">
+                                        <label for="form-mysql-dbpassword" class="uk-form-label">{{ 'Password' | trans }}</label>
+                                        <v-input id="form-mysql-dbpassword" v-model="config.database.connections.mysql.password" :type="hidePassword ? 'password' : 'text'" name="password" :view="{type: 'icon', icon: () => hidePassword ? 'eye-closed' : 'eye', class: 'uk-input uk-form-width-large', containerClass: 'uk-form-controls', iconTag: 'a', iconDir: 'right', iconClick: () => { hidePassword = !hidePassword }}" autocomplete="off" />
+                                    </div>
+                                    <div class="uk-margin">
+                                        <label for="form-mysql-dbname" class="uk-form-label">{{ 'Database Name' | trans }}</label>
+                                        <v-input id="form-mysql-dbname" v-model="config.database.connections.mysql.dbname" view="class: uk-input uk-form-width-large" type="text" name="dbname" rules="required" message="Database name cannot be blank." />
+                                    </div>
+                                    <div class="uk-margin">
+                                        <label for="form-mysql-dbprefix" class="uk-form-label">{{ 'Table Prefix' | trans }}</label>
+                                        <v-input id="form-mysql-dbprefix" v-model="config.database.connections.mysql.prefix" view="class: uk-input uk-form-width-large" type="text" name="mysqlprefix" :rules="{required: true, regex: /^[a-zA-Z][a-zA-Z0-9._\-]*$/}" message="Prefix must start with a letter and can only contain alphanumeric characters (A-Z, 0-9) and underscore (_)" />
+                                    </div>
+                                </template>
+                                <div v-show="config.database.default == 'sqlite'" class="uk-margin">
+                                    <label for="form-sqlite-dbprefix" class="uk-form-label">{{ 'Table Prefix' | trans }}</label>
+                                    <v-input id="form-sqlite-dbprefix" v-model="config.database.connections.sqlite.prefix" view="class: uk-input uk-form-width-large" type="text" name="sqliteprefix" :rules="{required: true, regex: /^[a-zA-Z][a-zA-Z0-9._\-]*$/}" message="Prefix must start with a letter and can only contain alphanumeric characters (A-Z, 0-9) and underscore (_)" />
+                                </div>
+                            </form>
+                            <buttons :prev="gotoStep.bind(vm, 'language')" :next="passes.bind(vm, stepDatabase)" :valid="valid" />
                         </div>
-                        <form class="uk-card-body uk-form-horizontal tm-form-horizontal">
-                            <div class="uk-margin uk-text-muted uk-text-center">
-                                {{ 'Enter your database connection details.' | trans }}
-                            </div>
-                            <div v-show="message" class="uk-alert uk-alert-danger uk-margin uk-text-center">
-                                <p>{{ message }}</p>
-                            </div>
-                            <div class="uk-margin">
-                                <label for="form-dbdriver" class="uk-form-label">{{ 'Driver' | trans }}</label>
-                                <div class="uk-form-controls">
-                                    <select id="form-dbdriver" v-model="config.database.default" class="uk-select" name="dbdriver">
-                                        <option v-if="sqlite" value="sqlite">
-                                            SQLite
-                                        </option>
-                                        <option value="mysql">
-                                            MySQL
-                                        </option>
-                                    </select>
-                                </div>
-                            </div>
-                            <template v-if="config.database.default === 'mysql'">
-                                <div class="uk-margin">
-                                    <label for="form-mysql-dbhost" class="uk-form-label">{{ 'Hostname' | trans }}</label>
-                                    <v-input id="form-mysql-dbhost" v-model="config.database.connections.mysql.host" view="class: uk-input uk-form-width-large" type="text" name="host" rules="required" message="Host cannot be blank." />
-                                </div>
-                                <div class="uk-margin">
-                                    <label for="form-mysql-dbuser" class="uk-form-label">{{ 'User' | trans }}</label>
-                                    <v-input id="form-mysql-dbuser" v-model="config.database.connections.mysql.user" view="class: uk-input uk-form-width-large" type="text" name="user" rules="required" message="User cannot be blank." />
-                                </div>
-                                <div class="uk-margin">
-                                    <label for="form-mysql-dbpassword" class="uk-form-label">{{ 'Password' | trans }}</label>
-                                    <v-input id="form-mysql-dbpassword" v-model="config.database.connections.mysql.password" :type="hidePassword ? 'password' : 'text'" name="password" :view="{type: 'icon', icon: () => hidePassword ? 'eye-closed' : 'eye', class: 'uk-input uk-form-width-large', containerClass: 'uk-form-controls', iconTag: 'a', iconDir: 'right', iconClick: () => { hidePassword = !hidePassword }}" autocomplete="off" />
-                                </div>
-                                <div class="uk-margin">
-                                    <label for="form-mysql-dbname" class="uk-form-label">{{ 'Database Name' | trans }}</label>
-                                    <v-input id="form-mysql-dbname" v-model="config.database.connections.mysql.dbname" view="class: uk-input uk-form-width-large" type="text" name="dbname" rules="required" message="Database name cannot be blank." />
-                                </div>
-                                <div class="uk-margin">
-                                    <label for="form-mysql-dbprefix" class="uk-form-label">{{ 'Table Prefix' | trans }}</label>
-                                    <v-input id="form-mysql-dbprefix" v-model="config.database.connections.mysql.prefix" view="class: uk-input uk-form-width-large" type="text" name="mysqlprefix" :rules="{required: true, regex: /^[a-zA-Z][a-zA-Z0-9._\-]*$/}" message="Prefix must start with a letter and can only contain alphanumeric characters (A-Z, 0-9) and underscore (_)" />
-                                </div>
-                            </template>
-                            <div v-show="config.database.default == 'sqlite'" class="uk-margin">
-                                <label for="form-sqlite-dbprefix" class="uk-form-label">{{ 'Table Prefix' | trans }}</label>
-                                <v-input id="form-sqlite-dbprefix" v-model="config.database.connections.sqlite.prefix" view="class: uk-input uk-form-width-large" type="text" name="sqliteprefix" :rules="{required: true, regex: /^[a-zA-Z][a-zA-Z0-9._\-]*$/}" message="Prefix must start with a letter and can only contain alphanumeric characters (A-Z, 0-9) and underscore (_)" />
-                            </div>
-                        </form>
-                        <buttons :prev="gotoStep.bind(vm, 'language')" :next="passes.bind(vm, stepDatabase)" :valid="valid" />
                     </div>
                 </div>
             </template>
             <template #site="{ step, passes, valid }">
-                <div>
-                    <div :step="step" class="uk-card uk-card-default">
-                        <div class="uk-card-header">
-                            <h1 class="uk-card-title uk-text-center">
-                                {{ 'Setup your site' | trans }}
-                            </h1>
-                        </div>
-                        <form class="uk-card-body uk-form-horizontal tm-form-horizontal">
-                            <div class="uk-margin uk-text-muted uk-text-center">
-                                {{ 'Choose a title and create the administrator account.' | trans }}
-                            </div>
-
-                            <div class="uk-margin">
-                                <label for="form-sitename" class="uk-form-label">{{ 'Site Title' | trans }}</label>
-                                <v-input id="form-sitename" v-model="option['system/site'].title" view="class: uk-input uk-form-width-large" type="text" name="name" rules="required" message="Site title cannot be blank." />
-                            </div>
-                            <div class="uk-margin">
-                                <label for="form-username" class="uk-form-label">{{ 'Username' | trans }}</label>
-                                <v-input id="form-username" v-model="user.username" view="class: uk-input uk-form-width-large" type="text" name="user" :rules="{required: true, regex: /^[a-zA-Z0-9._\-]{3,}$/}" message="Username cannot be blank and may only contain alphanumeric characters (A-Z, 0-9) and some special characters (&quot;._-&quot;)" />
-                            </div>
-                            <div class="uk-margin">
-                                <label for="form-password" class="uk-form-label">{{ 'Password' | trans }}</label>
-                                <v-input id="form-password" v-model="user.password" :type="hidePassword ? 'password' : 'text'" name="password" :view="{type: 'icon', icon: () => hidePassword ? 'eye-closed' : 'eye', class: 'uk-input uk-form-width-large', containerClass: 'uk-form-controls', iconTag: 'a', iconDir: 'right', iconClick: () => { hidePassword = !hidePassword }}" rules="required" message="Password cannot be blank." autocomplete="off" />
-                            </div>
-                            <div class="uk-margin">
-                                <label for="form-email" class="uk-form-label">{{ 'Email' | trans }}</label>
-                                <v-input id="form-email" v-model="user.email" view="class: uk-input uk-form-width-large" type="email" name="email" rules="required|email" message="Field must be a valid email address." />
-                            </div>
-                        </form>
-                        <buttons :options="optionSite.bind(vm)" :prev="gotoStep.bind(vm, 'database')" :next="passes.bind(vm, stepSite)" :title-next="'Install'" :icon-options="'settings'" :title-options="'Settings'" :valid="valid" />
-                        <v-modal ref="optionSite" center>
-                            <div class="uk-modal-header">
-                                <h1 class="uk-h4">
-                                    <span uk-icon="settings" ratio="1.1" /><span class="uk-text-middle uk-margin-small-left">{{ 'Settings' | trans }}</span>
+                <div :step="step" class="tm-slide">
+                    <div class="tm-container">
+                        <div class="uk-card uk-card-default">
+                            <div class="uk-card-header">
+                                <h1 class="uk-card-title uk-text-center">
+                                    {{ 'Setup your site' | trans }}
                                 </h1>
                             </div>
-                            <div class="uk-modal-body">
-                                <div class="uk-margin">
-                                    <label><input v-model="option['demo_content']" class="uk-checkbox" type="checkbox"> {{ 'Install demo content' }}</label>
+                            <form class="uk-card-body uk-form-horizontal tm-form-horizontal">
+                                <div class="uk-margin uk-text-muted uk-text-center">
+                                    {{ 'Choose a title and create the administrator account.' | trans }}
                                 </div>
-                            </div>
-                            <div class="uk-modal-footer uk-text-right">
-                                <button class="uk-button uk-button-default uk-modal-close">
-                                    {{ 'Close' | trans }}
-                                </button>
-                            </div>
-                        </v-modal>
+
+                                <div class="uk-margin">
+                                    <label for="form-sitename" class="uk-form-label">{{ 'Site Title' | trans }}</label>
+                                    <v-input id="form-sitename" v-model="option['system/site'].title" view="class: uk-input uk-form-width-large" type="text" name="name" rules="required" message="Site title cannot be blank." />
+                                </div>
+                                <div class="uk-margin">
+                                    <label for="form-username" class="uk-form-label">{{ 'Username' | trans }}</label>
+                                    <v-input id="form-username" v-model="user.username" view="class: uk-input uk-form-width-large" type="text" name="user" :rules="{required: true, regex: /^[a-zA-Z0-9._\-]{3,}$/}" message="Username cannot be blank and may only contain alphanumeric characters (A-Z, 0-9) and some special characters (&quot;._-&quot;)" />
+                                </div>
+                                <div class="uk-margin">
+                                    <label for="form-password" class="uk-form-label">{{ 'Password' | trans }}</label>
+                                    <v-input id="form-password" v-model="user.password" :type="hidePassword ? 'password' : 'text'" name="password" :view="{type: 'icon', icon: () => hidePassword ? 'eye-closed' : 'eye', class: 'uk-input uk-form-width-large', containerClass: 'uk-form-controls', iconTag: 'a', iconDir: 'right', iconClick: () => { hidePassword = !hidePassword }}" rules="required" message="Password cannot be blank." autocomplete="off" />
+                                </div>
+                                <div class="uk-margin">
+                                    <label for="form-email" class="uk-form-label">{{ 'Email' | trans }}</label>
+                                    <v-input id="form-email" v-model="user.email" view="class: uk-input uk-form-width-large" type="email" name="email" rules="required|email" message="Field must be a valid email address." />
+                                </div>
+                            </form>
+                            <buttons :options="optionSite.bind(vm)" :prev="gotoStep.bind(vm, 'database')" :next="passes.bind(vm, stepSite)" :title-next="'Install'" :icon-options="'settings'" :title-options="'Settings'" :valid="valid" />
+                            <v-modal ref="optionSite" center>
+                                <div class="uk-modal-header">
+                                    <h1 class="uk-h4">
+                                        <span uk-icon="settings" ratio="1.1" /><span class="uk-text-middle uk-margin-small-left">{{ 'Settings' | trans }}</span>
+                                    </h1>
+                                </div>
+                                <div class="uk-modal-body">
+                                    <div class="uk-margin">
+                                        <label><input v-model="option['demo_content']" class="uk-checkbox" type="checkbox"> {{ 'Install demo content' }}</label>
+                                    </div>
+                                </div>
+                                <div class="uk-modal-footer uk-text-right">
+                                    <button class="uk-button uk-button-default uk-modal-close">
+                                        {{ 'Close' | trans }}
+                                    </button>
+                                </div>
+                            </v-modal>
+                        </div>
                     </div>
                 </div>
             </template>
             <template #finish="{ step }">
-                <div>
-                    <div :step="step">
+                <div :step="step" class="tm-slide">
+                    <div class="tm-container">
                         <div v-show="status == 'install'" class="uk-text-center">
                             <svg class="tm-loader" width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
                                 <g><circle cx="0" cy="0" r="70" fill="none" stroke-width="2" /></g>
@@ -441,14 +449,12 @@ const Installer = {
             props: ['current', 'steps'],
 
             template: `
-                <validation-observer tag="div" v-slot="{ valid, passes }" slim>
-                    <div class="tm-container">
+                <validation-observer tag="div" class="tm-slider" v-slot="{ valid, passes }" slim>
                     <template v-for="(step, index) in steps">
                         <transition name="slide">
                             <slot :name="step" :step="step" :valid="valid" :passes="passes" v-if="step === current" />
                         </transition>
                     </template>
-                    </div>
                 </validation-observer>`,
 
             components: { ValidationObserver }

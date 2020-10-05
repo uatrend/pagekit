@@ -13,7 +13,7 @@
     <body>
 
         <div class="uk-section-secondary">
-            <div class="tm-background uk-background-cover uk-flex uk-flex-middle uk-flex-center" uk-height-viewport>
+            <div class="tm-background uk-flex uk-flex-middle uk-flex-center" uk-height-viewport>
                 <div class="uk-panel uk-width-medium uk-text-center">
 
                     <img class="uk-margin-large-bottom" src="<?= $view->url()->getStatic('app/system/assets/images/pagekit-logo-text.svg') ?>" alt="Pagekit">

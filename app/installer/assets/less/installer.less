@@ -1,8 +1,7 @@
-@import "../../../assets/uikit/src/less/uikit.theme.less";
+@import "theme/uikit.less";
 
-@uikit-path: "../../../../../assets/uikit";
-@internal-form-select-image: "@{uikit-path}/src/images/icons/chevron-down.svg";
-
+@uikit-path: "../../../../app/assets/uikit";
+@internal-form-select-image: "../../@{uikit-path}/src/images/icons/chevron-down.svg";
 /* ========================================================================
    Theme
  ========================================================================== */
@@ -30,12 +29,10 @@ body {
  ========================================================================== */
 
 .tm-background {
+    position: relative;
     background: lighten(@global-primary-background, 10%) url("../../../system/modules/theme/assets/images/background.jpg") 50% 50% no-repeat;
     background-size: cover;
-    overflow: hidden;
-    position: relative;
-    min-height: 100vh;
- }
+}
 
 /* Not used at the moment */
 .tm-background-clip:before {
@@ -62,29 +59,29 @@ body {
 /* Container
  ========================================================================== */
 
-.tm-container {
+.tm-slider {
     position: fixed;
     display: flex;
     flex-wrap: nowrap;
+    min-width: 100%;
     top: 0;
     left: 0;
-    right: 100vw;
+    right: 100%;
     bottom: 0;
 }
 
-.tm-container > div {
+.tm-slide {
     position: relative;
     display: flex;
     align-items: center;
-    min-width: 100vw;
-    height: 100vh;
+    justify-content: center;
+    min-width: 100%;
     overflow: auto;
 }
 
-.tm-container > div > div {
+.tm-container {
     width: 500px;
     max-width: calc(100% - 40px);
-    margin: 0 auto;
 }
 
 /* Modifier: `tm-form-horizontal`
@@ -111,6 +108,13 @@ body {
 
 }
 
+.tm-label-changelog {
+    width: 90px;
+}
+
+.tm-label-changelog > .uk-label {
+    margin-top: -3px;
+}
 
 /* SVG Loader
  ========================================================================== */

@@ -25,13 +25,13 @@
                         <?php foreach ($failed as $req) : ?>
                         <li>
                             <div class="uk-grid-small" uk-grid>
-                                <div class="uk-width-1-5"><span class="uk-label uk-label-danger uk-width-expand">Error</span> </div>
+                                <div class="tm-label-changelog"><span class="uk-label uk-label-danger uk-width-expand">Error</span> </div>
                                 <div class="uk-width-expand uk-text-left"><?php echo $req->getTestMessage() ?></div>
                             </div>
                         </li>
                         <li>
                             <div class="uk-grid-small" uk-grid>
-                                <div class="uk-width-1-5"><span class="uk-label uk-width-expand">Fix</span></div>
+                                <div class="tm-label-changelog"><span class="uk-label uk-width-expand">Fix</span></div>
                                 <div class="uk-width-expand uk-text-left"><?php echo $req->getHelpHtml() ?></div>
                             </div>
                         </li>

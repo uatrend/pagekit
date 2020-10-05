@@ -12,15 +12,12 @@
     </head>
     <body>
 
-        <div class="uk-height-viewport uk-flex uk-flex-center uk-flex-middle uk-text-center">
-            <div class="tm-container">
-
+        <div class="uk-flex uk-flex-center uk-flex-middle uk-height-viewport">
+            <div class="uk-container uk-text-center">
                 <img class="uk-margin-large-bottom" src="<?= $view->url()->getStatic('app/system/assets/images/pagekit-logo-large-black.svg') ?>" alt="Pagekit">
-
                 <div class="uk-panel">
                     <h1 class="uk-h2"><?= $title ?></h1>
                 </div>
-
             </div>
         </div>
 
