@@ -1,5 +1,7 @@
 <?php
 
+use Pagekit\Application as App;
+
 return [
 
     'name' => 'theme-one',
@@ -176,20 +178,6 @@ return [
             }
 
             $params = $view->params;
-
-            $sticky = [
-                'media' => '@m',
-                'show-on-up' => 'true',
-                'animation' => 'uk-animation-slide-top',
-                'cls-active' => 'uk-navbar-sticky',
-                'sel-target' => '.uk-navbar-container'
-            ];
-
-            $sticky_args = "";
-            array_walk($sticky, function ($item, $key) use (&$sticky_args) { $sticky_args .= $key .": " . $item . "; "; } );
-
-            $classes['sticky'] = 'uk-sticky="'. $sticky_args .'"';
-            $params['classes'] = $classes;
             $params['position'] = $this->options['position'];
         },
 
