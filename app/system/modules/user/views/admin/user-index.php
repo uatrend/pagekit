@@ -57,7 +57,7 @@
                 <tr class="check-item" v-for="user in users" :class="{'uk-active': active(user)}">
                     <td><input class="uk-checkbox" type="checkbox" name="id" :value="user.id"></td>
                     <td class="uk-table-shrink uk-preserve-width">
-                        <img class="uk-img-preserve uk-border-circle" width="40" height="40" :alt="user.name" v-gravatar="user.email">
+                        <img class="uk-border-circle" width="40" height="40" :alt="user.name" v-gravatar="user.email">
                     </td>
                     <td class="uk-text-nowrap">
                         <a :href="$url.route('admin/user/edit', { id: user.id })">{{ user.username }}</a>
