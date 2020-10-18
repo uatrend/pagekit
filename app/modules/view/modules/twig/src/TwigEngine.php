@@ -74,7 +74,7 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     protected function load($name)
     {
         try {
-            return $this->environment->loadTemplate((string) $name);
+            return $this->environment->load((string) $name);
         } catch (\Twig\Error\LoaderError $e) {
             throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }

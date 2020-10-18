@@ -457,6 +457,12 @@ div[data-src][uk-img] ~ canvas {
         background-color: darken(@global-border, 5%);
     }
 }
+.user-edit {
+    .uk-card-footer > div > h3 + i,
+    .uk-card-footer > a > span + i {
+        margin-left: 5px;
+    }
+}
 .uk-table.uk-table-hover tbody tr:hover {
     background: @theme-background-menu-active-color;
 }
@@ -560,6 +566,7 @@ div[data-src][uk-img] ~ canvas {
 
 // Theme Spinner
 // ==============================================================================================
+
 .tm-spinner-bounce {
     line-height: inherit;
     vertical-align: middle;
