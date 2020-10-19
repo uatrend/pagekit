@@ -7,7 +7,7 @@ use Pagekit\Site\Model\Page;
 
 class PageController
 {
-    public function indexAction($id = 0)
+    public function indexAction($id = 0): array
     {
         if (!$page = Page::find($id)) {
             App::abort(404, __('Page not found.'));

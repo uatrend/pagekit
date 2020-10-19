@@ -6,10 +6,7 @@ use Pagekit\Application;
 
 class ModuleLoader implements LoaderInterface
 {
-    /**
-     * @var Application
-     */
-    protected $app;
+    protected \Pagekit\Application $app;
 
     /**
      * Constructor.

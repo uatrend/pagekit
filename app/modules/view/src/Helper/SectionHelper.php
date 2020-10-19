@@ -6,20 +6,14 @@ use Pagekit\View\View;
 
 class SectionHelper extends Helper
 {
-    /**
-     * @var array
-     */
-    protected $sections = [];
+    protected array $sections = [];
 
-    /**
-     * @var array
-     */
-    protected $openSections = [];
+    protected array $openSections = [];
 
     /**
      * {@inheritdoc}
      */
-    public function register(View $view)
+    public function register(View $view): void
     {
         parent::register($view);
 
@@ -44,9 +38,8 @@ class SectionHelper extends Helper
      * Gets a section.
      *
      * @param  string $name
-     * @return string
      */
-    public function get($name)
+    public function get($name): string
     {
         return isset($this->sections[$name]) ? $this->sections[$name] : '';
     }
@@ -57,7 +50,7 @@ class SectionHelper extends Helper
      * @param string $name
      * @param mixed  $content
      */
-    public function set($name, $content)
+    public function set($name, $content): void
     {
         $this->sections[$name] = $content;
     }
@@ -66,9 +59,8 @@ class SectionHelper extends Helper
      * Checks if the section exists.
      *
      * @param  string $name
-     * @return bool
      */
-    public function exists($name)
+    public function exists($name): bool
     {
         return isset($this->sections[$name]);
     }
@@ -79,7 +71,7 @@ class SectionHelper extends Helper
      * @param  string $name
      * @throws \InvalidArgumentException
      */
-    public function start($name)
+    public function start($name): void
     {
         if (in_array($name, $this->openSections)) {
             throw new \InvalidArgumentException(sprintf('A section named "%s" is already started.', $name));
@@ -98,7 +90,7 @@ class SectionHelper extends Helper
      * @param  bool $show
      * @throws \LogicException
      */
-    public function stop($show = false)
+    public function stop($show = false): void
     {
         if (!$this->openSections) {
             throw new \LogicException('No section started.');
@@ -116,7 +108,7 @@ class SectionHelper extends Helper
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'section';
     }

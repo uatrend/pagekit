@@ -2,16 +2,17 @@
 
 namespace Pagekit\Debug\DataCollector;
 
+use Symfony\Component\Routing\RouterInterface;
 use DebugBar\DataCollector\DataCollectorInterface;
 use Pagekit\Event\EventDispatcherInterface;
 use Pagekit\Routing\Router;
 
 class RoutesDataCollector implements DataCollectorInterface
 {
-    protected $router;
+    protected \Pagekit\Routing\Router $router;
     protected $route;
-    protected $cache;
-    protected $file;
+    protected string $cache;
+    protected string $file;
 
     /**
      * Constructor.
@@ -21,7 +22,7 @@ class RoutesDataCollector implements DataCollectorInterface
      * @param string                   $cache
      * @param string                   $file
      */
-    public function __construct(Router $router, EventDispatcherInterface $events, $cache, $file = '%s.cache')
+    public function __construct(RouterInterface $router, EventDispatcherInterface $events, $cache, $file = '%s.cache')
     {
         $this->router = $router;
         $this->cache = $cache;
@@ -35,7 +36,7 @@ class RoutesDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $path = sprintf($this->cache.'/'.$this->file, sha1(filemtime((new \ReflectionClass($this->router->getGenerator()))->getFileName())));
 
@@ -65,7 +66,7 @@ class RoutesDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'routes';
     }

@@ -6,10 +6,7 @@ use Pagekit\Markdown\Markdown;
 
 class MarkdownHelper extends Helper
 {
-    /**
-     * @var Markdown
-     */
-    protected $parser;
+    protected \Pagekit\Markdown\Markdown $parser;
 
     /**
      * Constructor.
@@ -35,7 +32,7 @@ class MarkdownHelper extends Helper
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'markdown';
     }

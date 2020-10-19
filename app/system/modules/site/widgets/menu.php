@@ -12,14 +12,12 @@ return [
         'mode' => 'all'
     ],
 
-    'render' => function ($widget) use ($app) {
-        return $app->view()->menu()->render($widget->get('menu'), 'system/site/widget-menu.php', [
-            'start_level' => (int) $widget->get('start_level'),
-            'depth' => $widget->get('depth'),
-            'mode' => $widget->get('mode'),
-            'widget' => $widget
-        ]);
-    },
+    'render' => fn($widget) => $app->view()->menu()->render($widget->get('menu'), 'system/site/widget-menu.php', [
+        'start_level' => (int) $widget->get('start_level'),
+        'depth' => $widget->get('depth'),
+        'mode' => $widget->get('mode'),
+        'widget' => $widget
+    ]),
 
     'events' => [
 

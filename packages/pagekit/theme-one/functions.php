@@ -6,7 +6,7 @@ function isHTML(string $string) : bool
 {
     preg_match("/<\/?\w+((\s+\w+(\s*=\s*(?:\".*?\"|'.*?'|[^'\">\s]+))?)+\s*|\s*)\/?>/", $string, $matches);
 
-    return count($matches) ? true : false;
+    return (bool) count($matches);
 }
 
 function getHTML(string $content) : string
@@ -41,7 +41,7 @@ function attrs(array $attrs) : string
         }
     }
 
-    return $output ? ' '.implode(' ', $output) : '';
+    return (bool) count($output) ? ' '.implode(' ', $output) : '';
 }
 
 function bgImage ($url, $options) : array
@@ -80,7 +80,7 @@ function bgImage ($url, $options) : array
 
 }
 
-function image($url, array $attrs = [])
+function image($url, array $attrs = []): string
 {
     $path = App::view()->url($url);
 
@@ -92,7 +92,7 @@ function image($url, array $attrs = [])
     return "<img".$attributes.">";
 }
 
-function isImage($link)
+function isImage($link): bool
 {
     return $link && preg_match('#\.(gif|png|jpe?g|svg)$#', $link, $matches) ? $matches[1] : false;
 }

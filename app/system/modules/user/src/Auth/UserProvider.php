@@ -9,10 +9,7 @@ use Pagekit\User\Model\User;
 
 class UserProvider implements UserProviderInterface
 {
-    /**
-     * @var PasswordEncoderInterface
-     */
-    protected $encoder;
+    protected \Pagekit\Auth\Encoder\PasswordEncoderInterface $encoder;
 
     /**
      * Constructor.
@@ -27,7 +24,7 @@ class UserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function find($id)
+    public function find($id): ?UserInterface
     {
         return User::find($id);
     }
@@ -35,7 +32,7 @@ class UserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function findByUsername($username)
+    public function findByUsername($username): ?UserInterface
     {
         return User::findByUsername($username);
     }
@@ -43,7 +40,7 @@ class UserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function findByCredentials(array $credentials)
+    public function findByCredentials(array $credentials): ?UserInterface
     {
         if (isset($credentials['password'])) {
             unset($credentials['password']);
@@ -55,7 +52,7 @@ class UserProvider implements UserProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function validateCredentials(UserInterface $user, array $credentials)
+    public function validateCredentials(UserInterface $user, array $credentials): bool
     {
         return $this->encoder->verify($user->getPassword(), $credentials['password']);
     }

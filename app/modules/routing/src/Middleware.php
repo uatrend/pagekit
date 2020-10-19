@@ -6,10 +6,7 @@ use Pagekit\Event\EventDispatcherInterface;
 
 class Middleware
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected EventDispatcherInterface $events;
 
     /**
      * Constructor.
@@ -40,7 +37,7 @@ class Middleware
      * @param callable $callback
      * @param int      $priority
      */
-    public function before($name, $callback, $priority)
+    public function before($name, $callback, $priority): void
     {
         $this->events->on('before'.$name, $callback, $priority);
     }
@@ -52,7 +49,7 @@ class Middleware
      * @param callable $callback
      * @param int      $priority
      */
-    public function after($name, $callback, $priority)
+    public function after($name, $callback, $priority): void
     {
         $this->events->on('after'.$name, $callback, $priority);
     }

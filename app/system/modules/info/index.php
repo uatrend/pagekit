@@ -8,9 +8,7 @@ return [
 
     'main' => function ($app) {
 
-        $app['info'] = function () {
-            return new InfoHelper();
-        };
+        $app['info'] = fn() => new InfoHelper();
 
     },
 

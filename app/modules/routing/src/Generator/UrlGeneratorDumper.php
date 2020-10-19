@@ -17,9 +17,8 @@ class UrlGeneratorDumper extends GeneratorDumper
      * Dumps a set of routes to a PHP class.
      *
      * @param  array  $options
-     * @return string
      */
-    public function dump(array $options = [])
+    public function dump(array $options = []): string
     {
         $options = array_merge([
             'class'      => 'ProjectUrlGenerator',
@@ -61,10 +60,8 @@ EOF;
     /**
      * Generates PHP code representing an array of defined routes
      * together with the routes properties (e.g. requirements).
-     *
-     * @return string
      */
-    private function generateDeclaredRoutes()
+    private function generateDeclaredRoutes(): string
     {
         $routes = "array(\n";
         foreach ($this->getRoutes()->all() as $name => $route) {
@@ -80,17 +77,14 @@ EOF;
 
             $routes .= sprintf("        '%s' => %s,\n", $name, str_replace("\n", '', var_export($properties, true)));
         }
-        $routes .= '    )';
 
-        return $routes;
+        return $routes . '    )';
     }
 
     /**
      * Generates PHP code representing the `generate` method that implements the UrlGeneratorInterface.
-     *
-     * @return string
      */
-    private function generateGenerateMethod()
+    private function generateGenerateMethod(): string
     {
         return <<<EOF
     public function generate(\$name, \$parameters = [], \$referenceType = self::ABSOLUTE_PATH)
@@ -104,11 +98,13 @@ EOF;
         return \$this->doGenerate(\$variables, \$defaults, \$requirements, \$tokens, \$parameters, \$name, \$referenceType, \$hostTokens, \$requiredSchemes);
     }
 
-    public function getRouteProperties(\$name)
+    public function getRouteProperties(\$name): ?array
     {
         if (isset(self::\$declaredRoutes[\$name])) {
             return self::\$declaredRoutes[\$name];
         }
+
+        return null;
     }
 EOF;
     }

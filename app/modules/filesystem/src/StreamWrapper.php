@@ -9,25 +9,20 @@ class StreamWrapper
      */
     protected $handle;
 
-    /**
-     * @var Filesystem
-     */
-    protected static $file;
+    protected static ?\Pagekit\Filesystem\Filesystem $file = null;
 
     /**
      * @param Filesystem $file
      */
-    public static function setFilesystem(Filesystem $file)
+    public static function setFilesystem(Filesystem $file): void
     {
         static::$file = $file;
     }
 
     /**
      * Close directory handle.
-     *
-     * @return bool
      */
-    public function dir_closedir()
+    public function dir_closedir(): bool
     {
         closedir($this->handle);
 
@@ -39,9 +34,8 @@ class StreamWrapper
      *
      * @param  string $path
      * @param  int    $options
-     * @return bool
      */
-    public function dir_opendir($path, $options)
+    public function dir_opendir($path, $options): bool
     {
         $this->handle = opendir(self::$file->getPath($path, true));
 
@@ -60,10 +54,8 @@ class StreamWrapper
 
     /**
      * Rewind directory handle.
-     *
-     * @return bool
      */
-    public function dir_rewinddir()
+    public function dir_rewinddir(): bool
     {
         rewinddir($this->handle);
 
@@ -76,9 +68,8 @@ class StreamWrapper
      * @param  string $path
      * @param  int    $mode
      * @param  int    $options
-     * @return bool
      */
-    public function mkdir($path, $mode, $options)
+    public function mkdir($path, $mode, $options): bool
     {
         return mkdir(self::$file->getPath($path, true), $mode, $options & STREAM_MKDIR_RECURSIVE);
     }
@@ -88,9 +79,8 @@ class StreamWrapper
      *
      * @param  string $pathFrom
      * @param  string $pathTo
-     * @return bool
      */
-    public function rename($pathFrom, $pathTo)
+    public function rename($pathFrom, $pathTo): bool
     {
         return rename(self::$file->getPath($pathFrom, true), self::$file->getPath($pathTo, true));
     }
@@ -100,9 +90,8 @@ class StreamWrapper
      *
      * @param  string $path
      * @param  int    $options
-     * @return bool
      */
-    public function rmdir($path, $options)
+    public function rmdir($path, $options): bool
     {
         return rmdir(self::$file->getPath($path, true));
     }
@@ -111,9 +100,8 @@ class StreamWrapper
      * Delete a file.
      *
      * @param  $path string
-     * @return bool
      */
-    public function unlink($path)
+    public function unlink($path): bool
     {
         return unlink(self::$file->getPath($path, true));
     }
@@ -142,7 +130,7 @@ class StreamWrapper
      * @param  int $castAs
      * @return resource
      */
-    public function stream_cast($castAs)
+    public function stream_cast($castAs): bool
     {
         return false;
     }
@@ -150,27 +138,23 @@ class StreamWrapper
     /**
      * Close an resource.
      */
-    public function stream_close()
+    public function stream_close(): void
     {
         fclose($this->handle);
     }
 
     /**
      * Tests for end-of-file on a file pointer.
-     *
-     * @return bool
      */
-    public function stream_eof()
+    public function stream_eof(): bool
     {
         return feof($this->handle);
     }
 
     /**
      * Flushes the output.
-     *
-     * @return bool
      */
-    public function stream_flush()
+    public function stream_flush(): bool
     {
         return fflush($this->handle);
     }
@@ -179,9 +163,8 @@ class StreamWrapper
      * Advisory file locking.
      *
      * @param  int $operation
-     * @return bool
      */
-    public function stream_lock($operation)
+    public function stream_lock($operation): bool
     {
         if (in_array($operation, [LOCK_SH, LOCK_EX, LOCK_UN, LOCK_NB])) {
             return flock($this->handle, $operation);
@@ -197,9 +180,8 @@ class StreamWrapper
      * @param  string $mode
      * @param  int    $options
      * @param  string $openedPath
-     * @return bool
      */
-    public function stream_open($path, $mode, $options, &$openedPath)
+    public function stream_open($path, $mode, $options, &$openedPath): bool
     {
         $this->handle = fopen(self::$file->getPath($path, true), $mode);
 
@@ -222,9 +204,8 @@ class StreamWrapper
      *
      * @param  int $offset
      * @param  int $whence
-     * @return bool
      */
-    public function stream_seek($offset, $whence)
+    public function stream_seek($offset, $whence): bool
     {
         return !fseek($this->handle, $offset, $whence);
     }

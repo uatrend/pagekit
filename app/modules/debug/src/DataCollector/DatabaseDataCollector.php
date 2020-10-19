@@ -8,10 +8,7 @@ use Pagekit\Database\Connection;
 
 class DatabaseDataCollector extends DoctrineCollector
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected \Pagekit\Database\Connection $connection;
 
     /**
      * Constructor.
@@ -28,7 +25,7 @@ class DatabaseDataCollector extends DoctrineCollector
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         $driver = $this->connection->getDriver()->getName();
 
@@ -38,7 +35,7 @@ class DatabaseDataCollector extends DoctrineCollector
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'database';
     }

@@ -11,8 +11,7 @@
                 <v-editor v-model="page.content" :options="{markdown : page.data.markdown}" />
                 <div class="uk-margin-small-top">
                     <label>
-                        <input v-model="page.data.markdown" class="uk-checkbox" type="checkbox">
-                        <span class="uk-margin-small-left">{{ 'Enable Markdown' | trans }}</span>
+                        <input v-model="page.data.markdown" class="uk-checkbox" type="checkbox"> {{ 'Enable Markdown' | trans }}
                     </label>
                 </div>
             </div>

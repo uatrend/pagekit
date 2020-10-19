@@ -28,17 +28,11 @@ return [
             return $debugbar->setStorage($app['debugbar.storage']);
         };
 
-        $app['debugbar.storage'] = function () {
-            return new SqliteStorage($this->config['file']);
-        };
+        $app['debugbar.storage'] = fn() => new SqliteStorage($this->config['file']);
 
-        $app['debugbar.stopwatch'] = function() {
-            return new Stopwatch();
-        };
+        $app['debugbar.stopwatch'] = fn() => new Stopwatch();
 
-        $app->extend('events', function($dispatcher, $app) {
-            return new TraceableEventDispatcher($dispatcher, $app['debugbar.stopwatch']);
-        });
+        $app->extend('events', fn($dispatcher, $app) => new TraceableEventDispatcher($dispatcher, $app['debugbar.stopwatch']));
 
     },
 
@@ -100,9 +94,7 @@ return [
                 'name' => '_debugbar',
                 'path' => '_debugbar/{id}',
                 'defaults' => ['_debugbar' => false],
-                'controller' => function ($id) use ($app) {
-                    return $app['response']->json($app['debugbar']->getStorage()->get($id));
-                }
+                'controller' => fn($id) => $app['response']->json($app['debugbar']->getStorage()->get($id))
             ]);
 
         }

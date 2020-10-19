@@ -6,15 +6,12 @@ use Pagekit\View\View;
 
 class MapHelper implements HelperInterface, \IteratorAggregate
 {
-    /**
-     * @var array
-     */
-    protected $map = [];
+    protected array $map = [];
 
     /**
      * {@inheritdoc}
      */
-    public function register(View $view)
+    public function register(View $view): void
     {
         $view->on('render', function ($event) {
             if ($this->has($name = $event->getTemplate())) {
@@ -37,9 +34,8 @@ class MapHelper implements HelperInterface, \IteratorAggregate
      * Gets a template.
      *
      * @param  string $name
-     * @return string
      */
-    public function get($name)
+    public function get($name): ?string
     {
         return isset($this->map[$name]) ? $this->map[$name] : null;
     }
@@ -50,7 +46,7 @@ class MapHelper implements HelperInterface, \IteratorAggregate
      * @param string|array $name
      * @param string       $path
      */
-    public function add($name, $path = null)
+    public function add($name, $path = null): void
     {
         if (is_string($name) && $path) {
             $this->map[$name] = $path;
@@ -65,19 +61,16 @@ class MapHelper implements HelperInterface, \IteratorAggregate
      * Checks if the template exists.
      *
      * @param  string $name
-     * @return bool
      */
-    public function has($name)
+    public function has($name): bool
     {
         return isset($this->map[$name]);
     }
 
     /**
      * Implements the IteratorAggregate.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->map);
     }
@@ -85,7 +78,7 @@ class MapHelper implements HelperInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'map';
     }

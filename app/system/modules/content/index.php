@@ -17,9 +17,7 @@ return [
             new VideoPlugin
         );
 
-        $app['content'] = function() {
-            return new ContentHelper;
-        };
+        $app['content'] = fn() => new ContentHelper;
 
     },
 

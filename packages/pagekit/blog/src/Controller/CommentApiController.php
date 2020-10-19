@@ -5,14 +5,16 @@ namespace Pagekit\Blog\Controller;
 use Pagekit\Application as App;
 use Pagekit\Blog\Model\Comment;
 use Pagekit\Blog\Model\Post;
+use Pagekit\User\Model\User;
+use Pagekit\Module\Module;
 
 /**
  * @Route("comment", name="comment")
  */
 class CommentApiController
 {
-    protected $blog;
-    protected $user;
+    protected Module $blog;
+    protected User $user;
 
     public function __construct()
     {
@@ -24,7 +26,7 @@ class CommentApiController
      * @Route("/", methods="GET")
      * @Request({"filter": "array", "post":"int", "page":"int", "limit":"int"})
      */
-    public function indexAction($filter = [], $post = 0, $page = 0, $limit = 0)
+    public function indexAction($filter = [], $post = 0, $page = 0, $limit = 0): array
     {
         $query = Comment::query();
         $filter = array_merge(array_fill_keys(['status', 'search', 'order'], ''), $filter);
@@ -75,9 +77,7 @@ class CommentApiController
             $order = [1 => 'created', 2 => App::module('blog')->config('comments.order')];
         }
 
-        $comments = $query->related(['post' => function ($query) {
-            return $query->related('comments');
-        }])->related('user')->orderBy($order[1], $order[2])->get();
+        $comments = $query->related(['post' => fn($query) => $query->related('comments')])->related('user')->orderBy($order[1], $order[2])->get();
 
         $posts = [];
 
@@ -85,7 +85,7 @@ class CommentApiController
 
             $p = $comment->post;
 
-            if ($post && (!$p || !$p->hasAccess($this->user) || !($p->isPublished() || $this->user->hasAccess('blog: manage comments')))) {
+            if ($post && (!$p || !$p->hasAccess($this->user) || !$p->isPublished() && !$this->user->hasAccess('blog: manage comments'))) {
                 App::abort(403, __('Post not found.'));
             }
 
@@ -116,7 +116,7 @@ class CommentApiController
      * @Request({"comment": "array", "id": "int"}, csrf=true)
      * @Captcha(verify="true")
      */
-    public function saveAction($data, $id = 0)
+    public function saveAction($data, $id = 0): array
     {
         if (!$id) {
 
@@ -171,7 +171,7 @@ class CommentApiController
             App::abort(404, __('Parent not found.'));
         }
 
-        if (!@$data['post_id'] || !$post = Post::where(['id' => $data['post_id']])->first() or !($this->user->hasAccess('blog: manage comments') || $post->isCommentable() && $post->isPublished())) {
+        if (!@$data['post_id'] || !$post = Post::where(['id' => $data['post_id']])->first() or !$this->user->hasAccess('blog: manage comments') && !($post->isCommentable() && $post->isPublished())) {
             App::abort(404, __('Post not found.'));
         }
 
@@ -196,7 +196,7 @@ class CommentApiController
      * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
      * @Request({"id": "int"}, csrf=true)
      */
-    public function deleteAction($id)
+    public function deleteAction($id): array
     {
         if ($comment = Comment::find($id)) {
             $comment->delete();
@@ -210,11 +210,11 @@ class CommentApiController
      * @Route("/bulk", methods="POST")
      * @Request({"comments": "array"}, csrf=true)
      */
-    public function bulkSaveAction($comments = [])
+    public function bulkSaveAction($comments = []): array
     {
 
         foreach ($comments as $data) {
-            $this->saveAction($data, isset($data['id']) ? intval($data['id']) : 0);
+            $this->saveAction($data, isset($data['id']) ? (int) $data['id'] : 0);
         }
 
         return ['message' => 'success'];
@@ -225,7 +225,7 @@ class CommentApiController
      * @Route("/bulk", methods="DELETE")
      * @Request({"ids": "array"}, csrf=true)
      */
-    public function bulkDeleteAction($ids = [])
+    public function bulkDeleteAction($ids = []): array
     {
         foreach (array_filter($ids) as $id) {
             $this->deleteAction($id);

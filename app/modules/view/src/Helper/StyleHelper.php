@@ -7,10 +7,7 @@ use Pagekit\View\View;
 
 class StyleHelper implements HelperInterface, \IteratorAggregate
 {
-    /**
-     * @var AssetManager
-     */
-    protected $styles;
+    protected \Pagekit\View\Asset\AssetManager $styles;
 
     /**
      * Constructor.
@@ -25,7 +22,7 @@ class StyleHelper implements HelperInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function register(View $view)
+    public function register(View $view): void
     {
         $view->on('head', function ($event) use ($view) {
             $view->trigger('styles', [$this->styles]);
@@ -61,10 +58,8 @@ class StyleHelper implements HelperInterface, \IteratorAggregate
 
     /**
      * Renders the style tags.
-     *
-     * @return string
      */
-    public function render()
+    public function render(): string
     {
         $output = '';
 
@@ -81,10 +76,8 @@ class StyleHelper implements HelperInterface, \IteratorAggregate
 
     /**
      * Returns an iterator for style tags.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->styles->getIterator();
     }
@@ -92,7 +85,7 @@ class StyleHelper implements HelperInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'style';
     }

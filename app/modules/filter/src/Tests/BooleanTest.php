@@ -2,11 +2,12 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\BooleanFilter;
 
-class BooleanTest extends \PHPUnit\Framework\TestCase
+class BooleanTest extends TestCase
 {
-    public function testFilter()
+    public function testFilter(): void
     {
         $filter = new BooleanFilter;
 

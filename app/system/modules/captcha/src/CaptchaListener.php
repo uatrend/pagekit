@@ -28,7 +28,7 @@ class CaptchaListener implements EventSubscriberInterface
     /**
      * Reads the "@Captcha" annotations from the controller.
      */
-    public function onConfigureRoute($event, $route)
+    public function onConfigureRoute($event, $route): void
     {
         if (!$this->reader) {
             $this->reader = new SimpleAnnotationReader;
@@ -59,7 +59,7 @@ class CaptchaListener implements EventSubscriberInterface
         }
     }
 
-    public function onScripts($event, $scripts)
+    public function onScripts($event, $scripts): void
     {
         if (!App::module('system/captcha')->config('recaptcha_enable')
             || App::user()->isAuthenticated()
@@ -84,7 +84,7 @@ class CaptchaListener implements EventSubscriberInterface
         $scripts->add('captcha-interceptor', 'system/captcha:app/bundle/captcha-interceptor.js', ['vue', 'captcha-config']);
     }
 
-    public function onRequest($event, $request)
+    public function onRequest($event, $request): void
     {
         if ($user = $request->get('user')) {
             // App::abort(400, 'USER');
@@ -139,7 +139,7 @@ class CaptchaListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'route.configure' => 'onConfigureRoute',

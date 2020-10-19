@@ -7,15 +7,9 @@ namespace Pagekit\Captcha\Annotation;
  */
 class Captcha
 {
-    /**
-     * @var string
-     */
-    protected $route = null;
+    protected ?string $route = null;
 
-    /**
-     * @var bool
-     */
-    protected $verify = false;
+    protected bool $verify = false;
 
     /**
      * Constructor.
@@ -37,10 +31,8 @@ class Captcha
 
     /**
      * Gets the captcha route.
-     *
-     * @return string
      */
-    public function getRoute()
+    public function getRoute(): ?string
     {
         return $this->route;
     }
@@ -50,17 +42,15 @@ class Captcha
      *
      * @param string
      */
-    public function setRoute($route)
+    public function setRoute($route): void
     {
         $this->route = $route;
     }
 
     /**
      * Gets verify option.
-     *
-     * @return bool
      */
-    public function getVerify()
+    public function getVerify(): bool
     {
         return $this->verify;
     }
@@ -70,7 +60,7 @@ class Captcha
      *
      * @param bool $verify
      */
-    public function setVerify($verify)
+    public function setVerify($verify): void
     {
         $this->verify = $verify;
     }

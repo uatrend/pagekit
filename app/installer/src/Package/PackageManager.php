@@ -9,15 +9,9 @@ use Symfony\Component\Console\Output\StreamOutput;
 
 class PackageManager
 {
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    protected OutputInterface $output;
 
-    /**
-     * @var Composer
-     */
-    protected $composer;
+    protected Composer $composer;
 
     /**
      * Constructor.
@@ -40,16 +34,15 @@ class PackageManager
      * @param  array $install
      * @param bool $packagist
      * @param bool $preferSource
-     * @return bool
      */
-    public function install(array $install = [], $packagist = false, $preferSource = false)
+    public function install(array $install = [], $packagist = false, $preferSource = false): void
     {
         $previousPackageConfigs = App::package()->all(null, true);
 
         $this->composer->install($install, $packagist, $preferSource);
 
         $packages = App::package()->all(null, true);
-        foreach ($install as $name => $version) {
+        foreach (array_keys($install) as $name) {
             $moduleAlreadyExisted = isset($previousPackageConfigs[$name]) && App::module($previousPackageConfigs[$name]->get('module'));
 
             if ($moduleAlreadyExisted == true) {
@@ -63,9 +56,8 @@ class PackageManager
 
     /**
      * @param  array $uninstall
-     * @return bool
      */
-    public function uninstall($uninstall)
+    public function uninstall($uninstall): void
     {
         foreach ((array) $uninstall as $name) {
             if (!$package = App::package($name)) {
@@ -95,7 +87,7 @@ class PackageManager
      * @param $packages
      * @param $previousPackageConfigs
      */
-    public function enable($packages, $previousPackageConfigs = [])
+    public function enable($packages, $previousPackageConfigs = []): void
     {
         if (!is_array($packages)) {
             $packages = [$packages];
@@ -143,7 +135,7 @@ class PackageManager
     /**
      * @param $packages
      */
-    public function disable($packages)
+    public function disable($packages): void
     {
         if (!is_array($packages)) {
             $packages = [$packages];
@@ -161,9 +153,8 @@ class PackageManager
     /**
      * @param  array $package
      * @param  string $current
-     * @return PackageScripts
      */
-    protected function getScripts($package, $current = null)
+    protected function getScripts($package, $current = null): PackageScripts
     {
         if (!$scripts = $package->get('extra.scripts')) {
             return new PackageScripts(null, $current);
@@ -178,9 +169,8 @@ class PackageManager
 
     /**
      * @param  $package
-     * @return string
      */
-    protected function doInstall($package)
+    protected function doInstall($package): string
     {
         $this->getScripts($package)->install();
         $version = $this->getVersion($package);

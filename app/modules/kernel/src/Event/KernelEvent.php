@@ -7,10 +7,7 @@ use Pagekit\Kernel\HttpKernelInterface;
 
 class KernelEvent extends Event
 {
-    /**
-     * @var HttpKernelInterface
-     */
-    protected $kernel;
+    protected \Pagekit\Kernel\HttpKernelInterface $kernel;
 
     /**
      * Constructor.
@@ -27,20 +24,16 @@ class KernelEvent extends Event
 
     /**
      * Gets the kernel.
-     *
-     * @return HttpKernelInterface
      */
-    public function getKernel()
+    public function getKernel(): HttpKernelInterface
     {
         return $this->kernel;
     }
 
     /**
      * Checks if this is a master request.
-     *
-     * @return bool
      */
-    public function isMasterRequest()
+    public function isMasterRequest(): bool
     {
         return $this->kernel->isMasterRequest();
     }

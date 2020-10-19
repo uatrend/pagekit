@@ -7,25 +7,13 @@ use Pagekit\Database\Connection;
 
 class ConfigManager implements \IteratorAggregate
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected \Pagekit\Database\Connection $connection;
 
-    /**
-     * @var string
-     */
-    protected $table;
+    protected string $table;
 
-    /**
-     * @var array
-     */
-    protected $cache;
+    protected ?array $cache = null;
 
-    /**
-     * @var array
-     */
-    protected $configs = [];
+    protected array $configs = [];
 
     /**
      * Constructor.
@@ -53,9 +41,8 @@ class ConfigManager implements \IteratorAggregate
      * Checks if a config exists.
      *
      * @param  string $name
-     * @return bool
      */
-    public function has($name)
+    public function has($name): bool
     {
         return isset($this->configs[$name]) || $this->fetch($name);
     }
@@ -83,7 +70,7 @@ class ConfigManager implements \IteratorAggregate
      * @param string $name
      * @param mixed  $config
      */
-    public function set($name, $config)
+    public function set($name, $config): void
     {
         if (is_array($config)) {
             $config = (new Config())->merge($config);
@@ -108,17 +95,15 @@ class ConfigManager implements \IteratorAggregate
      *
      * @param string $name
      */
-    public function remove($name)
+    public function remove($name): void
     {
         $this->connection->delete($this->table, compact('name'));
     }
 
     /**
      * Returns an iterator.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->configs);
     }

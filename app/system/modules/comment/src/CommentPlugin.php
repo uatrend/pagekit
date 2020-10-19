@@ -12,14 +12,14 @@ class CommentPlugin implements EventSubscriberInterface
      *
      * @param ContentEvent $event
      */
-    public function onContentPlugins(ContentEvent $event)
+    public function onContentPlugins(ContentEvent $event): void
     {
         if (true != $event['comment']) {
             return;
         }
 
         // remove all html tags or escape if in [code] tag
-        $content = preg_replace_callback('/\[code\](.+?)\[\/code\]/is', function($matches) { return htmlspecialchars($matches[0]); }, $event->getContent());
+        $content = preg_replace_callback('/\[code\](.+?)\[\/code\]/is', fn($matches) => htmlspecialchars($matches[0]), $event->getContent());
         $content = strip_tags($content);
 
         $content = ' '.$content.' ';
@@ -50,7 +50,7 @@ class CommentPlugin implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'content.plugins' => 'onContentPlugins'

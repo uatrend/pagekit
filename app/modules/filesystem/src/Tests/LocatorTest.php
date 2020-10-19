@@ -2,13 +2,14 @@
 
 namespace Pagekit\Filesystem\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filesystem\Filesystem;
 use Pagekit\Filesystem\Locator;
 
-class LocatorTest extends \PHPUnit\Framework\TestCase
+class LocatorTest extends TestCase
 {
-    protected $file;
-    protected $locator;
+    protected ?Filesystem $file = null;
+    protected ?Locator $locator = null;
 
     public function setUp(): void
     {
@@ -19,13 +20,13 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider dataGetPaths
      */
-    public function testGet($path, $result, $exists)
+    public function testGet($path, $result, $exists): void
     {
         $this->assertSame($exists, $this->file->exists($result));
         $this->assertSame($result, $this->locator->get($path));
     }
 
-    public function dataGetPaths()
+    public function dataGetPaths(): array
     {
         $fixtures = __DIR__.'/Fixtures';
 
@@ -39,7 +40,7 @@ class LocatorTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    public function testPathOverride()
+    public function testPathOverride(): void
     {
         $file = basename(__FILE__);
 

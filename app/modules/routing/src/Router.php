@@ -2,6 +2,8 @@
 
 namespace Pagekit\Routing;
 
+use Symfony\Component\Routing\Route;
+use Pagekit\Routing\ResourceInterface;
 use Pagekit\Routing\Generator\UrlGenerator;
 use Pagekit\Routing\Generator\UrlGeneratorDumper;
 use Pagekit\Routing\Generator\UrlGeneratorInterface;
@@ -20,55 +22,31 @@ use Symfony\Component\Routing\RouterInterface;
 
 class Router implements RouterInterface, UrlGeneratorInterface
 {
-    /**
-     * @var ResourceInterface
-     */
-    protected $resource;
+    protected ResourceInterface $resource;
 
-    /**
-     * @var LoaderInterface
-     */
-    protected $loader;
+    protected LoaderInterface $loader;
 
-    /**
-     * @var RequestStack
-     */
-    protected $stack;
+    protected RequestStack $stack;
 
     /**
      * @var RequestContext
      */
     protected $context;
 
-    /**
-     * @var UrlMatcher
-     */
-    protected $matcher;
+    protected ?UrlMatcher $matcher = null;
 
-    /**
-     * @var UrlGenerator
-     */
-    protected $generator;
+    protected ?UrlGenerator $generator = null;
 
-    /**
-     * @var RouteCollection
-     */
-    protected $routes;
+    protected ?RouteCollection $routes = null;
 
-    /**
-     * @var array
-     */
-    protected $options;
+    protected array $options;
 
-    /**
-     * @var array
-     */
-    protected $cache;
+    protected ?array $cache = null;
 
     /**
      * @var ParamsResolverInterface[]
      */
-    protected $resolver = [];
+    protected array $resolver = [];
 
     /**
      * Constructor.
@@ -93,10 +71,8 @@ class Router implements RouterInterface, UrlGeneratorInterface
 
     /**
      * Get the current request.
-     *
-     * @return Request
      */
-    public function getRequest()
+    public function getRequest(): ?Request
     {
         return $this->stack->getCurrentRequest();
     }
@@ -104,7 +80,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function getContext()
+    public function getContext(): RequestContext
     {
         return $this->context;
     }
@@ -112,17 +88,15 @@ class Router implements RouterInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function setContext(RequestContext $context)
+    public function setContext(RequestContext $context): void
     {
         $this->context = $context;
     }
 
     /**
      * Gets the router's options.
-     *
-     * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -132,7 +106,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
      *
      * @param array $options
      */
-    public function setOptions($options)
+    public function setOptions($options): void
     {
         $this->options = $options;
     }
@@ -143,7 +117,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * @param string $name
      * @param mixed  $value
      */
-    public function setOption($name, $value)
+    public function setOption($name, $value): void
     {
         $this->options[$name] = $value;
     }
@@ -152,9 +126,8 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * Gets a route.
      *
      * @param  string $name
-     * @return Route|null
      */
-    public function getRoute($name)
+    public function getRoute($name): ?Route
     {
         return $this->getRouteCollection()->get($name);
     }
@@ -162,7 +135,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function getRouteCollection()
+    public function getRouteCollection(): RouteCollection
     {
         if (!$this->routes) {
             $this->routes = $this->loader->load($this->resource);
@@ -173,10 +146,8 @@ class Router implements RouterInterface, UrlGeneratorInterface
 
     /**
      * Gets the URL matcher instance.
-     *
-     * @return UrlMatcher
      */
-    public function getMatcher()
+    public function getMatcher(): UrlMatcher
     {
         if (!$this->matcher) {
             if ($cache = $this->getCache('%s/%s.matcher.cache')) {
@@ -205,10 +176,8 @@ class Router implements RouterInterface, UrlGeneratorInterface
 
     /**
      * Gets the UrlGenerator instance associated with this Router.
-     *
-     * @return UrlGenerator
      */
-    public function getGenerator()
+    public function getGenerator(): UrlGenerator
     {
         if (!$this->generator) {
             if ($cache = $this->getCache('%s/%s.generator.cache')) {
@@ -242,9 +211,8 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * @param  array   $parameters
      * @param  int     $status
      * @param  array   $headers
-     * @return RedirectResponse
      */
-    public function redirect($url = '', $parameters = [], $status = 302, $headers = [])
+    public function redirect($url = '', $parameters = [], $status = 302, $headers = []): RedirectResponse
     {
         try {
 
@@ -263,7 +231,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function match($pathinfo)
+    public function match($pathinfo): array
     {
         $this->context->fromRequest($this->getRequest());
 
@@ -283,7 +251,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
     /**
      * {@inheritdoc}
      */
-    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH)
+    public function generate($name, $parameters = [], $referenceType = self::ABSOLUTE_PATH): string
     {
         $generator = $this->getGenerator();
 
@@ -313,7 +281,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * @param  string $file
      * @return array|null
      */
-    protected function getCache($file)
+    protected function getCache($file): ?array
     {
         if (!$this->options['cache']) {
             return null;
@@ -336,7 +304,7 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * @param  string $content
      * @throws \RuntimeException
      */
-    protected function writeCache($file, $content)
+    protected function writeCache($file, $content): void
     {
         if (!file_put_contents($file, $content)) {
             throw new \RuntimeException("Failed to write cache file ($file).");
@@ -347,9 +315,8 @@ class Router implements RouterInterface, UrlGeneratorInterface
      * Gets resolver instance from parameters.
      *
      * @param  array $parameters
-     * @return ParamsResolverInterface|null
      */
-    protected function getResolver(array $parameters = [])
+    protected function getResolver(array $parameters = []): ?ParamsResolverInterface
     {
         $resolver = isset($parameters['_resolver']) ? $parameters['_resolver'] : false;
 

@@ -7,7 +7,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ControllerResolver
 {
-    protected $logger;
+    protected ?\Psr\Log\LoggerInterface $logger = null;
 
     /**
      * Constructor.
@@ -64,7 +64,7 @@ class ControllerResolver
     /**
      * {@inheritdoc}
      */
-    public function getArguments(Request $request, $controller)
+    public function getArguments(Request $request, $controller): array
     {
         if (is_array($controller)) {
             $r = new \ReflectionMethod($controller[0], $controller[1]);
@@ -78,7 +78,7 @@ class ControllerResolver
         return $this->doGetArguments($request, $controller, $r->getParameters());
     }
 
-    protected function doGetArguments(Request $request, $controller, array $parameters)
+    protected function doGetArguments(Request $request, $controller, array $parameters): array
     {
         $attributes = $request->attributes->all();
         $arguments = [];
@@ -112,7 +112,7 @@ class ControllerResolver
      * @return mixed A PHP callable
      * @throws \InvalidArgumentException
      */
-    protected function createController($controller)
+    protected function createController($controller): array
     {
         if (false === strpos($controller, '::')) {
             throw new \InvalidArgumentException(sprintf('Unable to find controller "%s".', $controller));
@@ -131,10 +131,8 @@ class ControllerResolver
      * Returns an instantiated controller
      *
      * @param string $class A class name
-     *
-     * @return object
      */
-    protected function instantiateController($class)
+    protected function instantiateController($class): object
     {
         return new $class();
     }

@@ -2,11 +2,15 @@
 
 namespace Pagekit\Database;
 
+use Doctrine\DBAL\Statement;
+use Doctrine\DBAL\Driver\ResultStatement;
+use Pagekit\Database\Query\QueryBuilder;
 use Doctrine\Common\EventManager;
 use Doctrine\DBAL\Cache\QueryCacheProfile;
 use Doctrine\DBAL\Configuration;
 use Doctrine\DBAL\Connection as BaseConnection;
 use Doctrine\DBAL\Driver;
+use Pagekit\Database\Utility;
 
 class Connection extends BaseConnection
 {
@@ -15,31 +19,23 @@ class Connection extends BaseConnection
 
     /**
      * The database utility.
-     *
-     * @var Utility
      */
-    protected $utility;
+    protected ?Utility $utility = null;
 
     /**
      * The table prefix.
-     *
-     * @var string
      */
-    protected $prefix;
+    protected ?string $prefix = null;
 
     /**
      * The table prefix placeholder.
-     *
-     * @var string
      */
-    protected $placeholder = '@';
+    protected string $placeholder = '@';
 
     /**
      * The regex for parsing SQL query parts.
-     *
-     * @var array
      */
-    protected $regex;
+    protected array $regex;
 
     /**
      * Initializes a new instance of the Connection class.
@@ -68,7 +64,7 @@ class Connection extends BaseConnection
 
         $this->regex = [
             'quotes' => "/([^'\"]+)(?:".self::DOUBLE_QUOTED_TEXT."|".self::SINGLE_QUOTED_TEXT.")?/As",
-            'placeholder' => "/".preg_quote($this->placeholder)."([a-zA-Z_][a-zA-Z0-9_]*)/"
+            'placeholder' => "/".preg_quote($this->placeholder, '/')."([a-zA-Z_][a-zA-Z0-9_]*)/"
         ];
 
         parent::__construct($params, $driver, $config, $eventManager);
@@ -76,10 +72,8 @@ class Connection extends BaseConnection
 
     /**
      * Gets the database utility.
-     *
-     * @return string
      */
-    public function getUtility()
+    public function getUtility(): Utility
     {
         if (!$this->utility) {
             $this->utility = new Utility($this);
@@ -90,10 +84,8 @@ class Connection extends BaseConnection
 
     /**
      * Gets the table prefix.
-     *
-     * @return string
      */
-    public function getPrefix()
+    public function getPrefix(): ?string
     {
         return $this->prefix;
     }
@@ -102,9 +94,8 @@ class Connection extends BaseConnection
      * Replaces the table prefix placeholder with actual one.
      *
      * @param  string $query
-     * @return string
      */
-    public function replacePrefix($query)
+    public function replacePrefix($query): string
     {
         $offset = 0;
         $length = strlen($this->prefix) - strlen($this->placeholder);
@@ -147,9 +138,8 @@ class Connection extends BaseConnection
      * @param  array  $params
      * @param  string $class
      * @param  array  $args
-     * @return array
      */
-    public function fetchAllObjects($statement, array $params = [], $class = 'stdClass', $args = [])
+    public function fetchAllObjects($statement, array $params = [], $class = 'stdClass', $args = []): array
     {
         return $this->executeQuery($statement, $params)->fetchAll(\PDO::FETCH_CLASS | \PDO::FETCH_PROPS_LATE, $class, $args);
     }
@@ -157,7 +147,7 @@ class Connection extends BaseConnection
     /**
      * @{inheritdoc}
      */
-    public function prepare($statement)
+    public function prepare($statement): Statement
     {
         return parent::prepare($this->replacePrefix($statement));
     }
@@ -165,7 +155,7 @@ class Connection extends BaseConnection
     /**
      * @{inheritdoc}
      */
-    public function exec($statement)
+    public function exec($statement): int
     {
         return parent::exec($this->replacePrefix($statement));
     }
@@ -173,7 +163,7 @@ class Connection extends BaseConnection
     /**
      * @{inheritdoc}
      */
-    public function executeQuery($query, array $params = [], $types = [], QueryCacheProfile $qcp = null)
+    public function executeQuery($query, array $params = [], $types = [], QueryCacheProfile $qcp = null): ResultStatement
     {
         return parent::executeQuery($this->replacePrefix($query), $params, $types, $qcp);
     }
@@ -181,7 +171,7 @@ class Connection extends BaseConnection
     /**
      * @{inheritdoc}
      */
-    public function executeUpdate($query, array $params = [], array $types = [])
+    public function executeUpdate($query, array $params = [], array $types = []): int
     {
         return parent::executeUpdate($this->replacePrefix($query), $params, $types);
     }
@@ -189,18 +179,17 @@ class Connection extends BaseConnection
     /**
      * @{inheritdoc}
      */
-    public function createQueryBuilder()
+    public function createQueryBuilder(): QueryBuilder
     {
-        return new Query\QueryBuilder($this);
+        return new QueryBuilder($this);
     }
 
     /**
      * Parses the unquoted SQL query parts.
      *
      * @param  string $query
-     * @return array
      */
-    protected function getUnquotedQueryParts($query)
+    protected function getUnquotedQueryParts($query): array
     {
         preg_match_all($this->regex['quotes'], $query, $parts, PREG_OFFSET_CAPTURE);
 

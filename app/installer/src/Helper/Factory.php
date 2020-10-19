@@ -8,14 +8,14 @@ use Composer\IO\IOInterface;
 
 class Factory extends BaseFactory
 {
-    protected static $config = [];
+    protected static array $config = [];
 
-    public static function bootstrap($config)
+    public static function bootstrap($config): void
     {
         self::$config = $config;
     }
 
-    public static function createConfig(IOInterface $io = null, $cwd = null)
+    public static function createConfig(IOInterface $io = null, $cwd = null): Config
     {
         $config = new Config(true, $cwd);
         $config->merge(['config' => static::$config]);

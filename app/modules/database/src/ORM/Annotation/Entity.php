@@ -8,9 +8,7 @@ namespace Pagekit\Database\ORM\Annotation;
  */
 final class Entity implements Annotation
 {
-    /** @var string */
-    public $tableClass;
+    public string $tableClass;
 
-    /** @var string */
-    public $eventPrefix;
+    public string $eventPrefix = '';
 }

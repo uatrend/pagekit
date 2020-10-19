@@ -6,15 +6,9 @@ use Pagekit\Util\Arr;
 
 class Config implements \ArrayAccess, \Countable, \JsonSerializable
 {
-    /**
-     * @var array
-     */
-    protected $values = [];
+    protected array $values = [];
 
-    /**
-     * @var bool
-     */
-    protected $dirty = false;
+    protected bool $dirty = false;
 
     /**
      * Constructor.
@@ -30,9 +24,8 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      * Checks if the given key exists.
      *
      * @param  string $key
-     * @return bool
      */
-    public function has($key)
+    public function has($key): bool
     {
         return Arr::has($this->values, $key);
     }
@@ -54,9 +47,8 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      *
      * @param  string $key
      * @param  mixed  $value
-     * @return self
      */
-    public function set($key, $value)
+    public function set($key, $value): self
     {
         Arr::set($this->values, $key, $value);
 
@@ -69,9 +61,8 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      * Removes one or more values.
      *
      * @param  array|string $keys
-     * @return self
      */
-    public function remove($keys)
+    public function remove($keys): self
     {
         Arr::remove($this->values, $keys);
 
@@ -85,9 +76,8 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      *
      * @param  string $key
      * @param  mixed  $value
-     * @return self
      */
-    public function push($key, $value)
+    public function push($key, $value): self
     {
         $values = $this->get($key);
 
@@ -101,9 +91,8 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      *
      * @param  string $key
      * @param  mixed  $value
-     * @return self
      */
-    public function pull($key, $value)
+    public function pull($key, $value): self
     {
         $values = $this->get($key);
 
@@ -117,9 +106,8 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      *
      * @param  mixed $values
      * @param  bool  $replace
-     * @return self
      */
-    public function merge($values, $replace = false)
+    public function merge($values, $replace = false): self
     {
         $this->values = Arr::merge($this->values, $values, $replace);
         $this->dirty  = true;
@@ -132,59 +120,48 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      *
      * @param  array $keys
      * @param  bool  $include
-     * @return array
      */
-    public function extract($keys, $include = true)
+    public function extract($keys, $include = true): array
     {
         return Arr::extract($this->values, $keys, $include);
     }
 
     /**
      * Checks if the values are modified.
-     *
-     * @return array
      */
-    public function dirty()
+    public function dirty(): bool
     {
         return $this->dirty;
     }
 
     /**
      * Dumps the values as php.
-     *
-     * @return string
      */
-    public function dump()
+    public function dump(): string
     {
         return '<?php return '.var_export($this->values, true).';';
     }
 
     /**
      * Gets the value count.
-     *
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->values);
     }
 
     /**
      * Gets the values as a plain array.
-     *
-     * @return array
      */
-    public function toArray()
+    public function toArray(): array
     {
         return $this->values;
     }
 
     /**
      * Implements JsonSerializable interface.
-     *
-     * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->values;
     }
@@ -194,7 +171,7 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      *
      * @see has()
      */
-    public function offsetExists($key)
+    public function offsetExists($key): bool
     {
         return $this->has($key);
     }
@@ -214,7 +191,7 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      *
      * @see set()
      */
-    public function offsetSet($key, $value)
+    public function offsetSet($key, $value): void
     {
         $this->set($key, $value);
     }
@@ -224,7 +201,7 @@ class Config implements \ArrayAccess, \Countable, \JsonSerializable
      *
      * @see remove()
      */
-    public function offsetUnset($key)
+    public function offsetUnset($key): void
     {
         $this->remove($key);
     }

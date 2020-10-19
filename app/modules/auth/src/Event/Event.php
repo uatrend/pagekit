@@ -7,10 +7,7 @@ use Pagekit\Event\Event as BaseEvent;
 
 class Event extends BaseEvent
 {
-    /**
-     * @var UserInterface
-     */
-    protected $user;
+    protected ?\Pagekit\Auth\UserInterface $user = null;
 
     /**
      * Constructor.
@@ -27,10 +24,8 @@ class Event extends BaseEvent
 
     /**
      * Gets the user.
-     *
-     * @return UserInterface|null
      */
-    public function getUser()
+    public function getUser(): ?\Pagekit\Auth\UserInterface
     {
         return $this->user;
     }

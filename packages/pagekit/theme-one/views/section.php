@@ -96,25 +96,21 @@
     if (!isset($options['width'])) {
         $options['width'] = '';
     }
-    if (!$options['width']) {
-        $attrs_container['class'][] = 'uk-container';
-    } else {
-        $attrs_container['class'][] = "uk-container uk-container-{$options['width']}";
-    }
+    $attrs_container['class'][] = !$options['width'] ? 'uk-container' : "uk-container uk-container-{$options['width']}";
 
 ?>
 
-<div<?= attrs(compact('id', 'class'), $attrs, !$attrs_image ? $attrs_section : []) ?>>
+<div<?= attrs(compact('id', 'class'), $attrs, empty($attrs_image) ? $attrs_section : []) ?>>
 
-    <?php if ($attrs_image) : ?>
+    <?php if (!empty($attrs_image)) : ?>
     <div<?= attrs($attrs_image, $attrs_section) ?>>
     <?php endif ?>
 
-            <?php if ($attrs_viewport_height) : ?>
+            <?php if (!empty($attrs_viewport_height)) : ?>
             <div<?= attrs($attrs_viewport_height) ?>>
             <?php endif ?>
 
-                <?php if ($attrs_container) : ?>
+                <?php if (!empty($attrs_container)) : ?>
                 <div<?= attrs($attrs_container) ?>>
                 <?php endif ?>
 
@@ -140,15 +136,15 @@
 
                     </div>
 
-                <?php if ($attrs_container) : ?>
+                <?php if (!empty($attrs_container)) : ?>
                 </div>
                 <?php endif ?>
 
-            <?php if ($attrs_viewport_height) : ?>
+            <?php if (!empty($attrs_viewport_height)) : ?>
             </div>
             <?php endif ?>
 
-    <?php if ($attrs_image) : ?>
+    <?php if (!empty($attrs_image)) : ?>
     </div>
     <?php endif ?>
 

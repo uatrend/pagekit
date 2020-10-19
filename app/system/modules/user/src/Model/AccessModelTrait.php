@@ -11,27 +11,24 @@ trait AccessModelTrait
 
     /**
      * @param  int $role
-     * @return bool
      */
-    public function hasRole($role)
+    public function hasRole($role): bool
     {
         return in_array($role, $this->roles);
     }
 
     /**
      * @param  User $user
-     * @return bool
      */
-    public function hasAccess(User $user)
+    public function hasAccess(User $user): bool
     {
         return !$this->roles or array_intersect($user->roles, $this->roles);
     }
 
     /**
      * @param  Role|int $role
-     * @return int
      */
-    public static function removeRole($role)
+    public static function removeRole($role): int
     {
         if ($role instanceof Role) {
             $role = $role->id;

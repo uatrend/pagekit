@@ -6,15 +6,12 @@ use Pagekit\View\View;
 
 class MetaHelper implements HelperInterface, \IteratorAggregate
 {
-    /**
-     * @var array
-     */
-    protected $metas = [];
+    protected array $metas = [];
 
     /**
      * {@inheritdoc}
      */
-    public function register(View $view)
+    public function register(View $view): void
     {
         $view->on('head', function ($event) use ($view) {
             $view->trigger('meta', [$this]);
@@ -41,9 +38,8 @@ class MetaHelper implements HelperInterface, \IteratorAggregate
      * Gets a meta tag.
      *
      * @param  string $name
-     * @return string
      */
-    public function get($name)
+    public function get($name): ?string
     {
         return isset($this->metas[$name]) ? $this->metas[$name] : null;
     }
@@ -53,9 +49,8 @@ class MetaHelper implements HelperInterface, \IteratorAggregate
      *
      * @param  string $name
      * @param  string $value
-     * @return self
      */
-    public function add($name, $value = '')
+    public function add($name, $value = ''): self
     {
         if ($value) {
             $this->metas[$name] = $value;
@@ -65,12 +60,11 @@ class MetaHelper implements HelperInterface, \IteratorAggregate
     }
     
     /**
-     * Removes a meta tag.
-     *
-     * @param  string $name
-     * @return self
-     */
-	public function remove( $name )
+  * Removes a meta tag.
+  *
+  * @param  string $name
+  */
+ public function remove( $name ): self
 	{
 		if (isset($this->metas[$name])) {
 			unset($this->metas[$name]);			
@@ -81,10 +75,8 @@ class MetaHelper implements HelperInterface, \IteratorAggregate
 
     /**
      * Renders the meta tags.
-     *
-     * @return string
      */
-    public function render()
+    public function render(): string
     {
         $output = '';
 
@@ -108,9 +100,9 @@ class MetaHelper implements HelperInterface, \IteratorAggregate
 
                 if ($name == 'title') {
                     $output .= sprintf("        <title>%s</title>\n", $value);
-                } else if ($name == 'base') {
+                } elseif ($name == 'base') {
                     $output .= sprintf("        <base href=\"%s\">\n", $value);
-                } else if ($name == 'canonical') {
+                } elseif ($name == 'canonical') {
                     $output .= sprintf("        <link rel=\"%s\" href=\"%s\">\n", $name, $value);
                 } elseif (preg_match('/^(og|fb|twitter|article):/i', $name)) {
                     $output .= sprintf("        <meta property=\"%s\" content=\"%s\">\n", $name, $value);
@@ -125,10 +117,8 @@ class MetaHelper implements HelperInterface, \IteratorAggregate
 
     /**
      * Returns an iterator for meta tags.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->metas);
     }
@@ -136,7 +126,7 @@ class MetaHelper implements HelperInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'meta';
     }

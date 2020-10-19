@@ -2,6 +2,10 @@
 
 namespace Pagekit\Auth;
 
+use Pagekit\Auth\UserProviderInterface;
+use Pagekit\Auth\UserInterface;
+use Pagekit\Auth\Exception\AuthException;
+use Pagekit\Event\EventInterface;
 use Pagekit\Auth\Event\AuthenticateEvent;
 use Pagekit\Auth\Event\AuthorizeEvent;
 use Pagekit\Auth\Event\LoginEvent;
@@ -15,25 +19,13 @@ class Auth
 {
     const LAST_USERNAME     = '_auth.last_username';
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected \Pagekit\Event\EventDispatcherInterface $events;
 
-    /**
-     * @var HandlerInterface
-     */
-    protected $handler;
+    protected \Pagekit\Auth\Handler\HandlerInterface $handler;
 
-    /**
-     * @var UserProviderInterface
-     */
-    protected $provider;
+    protected ?UserProviderInterface $provider = null;
 
-    /**
-     * @var UserInterface
-     */
-    protected $user;
+    protected ?\Pagekit\Auth\UserInterface $user = null;
 
     /**
      * Constructor.
@@ -49,10 +41,8 @@ class Auth
 
     /**
      * Gets the current user.
-     *
-     * @return UserInterface|null
      */
-    public function getUser()
+    public function getUser(): ?UserInterface
     {
         if ($this->user === null && $id = $this->handler->read()) {
             $this->user = $this->getUserProvider()->find($id);
@@ -67,7 +57,7 @@ class Auth
      * @param  UserInterface $user
      * @param  bool          $remember
      */
-    public function setUser(UserInterface $user, $remember = false)
+    public function setUser(UserInterface $user, $remember = false): void
     {
         $this->handler->write($user->getId(), $remember);
         $this->user = $user;
@@ -78,7 +68,7 @@ class Auth
      *
      * @param UserInterface
      */
-    public function removeUser()
+    public function removeUser(): void
     {
         $this->handler->destroy();
         $this->user = null;
@@ -88,9 +78,8 @@ class Auth
      * Gets the user provider.
      *
      * @throws \RuntimeException
-     * @return UserProviderInterface
      */
-    public function getUserProvider()
+    public function getUserProvider(): UserProviderInterface
     {
         if (!$this->provider) {
             throw new \RuntimeException('Accessed user provider prior to registering it.');
@@ -104,7 +93,7 @@ class Auth
      *
      * @param UserProviderInterface
      */
-    public function setUserProvider(UserProviderInterface $provider)
+    public function setUserProvider(UserProviderInterface $provider): void
     {
         $this->provider = $provider;
     }
@@ -113,10 +102,9 @@ class Auth
      * Attempts to authenticate the given user according to the passed credentials.
      *
      * @param  array $credentials
-     * @return UserInterface
      * @throws BadCredentialsException
      */
-    public function authenticate(array $credentials)
+    public function authenticate(array $credentials): UserInterface
     {
         $this->events->trigger(new AuthenticateEvent(AuthEvents::PRE_AUTHENTICATE, $credentials));
 
@@ -137,9 +125,9 @@ class Auth
      * Authorizes a user.
      *
      * @param  UserInterface $user
-     * @throws Exception\AuthException
+     * @throws AuthException
      */
-    public function authorize(UserInterface $user)
+    public function authorize(UserInterface $user): void
     {
         $this->events->trigger(new AuthorizeEvent(AuthEvents::AUTHORIZE, $user));
     }
@@ -149,9 +137,8 @@ class Auth
      *
      * @param  UserInterface $user
      * @param  bool          $remember
-     * @return Response
      */
-    public function login(UserInterface $user, $remember = false)
+    public function login(UserInterface $user, $remember = false): EventInterface
     {
         $this->setUser($user, $remember);
 
@@ -160,10 +147,8 @@ class Auth
 
     /**
      * Logs the current user out.
-     *
-     * @return Response
      */
-    public function logout()
+    public function logout(): EventInterface
     {
         $event = $this->events->trigger(new LogoutEvent(AuthEvents::LOGOUT, $this->getUser()));
         $this->removeUser();

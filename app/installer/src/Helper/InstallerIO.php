@@ -35,7 +35,7 @@ class InstallerIO extends ConsoleIO
     /**
      * {@inheritdoc}
      */
-    public function writeError($messages, $newline = true, $verbosity = parent::NORMAL)
+    public function writeError($messages, $newline = true, $verbosity = parent::NORMAL): void
     {
         foreach ((array)$messages as $message) {
             if (preg_match(self::REGEX, $message, $matches)) {

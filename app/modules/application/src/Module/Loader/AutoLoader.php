@@ -6,10 +6,7 @@ use Composer\Autoload\ClassLoader;
 
 class AutoLoader implements LoaderInterface
 {
-    /**
-     * @var ClassLoader
-     */
-    protected $loader;
+    protected \Composer\Autoload\ClassLoader $loader;
 
     /**
      * Constructor.
@@ -40,13 +37,12 @@ class AutoLoader implements LoaderInterface
      *
      * @param  array  $module
      * @param  string $path
-     * @return string
      */
-    protected function resolvePath($module, $path)
+    protected function resolvePath($module, $path): string
     {
         $path = strtr($path, '\\', '/');
 
-        if (!($path[0] == '/' || (strlen($path) > 3 && ctype_alpha($path[0]) && $path[1] == ':' && $path[2] == '/'))) {
+        if ($path[0] != '/' && !(strlen($path) > 3 && ctype_alpha($path[0]) && $path[1] == ':' && $path[2] == '/')) {
             $path = $module['path']."/$path";
         }
 

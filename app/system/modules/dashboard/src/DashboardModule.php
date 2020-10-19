@@ -11,9 +11,8 @@ class DashboardModule extends Module
      * Gets a widget.
      *
      * @param  string $id
-     * @return array
      */
-    public function getWidget($id)
+    public function getWidget($id): array
     {
         $widgets = $this->getWidgets();
 
@@ -22,10 +21,8 @@ class DashboardModule extends Module
 
     /**
      * Gets all user widgets.
-     *
-     * @return array
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return App::config()->get('system/dashboard', $this->config('defaults'))->toArray();
     }
@@ -35,7 +32,7 @@ class DashboardModule extends Module
      *
      * @param array $widgets
      */
-    public function saveWidgets(array $widgets)
+    public function saveWidgets(array $widgets): void
     {
         App::config()->set('system/dashboard', $widgets);
     }

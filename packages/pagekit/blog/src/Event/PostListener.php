@@ -8,12 +8,12 @@ use Pagekit\Event\EventSubscriberInterface;
 
 class PostListener implements EventSubscriberInterface
 {
-    public function onCommentChange($event, Comment $comment)
+    public function onCommentChange($event, Comment $comment): void
     {
         Post::updateCommentInfo($comment->post_id);
     }
 
-    public function onRoleDelete($event, $role)
+    public function onRoleDelete($event, $role): void
     {
         Post::removeRole($role);
     }
@@ -21,7 +21,7 @@ class PostListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'model.comment.saved' => 'onCommentChange',

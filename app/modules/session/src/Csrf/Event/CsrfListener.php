@@ -8,10 +8,7 @@ use Pagekit\Session\Csrf\Provider\CsrfProviderInterface;
 
 class CsrfListener implements EventSubscriberInterface
 {
-    /**
-     * @var CsrfProviderInterface
-     */
-    protected $provider;
+    protected \Pagekit\Session\Csrf\Provider\CsrfProviderInterface $provider;
 
     /**
      * Constructor.
@@ -29,7 +26,7 @@ class CsrfListener implements EventSubscriberInterface
      * @param  $event
      * @throws UnauthorizedException
      */
-    public function onRequest($event, $request)
+    public function onRequest($event, $request): void
     {
         $this->provider->setToken($request->get('_csrf', $request->headers->get('X-XSRF-TOKEN')));
         $attributes = $request->attributes->get('_request', []);
@@ -42,7 +39,7 @@ class CsrfListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'request' => ['onRequest', -150]

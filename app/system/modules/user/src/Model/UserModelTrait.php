@@ -35,7 +35,7 @@ trait UserModelTrait
     /**
      * {@inheritdoc}
      */
-    public static function updateLogin(User $user)
+    public static function updateLogin(User $user): void
     {
         static::where(['id' => $user->id])->update(['login' => date('Y-m-d H:i:s')]);
     }
@@ -46,7 +46,7 @@ trait UserModelTrait
      * @param  User $user
      * @return Role[]
      */
-    public static function findRoles(User $user)
+    public static function findRoles(User $user): array
     {
         static $cached = [];
 
@@ -60,7 +60,7 @@ trait UserModelTrait
     /**
      * @Saving
      */
-    public static function saving($event, User $user)
+    public static function saving($event, User $user): void
     {
         if (!$user->hasRole(Role::ROLE_AUTHENTICATED)) {
             $user->roles[] = Role::ROLE_AUTHENTICATED;

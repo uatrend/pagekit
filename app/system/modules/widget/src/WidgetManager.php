@@ -32,7 +32,7 @@ class WidgetManager extends ModuleManager
     /**
      * {@inheritdoc}
      */
-    public function all()
+    public function all(): array
     {
         $this->load(array_keys($this->registered));
 

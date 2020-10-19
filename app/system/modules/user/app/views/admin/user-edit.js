@@ -40,7 +40,7 @@ window.User = {
                 close: {
                     scope: 'topmenu-left',
                     type: 'button',
-                    caption: vm.user.id ? 'Close' : 'Cancel',
+                    caption: () => vm.user.id ? 'Close' : 'Cancel',
                     class: 'uk-button uk-button-text',
                     attrs: { href: () => vm.$url.route('admin/user') },
                     disabled: () => vm.processing,

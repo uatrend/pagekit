@@ -7,7 +7,7 @@ use DebugBar\Storage\StorageInterface;
 
 class ProfileDataCollector implements DataCollectorInterface
 {
-    protected $storage;
+    protected \DebugBar\Storage\StorageInterface $storage;
 
     /**
      * Constructor.
@@ -22,7 +22,7 @@ class ProfileDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         return ['requests' => $this->storage->find()];
     }
@@ -30,7 +30,7 @@ class ProfileDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'profile';
     }

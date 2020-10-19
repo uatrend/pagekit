@@ -3,28 +3,17 @@
 namespace Pagekit\Event;
 
 use Pagekit\Util\Arr;
+use \Pagekit\Event\EventDispatcherInterface;
 
 class Event implements EventInterface, \ArrayAccess
 {
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var array
-     */
-    protected $parameters;
+    protected array $parameters;
 
-    /**
-     * @var bool
-     */
-    protected $propagationStopped = false;
+    protected bool $propagationStopped = false;
 
-    /**
-     * @var EventDispatcher
-     */
-    protected $dispatcher;
+    protected ?\Pagekit\Event\EventDispatcherInterface $dispatcher = null;
 
     /**
      * Constructor.
@@ -41,7 +30,7 @@ class Event implements EventInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -50,9 +39,8 @@ class Event implements EventInterface, \ArrayAccess
      * Sets the event name.
      *
      * @param  string $name
-     * @return self
      */
-    public function setName($name)
+    public function setName($name): self
     {
         $this->name = $name;
 
@@ -64,7 +52,7 @@ class Event implements EventInterface, \ArrayAccess
      *
      * @return array|object|\ArrayAccess
      */
-    public function getParameters()
+    public function getParameters(): array
     {
         return $this->parameters;
     }
@@ -73,9 +61,8 @@ class Event implements EventInterface, \ArrayAccess
      * Sets all parameters.
      *
      * @param  array
-     * @return self
      */
-    public function setParameters(array $parameters)
+    public function setParameters(array $parameters): self
     {
         $this->parameters = $parameters;
 
@@ -85,9 +72,8 @@ class Event implements EventInterface, \ArrayAccess
     /**
      * @param  mixed $values
      * @param  bool  $replace
-     * @return self
      */
-    public function addParameters(array $values, $replace = false)
+    public function addParameters(array $values, $replace = false): self
     {
         $this->parameters = Arr::merge($this->parameters, $values, $replace);
         return $this;
@@ -96,7 +82,7 @@ class Event implements EventInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getDispatcher()
+    public function getDispatcher(): EventDispatcherInterface
     {
         return $this->dispatcher;
     }
@@ -106,7 +92,7 @@ class Event implements EventInterface, \ArrayAccess
      *
      * @param EventDispatcherInterface $dispatcher
      */
-    public function setDispatcher(EventDispatcherInterface $dispatcher)
+    public function setDispatcher(EventDispatcherInterface $dispatcher): void
     {
         $this->dispatcher = $dispatcher;
     }
@@ -114,7 +100,7 @@ class Event implements EventInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function isPropagationStopped()
+    public function isPropagationStopped(): bool
     {
         return $this->propagationStopped;
     }
@@ -122,7 +108,7 @@ class Event implements EventInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function stopPropagation()
+    public function stopPropagation(): void
     {
         $this->propagationStopped = true;
     }
@@ -133,7 +119,7 @@ class Event implements EventInterface, \ArrayAccess
      * @param  string $name
      * @return mixed
      */
-    public function offsetExists($name)
+    public function offsetExists($name): bool
     {
         return isset($this->parameters[$name]);
     }
@@ -155,7 +141,7 @@ class Event implements EventInterface, \ArrayAccess
      * @param  string   $name
      * @param  callable $callback
      */
-    public function offsetSet($name, $callback)
+    public function offsetSet($name, $callback): void
     {
         $this->parameters[$name] = $callback;
     }
@@ -165,7 +151,7 @@ class Event implements EventInterface, \ArrayAccess
      *
      * @param string $name
      */
-    public function offsetUnset($name)
+    public function offsetUnset($name): void
     {
         unset($this->parameters[$name]);
     }

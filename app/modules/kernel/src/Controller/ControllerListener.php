@@ -7,15 +7,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class ControllerListener implements EventSubscriberInterface
 {
-    /**
-     * @var ControllerResolver
-     */
-    protected $resolver;
+    protected \Pagekit\Kernel\Controller\ControllerResolver $resolver;
 
-    /**
-     * @var LoggerInterface
-     */
-    protected $logger;
+    protected ?\Pagekit\Kernel\Controller\LoggerInterface $logger = null;
 
     /**
      * Constructor.
@@ -35,7 +29,7 @@ class ControllerListener implements EventSubscriberInterface
      * @param $event
      * @param $request
      */
-    public function resolveController($event, $request)
+    public function resolveController($event, $request): void
     {
         if (!$controller = $this->resolver->getController($request)) {
             return;
@@ -50,7 +44,7 @@ class ControllerListener implements EventSubscriberInterface
      * @param $event
      * @param $request
      */
-    public function executeController($event, $request)
+    public function executeController($event, $request): void
     {
         if (!$controller = $event->getController()) {
             return;
@@ -69,7 +63,7 @@ class ControllerListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'controller' => [

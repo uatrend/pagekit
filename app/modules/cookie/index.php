@@ -8,9 +8,7 @@ return [
 
     'main' => function ($app) {
 
-        $app['cookie'] = function () {
-            return new CookieJar();
-        };
+        $app['cookie'] = fn() => new CookieJar();
 
     },
 

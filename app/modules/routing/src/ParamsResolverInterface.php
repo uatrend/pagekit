@@ -8,15 +8,13 @@ interface ParamsResolverInterface
      * Callback to modify parameters after route matching.
      *
      * @param  array $parameters
-     * @return array
      */
-    public function match(array $parameters = []);
+    public function match(array $parameters = []): array;
 
     /**
      * Callback to modify parameters during URL generation.
      *
      * @param  array $parameters
-     * @return array
      */
-    public function generate(array $parameters = []);
+    public function generate(array $parameters = []): array;
 }

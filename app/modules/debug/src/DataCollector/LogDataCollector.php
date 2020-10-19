@@ -7,15 +7,12 @@ use Monolog\Handler\AbstractHandler;
 
 class LogDataCollector extends AbstractHandler implements DataCollectorInterface
 {
-    /**
-     * @var array
-     */
-    protected $messages = [];
+    protected array $messages = [];
 
     /**
      * {@inheritdoc}
      */
-    public function handle(array $record)
+    public function handle(array $record): bool
     {
         if ($record['level'] < $this->level) {
             return false;
@@ -36,7 +33,7 @@ class LogDataCollector extends AbstractHandler implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         return ['messages' => $this->messages];
     }
@@ -44,7 +41,7 @@ class LogDataCollector extends AbstractHandler implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'log';
     }

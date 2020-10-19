@@ -10,17 +10,14 @@ use Pagekit\Installer\Package\PackageManager;
  */
 class PackageController
 {
-    /**
-     * @var PackageManager
-     */
-    protected $manager;
+    protected PackageManager $manager;
 
     public function __construct()
     {
         $this->manager = new PackageManager();
     }
 
-    public function themesAction()
+    public function themesAction(): array
     {
         $packages = array_values(App::package()->all('pagekit-theme'));
 
@@ -49,7 +46,7 @@ class PackageController
         ];
     }
 
-    public function extensionsAction()
+    public function extensionsAction(): array
     {
         $packages = array_values(App::package()->all('pagekit-extension'));
 
@@ -82,7 +79,7 @@ class PackageController
     /**
      * @Request({"name"}, csrf=true)
      */
-    public function enableAction($name)
+    public function enableAction($name): array
     {
         $handler = $this->errorHandler($name);
 
@@ -106,7 +103,7 @@ class PackageController
     /**
      * @Request({"name"}, csrf=true)
      */
-    public function disableAction($name)
+    public function disableAction($name): array
     {
         if (!$package = App::package($name)) {
             App::abort(400, __('Unable to find "%name%".', ['%name%' => $name]));
@@ -126,7 +123,7 @@ class PackageController
     /**
      * @Request({"type": "string"}, csrf=true)
      */
-    public function uploadAction($type)
+    public function uploadAction($type): array
     {
         $file = App::request()->files->get('file');
 
@@ -244,7 +241,7 @@ class PackageController
      * @param  string $name
      * @return callable|null
      */
-    protected function errorHandler($name)
+    protected function errorHandler($name): ?callable
     {
         ini_set('display_errors', 0);
 

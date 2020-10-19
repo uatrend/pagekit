@@ -3,63 +3,31 @@
 namespace Pagekit\Database\ORM;
 
 use Doctrine\DBAL\Types\Type;
+use Pagekit\Database\ORM\MetadataManager;
 
 class Metadata
 {
-    /**
-     * @var MetadataManager
-     */
-    protected $manager;
+    protected MetadataManager $manager;
 
-    /**
-     * @var string
-     */
-    protected $class;
+    protected string $class;
 
-    /**
-     * @var string
-     */
-    protected $table;
+    protected string $table;
 
-    /**
-     * @var string
-     */
-    protected $identifier;
+    protected string $identifier = '';
 
-    /**
-     * @var array
-     */
-    protected $fields = [];
+    protected array $fields = [];
 
-    /**
-     * @var array
-     */
-    protected $fieldNames = [];
+    protected array $fieldNames = [];
 
-    /**
-     * @var array
-     */
-    protected $relations = [];
+    protected array $relations = [];
 
-    /**
-     * @var boolean
-     */
-    protected $isMappedSuperclass = false;
+    protected bool $isMappedSuperclass = false;
 
-    /**
-     * @var array
-     */
-    protected $events = [];
+    protected array $events = [];
 
-    /**
-     * @var string
-     */
-    protected $eventPrefix = '';
+    protected string $eventPrefix = '';
 
-    /**
-     * @var \ReflectionClass
-     */
-    protected $reflClass;
+    protected ?\ReflectionClass $reflClass = null;
 
     /**
      * Constructor.
@@ -78,20 +46,16 @@ class Metadata
 
     /**
      * Gets name of the entity class.
-     *
-     * @return string
      */
-    public function getClass()
+    public function getClass(): string
     {
         return $this->class;
     }
 
     /**
      * Gets the entity's reflection class.
-     *
-     * @return \ReflectionClass
      */
-    public function getReflectionClass()
+    public function getReflectionClass(): \ReflectionClass
     {
         if ($this->reflClass === null) {
             $this->reflClass = new \ReflectionClass($this->class);
@@ -102,10 +66,8 @@ class Metadata
 
     /**
      * Gets the name of the table.
-     *
-     * @return string
      */
-    public function getTable()
+    public function getTable(): string
     {
         return $this->table;
     }
@@ -114,9 +76,8 @@ class Metadata
      * Gets the field or column name of the identifier.
      *
      * @param  bool $column
-     * @return string
      */
-    public function getIdentifier($column = false)
+    public function getIdentifier($column = false): ?string
     {
         return $column ? $this->fieldNames[$this->identifier] : $this->identifier;
     }
@@ -137,20 +98,16 @@ class Metadata
 
     /**
      * Gets all field mapping definitions.
-     *
-     * @return array
      */
-    public function getFields()
+    public function getFields(): array
     {
         return $this->fields;
     }
 
     /**
      * Gets all relation mappings of the class.
-     *
-     * @return array
      */
-    public function getRelationMappings()
+    public function getRelationMappings(): array
     {
         return $this->relations;
     }
@@ -159,10 +116,9 @@ class Metadata
      * Gets the mapping of a relation.
      *
      * @param  string $name
-     * @return array
      * @throws \Exception If no mapping is found for relation.
      */
-    public function getRelationMapping($name)
+    public function getRelationMapping($name): array
     {
         if (!isset($this->relations[$name])) {
             throw new \Exception(sprintf("No mapping found for relation '%s' on class '%s'.", $name, $this->class));
@@ -173,10 +129,8 @@ class Metadata
 
     /**
      * Is mapped super class.
-     *
-     * @return bool
      */
-    public function isMappedSuperclass()
+    public function isMappedSuperclass(): bool
     {
         return $this->isMappedSuperclass;
     }
@@ -218,7 +172,7 @@ class Metadata
      * @param bool   $column
      * @param bool   $convert
      */
-    public function setValue($entity, $name, $value, $column = false, $convert = false)
+    public function setValue($entity, $name, $value, $column = false, $convert = false): void
     {
         if ($column && isset($this->fieldNames[$name])) {
             $name = $this->fieldNames[$name];
@@ -241,9 +195,8 @@ class Metadata
      * @param  mixed $entity
      * @param  bool  $column
      * @param  bool  $convert
-     * @return array
      */
-    public function getValues($entity, $column = false, $convert = false)
+    public function getValues($entity, $column = false, $convert = false): array
     {
         $data = [];
 
@@ -262,9 +215,8 @@ class Metadata
      * @param  array $values
      * @param  bool  $column
      * @param  bool  $convert
-     * @return array
      */
-    public function setValues($entity, array $values, $column = false, $convert = false)
+    public function setValues($entity, array $values, $column = false, $convert = false): void
     {
         foreach ($values as $name => $value) {
             $this->setValue($entity, $name, $value, $column, $convert);
@@ -273,40 +225,32 @@ class Metadata
 
     /**
      * Gets the events.
-     *
-     * @return array
      */
-    public function getEvents()
+    public function getEvents(): array
     {
         return $this->events;
     }
 
     /**
      * Gets the event prefix.
-     *
-     * @return string
      */
-    public function getEventPrefix()
+    public function getEventPrefix(): string
     {
         return $this->eventPrefix ?: strtolower($this->getReflectionClass()->getShortName());
     }
 
     /**
      * Creates a new instance of the mapped class, without invoking the constructor.
-     *
-     * @return object
      */
-    public function newInstance()
+    public function newInstance(): object
     {
         return $this->getReflectionClass()->newInstanceWithoutConstructor();
     }
 
     /**
      * Gets the config values.
-     *
-     * @return array
      */
-    public function getConfig()
+    public function getConfig(): array
     {
         return [
             'class' => $this->class,
@@ -324,16 +268,16 @@ class Metadata
      *
      * @param array $config
      */
-    protected function setConfig(array $config)
+    protected function setConfig(array $config): void
     {
         if (isset($config['fields'])) {
-            foreach ($config['fields'] as $name => $field) {
+            foreach (array_keys($config['fields']) as $name) {
                 $this->validateField($config['fields'][$name]);
             }
         }
 
         if (isset($config['relations'])) {
-            foreach ($config['relations'] as $name => $relation) {
+            foreach (array_keys($config['relations']) as $name) {
                 $this->validateRelation($config['relations'][$name]);
             }
         }
@@ -349,7 +293,7 @@ class Metadata
      * @param  array $field
      * @throws \Exception
      */
-    protected function validateField(array &$field)
+    protected function validateField(array &$field): void
     {
         if (!isset($field['name']) || strlen($field['name']) == 0) {
             throw new \Exception(sprintf("The field or association mapping misses the 'name' attribute in entity '%s'.", $this->class));
@@ -389,7 +333,7 @@ class Metadata
      * @param  array $relation
      * @throws \Exception
      */
-    protected function validateRelation(array &$relation)
+    protected function validateRelation(array &$relation): void
     {
         if (isset($relation['targetEntity'])) {
 

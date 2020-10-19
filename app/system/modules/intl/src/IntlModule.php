@@ -17,7 +17,7 @@ class IntlModule extends Module
     /**
      * {@inheritdoc}
      */
-    public function main(App $app)
+    public function main(App $app): void
     {
         $app['translator'] = function () {
 
@@ -37,10 +37,8 @@ class IntlModule extends Module
 
     /**
      * Gets the current locale id.
-     *
-     * @return string
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->config('locale');
     }
@@ -50,27 +48,23 @@ class IntlModule extends Module
      *
      * @param string $locale
      */
-    public function setLocale($locale)
+    public function setLocale($locale): void
     {
         $this->config['locale'] = $locale;
     }
 
     /**
      * Gets the current locale tag.
-     *
-     * @return string
      */
-    public function getLocaleTag()
+    public function getLocaleTag(): string
     {
         return str_replace('_', '-', $this->getLocale());
     }
 
     /**
      * Gets the system's available languages.
-     *
-     * @return array
      */
-    public function getAvailableLanguages($locale = null)
+    public function getAvailableLanguages($locale = null): array
     {
         $languages = $this->getLanguages($locale);
         $territories = $this->getTerritories();
@@ -102,7 +96,7 @@ class IntlModule extends Module
      * @param  string $locale
      * @return array|null
      */
-    public function getLanguages($locale = null)
+    public function getLanguages($locale = null): ?array
     {
         return $this->getData('languages', $locale);
     }
@@ -113,7 +107,7 @@ class IntlModule extends Module
      * @param  string $locale
      * @return array|null
      */
-    public function getTerritories($locale = null)
+    public function getTerritories($locale = null): ?array
     {
         return $this->getData('territories', $locale);
     }
@@ -122,9 +116,8 @@ class IntlModule extends Module
      * Gets the continents list.
      *
      * @param  string $locale
-     * @return array
      */
-    public function getContinents($locale = null)
+    public function getContinents($locale = null): array
     {
         return $this->getTerritoryContainment(1, $locale);
     }
@@ -133,9 +126,8 @@ class IntlModule extends Module
      * Gets the subcontinents list.
      *
      * @param  string $locale
-     * @return array
      */
-    public function getSubContinents($locale = null)
+    public function getSubContinents($locale = null): array
     {
         return $this->getTerritoryContainment(2, $locale);
     }
@@ -144,9 +136,8 @@ class IntlModule extends Module
      * Gets the countries list.
      *
      * @param  string $locale
-     * @return array
      */
-    public function getCountries($locale = null)
+    public function getCountries($locale = null): array
     {
         return $this->getTerritoryContainment(3, $locale);
     }
@@ -157,7 +148,7 @@ class IntlModule extends Module
      * @param  string $locale
      * @return array|null
      */
-    public function getFormats($locale = null)
+    public function getFormats($locale = null): ?array
     {
         return $this->getData('formats', $locale);
     }
@@ -168,7 +159,7 @@ class IntlModule extends Module
      * @param string              $locale
      * @param TranslatorInterface $translator
      */
-    public function loadLocale($locale, TranslatorInterface $translator = null)
+    public function loadLocale($locale, TranslatorInterface $translator = null): void
     {
         $translator = $translator ?: App::translator();
 
@@ -194,7 +185,7 @@ class IntlModule extends Module
         }
     }
 
-    protected function getTerritoryContainment($level = 1, $locale = null)
+    protected function getTerritoryContainment($level = 1, $locale = null): array
     {
         static $tree;
 
@@ -237,7 +228,7 @@ class IntlModule extends Module
      * @param  string|null $locale
      * @return array|null
      */
-    protected function getData($name, $locale = null)
+    protected function getData($name, $locale = null): ?array
     {
         $locale = $locale ?: $this->getLocale();
 
@@ -252,7 +243,7 @@ class IntlModule extends Module
      * @param  string $name
      * @return array|null
      */
-    protected function getGeneric($name)
+    protected function getGeneric($name): ?array
     {
         return $this->parse("system/intl:data/{$name}.json");
     }
@@ -261,7 +252,7 @@ class IntlModule extends Module
      * @param  string $file
      * @return array|null
      */
-    protected function parse($file)
+    protected function parse($file): ?array
     {
         static $data = [];
 

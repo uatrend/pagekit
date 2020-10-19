@@ -11,7 +11,7 @@ trait NodeModelTrait
         find as modelFind;
     }
 
-    protected static $nodes;
+    protected static ?array $nodes = null;
 
     /**
      * Retrieves an entity by its identifier.
@@ -35,7 +35,7 @@ trait NodeModelTrait
      * @param  bool $cached
      * @return static[]
      */
-    public static function findAll($cached = false)
+    public static function findAll($cached = false): array
     {
         if (!$cached || null === self::$nodes) {
             self::$nodes = self::query()->orderBy('priority')->get();
@@ -49,9 +49,9 @@ trait NodeModelTrait
      *
      * @return static[]
      */
-    public static function findByMenu($menu, $cached = false)
+    public static function findByMenu($menu, $cached = false): array
     {
-        return array_filter(self::findAll($cached), function ($node) use ($menu) { return $menu == $node->menu; });
+        return array_filter(self::findAll($cached), fn($node) => $menu == $node->menu);
     }
 
     /**
@@ -79,7 +79,7 @@ trait NodeModelTrait
     /**
      * @Saving
      */
-    public static function saving($event, Node $node)
+    public static function saving($event, Node $node): void
     {
         $db = self::getConnection();
 
@@ -135,7 +135,7 @@ trait NodeModelTrait
     /**
      * @Deleting
      */
-    public static function deleting($event, Node $node)
+    public static function deleting($event, Node $node): void
     {
         // Update children's parents
         foreach (self::where('parent_id = ?', [$node->id])->get() as $child) {

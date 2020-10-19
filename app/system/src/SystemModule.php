@@ -11,14 +11,12 @@ class SystemModule extends Module
     /**
      * {@inheritdoc}
      */
-    public function main(App $app)
+    public function main(App $app): void
     {
         $app['system'] = $this;
         $app['isAdmin'] = false;
 
-        $app->factory('finder', function () {
-            return Finder::create();
-        });
+        $app->factory('finder', fn() => Finder::create());
 
         $app->extend('assets', function ($factory) use ($app) {
 
@@ -35,16 +33,11 @@ class SystemModule extends Module
         $app['module']->addLoader(function ($module) use ($app, $theme) {
 
             if (in_array($module['name'], $this->config['extensions'])) {
-
                 $module['type'] = 'extension';
-
                 $app['locator']->add("{$module['name']}:", $module['path']);
                 $app['locator']->add("views:{$module['name']}", "{$module['path']}/views");
-
-            } else if ($module['name'] == $theme) {
-
+            } elseif ($module['name'] == $theme) {
                 $module['type'] = 'theme';
-
                 $app['locator']->add('theme:', $module['path']);
                 $app['locator']->add('views:', "{$module['path']}/views");
             }
@@ -75,10 +68,8 @@ class SystemModule extends Module
 
     /**
      * Gets the system menu.
-     *
-     * @return array
      */
-    public function getMenu()
+    public function getMenu(): object
     {
         static $menu;
 

@@ -15,15 +15,9 @@ class AnnotationLoader implements LoaderInterface
      */
     protected $reader;
 
-    /**
-     * @var int
-     */
-    protected $routeIndex;
+    protected ?int $routeIndex = null;
 
-    /**
-     * @var string
-     */
-    protected $routeAnnotation = 'Pagekit\Routing\Annotation\Route';
+    protected string $routeAnnotation = 'Pagekit\Routing\Annotation\Route';
 
     /**
      * Constructor.
@@ -38,7 +32,7 @@ class AnnotationLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($class)
+    public function load($class): array
     {
         if (class_exists($class)) {
             $class = new \ReflectionClass($class);
@@ -67,7 +61,7 @@ class AnnotationLoader implements LoaderInterface
                     }
                 }
 
-                if ($count == count($routes)) {
+                if ($count === count($routes)) {
                     $this->addRoute($routes, $class, $method, new $this->routeAnnotation(), $globals);
                 }
             }
@@ -85,7 +79,7 @@ class AnnotationLoader implements LoaderInterface
      * @param RouteAnnotation   $annotation
      * @param array             $globals
      */
-    protected function addRoute(array &$routes, \ReflectionClass $class, \ReflectionMethod $method, $annotation, $globals)
+    protected function addRoute(array &$routes, \ReflectionClass $class, \ReflectionMethod $method, $annotation, $globals): void
     {
         $name = $annotation->getName() ?: $this->getDefaultRouteName($method);
         $path = $annotation->getPath() ?: $this->getDefaultRoutePath($method);
@@ -103,9 +97,8 @@ class AnnotationLoader implements LoaderInterface
 
     /**
      * @param  \ReflectionClass $class
-     * @return array
      */
-    protected function getGlobals(\ReflectionClass $class)
+    protected function getGlobals(\ReflectionClass $class): array
     {
         $globals = [
             'name'         => '',
@@ -133,10 +126,8 @@ class AnnotationLoader implements LoaderInterface
 
     /**
      * Get the annotation reader instance.
-     *
-     * @return Reader
      */
-    protected function getAnnotationReader()
+    protected function getAnnotationReader(): Reader
     {
         if (!$this->reader) {
             $this->reader = new SimpleAnnotationReader();
@@ -150,9 +141,8 @@ class AnnotationLoader implements LoaderInterface
      * Gets the default route path for a class method.
      *
      * @param  \ReflectionMethod $method
-     * @return string
      */
-    protected function getDefaultRoutePath(\ReflectionMethod $method)
+    protected function getDefaultRoutePath(\ReflectionMethod $method): string
     {
         $action = strtolower('/'.$this->parseControllerActionName($method));
 
@@ -167,9 +157,8 @@ class AnnotationLoader implements LoaderInterface
      * Gets the default route name for a class method.
      *
      * @param  \ReflectionMethod $method
-     * @return string
      */
-    protected function getDefaultRouteName(\ReflectionMethod $method)
+    protected function getDefaultRouteName(\ReflectionMethod $method): string
     {
         if ('index' === $action = strtolower($this->parseControllerActionName($method))) {
             $action = '';
@@ -191,9 +180,8 @@ class AnnotationLoader implements LoaderInterface
      *
      * @param  \ReflectionMethod $method
      * @throws \LogicException
-     * @return string
      */
-    protected function parseControllerActionName(\ReflectionMethod $method)
+    protected function parseControllerActionName(\ReflectionMethod $method): string
     {
         if (!preg_match('/([a-zA-Z0-9]+)Action$/', $method->name, $matches)) {
             throw new \LogicException(sprintf('Unable to retrieve action name. The controller class method %s does not follow the naming convention. (e.g. indexAction)', $method->name));

@@ -11,7 +11,7 @@ trait CommentModelTrait
     /**
      * @Deleting
      */
-    public static function deleting($event, Comment $comment)
+    public static function deleting($event, Comment $comment): void
     {
         self::where(['parent_id = :old_parent'], [':old_parent' => $comment->id])->update(['parent_id' => $comment->parent_id]);
     }

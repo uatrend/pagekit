@@ -2,11 +2,12 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\SlugifyFilter;
 
-class SlugifyTest extends \PHPUnit\Framework\TestCase
+class SlugifyTest extends TestCase
 {
-    public function testFilter()
+    public function testFilter(): void
     {
         $filter = new SlugifyFilter;
 

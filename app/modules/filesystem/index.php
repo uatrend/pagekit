@@ -11,13 +11,9 @@ return [
 
     'main' => function ($app) {
 
-        $app['file'] = function () {
-            return new Filesystem;
-        };
+        $app['file'] = fn() => new Filesystem;
 
-        $app['locator'] = function () {
-            return new Locator($this->config['path']);
-        };
+        $app['locator'] = fn() => new Locator($this->config['path']);
 
         $app['module']->addLoader(function ($module) use ($app) {
 

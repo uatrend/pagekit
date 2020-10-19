@@ -9,9 +9,7 @@ return [
 
     'main' => function ($app) {
 
-        $app['package'] = function ($app) {
-            return (new PackageFactory())->addPath($app['path'].'/packages/*/*/composer.json');
-        };
+        $app['package'] = fn($app) => (new PackageFactory())->addPath($app['path'].'/packages/*/*/composer.json');
 
         if ($this->config['enabled']) {
 
@@ -40,9 +38,7 @@ return [
 
             });
 
-            $app->error(function (NotFoundException $e) use ($app) {
-                return $app['response']->redirect('@installer');
-            });
+            $app->error(fn(NotFoundException $e) => $app['response']->redirect('@installer'));
 
         }
 

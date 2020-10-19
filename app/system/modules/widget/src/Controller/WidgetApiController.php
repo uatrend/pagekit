@@ -13,7 +13,7 @@ class WidgetApiController
     /**
      * @Route("/", methods="GET")
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         $widgets = Widget::findAll();
         $positions = App::position()->all();
@@ -35,7 +35,7 @@ class WidgetApiController
     /**
      * @Route("/{id}", methods="GET", requirements={"id"="\d+"})
      */
-    public function getAction($id)
+    public function getAction($id): Widget
     {
         if (!$widget = Widget::find($id)) {
             App::abort(404, 'Widget not found.');
@@ -47,7 +47,7 @@ class WidgetApiController
     /**
      * @Request({"position", "ids": "array"}, csrf=true)
      */
-    public function assignAction($position, $ids)
+    public function assignAction($position, $ids): array
     {
         App::position()->assign($position, $ids);
 
@@ -59,11 +59,11 @@ class WidgetApiController
      * @Route("/{id}", methods="POST", requirements={"id"="\d+"})
      * @Request({"widget": "array", "id": "int"}, csrf=true)
      */
-    public function saveAction($data, $id = 0)
+    public function saveAction($data, $id = 0): array
     {
         if (!$id) {
             $widget = Widget::create();
-        } else if (!$widget = Widget::find($id)) {
+        } elseif (!$widget = Widget::find($id)) {
             App::abort(404, 'Widget not found.');
         }
 
@@ -80,7 +80,7 @@ class WidgetApiController
      * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
      * @Request({"id": "int"}, csrf=true)
      */
-    public function deleteAction($id)
+    public function deleteAction($id): array
     {
         if (!$widget = Widget::find($id)) {
             App::abort(404, 'Widget not found.');
@@ -95,7 +95,7 @@ class WidgetApiController
      * @Route(methods="POST")
      * @Request({"ids": "int[]"}, csrf=true)
      */
-    public function copyAction($ids = [])
+    public function copyAction($ids = []): array
     {
         foreach ($ids as $id) {
             if ($widget = Widget::find((int) $id)) {
@@ -114,7 +114,7 @@ class WidgetApiController
      * @Route("/bulk", methods="POST")
      * @Request({"widgets": "array"}, csrf=true)
      */
-    public function bulkSaveAction($widgets = [])
+    public function bulkSaveAction($widgets = []): array
     {
         foreach ($widgets as $data) {
             $this->saveAction($data, isset($data['id']) ? $data['id'] : 0);
@@ -127,7 +127,7 @@ class WidgetApiController
      * @Route("/bulk", methods="DELETE")
      * @Request({"ids": "array"}, csrf=true)
      */
-    public function bulkDeleteAction($ids = [])
+    public function bulkDeleteAction($ids = []): array
     {
         foreach (array_filter($ids) as $id) {
             $this->deleteAction($id);

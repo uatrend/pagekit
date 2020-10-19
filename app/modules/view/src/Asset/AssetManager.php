@@ -2,6 +2,10 @@
 
 namespace Pagekit\View\Asset;
 
+use Pagekit\View\Asset\AssetInterface;
+use Pagekit\View\Asset\AssetCollection;
+use Pagekit\View\Asset\AssetFactory;
+
 class AssetManager implements \IteratorAggregate
 {
     /**
@@ -9,35 +13,17 @@ class AssetManager implements \IteratorAggregate
      */
     protected $filters;
 
-    /**
-     * @var AssetFactory
-     */
-    protected $factory;
+    protected \Pagekit\View\Asset\AssetFactory $factory;
 
-    /**
-     * @var AssetCollection
-     */
-    protected $registered;
+    protected \Pagekit\View\Asset\AssetCollection $registered;
 
-    /**
-     * @var array
-     */
-    protected $queue = [];
+    protected array $queue = [];
 
-    /**
-     * @var array
-     */
-    protected $lazy = [];
+    protected array $lazy = [];
 
-    /**
-     * @var array
-     */
-    protected $combine = [];
+    protected array $combine = [];
 
-    /**
-     * @var string
-     */
-    protected $cache;
+    protected ?string $cache = null;
 
     /**
      * Constructor.
@@ -69,9 +55,8 @@ class AssetManager implements \IteratorAggregate
      * Gets a registered asset.
      *
      * @param  string $name
-     * @return AssetInterface
      */
-    public function get($name)
+    public function get($name): ?\Pagekit\View\Asset\AssetInterface
     {
         return $this->registered->get($name);
     }
@@ -83,9 +68,8 @@ class AssetManager implements \IteratorAggregate
      * @param  mixed  $source
      * @param  array  $dependencies
      * @param  array  $options
-     * @return AssetInterface
      */
-    public function add($name, $source = null, $dependencies = [], $options = [])
+    public function add($name, $source = null, $dependencies = [], $options = []): ?AssetInterface
     {
         if ($source !== null) {
             $this->registered->add($asset = $this->factory->create($name, $source, $dependencies, $options));
@@ -102,9 +86,8 @@ class AssetManager implements \IteratorAggregate
      * Removes an asset from the queue.
      *
      * @param  string $name
-     * @return self
      */
-    public function remove($name)
+    public function remove($name): self
     {
         unset($this->queue[$name]);
 
@@ -119,10 +102,8 @@ class AssetManager implements \IteratorAggregate
 
     /**
      * Removes all assets from the queue.
-     *
-     * @return self
      */
-    public function removeAll()
+    public function removeAll(): self
     {
         $this->queue = [];
         $this->lazy = [];
@@ -137,9 +118,8 @@ class AssetManager implements \IteratorAggregate
      * @param  mixed  $source
      * @param  array  $dependencies
      * @param  array  $options
-     * @return AssetInterface
      */
-    public function register($name, $source, $dependencies = [], $options = [])
+    public function register($name, $source, $dependencies = [], $options = []): AssetInterface
     {
         $this->registered->add($asset = $this->factory->create($name, $source, $dependencies, $options));
 
@@ -156,9 +136,8 @@ class AssetManager implements \IteratorAggregate
      * Unregisters an asset.
      *
      * @param  string $name
-     * @return self
      */
-    public function unregister($name)
+    public function unregister($name): self
     {
         $this->registered->remove($name);
         $this->remove($name);
@@ -172,9 +151,8 @@ class AssetManager implements \IteratorAggregate
      * @param  string $name
      * @param  string $pattern
      * @param  array  $filters
-     * @return self
      */
-    public function combine($name, $pattern, $filters = [])
+    public function combine($name, $pattern, $filters = []): self
     {
         $this->combine[$name] = compact('pattern', 'filters');
 
@@ -185,9 +163,8 @@ class AssetManager implements \IteratorAggregate
      * Gets queued assets with resolved dependencies, optionally all registered assets.
      *
      * @param  bool $registered
-     * @return AssetCollection
      */
-    public function all($registered = false)
+    public function all($registered = false): AssetCollection
     {
         if ($registered) {
             return $this->registered;
@@ -211,7 +188,7 @@ class AssetManager implements \IteratorAggregate
     /**
      * IteratorAggregate interface implementation.
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return $this->all()->getIterator();
     }
@@ -219,7 +196,7 @@ class AssetManager implements \IteratorAggregate
     /**
      * Gets the asset factory.
      */
-    public function getFactory()
+    public function getFactory(): AssetFactory
     {
         return $this->factory;
     }
@@ -233,7 +210,7 @@ class AssetManager implements \IteratorAggregate
      * @return AssetInterface[]
      * @throws \RuntimeException
      */
-    protected function resolveDependencies($asset, &$resolved = [], &$unresolved = [])
+    protected function resolveDependencies($asset, &$resolved = [], &$unresolved = []): array
     {
         $name = $asset->getName();
         $unresolved[$name] = $asset;
@@ -276,9 +253,8 @@ class AssetManager implements \IteratorAggregate
      * @param  AssetCollection $assets
      * @param  string          $name
      * @param  array           $options
-     * @return AssetCollection
      */
-    protected function doCombine(AssetCollection $assets, $name, $options = [])
+    protected function doCombine(AssetCollection $assets, $name, $options = []): AssetCollection
     {
         extract($options);
 
@@ -332,9 +308,8 @@ class AssetManager implements \IteratorAggregate
      * Converts a glob to a regular expression.
      *
      * @param  string $glob
-     * @return string
      */
-    protected function globToRegex($glob)
+    protected function globToRegex($glob): string
     {
         $regex  = '';
         $group  = 0;

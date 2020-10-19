@@ -6,10 +6,7 @@ use Pagekit\Util\Arr;
 
 class Package implements PackageInterface
 {
-    /**
-     * @var array
-     */
-    protected $data;
+    protected array $data;
 
     /**
      * Constructor.
@@ -32,7 +29,7 @@ class Package implements PackageInterface
     /**
      * {@inheritdoc}
      */
-    public function set($key, $value)
+    public function set($key, $value): void
     {
         Arr::set($this->data, $key, $value);
     }
@@ -40,7 +37,7 @@ class Package implements PackageInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->get('name');
     }
@@ -48,7 +45,7 @@ class Package implements PackageInterface
     /**
      * {@inheritdoc}
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->get('type');
     }
@@ -56,7 +53,7 @@ class Package implements PackageInterface
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->data;
     }

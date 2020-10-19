@@ -7,23 +7,20 @@ use Doctrine\DBAL\Driver\Statement;
 use Doctrine\DBAL\Platforms\MySqlPlatform;
 use Doctrine\DBAL\Types\Type;
 use Pagekit\Database\Connection;
+use Pagekit\Database\Query\QueryBuilder;
 use PDO;
 
 class QueryBuilder
 {
     /**
      * The Connection.
-     *
-     * @var Connection
      */
-    protected $connection;
+    protected \Pagekit\Database\Connection $connection;
 
     /**
      * The query parts.
-     *
-     * @var array
      */
-    protected $parts = [
+    protected array $parts = [
         'select' => [],
         'from' => null,
         'join' => [],
@@ -38,10 +35,8 @@ class QueryBuilder
 
     /**
      * The query parameters.
-     *
-     * @var array
      */
-    protected $params = [];
+    protected array $params = [];
 
     /**
      * Constructor.
@@ -55,10 +50,8 @@ class QueryBuilder
 
     /**
      * Gets the connection for the query builder.
-     *
-     * @return Connection
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
         return $this->connection;
     }
@@ -67,9 +60,8 @@ class QueryBuilder
      * Creates and adds a "select" to the query.
      *
      * @param  mixed $columns
-     * @return self
      */
-    public function select($columns = ['*'])
+    public function select($columns = ['*']): QueryBuilder
     {
         return $this->addPart('select', is_array($columns) ? $columns : func_get_args());
     }
@@ -78,9 +70,8 @@ class QueryBuilder
      * Creates and sets a "from" to the query.
      *
      * @param  string $table
-     * @return self
      */
-    public function from($table)
+    public function from($table): QueryBuilder
     {
         return $this->setPart('from', $table);
     }
@@ -91,9 +82,8 @@ class QueryBuilder
      * @param  string $table
      * @param  string $condition
      * @param  string $type
-     * @return self
      */
-    public function join($table, $condition = null, $type = 'inner')
+    public function join($table, $condition = null, $type = 'inner'): QueryBuilder
     {
         return $this->addPart('join', compact('type', 'table', 'condition'));
     }
@@ -103,9 +93,8 @@ class QueryBuilder
      *
      * @param  string $table
      * @param  string $condition
-     * @return self
      */
-    public function innerJoin($table, $condition = null)
+    public function innerJoin($table, $condition = null): QueryBuilder
     {
         return $this->join($table, $condition);
     }
@@ -115,9 +104,8 @@ class QueryBuilder
      *
      * @param  string $table
      * @param  string $condition
-     * @return self
      */
-    public function leftJoin($table, $condition = null)
+    public function leftJoin($table, $condition = null): QueryBuilder
     {
         return $this->join($table, $condition, 'left');
     }
@@ -127,9 +115,8 @@ class QueryBuilder
      *
      * @param  string $table
      * @param  string $condition
-     * @return self
      */
-    public function rightJoin($table, $condition = null)
+    public function rightJoin($table, $condition = null): QueryBuilder
     {
         return $this->join($table, $condition, 'right');
     }
@@ -139,9 +126,8 @@ class QueryBuilder
      *
      * @param  mixed $condition
      * @param  array $params
-     * @return self
      */
-    public function where($condition, array $params = [])
+    public function where($condition, array $params = []): QueryBuilder
     {
         return $this->addWhere($condition, $params);
     }
@@ -151,9 +137,8 @@ class QueryBuilder
      *
      * @param  mixed $condition
      * @param  array $params
-     * @return self
      */
-    public function orWhere($condition, array $params = [])
+    public function orWhere($condition, array $params = []): QueryBuilder
     {
         return $this->addWhere($condition, $params, CompositeExpression::TYPE_OR);
     }
@@ -165,9 +150,8 @@ class QueryBuilder
      * @param  mixed  $values
      * @param  bool   $not
      * @param  string $type
-     * @return self
      */
-    public function whereIn($column, $values, $not = false, $type = null)
+    public function whereIn($column, $values, $not = false, $type = null): QueryBuilder
     {
         $params = [];
 
@@ -196,9 +180,8 @@ class QueryBuilder
      * @param  string $column
      * @param  mixed  $values
      * @param  bool   $not
-     * @return self
      */
-    public function orWhereIn($column, $values, $not = false)
+    public function orWhereIn($column, $values, $not = false): QueryBuilder
     {
         return $this->whereIn($column, $values, $not, CompositeExpression::TYPE_OR);
     }
@@ -209,9 +192,8 @@ class QueryBuilder
      * @param  Closure $callback
      * @param  bool    $not
      * @param  string  $type
-     * @return self
      */
-    public function whereExists(Closure $callback, $not = false, $type = null)
+    public function whereExists(Closure $callback, $not = false, $type = null): QueryBuilder
     {
         $query = $this->newQuery();
 
@@ -229,9 +211,8 @@ class QueryBuilder
      *
      * @param  Closure $callback
      * @param  bool    $not
-     * @return self
      */
-    public function orWhereExists(Closure $callback, $not = false)
+    public function orWhereExists(Closure $callback, $not = false): QueryBuilder
     {
         return $this->whereExists($callback, $not, CompositeExpression::TYPE_OR);
     }
@@ -243,9 +224,8 @@ class QueryBuilder
      * @param  mixed  $values
      * @param  bool   $not
      * @param  string $type
-     * @return self
      */
-    public function whereInSet($column, $values, $not = false, $type = null)
+    public function whereInSet($column, $values, $not = false, $type = null): QueryBuilder
     {
         $not    = $not ? ' NOT' : '';
         $values = (array) $values;
@@ -265,9 +245,8 @@ class QueryBuilder
      * @param  mixed  $condition
      * @param  array  $params
      * @param  string $type
-     * @return self
      */
-    protected function addWhere($condition, array $params, $type = null)
+    protected function addWhere($condition, array $params, $type = null): QueryBuilder
     {
         $args = [];
 
@@ -321,9 +300,8 @@ class QueryBuilder
      * Creates and adds a "group by" to the query.
      *
      * @param  mixed $groupBy
-     * @return self
      */
-    public function groupBy($groupBy)
+    public function groupBy($groupBy): QueryBuilder
     {
         return $this->addPart('group', is_array($groupBy) ? $groupBy : func_get_args());
     }
@@ -333,9 +311,8 @@ class QueryBuilder
      *
      * @param  mixed  $having
      * @param  string $type
-     * @return self
      */
-    public function having($having, $type = CompositeExpression::TYPE_AND)
+    public function having($having, $type = CompositeExpression::TYPE_AND): QueryBuilder
     {
         $args   = func_get_args();
         $having = $this->getPart('having');
@@ -354,9 +331,8 @@ class QueryBuilder
      * Creates and adds a "or having" to the query.
      *
      * @param  mixed $having
-     * @return self
      */
-    public function orHaving($having)
+    public function orHaving($having): QueryBuilder
     {
         return $this->having($having, CompositeExpression::TYPE_OR);
     }
@@ -366,9 +342,8 @@ class QueryBuilder
      *
      * @param  string $sort
      * @param  string $order
-     * @return self
      */
-    public function orderBy($sort, $order = null)
+    public function orderBy($sort, $order = null): QueryBuilder
     {
         return $this->addPart('order', "$sort ".($order ?: 'ASC'));
     }
@@ -377,9 +352,8 @@ class QueryBuilder
      * Sets the offset of the query.
      *
      * @param  int $offset
-     * @return self
      */
-    public function offset($offset)
+    public function offset($offset): self
     {
         $this->parts['offset'] = $offset;
 
@@ -390,9 +364,8 @@ class QueryBuilder
      * Sets the limit of the query.
      *
      * @param  int $limit
-     * @return self
      */
-    public function limit($limit)
+    public function limit($limit): self
     {
         $this->parts['limit'] = $limit;
 
@@ -429,10 +402,8 @@ class QueryBuilder
 
     /**
      * Gets all query parts.
-     *
-     * @return array
      */
-    public function getParts()
+    public function getParts(): array
     {
         return $this->parts;
     }
@@ -442,9 +413,8 @@ class QueryBuilder
      *
      * @param  string $name
      * @param  mixed  $parts
-     * @return self
      */
-    public function setPart($name, $parts)
+    public function setPart($name, $parts): self
     {
         if (is_array($this->parts[$name]) && !is_array($parts)) {
             $parts = [$parts];
@@ -460,9 +430,8 @@ class QueryBuilder
      *
      * @param  string $name
      * @param  mixed  $parts
-     * @return self
      */
-    public function addPart($name, $parts)
+    public function addPart($name, $parts): self
     {
         if (is_array($this->parts[$name]) && !is_array($parts)) {
             $parts = [$parts];
@@ -470,7 +439,7 @@ class QueryBuilder
 
         if (in_array($name, ['select', 'set', 'order', 'group'])) {
             $this->parts[$name] = array_merge($this->parts[$name], $parts);
-        } else if (is_array($this->parts[$name])) {
+        } elseif (is_array($this->parts[$name])) {
             $this->parts[$name][] = $parts;
         } else {
             $this->parts[$name] = $parts;
@@ -483,9 +452,8 @@ class QueryBuilder
      * Execute the query and get all results.
      *
      * @param  mixed $columns
-     * @return array
      */
-    public function get($columns = ['*'])
+    public function get($columns = ['*']): array
     {
         return $this->execute($columns)->fetchAll();
     }
@@ -505,9 +473,8 @@ class QueryBuilder
      * Execute the query and get the "count" result.
      *
      * @param  string $column
-     * @return int
      */
-    public function count($column = '*')
+    public function count($column = '*'): int
     {
         return (int) $this->aggregate('count', $column);
     }
@@ -579,9 +546,8 @@ class QueryBuilder
      * Execute the "select" query.
      *
      * @param  mixed $columns
-     * @return Statement
      */
-    public function execute($columns = ['*'])
+    public function execute($columns = ['*']): Statement
     {
         if (empty($this->parts['select'])) {
             $this->select($columns);
@@ -594,9 +560,8 @@ class QueryBuilder
      * Execute the "update" query with the given values.
      *
      * @param  array $values
-     * @return int
      */
-    public function update(array $values)
+    public function update(array $values): int
     {
         foreach ($values as $key => $value) {
             $name          = $this->parameter($key);
@@ -609,20 +574,16 @@ class QueryBuilder
 
     /**
      * Execute the "delete" query.
-     *
-     * @return int
      */
-    public function delete()
+    public function delete(): int
     {
         return $this->executeQuery('delete');
     }
 
     /**
      * Gets the query SQL.
-     *
-     * @return string
      */
-    public function getSQL()
+    public function getSQL(): string
     {
         return $this->getSQLForSelect();
     }
@@ -675,10 +636,8 @@ class QueryBuilder
 
     /**
      * Creates the "select" SQL string from the query parts.
-     *
-     * @return string
      */
-    protected function getSQLForSelect()
+    protected function getSQLForSelect(): string
     {
         extract($this->parts);
 
@@ -709,10 +668,8 @@ class QueryBuilder
 
     /**
      * Creates the "update" SQL string from the query parts.
-     *
-     * @return string
      */
-    protected function getSQLForUpdate()
+    protected function getSQLForUpdate(): string
     {
         extract($this->parts);
 
@@ -733,10 +690,8 @@ class QueryBuilder
 
     /**
      * Creates the "delete" SQL string from the query parts.
-     *
-     * @return string
      */
-    protected function getSQLForDelete()
+    protected function getSQLForDelete(): string
     {
         extract($this->parts);
 
@@ -757,9 +712,8 @@ class QueryBuilder
      * Tries to guess param types
      *
      * @param  array $params
-     * @return array
      */
-    protected function guessParamTypes(array $params = [])
+    protected function guessParamTypes(array $params = []): array
     {
         $types = [];
         foreach ($params as $key => $param) {

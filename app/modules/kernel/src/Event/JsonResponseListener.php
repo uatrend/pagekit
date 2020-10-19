@@ -10,7 +10,7 @@ class JsonResponseListener implements EventSubscriberInterface
     /**
      * Transforms the body of a JSON request to POST parameters.
      */
-    public function onRequest($event, $request)
+    public function onRequest($event, $request): void
     {
         if ('json' === $request->getContentType() && $data = @json_decode($request->getContent(), true)) {
             $request->request->replace($data);
@@ -20,7 +20,7 @@ class JsonResponseListener implements EventSubscriberInterface
     /**
      * Converts a array to a JSON response.
      */
-    public function onController($event)
+    public function onController($event): void
     {
         $result = $event->getControllerResult();
 
@@ -32,7 +32,7 @@ class JsonResponseListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'request'    => ['onRequest', 130],

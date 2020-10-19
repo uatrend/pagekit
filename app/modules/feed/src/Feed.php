@@ -10,10 +10,7 @@ abstract class Feed implements FeedInterface
     const RSS1 = 'rss1';
     const RSS2 = 'rss2';
 
-    /**
-     * @var string
-     */
-    protected $encoding = 'utf-8';
+    protected string $encoding = 'utf-8';
 
     /**
      * @var string
@@ -23,17 +20,17 @@ abstract class Feed implements FeedInterface
     /**
      * @var ItemInterface[]
      */
-    protected $items = [];
+    protected array $items = [];
 
     /**
      * @var string[]
      */
-    protected $cdata = ['description', 'content:encoded', 'summary'];
+    protected array $cdata = ['description', 'content:encoded', 'summary'];
 
     /**
      * @var string[]
      */
-    protected $namespaces = [
+    protected array $namespaces = [
         'content' => 'http://purl.org/rss/1.0/modules/content/',
         'wfw'     => 'http://wellformedweb.org/CommentAPI/',
         'atom'    => 'http://www.w3.org/2005/Atom',
@@ -51,7 +48,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function getMimeType()
+    public function getMimeType(): string
     {
         return $this->mime;
     }
@@ -67,7 +64,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function addNamespace($prefix, $uri)
+    public function addNamespace($prefix, $uri): FeedInterface
     {
         $this->namespaces[$prefix] = $uri;
         return $this;
@@ -76,7 +73,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function getEncoding()
+    public function getEncoding(): string
     {
         return $this->encoding;
     }
@@ -84,7 +81,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function setEncoding($encoding)
+    public function setEncoding($encoding): FeedInterface
     {
         $this->encoding = $encoding;
         return $this;
@@ -93,7 +90,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function getCDATA()
+    public function getCDATA(): array
     {
         return $this->cdata;
     }
@@ -101,7 +98,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function addCDATA(array $properties)
+    public function addCDATA(array $properties): FeedInterface
     {
         $this->cdata += $properties;
         return $this;
@@ -110,7 +107,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function createItem(array $elements = [])
+    public function createItem(array $elements = []): ItemInterface
     {
         return (new $this->item)->addElements($elements);
     }
@@ -118,7 +115,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function addItem(ItemInterface $item)
+    public function addItem(ItemInterface $item): FeedInterface
     {
         $this->items[] = $item;
         return $this;
@@ -127,7 +124,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function setTitle($title)
+    public function setTitle($title): FeedInterface
     {
         return $this->setElement('title', $title);
     }
@@ -135,7 +132,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function setLink($link)
+    public function setLink($link): FeedInterface
     {
         return $this->setElement('link', $link);
     }
@@ -143,7 +140,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function setImage($title, $link, $url)
+    public function setImage($title, $link, $url): FeedInterface
     {
         return $this->setElement('image', compact('title', 'link', 'url'));
     }
@@ -151,7 +148,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function setDescription($description)
+    public function setDescription($description): FeedInterface
     {
         return $this->setElement('description', $description);
     }
@@ -159,7 +156,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function setSelfLink($href)
+    public function setSelfLink($href): FeedInterface
     {
         return $this->setAtomLink($href, 'self', $this->getMimeType());
     }
@@ -167,7 +164,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function setAtomLink($href, $rel = '', $type = '', $hreflang = '', $title = '', $length = 0)
+    public function setAtomLink($href, $rel = '', $type = '', $hreflang = '', $title = '', $length = 0): FeedInterface
     {
         return $this->setElement('atom:link', null, array_filter(compact('href', 'rel', 'type', 'hreflang', 'title', 'length')));
     }
@@ -175,7 +172,7 @@ abstract class Feed implements FeedInterface
     /**
      * {@inheritdoc}
      */
-    public function generate()
+    public function generate(): string
     {
         $doc = $this->build();
 
@@ -202,17 +199,13 @@ abstract class Feed implements FeedInterface
         return $this->generate();
     }
 
-    /**
-     * @return \DOMDocument
-     */
-    abstract protected function build();
+    abstract protected function build(): \DOMDocument;
 
     /**
      * @param  \DOMDocument $doc
      * @param  array        $element
-     * @return \DOMElement
      */
-    protected function buildElement(\DOMDocument $doc, array $element)
+    protected function buildElement(\DOMDocument $doc, array $element): \DOMElement
     {
         list($name, $value, $attributes) = $element;
 
@@ -242,9 +235,8 @@ abstract class Feed implements FeedInterface
     /**
      * @param  \DOMElement $element
      * @param  array       $attributes
-     * @return \DOMElement
      */
-    protected function buildAttributes(\DOMElement $element, array $attributes = [])
+    protected function buildAttributes(\DOMElement $element, array $attributes = []): \DOMElement
     {
         foreach ($attributes as $name => $value) {
             $element->setAttribute($name, $value);

@@ -2,42 +2,40 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\PregReplaceFilter;
 
-class PregReplaceTest extends \PHPUnit\Framework\TestCase
+class PregReplaceTest extends TestCase
 {
-    /**
-     * @var PregReplace
-     **/
-    protected $filter;
+    protected ?PregReplaceFilter $filter = null;
 
     public function setUp(): void
     {
         $this->filter = new PregReplaceFilter;
     }
 
-    public function testRuntimeException()
+    public function testRuntimeException(): void
     {
         $this->expectException(\RuntimeException::class);
 
         $this->filter->filter('foo');
     }
 
-    public function testModifierE()
+    public function testModifierE(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         $this->filter->setPattern('/foo/e');
     }
 
-    public function testPatternArgument()
+    public function testPatternArgument(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
         $this->filter->setPattern(null);
     }
 
-    public function testReplacementArgument()
+    public function testReplacementArgument(): void
     {
         $this->expectException(\InvalidArgumentException::class);
 
@@ -47,7 +45,7 @@ class PregReplaceTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider provider
      */
-    public function testFilter($pattern, $replacement, $in, $out)
+    public function testFilter($pattern, $replacement, $in, $out): void
     {
         $this->filter->setPattern($pattern);
         $this->assertSame($this->filter->getPattern(), $pattern);
@@ -58,7 +56,7 @@ class PregReplaceTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($this->filter->filter($in), $out);
     }
 
-    public function provider()
+    public function provider(): array
     {
         return [
             ['/foo/i', '', 'Foobar', 'bar'],

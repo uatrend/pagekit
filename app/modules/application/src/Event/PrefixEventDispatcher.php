@@ -4,15 +4,9 @@ namespace Pagekit\Event;
 
 class PrefixEventDispatcher implements EventDispatcherInterface
 {
-    /**
-     * @var string
-     */
-    protected $prefix = '';
+    protected string $prefix = '';
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected \Pagekit\Event\EventDispatcherInterface $events;
 
     /**
      * Constructor.
@@ -29,7 +23,7 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function on($event, $listener, $priority = 0)
+    public function on($event, $listener, $priority = 0): void
     {
         $this->events->on($this->prefix.$event, $listener, $priority);
     }
@@ -37,7 +31,7 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function off($event, $listener = null)
+    public function off($event, $listener = null): void
     {
         $this->events->off($this->prefix.$event, $listener);
     }
@@ -45,7 +39,7 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe(EventSubscriberInterface $subscriber)
+    public function subscribe(EventSubscriberInterface $subscriber): void
     {
         $this->events->subscribe($subscriber);
     }
@@ -53,7 +47,7 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function unsubscribe(EventSubscriberInterface $subscriber)
+    public function unsubscribe(EventSubscriberInterface $subscriber): void
     {
         $this->events->unsubscribe($subscriber);
     }
@@ -61,11 +55,11 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function trigger($event, array $arguments = [])
+    public function trigger($event, array $arguments = []): EventInterface
     {
         if (is_string($event)) {
             $event = $this->prefix.$event;
-        } else if ($event instanceof EventInterface) {
+        } elseif ($event instanceof EventInterface) {
             $event->setName($this->prefix.$event->getName());
         }
 
@@ -75,7 +69,7 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function hasListeners($event = null)
+    public function hasListeners($event = null): bool
     {
         return $this->events->hasListeners($event);
     }
@@ -83,7 +77,7 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getListeners($event = null)
+    public function getListeners($event = null): array
     {
         return $this->events->getListeners($event);
     }
@@ -91,7 +85,7 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getListenerPriority($event, $listener)
+    public function getListenerPriority($event, $listener): ?int
     {
         return $this->events->getListenerPriority($event, $listener);
     }
@@ -99,7 +93,7 @@ class PrefixEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getEventClass()
+    public function getEventClass(): string
     {
         return $this->events->getEventClass();
     }

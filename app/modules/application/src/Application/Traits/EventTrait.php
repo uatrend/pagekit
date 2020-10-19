@@ -9,7 +9,7 @@ trait EventTrait
     /**
      * @see EventDispatcher::on()
      */
-    public static function on($event, $callback, $priority = 0)
+    public static function on($event, $callback, $priority = 0): void
     {
         if (static::$instance->booted) {
             static::events()->on($event, $callback, $priority);
@@ -26,7 +26,7 @@ trait EventTrait
     /**
      * @see EventDispatcher::subscribe()
      */
-    public static function subscribe(EventSubscriberInterface $subscriber)
+    public static function subscribe(EventSubscriberInterface $subscriber): void
     {
         $subscribers = func_num_args() > 1 ? func_get_args() : [$subscriber];
 

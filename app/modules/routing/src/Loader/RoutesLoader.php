@@ -8,20 +8,11 @@ use Symfony\Component\Routing\RouteCollection;
 
 class RoutesLoader implements LoaderInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected \Pagekit\Event\EventDispatcherInterface $events;
 
-    /**
-     * @var AnnotationLoader
-     */
-    protected $loader;
+    protected \Pagekit\Routing\Loader\AnnotationLoader $loader;
 
-    /**
-     * @var RouteCollection
-     */
-    protected $routes;
+    protected ?RouteCollection $routes = null;
 
     /**
      * Constructor.
@@ -38,7 +29,7 @@ class RoutesLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function load($routes)
+    public function load($routes): RouteCollection
     {
         $this->routes = new RouteCollection();
 
@@ -72,7 +63,7 @@ class RoutesLoader implements LoaderInterface
      *
      * @param Route $route
      */
-    protected function addRoute($route)
+    protected function addRoute($route): void
     {
         $this->routes->add($route->getName(), $route);
         $this->events->trigger('route.configure', [$route, $this->routes]);
@@ -84,7 +75,7 @@ class RoutesLoader implements LoaderInterface
      * @param Route  $route
      * @param string $controller
      */
-    protected function addController($route, $controller)
+    protected function addController($route, $controller): void
     {
         try {
 

@@ -19,21 +19,19 @@ class ResponseListener implements EventSubscriberInterface
     /**
      * Filter the response content.
      */
-    public function onResponse($event, $request, $response)
+    public function onResponse($event, $request, $response): void
     {
         if (!is_string($content = $response->getContent())) {
             return;
         }
 
-        $response->setContent(preg_replace_callback(self::REGEX_URL, function ($matches) {
-            return sprintf(' %s="%s"', $matches['attr'], App::url($matches['url']));
-        }, $content));
+        $response->setContent(preg_replace_callback(self::REGEX_URL, fn($matches) => sprintf(' %s="%s"', $matches['attr'], App::url($matches['url'])), $content));
     }
 
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'response' => ['onResponse', -20]

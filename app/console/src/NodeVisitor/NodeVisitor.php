@@ -8,30 +8,18 @@ use Symfony\Component\Templating\EngineInterface;
 
 abstract class NodeVisitor
 {
-    /**
-     * @var string
-     */
-    public $file;
+    public ?string $file = null;
 
-    /**
-     * @var array
-     */
-    public $results = [];
+    public array $results = [];
 
-    /**
-     * @var EngineInterface
-     */
-    public $engine;
+    public EngineInterface $engine;
 
     public function __construct(EngineInterface $engine)
     {
         $this->engine = $engine;
     }
 
-    /**
-     * @return EngineInterface
-     */
-    public function getEngine()
+    public function getEngine(): EngineInterface
     {
         return $this->engine;
     }
@@ -40,15 +28,13 @@ abstract class NodeVisitor
      * Starts traversing an array of files.
      *
      * @param  array $files
-     * @return array
      */
-    abstract public function traverse(array $files);
+    abstract public function traverse(array $files): array;
 
     /**
      * @param  string $name
-     * @return string
      */
-    protected function loadTemplate($name)
+    protected function loadTemplate($name): string
     {
         return $this->file = $name;
     }

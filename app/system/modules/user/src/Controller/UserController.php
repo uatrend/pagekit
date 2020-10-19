@@ -15,7 +15,7 @@ class UserController
      * @Access("user: manage users")
      * @Request({"filter": "array", "page":"int"})
      */
-    public function indexAction($filter = [], $page = null)
+    public function indexAction($filter = [], $page = null): array
     {
         $roles = $this->getRoles();
         unset($roles[Role::ROLE_AUTHENTICATED]);
@@ -41,13 +41,11 @@ class UserController
      * @Access("user: manage users")
      * @Request({"id": "int"})
      */
-    public function editAction($id = 0)
+    public function editAction($id = 0): array
     {
         if (!$id) {
-
             $user = User::create(['roles' => [Role::ROLE_AUTHENTICATED]]);
-
-        } else if (!$user = User::find($id)) {
+        } elseif (!$user = User::find($id)) {
             App::abort(404, 'User not found.');
         }
 
@@ -71,7 +69,7 @@ class UserController
     /**
      * @Access("user: manage user permissions")
      */
-    public function permissionsAction()
+    public function permissionsAction(): array
     {
         return [
             '$view' => [
@@ -89,7 +87,7 @@ class UserController
      * @Access("user: manage user permissions")
      * @Request({"id": "int"})
      */
-    public function rolesAction($id = null)
+    public function rolesAction($id = null): array
     {
         return [
             '$view' => [
@@ -109,7 +107,7 @@ class UserController
     /**
      * @Access("system: access settings")
      */
-    public function settingsAction()
+    public function settingsAction(): array
     {
         return [
             '$view' => [
@@ -126,9 +124,8 @@ class UserController
      * Gets the user roles.
      *
      * @param  User $user
-     * @return array
      */
-    protected function getRoles(User $user = null)
+    protected function getRoles(User $user = null): array
     {
         $roles = [];
         $self  = $user && $user->id === App::user()->id;

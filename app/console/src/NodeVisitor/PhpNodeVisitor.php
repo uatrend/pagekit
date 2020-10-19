@@ -2,6 +2,8 @@
 
 namespace Pagekit\Console\NodeVisitor;
 
+use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Lexer;
 use PhpParser\Node;
 use PhpParser\NodeTraverser;
@@ -13,7 +15,7 @@ class PhpNodeVisitor extends NodeVisitor implements BaseVisitor
     /**
      * {@inheritdoc}
      */
-    public function traverse(array $files)
+    public function traverse(array $files): array
     {
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP5);
 
@@ -38,7 +40,7 @@ class PhpNodeVisitor extends NodeVisitor implements BaseVisitor
      */
     public function enterNode(Node $node)
     {
-        if ($node instanceof Node\Expr\FuncCall
+        if ($node instanceof FuncCall
             && isset($node->name) && isset($node->name->parts)
             && ($node->name->parts[0] == '__' || $node->name->parts[0] == '_c')
             && isset($node->args[0]) && isset($node->args[0]->value->value)
@@ -47,7 +49,7 @@ class PhpNodeVisitor extends NodeVisitor implements BaseVisitor
             $key                               = $node->name->parts[0] == '__' ? 2 : 3;
             $domain                            = isset($node->args[$key]) && is_string($node->args[$key]->value->value) ? $node->args[$key]->value->value : 'messages';
             $this->results[$domain][$string][] = ['file' => $this->file, 'line' => $node->getLine()];
-        } elseif ($node instanceof Node\Expr\MethodCall
+        } elseif ($node instanceof MethodCall
             && isset($node->name)
             && ($node->name == 'trans' || $node->name == 'transChoice')
             && isset($node->args[0]) && isset($node->args[0]->value->value)

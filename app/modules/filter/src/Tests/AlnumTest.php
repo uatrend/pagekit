@@ -2,11 +2,12 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\AlnumFilter;
 
-class AlnumTest extends \PHPUnit\Framework\TestCase
+class AlnumTest extends TestCase
 {
-    public function testFilter()
+    public function testFilter(): void
     {
         $filter = new AlnumFilter;
 

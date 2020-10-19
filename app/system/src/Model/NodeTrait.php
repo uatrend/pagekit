@@ -4,20 +4,17 @@ namespace Pagekit\System\Model;
 
 trait NodeTrait
 {
-    /**
-     * @var NodeInterface|null
-     */
-    protected $parent;
+    protected ?NodeInterface $parent = null;
 
     /**
      * @var NodeInterface[]
      */
-    protected $children = [];
+    protected array $children = [];
 
     /**
      * @return NodeInterface|null
      */
-    public function getParent()
+    public function getParent(): ?NodeInterface
     {
         return $this->parent;
     }
@@ -25,7 +22,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function setParent(NodeInterface $parent = null)
+    public function setParent(NodeInterface $parent = null): NodeInterface
     {
         if ($parent === $this) {
             throw new \InvalidArgumentException('A node cannot have itself as a parent');
@@ -51,7 +48,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function hasChildren()
+    public function hasChildren(): bool
     {
         return !empty($this->children);
     }
@@ -59,7 +56,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function getChildren()
+    public function getChildren(): array
     {
         return $this->children;
     }
@@ -67,7 +64,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function add(NodeInterface $node)
+    public function add(NodeInterface $node): NodeInterface
     {
          $this->children[$node->hashCode()] = $node->setParent($this);
 
@@ -77,7 +74,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function addAll(array $nodes)
+    public function addAll(array $nodes): NodeInterface
     {
         foreach ($nodes as $node) {
             $this->add($node);
@@ -89,7 +86,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function remove($node)
+    public function remove($node): bool
     {
         $hash = $node instanceof NodeInterface ? $node->hashCode() : (string) $node;
 
@@ -107,7 +104,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function removeAll(array $nodes = [])
+    public function removeAll(array $nodes = []): bool
     {
         if (empty($nodes)) {
 
@@ -134,7 +131,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function findChild($hash, $recursive = true)
+    public function findChild($hash, $recursive = true): ?NodeInterface
     {
         $node = isset($this->children[$hash]) ? $this->children[$hash] : null;
 
@@ -152,7 +149,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function contains($node, $recursive = true)
+    public function contains($node, $recursive = true): bool
     {
         return $this->findChild(($node instanceof NodeInterface ? $node->hashCode() : (string) $node), $recursive) !== null;
     }
@@ -160,7 +157,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function getDepth()
+    public function getDepth(): int
     {
         if ($this->parent === null) {
             return 0;
@@ -172,7 +169,7 @@ trait NodeTrait
     /**
      * {@inheritdoc}
      */
-    public function hashCode()
+    public function hashCode(): string
     {
         return spl_object_hash($this);
     }

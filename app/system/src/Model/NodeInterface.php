@@ -2,79 +2,70 @@
 
 namespace Pagekit\System\Model;
 
+use Pagekit\System\Model\NodeInterface;
+
 interface NodeInterface extends \IteratorAggregate, \Countable
 {
-    /**
-     * @return NodeInterface|null
-     */
-    public function getParent();
+    public function getParent(): ?self;
 
     /**
      * Sets the parent node.
      *
      * @param  NodeInterface|null $parent
-     * @return self
      *
      * @throws \InvalidArgumentException
      */
-    public function setParent(NodeInterface $parent = null);
+    public function setParent(NodeInterface $parent = null): self;
 
     /**
      * Checks for child nodes.
-     *
-     * @return bool
      */
-    public function hasChildren();
+    public function hasChildren(): bool;
 
     /**
      * Gets all child nodes.
      *
      * @return NodeInterface[]
      */
-    public function getChildren();
+    public function getChildren(): array;
 
     /**
      * Adds a node.
      *
      * @param  NodeInterface $node
-     * @return self
      *
      * @throws \InvalidArgumentException
      */
-    public function add(NodeInterface $node);
+    public function add(NodeInterface $node): self;
 
     /**
      * Add an array of nodes.
      *
      * @param  NodeInterface[]  $nodes
-     * @return self
      */
-    public function addAll(array $nodes);
+    public function addAll(array $nodes): self;
 
     /**
      * Removes a node.
      *
      * @param  NodeInterface|string $node
-     * @return bool
      */
-    public function remove($node);
+    public function remove($node): bool;
 
     /**
      * Removes all nodes or an given array of nodes.
      *
      * @param  (NodeInterface|string)[] $nodes
-     * @return bool
      */
-    public function removeAll(array $nodes = []);
+    public function removeAll(array $nodes = []): bool;
 
     /**
      * Find a node by its hashcode.
      *
      * @param  string $hash
      * @param  bool   $recursive
-     * @return NodeInterface|null
      */
-    public function findChild($hash, $recursive = true);
+    public function findChild($hash, $recursive = true): ?self;
 
 
     /**
@@ -82,21 +73,16 @@ interface NodeInterface extends \IteratorAggregate, \Countable
      *
      * @param  NodeInterface|string $node
      * @param  bool        $recursive
-     * @return bool
      */
-    public function contains($node, $recursive = true);
+    public function contains($node, $recursive = true): bool;
 
     /**
      * Gets the nodes depth.
-     *
-     * @return int
      */
-    public function getDepth();
+    public function getDepth(): int;
 
     /**
      * Returns a hashcode as unique identifier for a node.
-     *
-     * @return string
      */
-    public function hashCode();
+    public function hashCode(): string;
 }

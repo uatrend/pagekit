@@ -4,30 +4,15 @@ namespace Pagekit\View\Asset;
 
 abstract class Asset implements AssetInterface, \ArrayAccess
 {
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var string
-     */
-    protected $source;
+    protected ?string $source = null;
 
-    /**
-     * @var string
-     */
-    protected $content;
+    protected ?string $content = null;
 
-    /**
-     * @var array
-     */
-    protected $dependencies;
+    protected array $dependencies;
 
-    /**
-     * @var array
-     */
-    protected $options;
+    protected array $options;
 
     /**
      * Constructor.
@@ -48,7 +33,7 @@ abstract class Asset implements AssetInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -56,7 +41,7 @@ abstract class Asset implements AssetInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getSource()
+    public function getSource(): ?string
     {
         return $this->source;
     }
@@ -64,7 +49,7 @@ abstract class Asset implements AssetInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getPath()
+    public function getPath(): string
     {
         return false;
     }
@@ -72,7 +57,7 @@ abstract class Asset implements AssetInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getDependencies()
+    public function getDependencies(): array
     {
         return $this->dependencies;
     }
@@ -80,7 +65,7 @@ abstract class Asset implements AssetInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -96,7 +81,7 @@ abstract class Asset implements AssetInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -120,7 +105,7 @@ abstract class Asset implements AssetInterface, \ArrayAccess
     /**
      * {@inheritdoc}
      */
-    public function dump(array $filters = [])
+    public function dump(array $filters = []): string
     {
         $asset = clone $this;
 
@@ -161,7 +146,7 @@ abstract class Asset implements AssetInterface, \ArrayAccess
      *
      * @return bool true if the option exists, false otherwise
      */
-    public function offsetExists($name)
+    public function offsetExists($name): bool
     {
         return isset($this->options[$name]);
     }

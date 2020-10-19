@@ -4,11 +4,11 @@ namespace Pagekit\Markdown\Lexer;
 
 class BlockLexer
 {
-    protected $rules;
-    protected $tokens;
-    protected $options;
+    protected array $rules;
+    protected ?array $tokens = null;
+    protected array $options;
 
-    protected static $blocks;
+    protected static ?array $blocks = null;
 
     /**
      * Constructor.
@@ -25,9 +25,8 @@ class BlockLexer
      * Lex source to tokens.
      *
      * @param  string $src
-     * @return array
      */
-    public function lex($src)
+    public function lex($src): ?array
     {
         $src = preg_replace(['/\r\n|\r/m', '/\t/m'], ["\n", '    '], $src);
         $src = str_replace(['\\u00a0', '\\u2424'], [' ', "\n"], $src);
@@ -42,9 +41,8 @@ class BlockLexer
      * Get tokens from source.
      *
      * @param  string $src
-     * @return array
      */
-    protected function token($src, $top = false, $bq = null)
+    protected function token($src, $top = false, $bq = null): ?array
     {
         $src = preg_replace('/^ +$/m', '', $src);
 
@@ -113,8 +111,9 @@ class BlockLexer
                     'align'  => preg_split('/ *\| */', preg_replace('/^ *|\| *$/m', '', $cap[2])),
                     'cells'  => preg_split('/\n/', preg_replace('/\n$/', '', $cap[3]))
                 ];
+                $itemsCount = count($item['align']);
 
-                for ($i = 0; $i < count($item['align']); $i++) {
+                for ($i = 0; $i < $itemsCount; $i++) {
                     if (preg_match('/^ *-+: *$/' ,$item['align'][$i])) {
                         $item['align'][$i] = 'right';
                     } elseif (preg_match('/^ *:-+: *$/' ,$item['align'][$i])) {
@@ -125,8 +124,9 @@ class BlockLexer
                         $item['align'][$i] = null;
                     }
                 }
+                $itemsCount = count($item['cells']);
 
-                for ($i = 0; $i < count($item['cells']); $i++) {
+                for ($i = 0; $i < $itemsCount; $i++) {
                     $item['cells'][$i] = preg_split('/ *\| */', $item['cells'][$i]);
                 }
 
@@ -296,8 +296,9 @@ class BlockLexer
                     'align'  => preg_split('/ *\| */', preg_replace('/^ *|\| *$/m', '', $cap[2])),
                     'cells'  => preg_split('/\n/', preg_replace('/\n$/', '', $cap[3]))
                 ];
+                $itemsCount = count($item['align']);
 
-                for ($i = 0; $i < count($item['align']); $i++) {
+                for ($i = 0; $i < $itemsCount; $i++) {
                     if (preg_match('/^ *-+: *$/' ,$item['align'][$i])) {
                         $item['align'][$i] = 'right';
                     } elseif (preg_match('/^ *:-+: *$/' ,$item['align'][$i])) {
@@ -308,8 +309,9 @@ class BlockLexer
                         $item['align'][$i] = null;
                     }
                 }
+                $itemsCount = count($item['cells']);
 
-                for ($i = 0; $i < count($item['cells']); $i++) {
+                for ($i = 0; $i < $itemsCount; $i++) {
                     $item['cells'][$i] = preg_split('/ *\| */', preg_replace('/^ *\| *| *\| *$/m', '', $item['cells'][$i]));
                 }
 
@@ -357,9 +359,8 @@ class BlockLexer
      * Get block grammar rules for given options.
      *
      * @param  array $options
-     * @return array
      */
-    protected static function rules(array $options)
+    protected static function rules(array $options): array
     {
         if (!static::$blocks) {
 
@@ -403,11 +404,7 @@ class BlockLexer
         $rules = static::$blocks['normal'];
 
         if ($options['gfm']) {
-            if ($options['tables']) {
-                $rules = static::$blocks['tables'];
-            } else {
-                $rules = static::$blocks['gfm'];
-            }
+            $rules = $options['tables'] ? static::$blocks['tables'] : static::$blocks['gfm'];
         }
 
         return $rules;

@@ -8,8 +8,8 @@ use Pagekit\Event\EventDispatcherInterface;
 
 class EventDataCollector implements DataCollectorInterface
 {
-    protected $data = [];
-    protected $dispatcher;
+    protected array $data = [];
+    protected EventDispatcherInterface $dispatcher;
     protected $base;
 
     public function __construct(EventDispatcherInterface $dispatcher, $base = '')
@@ -21,7 +21,7 @@ class EventDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         if ($this->dispatcher instanceof TraceableEventDispatcher) {
             $this->data['called'] = $this->attachLink($this->dispatcher->getCalledListeners());
@@ -55,7 +55,7 @@ class EventDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'events';
     }

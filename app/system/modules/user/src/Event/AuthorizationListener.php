@@ -15,7 +15,7 @@ class AuthorizationListener implements EventSubscriberInterface
     /**
      * Initialize system.
      */
-    public function onSystemInit()
+    public function onSystemInit(): void
     {
         App::auth()->setUserProvider(new UserProvider(App::get('auth.password')));
     }
@@ -23,7 +23,7 @@ class AuthorizationListener implements EventSubscriberInterface
     /**
      * Logout blocked users.
      */
-    public function onRequest()
+    public function onRequest(): void
     {
         if ($user = App::auth()->getUser() and $user->isBlocked()) {
             App::auth()->logout();
@@ -36,7 +36,7 @@ class AuthorizationListener implements EventSubscriberInterface
      * @param  AuthorizeEvent $event
      * @throws AuthException
      */
-    public function onAuthorize(AuthorizeEvent $event)
+    public function onAuthorize(AuthorizeEvent $event): void
     {
         if ($event->getUser()->isBlocked()) {
             throw new AuthException($event->getUser()->login ? __('Your account is blocked.') : __('Your account has not been activated.'));
@@ -46,17 +46,17 @@ class AuthorizationListener implements EventSubscriberInterface
     /**
      * Redirects a user after successful login.
      */
-    public function onLogin()
+    public function onLogin(): void
     {
         App::session()->migrate();
     }
 
-    public function onSuccess()
+    public function onSuccess(): void
     {
         App::session()->remove(Auth::LAST_USERNAME);
     }
 
-    public function onFailure(AuthenticateEvent $event)
+    public function onFailure(AuthenticateEvent $event): void
     {
         $credentials = $event->getCredentials();
         App::session()->set(Auth::LAST_USERNAME, $credentials['username']);
@@ -65,7 +65,7 @@ class AuthorizationListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'request' => [

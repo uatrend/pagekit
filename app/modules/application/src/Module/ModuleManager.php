@@ -9,35 +9,23 @@ use Pagekit\Module\Loader\ModuleLoader;
 
 class ModuleManager implements \IteratorAggregate
 {
-    /**
-     * @var Application
-     */
-    protected $app;
+    protected \Pagekit\Application $app;
 
-    /**
-     * @var array
-     */
-    protected $modules = [];
+    protected array $modules = [];
 
-    /**
-     * @var array
-     */
-    protected $registered = [];
+    protected array $registered = [];
 
     /**
      * @var LoaderInterface[]
      */
-    protected $preLoaders = [];
+    protected array $preLoaders = [];
 
     /**
      * @var LoaderInterface[]
      */
-    protected $postLoaders = [];
+    protected array $postLoaders = [];
 
-    /**
-     * @var array
-     */
-    protected $defaults = [
+    protected array $defaults = [
         'main' => null,
         'type' => 'module',
         'class' => 'Pagekit\Module\Module',
@@ -78,10 +66,8 @@ class ModuleManager implements \IteratorAggregate
 
     /**
      * Gets all modules.
-     *
-     * @return array
      */
-    public function all()
+    public function all(): array
     {
         return $this->modules;
     }
@@ -90,9 +76,8 @@ class ModuleManager implements \IteratorAggregate
      * Loads modules by name.
      *
      * @param  string|array $modules
-     * @return self
      */
-    public function load($modules)
+    public function load($modules): self
     {
         $resolved = [];
 
@@ -132,9 +117,8 @@ class ModuleManager implements \IteratorAggregate
      *
      * @param  string|array $paths
      * @param  string $basePath
-     * @return self
      */
-    public function register($paths, $basePath = null)
+    public function register($paths, $basePath = null): self
     {
         $app = $this->app;
         $includes = [];
@@ -174,9 +158,8 @@ class ModuleManager implements \IteratorAggregate
      *
      * @param  LoaderInterface|callable $loader
      * @param  boolean $post
-     * @return self
      */
-    public function addLoader($loader, $post = false)
+    public function addLoader($loader, $post = false): self
     {
         if (is_callable($loader)) {
             $loader = new CallableLoader($loader);
@@ -193,10 +176,8 @@ class ModuleManager implements \IteratorAggregate
 
     /**
      * Implements the IteratorAggregate.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->all());
     }
@@ -210,7 +191,7 @@ class ModuleManager implements \IteratorAggregate
      *
      * @throws \RuntimeException
      */
-    protected function resolveModules(array $module, array &$resolved = [], array &$unresolved = [])
+    protected function resolveModules(array $module, array &$resolved = [], array &$unresolved = []): void
     {
         $unresolved[$module['name']] = $module;
 
@@ -238,13 +219,12 @@ class ModuleManager implements \IteratorAggregate
      *
      * @param  string $path
      * @param  string $basePath
-     * @return string
      */
-    protected function resolvePath($path, $basePath = null)
+    protected function resolvePath($path, $basePath = null): string
     {
         $path = strtr($path, '\\', '/');
 
-        if (!($path[0] == '/' || (strlen($path) > 3 && ctype_alpha($path[0]) && $path[1] == ':' && $path[2] == '/'))) {
+        if ($path[0] != '/' && !(strlen($path) > 3 && ctype_alpha($path[0]) && $path[1] == ':' && $path[2] == '/')) {
             $path = "$basePath/$path";
         }
 

@@ -7,7 +7,7 @@ use Pagekit\Util\Arr;
 trait DataModelTrait
 {
     /** @Column(type="json_array") */
-    public $data;
+    public ?array $data = null;
 
     /**
      * Gets a data value.
@@ -27,7 +27,7 @@ trait DataModelTrait
      * @param string $key
      * @param mixed  $value
      */
-    public function set($key, $value)
+    public function set($key, $value): void
     {
         if (null === $this->data) {
             $this->data = [];

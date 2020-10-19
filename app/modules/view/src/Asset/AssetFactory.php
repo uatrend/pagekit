@@ -4,26 +4,20 @@ namespace Pagekit\View\Asset;
 
 class AssetFactory
 {
-    /**
-     * @var array
-     */
-    protected $types = [
+    protected array $types = [
         'file'   => 'Pagekit\View\Asset\FileAsset',
         'string' => 'Pagekit\View\Asset\StringAsset',
         'url'    => 'Pagekit\View\Asset\UrlAsset'
     ];
 
-    /**
-     * @var string
-     */
-    protected $version;
+    protected string $version;
 
     /**
      * Set a version number for cache breaking.
      *
      * @param $version
      */
-    public function setVersion($version)
+    public function setVersion($version): void
     {
         $this->version = $version;
     }
@@ -31,7 +25,7 @@ class AssetFactory
     /**
      * Returns version number for cache breaking.
      */
-    public function getVersion()
+    public function getVersion(): string
     {
         return $this->version;
     }
@@ -43,10 +37,9 @@ class AssetFactory
      * @param  mixed  $source
      * @param  mixed  $dependencies
      * @param  mixed  $options
-     * @return AssetInterface
      * @throws \InvalidArgumentException
      */
-    public function create($name, $source, $dependencies = [], $options = [])
+    public function create($name, $source, $dependencies = [], $options = []): AssetInterface
     {
         if (is_string($dependencies)) {
             $dependencies = [$dependencies];
@@ -79,9 +72,8 @@ class AssetFactory
      *
      * @param  string $name
      * @param  string $class
-     * @return self
      */
-    public function register($name, $class)
+    public function register($name, $class): self
     {
         $this->types[$name] = $class;
 

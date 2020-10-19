@@ -7,20 +7,11 @@ use Pagekit\View\View;
 
 class DeferredHelper implements HelperInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected \Pagekit\Event\EventDispatcherInterface $events;
 
-    /**
-     * @var array
-     */
-    protected $deferred = [];
+    protected array $deferred = [];
 
-    /**
-     * @var array
-     */
-    protected $placeholder = [];
+    protected array $placeholder = [];
 
     /**
      * Constructor.
@@ -35,7 +26,7 @@ class DeferredHelper implements HelperInterface
     /**
      * {@inheritdoc}
      */
-    public function register(View $view)
+    public function register(View $view): void
     {
         $view->on('render', function ($event) {
 
@@ -74,7 +65,7 @@ class DeferredHelper implements HelperInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'defer';
     }

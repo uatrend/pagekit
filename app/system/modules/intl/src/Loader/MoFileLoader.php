@@ -2,6 +2,7 @@
 
 namespace Pagekit\Intl\Loader;
 
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
@@ -36,7 +37,7 @@ class MoFileLoader extends ArrayLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $locale, $domain = 'messages')
+    public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {
         if (!stream_is_local($resource)) {
             throw new InvalidResourceException(sprintf('This is not a local file "%s".', $resource));
@@ -67,10 +68,9 @@ class MoFileLoader extends ArrayLoader
      *
      * @param resource $resource
      *
-     * @return array
      * @throws InvalidResourceException If stream content has an invalid format.
      */
-    protected function parse($resource)
+    protected function parse($resource): array
     {
         $stream = fopen($resource, 'r');
 
@@ -160,9 +160,8 @@ class MoFileLoader extends ArrayLoader
      *
      * @param  resource $stream
      * @param  boolean  $isBigEndian
-     * @return integer
      */
-    protected function readLong($stream, $isBigEndian)
+    protected function readLong($stream, $isBigEndian): int
     {
         $result = unpack($isBigEndian ? 'N1' : 'V1', fread($stream, 4));
         $result = current($result);

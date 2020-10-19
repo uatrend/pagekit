@@ -7,10 +7,10 @@ use Pagekit\Markdown\Lexer\InlineLexer;
 class Parser
 {
     protected $token;
-    protected $tokens;
-    protected $inline;
+    protected ?array $tokens = null;
+    protected ?InlineLexer $inline = null;
     protected $renderer;
-    protected $options;
+    protected array $options;
 
     /**
      * Constructor.
@@ -27,9 +27,8 @@ class Parser
      * Compiling method.
      *
      * @param  array $src
-     * @return string
      */
-    public function parse($src)
+    public function parse($src): string
     {
         $this->inline = new InlineLexer($src['links'], $this->options);
 
@@ -48,30 +47,24 @@ class Parser
 
     /**
      * Next token.
-     *
-     * @return array
      */
-    protected function next()
+    protected function next(): ?array
     {
         return $this->token = array_pop($this->tokens);
     }
 
     /**
      * Preview next token.
-     *
-     * @return array
      */
-    protected function peek()
+    protected function peek(): array
     {
         return end($this->tokens);
     }
 
     /**
      * Parse text tokens.
-     *
-     * @return string
      */
-    protected function parseText()
+    protected function parseText(): string
     {
         $body = $this->token['text'];
 
@@ -114,22 +107,24 @@ class Parser
 
                 $header = '';
                 $cell   = '';
+                $itemsCount = count($this->token['header']);
 
-                for ($i = 0; $i < count($this->token['header']); $i++) {
+                for ($i = 0; $i < $itemsCount; $i++) {
                     $flags = ['header' => true, 'align' => $this->token['align'][$i]];
                     $cell .= $this->renderer->tablecell($this->inline->output($this->token['header'][$i]), $flags);
                 }
 
                 $header .= $this->renderer->tablerow($cell);
+                $itemsCount = count($this->token['cells']);
 
-                for ($i = 0; $i < count($this->token['cells']); $i++) {
+                for ($i = 0; $i < $itemsCount; $i++) {
 
                     $row  = $this->token['cells'][$i];
                     $cell = '';
 
-                    for ($j = 0; $j < count($row); $j++) {
+                    foreach ($row as $j => $row) {
                         $flags = ['header' => false, 'align' => $this->token['align'][$j]];
-                        $cell .= $this->renderer->tablecell($this->inline->output($row[$j]), $flags);
+                        $cell .= $this->renderer->tablecell($this->inline->output($row), $flags);
                     }
 
                     $body .= $this->renderer->tablerow($cell);

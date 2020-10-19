@@ -8,9 +8,7 @@ return [
 
     'main' => function ($app) {
 
-        $app['markdown'] = function() {
-            return new Markdown;
-        };
+        $app['markdown'] = fn() => new Markdown;
 
     },
 

@@ -37,7 +37,7 @@ class PhpMatcherDumper extends CompiledUrlMatcherDumper
      *
      * @return string A PHP class representing the matcher class
      */
-    public function dump(array $options = [])
+    public function dump(array $options = []): string
     {
         $options = array_replace([
             'class' => 'ProjectUrlMatcher',

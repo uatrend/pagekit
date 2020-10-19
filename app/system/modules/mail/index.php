@@ -56,29 +56,19 @@ return [
             throw new \InvalidArgumentException('Invalid mail driver.');
         };
 
-        $app['swift.transport.buffer'] = function () {
-            return new Swift_Transport_StreamBuffer(new Swift_StreamFilters_StringReplacementFilterFactory);
-        };
+        $app['swift.transport.buffer'] = fn() => new Swift_Transport_StreamBuffer(new Swift_StreamFilters_StringReplacementFilterFactory);
 
-        $app['swift.transport.authhandler'] = function () {
-            return new Swift_Transport_Esmtp_AuthHandler([
-                new Swift_Transport_Esmtp_Auth_CramMd5Authenticator,
-                new Swift_Transport_Esmtp_Auth_LoginAuthenticator,
-                new Swift_Transport_Esmtp_Auth_PlainAuthenticator,
-            ]);
-        };
+        $app['swift.transport.authhandler'] = fn() => new Swift_Transport_Esmtp_AuthHandler([
+            new Swift_Transport_Esmtp_Auth_CramMd5Authenticator,
+            new Swift_Transport_Esmtp_Auth_LoginAuthenticator,
+            new Swift_Transport_Esmtp_Auth_PlainAuthenticator,
+        ]);
 
-        $app['swift.transport.eventdispatcher'] = function () {
-            return new Swift_Events_SimpleEventDispatcher;
-        };
+        $app['swift.transport.eventdispatcher'] = fn() => new Swift_Events_SimpleEventDispatcher;
 
-        $app['swift.spool'] = function () {
-            return new Swift_MemorySpool;
-        };
+        $app['swift.spool'] = fn() => new Swift_MemorySpool;
 
-        $app['swift.spooltransport'] = function ($app) {
-            return new Swift_SpoolTransport($app['swift.spool']);
-        };
+        $app['swift.spooltransport'] = fn($app) => new Swift_SpoolTransport($app['swift.spool']);
 
     },
 

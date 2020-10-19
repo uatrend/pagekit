@@ -12,7 +12,7 @@ class CacheController
     /**
      * @Request({"caches": "array"}, csrf=true)
      */
-    public function clearAction($caches)
+    public function clearAction($caches): array
     {
         App::module('system/cache')->clearCache($caches);
 

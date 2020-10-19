@@ -11,7 +11,7 @@ trait RoleModelTrait
     /**
      * @Saving
      */
-    public static function saving($event, Role $role)
+    public static function saving($event, Role $role): void
     {
         if (!$role->id) {
             $role->priority = self::getConnection()->fetchColumn('SELECT MAX(priority) + 1 FROM @system_role');

@@ -46,8 +46,7 @@ class Node implements NodeInterface, \JsonSerializable
     /** @Column(type="string") */
     public $menu = '';
 
-    /** @var array */
-    protected static $properties = [
+    protected static array $properties = [
         'accessible' => 'isAccessible'
     ];
 
@@ -55,14 +54,13 @@ class Node implements NodeInterface, \JsonSerializable
      * Gets the node URL.
      *
      * @param  mixed  $referenceType
-     * @return string
      */
-    public function getUrl($referenceType = false)
+    public function getUrl($referenceType = false): string
     {
         return App::url($this->link, [], $referenceType);
     }
 
-    public function isAccessible(User $user = null)
+    public function isAccessible(User $user = null): bool
     {
         return $this->status && $this->hasAccess($user ?: App::user());
     }
@@ -70,7 +68,7 @@ class Node implements NodeInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray(['url' => $this->getUrl('base')]);
     }

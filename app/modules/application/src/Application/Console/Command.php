@@ -26,31 +26,23 @@ class Command extends BaseCommand
 
     /**
      * The console command input.
-     *
-     * @var InputInterface
      */
-    protected $input;
+    protected ?InputInterface $input = null;
 
     /**
      * The console command output.
-     *
-     * @var OutputInterface
      */
-    protected $output;
+    protected ?OutputInterface $output = null;
 
     /**
      * The Container instance.
-     *
-     * @var Container
      */
-    protected $container;
+    protected ?\Pagekit\Container $container = null;
 
     /**
      * The Pagekit config.
-     *
-     * @var array
      */
-    protected $config;
+    protected ?array $config = null;
 
     /**
      * Create a new console command instance.
@@ -66,7 +58,7 @@ class Command extends BaseCommand
      *
      * @param Container $container
      */
-    public function setContainer(Container $container)
+    public function setContainer(Container $container): void
     {
         $this->container = $container;
     }
@@ -76,7 +68,7 @@ class Command extends BaseCommand
      *
      * @param array $config
      */
-    public function setConfig(array $config)
+    public function setConfig(array $config): void
     {
         $this->config = $config;
     }
@@ -84,7 +76,7 @@ class Command extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         $this->input = $input;
         $this->output = $output;
@@ -121,9 +113,8 @@ class Command extends BaseCommand
      *
      * @param  string $question
      * @param  bool $default
-     * @return bool
      */
-    public function confirm($question, $default = true)
+    public function confirm($question, $default = true): bool
     {
         $helper = $this->getHelperSet()->get('question');
         $question = new ConfirmationQuestion("<question>$question</question>", $default);
@@ -136,9 +127,8 @@ class Command extends BaseCommand
      *
      * @param  string $question
      * @param  string $default
-     * @return string
      */
-    public function ask($question, $default = null)
+    public function ask($question, $default = null): string
     {
         $helper = $this->getHelperSet()->get('question');
         $question = new Question("<question>$question</question>", $default);
@@ -151,9 +141,8 @@ class Command extends BaseCommand
      *
      * @param  string $question
      * @param  bool $fallback
-     * @return string
      */
-    public function secret($question, $fallback = true)
+    public function secret($question, $fallback = true): string
     {
         $helper = $this->getHelperSet()->get('question');
         $question = new Question("<question>$question</question>");
@@ -168,7 +157,7 @@ class Command extends BaseCommand
      *
      * @param string $string
      */
-    public function line($string)
+    public function line($string): void
     {
         $this->output->writeln($string);
     }
@@ -178,7 +167,7 @@ class Command extends BaseCommand
      *
      * @param string $string
      */
-    public function info($string)
+    public function info($string): void
     {
         $this->output->writeln("<info>$string</info>");
     }
@@ -188,7 +177,7 @@ class Command extends BaseCommand
      *
      * @param string $string
      */
-    public function comment($string)
+    public function comment($string): void
     {
         $this->output->writeln("<comment>$string</comment>");
     }
@@ -198,7 +187,7 @@ class Command extends BaseCommand
      *
      * @param string $string
      */
-    public function question($string)
+    public function question($string): void
     {
         $this->output->writeln("<question>$string</question>");
     }
@@ -208,7 +197,7 @@ class Command extends BaseCommand
      *
      * @param string $string
      */
-    public function error($string)
+    public function error($string): void
     {
         $this->output->writeln("<error>$string</error>");
     }
@@ -218,7 +207,7 @@ class Command extends BaseCommand
      *
      * @param string $string
      */
-    public function abort($string)
+    public function abort($string): void
     {
         $this->error($string);
         exit;

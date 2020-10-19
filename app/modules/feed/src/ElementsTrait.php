@@ -7,7 +7,7 @@ trait ElementsTrait
     /**
      * @var array[]
      */
-    protected $elements;
+    protected array $elements;
 
     /**
      * {@inheritdoc}
@@ -21,7 +21,7 @@ trait ElementsTrait
     /**
      * {@inheritdoc}
      */
-    public function addElement($name, $value, $attributes = null)
+    public function addElement($name, $value, $attributes = null): object
     {
         $this->elements[$name][] = [$name, $value, $attributes];
         return $this;
@@ -30,7 +30,7 @@ trait ElementsTrait
     /**
      * {@inheritdoc}
      */
-    public function addElements(array $elements)
+    public function addElements(array $elements): object
     {
         foreach ($elements as $name => $value) {
             if (method_exists($this, $method = 'set'.$name)) {
@@ -50,7 +50,7 @@ trait ElementsTrait
     /**
      * {@inheritdoc}
      */
-    public function getElements()
+    public function getElements(): array
     {
         return call_user_func_array('array_merge', $this->elements);
     }

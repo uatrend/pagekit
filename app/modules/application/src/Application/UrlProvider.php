@@ -2,6 +2,7 @@
 
 namespace Pagekit\Application;
 
+use Symfony\Component\Routing\RouterInterface;
 use Pagekit\Filesystem\Filesystem;
 use Pagekit\Filesystem\Locator;
 use Pagekit\Routing\Generator\UrlGenerator;
@@ -17,27 +18,18 @@ class UrlProvider
      */
     const BASE_PATH = 'base';
 
-    /**
-     * @var Router
-     */
-    protected $router;
+    protected \Pagekit\Routing\Router $router;
 
-    /**
-     * @var Filesystem
-     */
-    protected $file;
+    protected Filesystem $file;
 
-    /**
-     * @var Locator
-     */
-    protected $locator;
+    protected Locator $locator;
 
     /**
      * Constructor.
      *
      * @param Router $router
      */
-    public function __construct(Router $router, Filesystem $file, Locator $locator)
+    public function __construct(RouterInterface $router, Filesystem $file, Locator $locator)
     {
         $this->router = $router;
         $this->file = $file;
@@ -58,9 +50,8 @@ class UrlProvider
      * Gets the base path for the current request.
      *
      * @param  mixed $referenceType
-     * @return string
      */
-    public function base($referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function base($referenceType = UrlGenerator::ABSOLUTE_PATH): string
     {
         $request = $this->router->getRequest();
         $url = $request->getBasePath();
@@ -78,9 +69,8 @@ class UrlProvider
      * Gets the URL for the current request.
      *
      * @param  mixed $referenceType
-     * @return string
      */
-    public function current($referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function current($referenceType = UrlGenerator::ABSOLUTE_PATH): string
     {
         $request = $this->router->getRequest();
 
@@ -99,10 +89,8 @@ class UrlProvider
 
     /**
      * Gets the URL for the previous request.
-     *
-     * @return string
      */
-    public function previous()
+    public function previous(): ?string
     {
         return $this->router->getRequest()->headers->get('referer');
     }
@@ -164,9 +152,8 @@ class UrlProvider
      * @param  string $path
      * @param  mixed  $parameters
      * @param  mixed  $referenceType
-     * @return string
      */
-    public function getStatic($path, $parameters = [], $referenceType = UrlGenerator::ABSOLUTE_PATH)
+    public function getStatic($path, $parameters = [], $referenceType = UrlGenerator::ABSOLUTE_PATH): string
     {
         $url = $this->file->getUrl($this->locator->get($path) ?: $path, $referenceType === self::BASE_PATH ? UrlGenerator::ABSOLUTE_PATH : $referenceType);
 

@@ -16,7 +16,7 @@ class UserApiController
      * @Route("/", methods="GET")
      * @Request({"filter": "array", "page":"int", "limit":"int"})
      */
-    public function indexAction($filter = [], $page = 0, $limit = 0)
+    public function indexAction($filter = [], $page = 0, $limit = 0): array
     {
         $query  = User::query();
         $filter = array_merge(array_fill_keys(['status', 'search', 'role', 'order', 'access'], ''), $filter);
@@ -72,7 +72,7 @@ class UserApiController
     /**
      * @Request({"filter": "array"})
      */
-    public function countAction($filter = [])
+    public function countAction($filter = []): array
     {
         $query  = User::query();
         $filter = array_merge(array_fill_keys(['status', 'search', 'role', 'order', 'access'], ''), (array)$filter);
@@ -117,7 +117,7 @@ class UserApiController
     /**
      * @Route("/{id}", methods="GET", requirements={"id"="\d+"})
      */
-    public function getAction($id)
+    public function getAction($id): User
     {
         if (!$user = User::find($id)) {
             App::abort(404, 'User not found.');
@@ -199,7 +199,7 @@ class UserApiController
      * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
      * @Request({"id": "int"}, csrf=true)
      */
-    public function deleteAction($id)
+    public function deleteAction($id): array
     {
         if (App::user()->id == $id) {
             App::abort(400, __('Unable to delete yourself.'));
@@ -220,7 +220,7 @@ class UserApiController
      * @Route("/bulk", methods="POST")
      * @Request({"users": "array"}, csrf=true)
      */
-    public function bulkSaveAction($users = [])
+    public function bulkSaveAction($users = []): array
     {
         foreach ($users as $data) {
             $this->saveAction($data, null, isset($data['id']) ? $data['id'] : 0);
@@ -233,7 +233,7 @@ class UserApiController
      * @Route("/bulk", methods="DELETE")
      * @Request({"ids": "array"}, csrf=true)
      */
-    public function bulkDeleteAction($ids = [])
+    public function bulkDeleteAction($ids = []): array
     {
         foreach (array_filter($ids) as $id) {
             $this->deleteAction($id);

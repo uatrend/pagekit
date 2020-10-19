@@ -2,12 +2,11 @@
 
 namespace Pagekit\Filter;
 
+use Pagekit\Filter\FilterInterface;
+
 class FilterManager
 {
-    /**
-     * @var array
-     */
-    protected $defaults = [
+    protected ?array $defaults = [
         'addrelnofollow' => 'Pagekit\Filter\AddRelNofollowFilter',
         'alnum'          => 'Pagekit\Filter\AlnumFilter',
         'alpha'          => 'Pagekit\Filter\AlphaFilter',
@@ -27,7 +26,7 @@ class FilterManager
     /**
      * @var FilterInterface[]
      */
-    protected $filters = [];
+    protected array $filters = [];
 
     /**
      * Constructor.
@@ -56,7 +55,6 @@ class FilterManager
      * @param  mixed  $value
      * @param  string $name
      * @param  array  $options
-     * @return FilterInterface The filter
      * @throws \InvalidArgumentException
      */
     public function apply($value, $name, array $options = [])
@@ -72,7 +70,7 @@ class FilterManager
      * @return FilterInterface The filter
      * @throws \InvalidArgumentException
      */
-    public function get($name, array $options = [])
+    public function get($name, array $options = []): FilterInterface
     {
         if (array_key_exists($name, $this->defaults)) {
             $this->filters[$name] = $this->defaults[$name];
@@ -99,7 +97,7 @@ class FilterManager
      * @param string|FilterInterface $filter
      * @throws \InvalidArgumentException
      */
-    public function register($name, $filter)
+    public function register($name, $filter): void
     {
         if (array_key_exists($name, $this->filters)) {
             throw new \InvalidArgumentException(sprintf('Filter with the name "%s" is already defined.', $name));

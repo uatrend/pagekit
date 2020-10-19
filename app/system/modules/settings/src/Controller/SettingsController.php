@@ -10,7 +10,7 @@ use Pagekit\Config\Config;
  */
 class SettingsController
 {
-    public function indexAction()
+    public function indexAction(): array
     {
         return [
             '$view' => [
@@ -23,7 +23,7 @@ class SettingsController
     /**
      * @Request({"config": "array", "options": "array"}, csrf=true)
      */
-    public function saveAction($values = [], $options = [])
+    public function saveAction($values = [], $options = []): array
     {
         $config = new Config;
         $config->merge(include $file = App::get('config.file'));
@@ -48,7 +48,7 @@ class SettingsController
     /**
      * @Request({"name", "config": "array"}, csrf=true)
      */
-    public function configAction($name, $config = [])
+    public function configAction($name, $config = []): array
     {
         App::config()->set($name, array_replace(App::config($name)->toArray(), $config));
 

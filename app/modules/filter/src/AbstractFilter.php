@@ -6,17 +6,13 @@ abstract class AbstractFilter implements FilterInterface
 {
     /**
      * Filter options
-     *
-     * @var array
      */
-    protected $options = [];
+    protected array $options = [];
 
     /**
      * Returns the filter options.
-     *
-     * @return array
      */
-    public function getOptions()
+    public function getOptions(): array
     {
         return $this->options;
     }
@@ -26,9 +22,8 @@ abstract class AbstractFilter implements FilterInterface
      *
      * @param  array $options
      * @throws \InvalidArgumentException
-     * @return self
      */
-    public function setOptions(array $options)
+    public function setOptions(array $options): self
     {
         foreach ($options as $key => $value) {
             if (method_exists($this, $method = 'set'.$key)) {

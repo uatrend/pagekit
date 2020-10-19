@@ -12,9 +12,8 @@ class Arr
      *
      * @param  array  $array
      * @param  string $key
-     * @return bool
      */
-    public static function has(array $array, $key)
+    public static function has(array $array, $key): bool
     {
         if (!$array || $key === null) {
             return false;
@@ -108,7 +107,7 @@ class Arr
      * @param array        $array
      * @param array|string $keys
      */
-    public static function remove(array &$array, $keys)
+    public static function remove(array &$array, $keys): void
     {
         $original =& $array;
 
@@ -137,9 +136,8 @@ class Arr
      * @param  array $array
      * @param  mixed $value
      * @param  bool  $strict
-     * @return array
      */
-    public static function pull(array &$array, $value, $strict = false)
+    public static function pull(array &$array, $value, $strict = false): array
     {
         if ($keys = array_keys($array, $value, $strict)) {
 
@@ -160,9 +158,8 @@ class Arr
      * @param  array $array1
      * @param  array $array2
      * @param  bool  $replace
-     * @return array
      */
-    public static function merge(array $array1, array $array2, $replace = false)
+    public static function merge(array $array1, array $array2, $replace = false): array
     {
         if ($replace) {
             return array_replace_recursive($array1, $array2);
@@ -173,7 +170,7 @@ class Arr
 
                 if (is_int($key)) {
                     $array1[] = $value;
-                } else if (is_array($value) && is_array($array1[$key])) {
+                } elseif (is_array($value) && is_array($array1[$key])) {
                     $array1[$key] = static::merge($array1[$key], $value);
                 } else {
                     $array1[$key] = $value;
@@ -193,9 +190,8 @@ class Arr
      * @param  array    $array
      * @param  callable $callback
      * @param  int      $flag
-     * @return array
      */
-    public static function filter(array $array, callable $callback, $flag = 1)
+    public static function filter(array $array, callable $callback, $flag = 1): array
     {
         if (version_compare(PHP_VERSION, '5.6.0') >= 0) {
             return array_filter($array, $callback, $flag);
@@ -229,9 +225,8 @@ class Arr
      * @param  array $data
      * @param  array $keys
      * @param  bool  $include
-     * @return array
      */
-    public static function extract(array $data, array $keys = null, $include = true)
+    public static function extract(array $data, array $keys = null, $include = true): array
     {
         if (!$keys) {
             return $data;
@@ -262,9 +257,8 @@ class Arr
      *
      * @param  array $array
      * @param  string $path
-     * @return array
      */
-    public static function flatten(array $array, $path = '')
+    public static function flatten(array $array, $path = ''): array
     {
         $results = [];
 
@@ -283,9 +277,8 @@ class Arr
      * Expands an array.
      *
      * @param  array $array
-     * @return array
      */
-    public static function expand(array $array)
+    public static function expand(array $array): array
     {
         $result = [];
 

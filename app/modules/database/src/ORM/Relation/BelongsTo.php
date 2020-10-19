@@ -14,13 +14,13 @@ class BelongsTo extends Relation
         parent::__construct($manager, $metadata, $mapping);
 
         $this->keyFrom = $mapping['keyFrom'];
-        $this->keyTo   = $mapping['keyTo'] ? $mapping['keyTo'] :  $this->targetMetadata->getIdentifier();
+        $this->keyTo   = (isset($mapping['keyTo']) && $mapping['keyTo']) ? $mapping['keyTo'] :  $this->targetMetadata->getIdentifier();
     }
 
     /**
      * {@inheritdoc}
      */
-    public function resolve(array $entities, QueryBuilder $query)
+    public function resolve(array $entities, QueryBuilder $query): void
     {
         $this->initRelation($entities);
 

@@ -8,41 +8,36 @@ interface ItemInterface
      * Sets the id.
      *
      * @param  string $id
-     * @return self
      */
-    public function setId($id);
+    public function setId($id): self;
 
     /**
      * Sets the title.
      *
      * @param  string $title
-     * @return self
      */
-    public function setTitle($title);
+    public function setTitle($title): self;
 
     /**
      * Sets the description.
      *
      * @param  string $description
-     * @return self
      */
-    public function setDescription($description);
+    public function setDescription($description): self;
 
     /**
      * Sets the content.
      *
      * @param  string $content
-     * @return self
      */
-    public function setContent($content);
+    public function setContent($content): self;
 
     /**
      * Sets the date.
      *
      * @param  \DateTimeInterface $date
-     * @return self
      */
-    public function setDate(\DateTimeInterface $date);
+    public function setDate(\DateTimeInterface $date): self;
 
     /**
      * Sets the author.
@@ -50,17 +45,15 @@ interface ItemInterface
      * @param  string $author
      * @param  string $email
      * @param  string $uri
-     * @return self
      */
-    public function setAuthor($author, $email = null, $uri = null);
+    public function setAuthor($author, $email = null, $uri = null): self;
 
     /**
      * Sets the link.
      *
      * @param  string $link
-     * @return self
      */
-    public function setLink($link);
+    public function setLink($link): self;
 
     /**
      * Adds an attachment.
@@ -69,42 +62,13 @@ interface ItemInterface
      * @param  integer $length
      * @param  string  $type
      * @param  bool    $multiple
-     * @return self
      */
-    public function addEnclosure($url, $length, $type, $multiple = true);
-
-    /**
-     * Sets an element.
-     *
-     * @param  string $name
-     * @param  string $value
-     * @param  null   $attributes
-     * @return self
-     */
-    public function setElement($name, $value, $attributes = null);
-
-    /**
-     * Adds an element.
-     *
-     * @param  string $name
-     * @param  string $value
-     * @param  null   $attributes
-     * @return self
-     */
-    public function addElement($name, $value, $attributes = null);
-
-    /**
-     * Adds multiple elements.
-     *
-     * @param  $elements array
-     * @return self
-     */
-    public function addElements(array $elements);
+    public function addEnclosure($url, $length, $type, $multiple = true): self;
 
     /**
      * Gets the items elements.
      *
      * @return array[]
      */
-    public function getElements();
+    public function getElements(): array;
 }

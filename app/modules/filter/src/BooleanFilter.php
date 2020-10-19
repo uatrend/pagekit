@@ -10,7 +10,7 @@ class BooleanFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filter($value)
+    public function filter($value): bool
     {
         return (bool) @strval($value);
     }

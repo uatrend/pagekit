@@ -6,29 +6,21 @@ interface EventInterface
 {
     /**
      * Gets the event name.
-     *
-     * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Gets the event dispatcher.
-     *
-     * @return EventDispatcherInterface
      */
-    public function getDispatcher();
+    public function getDispatcher(): EventDispatcherInterface;
 
     /**
      * Is propagation stopped?
-     *
-     * @return bool
      */
-    public function isPropagationStopped();
+    public function isPropagationStopped(): bool;
 
     /**
      * Stop further event propagation.
-     *
-     * @return void
      */
-    public function stopPropagation();
+    public function stopPropagation(): void;
 }

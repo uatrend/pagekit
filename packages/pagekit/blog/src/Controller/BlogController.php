@@ -16,7 +16,7 @@ class BlogController
      * @Access("blog: manage own posts || blog: manage all posts")
      * @Request({"filter": "array", "page":"int"})
      */
-    public function postAction($filter = null, $page = null)
+    public function postAction($filter = null, $page = null): array
     {
         return [
             '$view' => [
@@ -108,7 +108,7 @@ class BlogController
      * @Access("blog: manage comments")
      * @Request({"filter": "array", "post":"int", "page":"int"})
      */
-    public function commentAction($filter = [], $post = 0, $page = null)
+    public function commentAction($filter = [], $post = 0, $page = null): array
     {
         $post = Post::find($post);
         $filter['order'] = 'created DESC';
@@ -133,7 +133,7 @@ class BlogController
     /**
      * @Access("system: access settings")
      */
-    public function settingsAction()
+    public function settingsAction(): array
     {
         return [
             '$view' => [

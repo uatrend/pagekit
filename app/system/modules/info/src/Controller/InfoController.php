@@ -9,7 +9,7 @@ use Pagekit\Application as App;
  */
 class InfoController
 {
-    public function indexAction()
+    public function indexAction(): array
     {
         return [
             '$view' => [

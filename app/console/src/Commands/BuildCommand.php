@@ -25,7 +25,7 @@ class BuildCommand extends Command
     /**
      * @var string[]
      */
-    protected $excludes = [
+    protected array $excludes = [
         '^(tmp|config\.php|pagekit.+\.zip|pagekit.db|.+\.map)',
         '^app\/assets\/[^\/]+\/(dist\/vue-.+\.js|dist\/jquery\.js|lodash\.js)',
         '^app\/assets\/(jquery|vue)\/(src|perf|external)',
@@ -40,7 +40,7 @@ class BuildCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $path = $this->container->path();
         $vers = $this->container->version();
@@ -65,9 +65,7 @@ class BuildCommand extends Command
 
         $this->line(sprintf('Building Package.'));
 
-        $finder = Finder::create()->files()->in($path)->ignoreVCS(true)->filter(function ($file) use ($filter) {
-            return !preg_match($filter, $file->getRelativePathname());
-        });
+        $finder = Finder::create()->files()->in($path)->ignoreVCS(true)->filter(fn($file) => !preg_match($filter, $file->getRelativePathname()));
 
         $zip = new \ZipArchive;
 

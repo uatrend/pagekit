@@ -11,7 +11,7 @@ class FinderController
     /**
      * @Request({"path"})
      */
-    public function indexAction($path)
+    public function indexAction($path): array
     {
         if (!$dir = $this->getPath()) {
             return $this->error(__('Invalid path.'));
@@ -26,9 +26,7 @@ class FinderController
 
         $finder = App::finder();
 
-        $finder->sort(function ($a, $b) {
-            return $b->getRealpath() > $a->getRealpath() ? -1 : 1;
-        });
+        $finder->sort(fn($a, $b) => $b->getRealpath() > $a->getRealpath() ? -1 : 1);
 
         foreach ($finder->depth(0)->in($dir) as $file) {
 
@@ -60,7 +58,7 @@ class FinderController
     /**
      * @Request({"name"}, csrf=true)
      */
-    public function createFolderAction($name)
+    public function createFolderAction($name): array
     {
         if (!$this->isValidFilename($name)) {
             return $this->error(__('Invalid file name.'));
@@ -93,7 +91,7 @@ class FinderController
     /**
      * @Request({"oldname", "newname"}, csrf=true)
      */
-    public function renameAction($oldname, $newname)
+    public function renameAction($oldname, $newname): array
     {
         if (!$this->isValidFilename($newname)) {
             return $this->error(__('Invalid file name.'));
@@ -117,7 +115,7 @@ class FinderController
     /**
      * @Request({"names": "array"}, csrf=true)
      */
-    public function removeFilesAction($names)
+    public function removeFilesAction($names): array
     {
         foreach ($names as $name) {
 
@@ -145,7 +143,7 @@ class FinderController
     /**
      * @Request(csrf=true)
      */
-    public function uploadAction()
+    public function uploadAction(): array
     {
         try {
 
@@ -184,7 +182,7 @@ class FinderController
         }
     }
 
-    protected function getMode($path)
+    protected function getMode($path): string
     {
         $mode = App::trigger(new FileAccessEvent('system.finder'))->mode($path);
 
@@ -199,7 +197,7 @@ class FinderController
         return $mode;
     }
 
-    protected function formatFileSize($size)
+    protected function formatFileSize($size): string
     {
       if ($size == 0) {
           return __('n/a');
@@ -222,9 +220,8 @@ class FinderController
      * Normalizes the given path
      *
      * @param  string $path
-     * @return string
      */
-    protected function normalizePath($path)
+    protected function normalizePath($path): string
     {
         $path   = str_replace(['\\', '//'], '/', $path);
         $prefix = preg_match('|^(?P<prefix>([a-zA-Z]+:)?//?)|', $path, $matches) ? $matches['prefix'] : '';
@@ -236,14 +233,14 @@ class FinderController
             if ('..' === $part) {
                 array_pop($tokens);
             } elseif ('.' !== $part) {
-                array_push($tokens, $part);
+                $tokens[] = $part;
             }
         }
 
         return $prefix . implode('/', $tokens);
     }
 
-    protected function isValidFilename($name)
+    protected function isValidFilename($name): bool
     {
         if (empty($name)) {
             return false;
@@ -262,11 +259,11 @@ class FinderController
         return false === strpos($name, '/');
     }
 
-    protected function success($message) {
+    protected function success($message): array {
         return compact('message');
     }
 
-    protected function error($message) {
+    protected function error($message): array {
         return ['error' => true, 'message' => $message];
     }
 }

@@ -2,16 +2,15 @@
 
 namespace Pagekit\Session\Csrf\Provider;
 
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class SessionCsrfProvider extends DefaultCsrfProvider
 {
     /**
      * The session.
-     *
-     * @var Session
      */
-    protected $session;
+    protected \Symfony\Component\HttpFoundation\Session\Session $session;
 
     /**
      * Constructor.
@@ -19,7 +18,7 @@ class SessionCsrfProvider extends DefaultCsrfProvider
      * @param Session $session
      * @param string  $name
      */
-    public function __construct(Session $session, $name = '_csrf')
+    public function __construct(SessionInterface $session, $name = '_csrf')
     {
         parent::__construct($name);
 
@@ -29,7 +28,7 @@ class SessionCsrfProvider extends DefaultCsrfProvider
     /**
      * {@inheritdoc}
      */
-    protected function getSessionId()
+    protected function getSessionId(): string
     {
         if (!$this->session->isStarted()) {
             $this->session->start();
@@ -41,7 +40,7 @@ class SessionCsrfProvider extends DefaultCsrfProvider
     /**
      * {@inheritdoc}
      */
-    protected function getSessionToken()
+    protected function getSessionToken(): string
     {
         if (!$this->session->has($this->name)) {
             $this->session->set($this->name, sha1(uniqid(rand(), true)));

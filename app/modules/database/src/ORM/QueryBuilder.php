@@ -4,25 +4,13 @@ namespace Pagekit\Database\ORM;
 
 class QueryBuilder
 {
-    /**
-     * @var EntityManager
-     */
-    protected $manager;
+    protected \Pagekit\Database\ORM\EntityManager $manager;
 
-    /**
-     * @var Metadata
-     */
-    protected $metadata;
+    protected \Pagekit\Database\ORM\Metadata $metadata;
 
-    /**
-     * @var \Pagekit\Database\Query\QueryBuilder
-     */
-    protected $query;
+    protected \Pagekit\Database\Query\QueryBuilder $query;
 
-    /**
-     * @var array
-     */
-    protected $relations = [];
+    protected array $relations = [];
 
     /**
      * Constructor.
@@ -39,10 +27,8 @@ class QueryBuilder
 
     /**
      * Execute the query and get all results.
-     *
-     * @return array
      */
-    public function get()
+    public function get(): array
     {
         if ($entities = $this->manager->hydrateAll($this->query->execute(), $this->metadata)) {
             foreach ($this->getRelations() as $name => $query) {
@@ -76,9 +62,8 @@ class QueryBuilder
      * Set the relations that will be eager loaded.
      *
      * @param  mixed $related
-     * @return self
      */
-    public function related($related)
+    public function related($related): self
     {
         if (is_string($related)) {
             $related = func_get_args();
@@ -90,7 +75,8 @@ class QueryBuilder
 
             // no constrains
             if (is_numeric($name)) {
-                list($name, $constraints) = [$constraints, function () {}];
+                $name = $constraints;
+                $constraints = function () {};
             }
 
             // is nested ?
@@ -118,10 +104,8 @@ class QueryBuilder
 
     /**
      * Gets all relations of the query.
-     *
-     * @return array
      */
-    public function getRelations()
+    public function getRelations(): array
     {
         $relations = [];
 
@@ -148,15 +132,14 @@ class QueryBuilder
      * Gets all nested relations of the query.
      *
      * @param  string $relation
-     * @return array
      */
-    public function getNestedRelations($relation)
+    public function getNestedRelations($relation): array
     {
         $nested = [];
         $prefix = $relation.'.';
 
         foreach ($this->relations as $name => $constraints) {
-            if ($prefix == substr($name, 0, strlen($prefix))) {
+            if ($prefix === substr($name, 0, strlen($prefix))) {
                 $nested[substr($name, strlen($prefix))] = $constraints;
             }
         }

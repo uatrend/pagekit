@@ -33,8 +33,8 @@
 <?php
 
     $range     = 3;
-    $total     = intval($total);
-    $page      = intval($page);
+    $total     = (int) $total;
+    $page      = (int) $page;
     $pageIndex = $page - 1;
 
 ?>
@@ -46,7 +46,7 @@
     <?php for($i=1;$i<=$total;$i++): ?>
         <?php if ($i <= ($pageIndex+$range) && $i >= ($pageIndex-$range)): ?>
 
-            <?php if ($i == $page): ?>
+            <?php if ($i === $page): ?>
             <li class="uk-active"><span><?=$i?></span></li>
             <?php else: ?>
             <li>

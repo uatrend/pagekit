@@ -2,24 +2,22 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\StripNewlinesFilter;
 
-class StripNewlinesTest extends \PHPUnit\Framework\TestCase
+class StripNewlinesTest extends TestCase
 {
     /**
      * @dataProvider provideNewLineStrings
      */
-    public function testFilter($input, $output)
+    public function testFilter($input, $output): void
     {
         $filter = new StripNewlinesFilter;
 
         $this->assertEquals($output, $filter->filter($input));
     }
 
-    /**
-     * @return array
-     */
-    public function provideNewLineStrings()
+    public function provideNewLineStrings(): array
     {
         return [
             ['', ''],

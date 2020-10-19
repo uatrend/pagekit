@@ -7,10 +7,7 @@ use Pagekit\Info\InfoHelper;
 
 class SystemDataCollector implements DataCollectorInterface
 {
-    /**
-     * @var InfoHelper
-     */
-    protected $info;
+    protected \Pagekit\Info\InfoHelper $info;
 
     /**
      * Constructor.
@@ -25,7 +22,7 @@ class SystemDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         return $this->info->get();
     }
@@ -33,7 +30,7 @@ class SystemDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'system';
     }

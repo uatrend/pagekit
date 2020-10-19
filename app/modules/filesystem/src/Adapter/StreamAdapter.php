@@ -4,10 +4,7 @@ namespace Pagekit\Filesystem\Adapter;
 
 class StreamAdapter extends FileAdapter
 {
-    /**
-     * @var string
-     */
-    protected $wrapper;
+    protected string $wrapper;
 
     /**
      * Constructor.
@@ -26,7 +23,7 @@ class StreamAdapter extends FileAdapter
     /**
      * {@inheritdoc}
      */
-    public function getStreamWrapper()
+    public function getStreamWrapper(): string
     {
         return $this->wrapper;
     }
@@ -34,7 +31,7 @@ class StreamAdapter extends FileAdapter
     /**
      * {@inheritdoc}
      */
-    public function getPathInfo(array $info)
+    public function getPathInfo(array $info): array
     {
         $info['root'] = '';
 

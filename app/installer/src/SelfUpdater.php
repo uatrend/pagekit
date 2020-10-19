@@ -9,25 +9,13 @@ use Symfony\Component\Console\Output\StreamOutput;
 
 class SelfUpdater
 {
-    /**
-     * @var array
-     */
-    protected $cleanFolder = ['app'];
+    protected array $cleanFolder = ['app'];
 
-    /**
-     * @var array
-     */
-    protected $ignoreFolder = ['packages', 'storage'];
+    protected array $ignoreFolder = ['packages', 'storage'];
 
-    /**
-     * @var string
-     */
-    protected $path;
+    protected string $path;
 
-    /**
-     * @var string
-     */
-    protected $output;
+    protected OutputInterface $output;
 
     /**
      * Constructor.
@@ -53,7 +41,7 @@ class SelfUpdater
      * @param $file
      * @throws \Exception
      */
-    public function update($file)
+    public function update($file): void
     {
         try {
             $path = App::path();
@@ -77,17 +65,13 @@ class SelfUpdater
             }));
 
             if ($this->isWritable($fileList, $path) !== true) {
-                throw new \RuntimeException(array_reduce($fileList, function ($carry, $file) {
-                    return $carry . sprintf("'%s' not writable\n", $file);
-                }));
+                throw new \RuntimeException(array_reduce($fileList, fn($carry, $file) => $carry . sprintf("'%s' not writable\n", $file)));
             }
 
             $requirements = include "zip://{$file}#app/installer/requirements.php";
             if ($failed = $requirements->getFailedRequirements()) {
 
-                throw new \RuntimeException(array_reduce($failed, function ($carry, $problem) {
-                    return $carry . "\n" . $problem->getHelpText();
-                }));
+                throw new \RuntimeException(array_reduce($failed, fn($carry, $problem) => $carry . "\n" . $problem->getHelpText()));
 
             }
 
@@ -186,7 +170,7 @@ class SelfUpdater
      * @param $fileList
      * @param $path
      */
-    protected function extract($file, $fileList, $path)
+    protected function extract($file, $fileList, $path): void
     {
         $zip = new \ZipArchive;
         if ($zip->open($file) === true) {
@@ -203,9 +187,8 @@ class SelfUpdater
      *
      * @param $fileList
      * @param $path
-     * @return array
      */
-    protected function cleanup($fileList, $path)
+    protected function cleanup($fileList, $path): array
     {
         $errorList = [];
 
@@ -220,9 +203,8 @@ class SelfUpdater
      * @param $fileList
      * @param $dir
      * @param $path
-     * @return array
      */
-    protected function doCleanup($fileList, $dir, $path)
+    protected function doCleanup($fileList, $dir, $path): array
     {
         $errorList = [];
 
@@ -232,11 +214,10 @@ class SelfUpdater
 
             if (is_dir($realPath)) {
                 array_merge($errorList, $this->doCleanup($fileList, $file, $path));
-
                 if (!in_array($file, $fileList)) {
                     @rmdir($realPath);
                 }
-            } else if (!in_array($file, $fileList) && !unlink($realPath)) {
+            } elseif (!in_array($file, $fileList) && !unlink($realPath)) {
                 $errorList[] = $file;
             }
         }
@@ -249,7 +230,7 @@ class SelfUpdater
      *
      * @param $active
      */
-    protected function setUpdateMode($active)
+    protected function setUpdateMode($active): void
     {
         // TODO: Implement this.
     }

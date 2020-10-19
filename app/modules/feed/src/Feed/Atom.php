@@ -2,6 +2,7 @@
 
 namespace Pagekit\Feed\Feed;
 
+use Pagekit\Feed\FeedInterface;
 use Pagekit\Feed\Feed;
 
 class Atom extends Feed
@@ -20,7 +21,7 @@ class Atom extends Feed
     /**
      * {@inheritdoc}
      */
-    public function setDescription($description)
+    public function setDescription($description): FeedInterface
     {
         return $this;
     }
@@ -28,7 +29,7 @@ class Atom extends Feed
     /**
      * {@inheritdoc}
      */
-    public function setAtomLink($href, $rel = '', $type = '', $hreflang = '', $title = '', $length = 0)
+    public function setAtomLink($href, $rel = '', $type = '', $hreflang = '', $title = '', $length = 0): FeedInterface
     {
         return parent::setAtomLink($href, $rel, $type, $hreflang, $title, $length)->setElement('id', self::uuid($href, 'urn:uuid:'));
     }
@@ -38,9 +39,8 @@ class Atom extends Feed
      *
      * @param  string $key
      * @param  string $prefix
-     * @return string
      */
-    public static function uuid($key = null, $prefix = '')
+    public static function uuid($key = null, $prefix = ''): string
     {
         $hash = str_split(md5($key ?: uniqid()), 4);
         foreach ([2, 1, 1, 1, 3] as $length) {
@@ -52,7 +52,7 @@ class Atom extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function build()
+    protected function build(): \DOMDocument
     {
         $doc = new \DOMDocument('1.0', $this->encoding);
 
@@ -78,7 +78,7 @@ class Atom extends Feed
      * @param  array        $element
      * @return \DOMElement
      */
-    protected function buildElement(\DOMDocument $doc, array $element)
+    protected function buildElement(\DOMDocument $doc, array $element): \DOMElement
     {
         $element[0] = 0 === strpos($element[0], 'atom:') ? substr($element[0], 5) : $element[0];
         return parent::buildElement($doc, $element);
@@ -87,7 +87,7 @@ class Atom extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function buildAttributes(\DOMElement $element, array $attributes = [])
+    protected function buildAttributes(\DOMElement $element, array $attributes = []): \DOMElement
     {
         if (in_array($element->nodeName, $this->cdata)) {
             $attributes['type'] = 'html';

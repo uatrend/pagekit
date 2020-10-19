@@ -7,9 +7,9 @@ use Pagekit\Config\Config;
 
 class MenuManager implements \JsonSerializable
 {
-    protected $positions = [];
-    protected $menus;
-    protected $config;
+    protected ?array $positions = [];
+    protected array $menus;
+    protected Config $config;
 
     public function __construct(Config $config, array $menus = [])
     {
@@ -31,9 +31,8 @@ class MenuManager implements \JsonSerializable
      * Gets menu by id.
      *
      * @param  string $id
-     * @return array
      */
-    public function get($id)
+    public function get($id): array
     {
         $menus = $this->all();
 
@@ -42,10 +41,8 @@ class MenuManager implements \JsonSerializable
 
     /**
      * Gets menus.
-     *
-     * @return array
      */
-    public function all()
+    public function all(): array
     {
         $menus = $this->menus;
 
@@ -53,9 +50,7 @@ class MenuManager implements \JsonSerializable
             $menu['positions'] = array_keys($this->config->get('_menus', []), $id);
         }
 
-        uasort($menus, function ($a, $b) {
-            return strcmp($a['label'], $b['label']);
-        });
+        uasort($menus, fn($a, $b) => strcmp($a['label'], $b['label']));
 
         return $menus + ['' => ['id' => '', 'label' => __('Not Linked'), 'fixed' => true]];
     }
@@ -66,17 +61,15 @@ class MenuManager implements \JsonSerializable
      * @param string $name
      * @param string $label
      */
-    public function register($name, $label)
+    public function register($name, $label): void
     {
         $this->positions[$name] = compact('name', 'label');
     }
 
     /**
      * Gets the menu positions.
-     *
-     * @return array
      */
-    public function getPositions()
+    public function getPositions(): ?array
     {
         return $this->positions;
     }
@@ -85,9 +78,8 @@ class MenuManager implements \JsonSerializable
      * Finds an assigned menu by position.
      *
      * @param  string $position
-     * @return string
      */
-    public function find($position)
+    public function find($position): string
     {
         return $this->config->get("_menus.{$position}");
     }
@@ -98,7 +90,7 @@ class MenuManager implements \JsonSerializable
      * @param string $id
      * @param array  $positions
      */
-    public function assign($id, array $positions)
+    public function assign($id, array $positions): void
     {
         $menus = $this->config->get('_menus', []);
         $menus = array_diff($menus, [$id]);
@@ -113,7 +105,7 @@ class MenuManager implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->all();
     }

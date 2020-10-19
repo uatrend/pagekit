@@ -10,10 +10,7 @@ use Pagekit\Event\EventSubscriberInterface;
  */
 class ResponseListener implements EventSubscriberInterface
 {
-    /**
-     * @var string
-     */
-    protected $charset;
+    protected string $charset;
 
     /**
      * Constructor.
@@ -32,7 +29,7 @@ class ResponseListener implements EventSubscriberInterface
      * @param $request
      * @param $response
      */
-    public function onResponse($event, $request, $response)
+    public function onResponse($event, $request, $response): void
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -45,7 +42,7 @@ class ResponseListener implements EventSubscriberInterface
         $response->prepare($request);
     }
 
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'response' => ['onResponse', -10]

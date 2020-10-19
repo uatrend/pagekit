@@ -5,6 +5,8 @@ namespace Pagekit\User\Model;
 use Pagekit\Application\Exception;
 use Pagekit\Auth\UserInterface;
 use Pagekit\System\Model\DataModelTrait;
+use Pagekit\User\Model\AccessModelTrait;
+use Pagekit\User\Model\UserModelTrait;
 
 /**
  * @Entity(tableClass="@system_user")
@@ -57,15 +59,12 @@ class User implements UserInterface, \JsonSerializable
     /** @Column */
     public $activation;
 
-    /**
-     * @var array
-     */
-    protected $permissions;
+    protected ?array $permissions = null;
 
     /**
      * {@inheritdoc}
      */
-    public function getId()
+    public function getId(): string
     {
         return $this->id;
     }
@@ -73,7 +72,7 @@ class User implements UserInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function getUsername()
+    public function getUsername(): string
     {
         return $this->username;
     }
@@ -81,7 +80,7 @@ class User implements UserInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function getPassword()
+    public function getPassword(): string
     {
         return $this->password;
     }
@@ -93,7 +92,7 @@ class User implements UserInterface, \JsonSerializable
         return isset($statuses[$this->status]) ? $statuses[$this->status] : __('Unknown');
     }
 
-    public static function getStatuses()
+    public static function getStatuses(): array
     {
         return [
             self::STATUS_ACTIVE => __('Active'),
@@ -103,50 +102,40 @@ class User implements UserInterface, \JsonSerializable
 
     /**
      * Check if the user has the anonymous role.
-     *
-     * @return boolean
      */
-    public function isAnonymous()
+    public function isAnonymous(): bool
     {
         return $this->hasRole(Role::ROLE_ANONYMOUS);
     }
 
     /**
      * Check if the user has the authenticated role.
-     *
-     * @return boolean
      */
-    public function isAuthenticated()
+    public function isAuthenticated(): bool
     {
         return $this->hasRole(Role::ROLE_AUTHENTICATED);
     }
 
     /**
      * Check if the user has the administrator role.
-     *
-     * @return boolean
      */
-    public function isAdministrator()
+    public function isAdministrator(): bool
     {
         return $this->hasRole(Role::ROLE_ADMINISTRATOR);
     }
 
     /**
      * Check if the user is active.
-     *
-     * @return bool
      */
-    public function isActive()
+    public function isActive(): bool
     {
         return $this->status == self::STATUS_ACTIVE;
     }
 
     /**
      * Check if the user is blocked.
-     *
-     * @return bool
      */
-    public function isBlocked()
+    public function isBlocked(): bool
     {
         return $this->status == self::STATUS_BLOCKED;
     }
@@ -155,9 +144,8 @@ class User implements UserInterface, \JsonSerializable
      * Check if the user has access for a provided permission identifier
      *
      * @param  string  $permission
-     * @return boolean
      */
-    public function hasPermission($permission)
+    public function hasPermission($permission): bool
     {
         if ($this->permissions === null) {
 
@@ -184,9 +172,8 @@ class User implements UserInterface, \JsonSerializable
      *
      * @param  string $expression
      * @throws \InvalidArgumentException
-     * @return boolean
      */
-    public function hasAccess($expression)
+    public function hasAccess($expression): bool
     {
         $user = $this;
 
@@ -198,9 +185,7 @@ class User implements UserInterface, \JsonSerializable
             return $this->hasPermission($expression);
         }
 
-        $exp = preg_replace('/[^01&\(\)\|!]/', '', preg_replace_callback('/[a-z_][a-z-_\.:\d\s]*/i', function($permission) use ($user) {
-            return (int) $user->hasPermission(trim($permission[0]));
-        }, $expression));
+        $exp = preg_replace('/[^01&\(\)\|!]/', '', preg_replace_callback('/[a-z_][a-z-_\.:\d\s]*/i', fn($permission) => (int) $user->hasPermission(trim($permission[0])), $expression));
 
         if (!$fn = @create_function("", "return $exp;")) {
             throw new \InvalidArgumentException(sprintf('Unable to parse the given access string "%s"', $expression));
@@ -209,7 +194,7 @@ class User implements UserInterface, \JsonSerializable
         return (bool) $fn();
     }
 
-    public function validate()
+    public function validate(): bool
     {
         if (empty($this->name)) {
             throw new Exception(__('Name required.'));
@@ -248,7 +233,7 @@ class User implements UserInterface, \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->toArray([], ['password', 'activation']);
     }

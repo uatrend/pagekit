@@ -2,20 +2,15 @@
 
 namespace Pagekit\Config\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Config\Config;
 use Pagekit\Config\Loader\PhpLoader;
 
-class ConfigTest extends \PHPUnit\Framework\TestCase
+class ConfigTest extends TestCase
 {
-    /**
-     * @var Config
-     */
-    protected $config;
+    protected ?Config $config = null;
 
-    /**
-     * @var array
-     */
-    protected $values;
+    protected ?array $values = null;
 
     public function setUp(): void
 	{
@@ -29,23 +24,23 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 	    $this->values = $values;
 	}
 
-	public function testHas()
+	public function testHas(): void
 	{
 		$this->assertTrue($this->config->has('foo'));
 		$this->assertTrue(!$this->config->has('none'));
 	}
 
-	public function testGet()
+	public function testGet(): void
 	{
 		$this->assertEquals($this->config->get('foo.bar'), 'test');
 	}
 
-	public function testToArray()
+	public function testToArray(): void
 	{
 		$this->assertEquals($this->config->toArray(), $this->values);
 	}
 
-	public function testSet()
+	public function testSet(): void
 	{
 		$this->config->set('foo.bar2', 'test2');
 		$this->assertEquals($this->config->get('foo.bar2'), 'test2');
@@ -56,7 +51,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
 		$this->assertEquals($this->config->offsetGet('foo.bar'), null);
 	}
 
-	public function testDump()
+	public function testDump(): void
 	{
 		$this->assertIsString($this->config->dump());
 	}

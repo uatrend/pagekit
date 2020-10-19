@@ -16,10 +16,10 @@ class WrappedListener
     protected $listener;
     protected $name;
     protected $priority;
-    protected $called;
-    protected $stoppedPropagation;
-    protected $stopwatch;
-    protected $dispatcher;
+    protected bool $called;
+    protected bool $stoppedPropagation;
+    protected Stopwatch $stopwatch;
+    protected ?EventDispatcherInterface $dispatcher = null;
 
     public function __construct($listener, $name, $priority, Stopwatch $stopwatch, EventDispatcherInterface $dispatcher = null)
     {
@@ -42,12 +42,12 @@ class WrappedListener
         return $this->priority;
     }
 
-    public function wasCalled()
+    public function wasCalled(): bool
     {
         return $this->called;
     }
 
-    public function stoppedPropagation()
+    public function stoppedPropagation(): bool
     {
         return $this->stoppedPropagation;
     }

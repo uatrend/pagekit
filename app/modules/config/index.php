@@ -8,9 +8,7 @@ return [
 
     'main' => function ($app) {
 
-        $app['config'] = function ($app) {
-            return new ConfigManager($app['db'], $this->config);
-        };
+        $app['config'] = fn($app) => new ConfigManager($app['db'], $this->config);
 
         if ($app['config.file']) {
             $app['module']->addLoader(function ($module) use ($app) {

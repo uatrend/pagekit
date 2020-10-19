@@ -16,16 +16,13 @@ use Symfony\Component\Console\Output\NullOutput;
 class Installer
 {
 
-    /**
-     * @var string
-     */
-    protected $configFile = 'config.php';
+    protected string $configFile = 'config.php';
 
 
     /**
      * @var Application Pagekit Application instance
      */
-    protected $app;
+    protected \Pagekit\Application $app;
 
     /**
      * @var bool
@@ -43,7 +40,7 @@ class Installer
         $this->config = file_exists($this->configFile);
     }
 
-    public function check($config)
+    public function check($config): array
     {
         $status = 'no-connection';
         $message = '';
@@ -91,7 +88,7 @@ class Installer
         return ['status' => $status, 'message' => $message];
     }
 
-    public function install($config = [], $option = [], $user = [])
+    public function install($config = [], $option = [], $user = []): array
     {
         $status = $this->check($config);
         $message = $status['message'];
@@ -144,10 +141,8 @@ class Installer
                 if (file_exists(__DIR__.'/../install.php')) {
                     require_once __DIR__.'/../install.php';
                 }
-            } else {
-                if (file_exists(__DIR__.'/../install-demo.php')) {
-                    require_once __DIR__.'/../install-demo.php';
-                }
+            } elseif (file_exists(__DIR__.'/../install-demo.php')) {
+                require_once __DIR__.'/../install-demo.php';
             }
 
             if (!$this->config) {
@@ -187,10 +182,7 @@ class Installer
         return ['status' => $status, 'message' => $message];
     }
 
-    /**
-     * @return void
-     */
-    protected function createDatabase()
+    protected function createDatabase(): void
     {
         $module = $this->app->module('database');
         $params = $module->config('connections')[$module->config('default')];

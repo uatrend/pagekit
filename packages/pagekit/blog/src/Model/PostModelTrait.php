@@ -14,7 +14,7 @@ trait PostModelTrait
      *
      * @param int $id
      */
-    public static function updateCommentInfo($id)
+    public static function updateCommentInfo($id): void
     {
         $query = Comment::where(['post_id' => $id, 'status' => Comment::STATUS_APPROVED]);
 
@@ -32,7 +32,7 @@ trait PostModelTrait
     /**
      * @Saving
      */
-    public static function saving($event, Post $post)
+    public static function saving($event, Post $post): void
     {
         $post->modified = new \DateTime();
 
@@ -51,7 +51,7 @@ trait PostModelTrait
     /**
      * @Deleting
      */
-    public static function deleting($event, Post $post)
+    public static function deleting($event, Post $post): void
     {
         self::getConnection()->delete('@blog_comment', ['post_id' => $post->id]);
     }

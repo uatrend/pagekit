@@ -42,7 +42,7 @@ class AdminController
      * @Access(admin=true)
      * @Request({"order": "array"})
      */
-    public function adminMenuAction($order)
+    public function adminMenuAction($order): array
     {
         if (!$order) {
             App::abort(400, __('Missing order data.'));

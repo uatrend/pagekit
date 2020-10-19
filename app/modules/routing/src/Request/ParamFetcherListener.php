@@ -6,10 +6,7 @@ use Pagekit\Event\EventSubscriberInterface;
 
 class ParamFetcherListener implements EventSubscriberInterface
 {
-    /**
-     * @var ParamFetcherInterface
-     */
-    protected $paramFetcher;
+    protected \Pagekit\Routing\Request\ParamFetcherInterface $paramFetcher;
 
     /**
      * Constructor.
@@ -26,7 +23,7 @@ class ParamFetcherListener implements EventSubscriberInterface
      *
      * @param $event
      */
-    public function onController($event, $request)
+    public function onController($event, $request): void
     {
         $controller = $event->getController();
         $attributes = $request->attributes->get('_request', []);
@@ -51,7 +48,7 @@ class ParamFetcherListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'controller' => ['onController', 110]

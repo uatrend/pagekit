@@ -4,15 +4,9 @@ namespace Pagekit\Filesystem;
 
 class Locator
 {
-    /**
-     * @var string
-     */
-    protected $path;
+    protected string $path;
 
-    /**
-     * @var array
-     */
-    protected $paths = [];
+    protected array $paths = [];
 
     /**
      * Constructor.
@@ -35,9 +29,8 @@ class Locator
      *
      * @param  string       $prefix
      * @param  string|array $paths
-     * @return self
      */
-    public function add($prefix, $paths)
+    public function add($prefix, $paths): self
     {
         $paths = array_map(function($path) use ($prefix) {
 

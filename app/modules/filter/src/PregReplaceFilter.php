@@ -36,7 +36,7 @@ class PregReplaceFilter extends AbstractFilter
      * @param  string|array $pattern
      * @throws \InvalidArgumentException
      */
-    public function setPattern($pattern)
+    public function setPattern($pattern): void
     {
         if (!is_array($pattern) && !is_string($pattern)) {
             $pattern = is_object($pattern) ? get_class($pattern) : gettype($pattern);
@@ -72,7 +72,7 @@ class PregReplaceFilter extends AbstractFilter
      * @param  array|string $replacement
      * @throws \InvalidArgumentException
      */
-    public function setReplacement($replacement)
+    public function setReplacement($replacement): void
     {
         if (!is_array($replacement) && !is_string($replacement)) {
             $replacement = is_object($replacement) ? get_class($replacement) : gettype($replacement);

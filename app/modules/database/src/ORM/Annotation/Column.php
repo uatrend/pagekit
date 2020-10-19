@@ -8,8 +8,7 @@ namespace Pagekit\Database\ORM\Annotation;
  */
 final class Column implements Annotation
 {
-    /** @var string */
-    public $name;
+    public string $name = '';
 
     /** @var mixed */
     public $type = 'string';

@@ -6,17 +6,12 @@ use Symfony\Component\HttpFoundation\Response;
 
 class GetResponseEvent extends Event
 {
-    /**
-     * @var Response
-     */
-    protected $response;
+    protected ?\Symfony\Component\HttpFoundation\Response $response = null;
 
     /**
      * Returns the response object
-     *
-     * @return Response
      */
-    public function getResponse()
+    public function getResponse(): ?\Symfony\Component\HttpFoundation\Response
     {
         return $this->response;
     }
@@ -26,7 +21,7 @@ class GetResponseEvent extends Event
      *
      * @param Response $response
      */
-    public function setResponse(Response $response)
+    public function setResponse(Response $response): void
     {
         $this->response = $response;
         $this->stopPropagation();
@@ -37,7 +32,7 @@ class GetResponseEvent extends Event
      *
      * @return Boolean Whether a response was set
      */
-    public function hasResponse()
+    public function hasResponse(): bool
     {
         return null !== $this->response;
     }

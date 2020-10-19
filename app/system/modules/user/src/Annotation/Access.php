@@ -7,15 +7,9 @@ namespace Pagekit\User\Annotation;
  */
 class Access
 {
-    /**
-     * @var string
-     */
-    protected $expression;
+    protected ?string $expression = null;
 
-    /**
-     * @var bool
-     */
-    protected $admin = null;
+    protected ?bool $admin = null;
 
     /**
      * Constructor.
@@ -41,10 +35,8 @@ class Access
 
     /**
      * Gets the access expression.
-     *
-     * @return string
      */
-    public function getExpression()
+    public function getExpression(): ?string
     {
         return $this->expression;
     }
@@ -54,17 +46,15 @@ class Access
      *
      * @param string
      */
-    public function setExpression($expression)
+    public function setExpression($expression): void
     {
         $this->expression = $expression;
     }
 
     /**
      * Gets admin option.
-     *
-     * @return bool
      */
-    public function getAdmin()
+    public function getAdmin(): ?bool
     {
         return $this->admin;
     }
@@ -74,7 +64,7 @@ class Access
      *
      * @param bool $admin
      */
-    public function setAdmin($admin)
+    public function setAdmin($admin): void
     {
         $this->admin = $admin;
     }

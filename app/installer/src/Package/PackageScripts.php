@@ -6,15 +6,9 @@ use Pagekit\Application as App;
 
 class PackageScripts
 {
-    /**
-     * @var string
-     */
-    protected $file;
+    protected ?string $file = null;
 
-    /**
-     * @var string
-     */
-    protected $current;
+    protected ?string $current = null;
 
     /**
      * Constructor.
@@ -31,7 +25,7 @@ class PackageScripts
     /**
      * Runs the script's install hook.
      */
-    public function install()
+    public function install(): void
     {
         $this->run($this->get('install'));
     }
@@ -39,7 +33,7 @@ class PackageScripts
     /**
      * Runs the script's uninstall hook.
      */
-    public function uninstall()
+    public function uninstall(): void
     {
         $this->run($this->get('uninstall'));
     }
@@ -47,7 +41,7 @@ class PackageScripts
     /**
      * Runs the script's enable hook.
      */
-    public function enable()
+    public function enable(): void
     {
         $this->run($this->get('enable'));
     }
@@ -55,7 +49,7 @@ class PackageScripts
     /**
      * Runs the script's disable hook.
      */
-    public function disable()
+    public function disable(): void
     {
         $this->run($this->get('disable'));
     }
@@ -63,7 +57,7 @@ class PackageScripts
     /**
      * Runs the script's update hooks.
      */
-    public function update()
+    public function update(): void
     {
         $this->run($this->getUpdates());
     }
@@ -71,20 +65,19 @@ class PackageScripts
     /**
      * Checks for script updates.
      */
-    public function hasUpdates()
+    public function hasUpdates(): bool
     {
         return (bool) $this->getUpdates();
     }
 
     /**
      * @param  string $name
-     * @return array
      */
-    protected function get($name)
+    protected function get($name): array
     {
         $scripts = $this->load();
 
-        return isset($scripts[$name]) ? $scripts[$name] : [];
+        return isset($scripts[$name]) ? (array) $scripts[$name] : [];
     }
 
     /**
@@ -102,7 +95,7 @@ class PackageScripts
     /**
      * @param array|callable $scripts
      */
-    protected function run($scripts)
+    protected function run($scripts): void
     {
         array_map(function ($script) {
 
@@ -116,13 +109,11 @@ class PackageScripts
     /**
      * @return callable[]
      */
-    protected function getUpdates()
+    protected function getUpdates(): array
     {
         $updates = $this->get('updates');
 
-        $versions = array_filter(array_keys($updates), function ($version) {
-            return version_compare($version, $this->current, '>');
-        });
+        $versions = array_filter(array_keys($updates), fn($version) => version_compare($version, $this->current, '>'));
 
         $updates = array_intersect_key($updates, array_flip($versions));
         uksort($updates, 'version_compare');

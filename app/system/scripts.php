@@ -159,9 +159,7 @@ return [
             $dashboard = $app->module('system/dashboard');
             $widgets = $dashboard->getWidgets();
 
-            $ids = array_filter(array_keys($widgets), function ($id) use ($widgets){
-                return $id == $widgets[$id]['id'];
-            });
+            $ids = array_filter(array_keys($widgets), fn($id) => $id == $widgets[$id]['id']);
 
             $dashboard->saveWidgets(array_intersect_key($widgets, array_flip($ids)));
 

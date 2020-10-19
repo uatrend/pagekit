@@ -9,17 +9,17 @@ class FileAccessEvent extends Event
     /**
      * @var string[]
      */
-    protected $writePaths = [];
+    protected array $writePaths = [];
 
     /**
      * @var string[]
      */
-    protected $readPaths = [];
+    protected array $readPaths = [];
 
     /**
      * @var string[]
      */
-    protected $notPaths = [];
+    protected array $notPaths = [];
 
     /**
      * Adds a rule a path must match
@@ -56,7 +56,7 @@ class FileAccessEvent extends Event
         return $this;
     }
 
-    public function mode($path)
+    public function mode($path): string
     {
         if (defined('PHP_WINDOWS_VERSION_MAJOR')) {
             $path = strtr($path, '\\', '/');
@@ -90,7 +90,7 @@ class FileAccessEvent extends Event
      *
      * @return bool    Whether the given string is a regex
      */
-    protected function isRegex($str)
+    protected function isRegex($str): bool
     {
         if (preg_match('/^(.{3,}?)[imsxuADU]*$/', $str, $m)) {
             $start = substr($m[1], 0, 1);
@@ -124,7 +124,7 @@ class FileAccessEvent extends Event
      *
      * @return string regexp corresponding to a given string or regexp
      */
-    protected function toRegex($str)
+    protected function toRegex($str): string
     {
         return $this->isRegex($str) ? $str : '~'.preg_quote($str, '~').'~';
     }

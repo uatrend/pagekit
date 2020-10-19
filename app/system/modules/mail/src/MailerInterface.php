@@ -11,27 +11,24 @@ interface MailerInterface
      * @param  string $body
      * @param  mixed  $to
      * @param  mixed  $from
-     * @return object
      */
-    public function create($subject = null, $body = null, $to = null, $from = null);
+    public function create($subject = null, $body = null, $to = null, $from = null): object;
 
     /**
      * Sends the given message.
      *
      * @param  mixed $message
      * @param  array $errors
-     * @return int
      */
-    public function send($message, &$errors = []);
+    public function send($message, &$errors = []): int;
 
     /**
      * Queues the given message and send it later.
      *
      * @param  mixed $message
      * @param  array $errors
-     * @return int
      */
-    public function queue($message, &$errors = []);
+    public function queue($message, &$errors = []): int;
 
     /**
      * Registers a plugin.

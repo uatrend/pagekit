@@ -35,12 +35,10 @@ return [
             if ($css = $app['url']->getStatic('theme:css/theme.css')) {
                 $editor['content_css'] = [ $css ];
             }
-            if (isset($presets['tinymce_uikit']) && $presets['tinymce_uikit']) {
-                if ($uikit = $scripts->get('uikit')->getSource()) {
-                    $editorScripts[] = $uikit;
-                    if ($uikitIcons = $scripts->get('uikit-icons')->getSource()) {
-                        $editorScripts[] = $uikitIcons;
-                    }
+            if (isset($presets['tinymce_uikit']) && $presets['tinymce_uikit'] && ($uikit = $scripts->get('uikit')->getSource())) {
+                $editorScripts[] = $uikit;
+                if ($uikitIcons = $scripts->get('uikit-icons')->getSource()) {
+                    $editorScripts[] = $uikitIcons;
                 }
             }
             if (isset($presets['tinymce_body_class']) && $presets['tinymce_body_class']) {

@@ -8,10 +8,7 @@ use Pagekit\Widget\Model\Widget;
 
 class PositionHelper extends Helper
 {
-    /**
-     * @var PositionManager
-     */
-    protected $positions;
+    protected \Pagekit\Widget\PositionManager $positions;
 
     /**
      * @param PositionManager $positions
@@ -35,9 +32,8 @@ class PositionHelper extends Helper
      * Checks if the position exists.
      *
      * @param  string $name
-     * @return bool
      */
-    public function exists($name)
+    public function exists($name): bool
     {
         return (bool) $this->getWidgets($name);
     }
@@ -48,9 +44,8 @@ class PositionHelper extends Helper
      * @param  string       $name
      * @param  array|string $view
      * @param  array        $parameters
-     * @return string
      */
-    public function render($name, $view = null, array $parameters = [])
+    public function render($name, $view = null, array $parameters = []): ?string
     {
         if (is_array($view)) {
             $parameters = $view;
@@ -65,7 +60,7 @@ class PositionHelper extends Helper
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'position';
     }

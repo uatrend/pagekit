@@ -30,7 +30,7 @@ class AccessListener implements EventSubscriberInterface
     /**
      * Reads the "@Access" annotations from the controller stores them in the "access" route option.
      */
-    public function onConfigureRoute($event, $route)
+    public function onConfigureRoute($event, $route): void
     {
         if (!$this->reader) {
             $this->reader = new SimpleAnnotationReader;
@@ -59,10 +59,8 @@ class AccessListener implements EventSubscriberInterface
 
                 if ($admin) {
                     $access[] = $permission;
-                } else {
-                    if ($key = array_search($permission, $access)) {
-                        unset($access[$key]);
-                    }
+                } elseif ($key = array_search($permission, $access)) {
+                    unset($access[$key]);
                 }
             }
         }
@@ -78,7 +76,7 @@ class AccessListener implements EventSubscriberInterface
      * @param  AuthorizeEvent $event
      * @throws AuthException
      */
-    public function onAuthorize(AuthorizeEvent $event)
+    public function onAuthorize(AuthorizeEvent $event): void
     {
         if (strpos(App::request()->get('redirect'), App::url('@system', [], true)) === 0 && !$event->getUser()->hasAccess('system: access admin area')) {
             throw new AuthException(__('You do not have access to the administration area of this site.'));
@@ -88,7 +86,7 @@ class AccessListener implements EventSubscriberInterface
     /**
      * Reads the access expressions and evaluates them on the current user.
      */
-    public function onLateRequest($event, $request)
+    public function onLateRequest($event, $request): void
     {
         if (!$access = $request->attributes->get('_access')) {
             return;
@@ -108,7 +106,7 @@ class AccessListener implements EventSubscriberInterface
     /**
      * Checks for the "system: access admin area" and redirects to login.
      */
-    public function onRequest($event, $request)
+    public function onRequest($event, $request): void
     {
         if ($request->isXmlHttpRequest() || App::auth()->getUser() || !in_array('system: access admin area', $request->attributes->get('_access', []))) {
             return;
@@ -127,7 +125,7 @@ class AccessListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'route.configure' => 'onConfigureRoute',

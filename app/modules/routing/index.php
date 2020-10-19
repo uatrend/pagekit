@@ -19,17 +19,11 @@ return [
 
     'main' => function ($app) {
 
-        $app['routes'] = function () {
-            return new Routes();
-        };
+        $app['routes'] = fn() => new Routes();
 
-        $app['router'] = function ($app) {
-            return new Router($app['routes'], new RoutesLoader($app['events']), $app['request.stack'], ['cache' => $app['path.cache']]);
-        };
+        $app['router'] = fn($app) => new Router($app['routes'], new RoutesLoader($app['events']), $app['request.stack'], ['cache' => $app['path.cache']]);
 
-        $app['middleware'] = function ($app) {
-            return new Middleware($app['events']);
-        };
+        $app['middleware'] = fn($app) => new Middleware($app['events']);
 
         $app['module']->addLoader(function ($module) use ($app) {
 

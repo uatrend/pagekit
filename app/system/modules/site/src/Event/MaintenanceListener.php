@@ -10,7 +10,7 @@ class MaintenanceListener implements EventSubscriberInterface
     /**
      * Puts the page in maintenance mode.
      */
-    public function onRequest($event, $request)
+    public function onRequest($event, $request): void
     {
         if (!$event->isMasterRequest()) {
             return;
@@ -43,7 +43,7 @@ class MaintenanceListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'request' => ['onRequest', 10]

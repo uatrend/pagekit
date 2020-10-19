@@ -13,7 +13,7 @@ class PageApiController
     /**
      * @Route("/", methods="GET")
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         return array_values(Page::findAll());
     }
@@ -21,7 +21,7 @@ class PageApiController
     /**
      * @Route("/{id}", methods="GET", requirements={"id"="\d+"})
      */
-    public function getAction($id)
+    public function getAction($id): Page
     {
         return Page::find($id);
     }

@@ -11,10 +11,8 @@ class FilterChain implements \Countable, FilterInterface
 
     /**
      * Filter chain
-     *
-     * @var \SplPriorityQueue
      */
-    protected $filters;
+    protected \SplPriorityQueue $filters;
 
     /**
      * Constructor.
@@ -26,10 +24,8 @@ class FilterChain implements \Countable, FilterInterface
 
     /**
      * Return the count of attached filters
-     *
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->filters);
     }
@@ -40,9 +36,8 @@ class FilterChain implements \Countable, FilterInterface
      * @param  callable|FilterInterface $callback
      * @param  int $priority
      * @throws \InvalidArgumentException
-     * @return FilterChain
      */
-    public function attach($callback, $priority = self::DEFAULT_PRIORITY)
+    public function attach($callback, $priority = self::DEFAULT_PRIORITY): self
     {
         if (!is_callable($callback)) {
             if (!$callback instanceof FilterInterface) {
@@ -59,9 +54,8 @@ class FilterChain implements \Countable, FilterInterface
      * Merge the filter chain with the one given in parameter
      *
      * @param  FilterChain $filterChain
-     * @return FilterChain
      */
-    public function merge(FilterChain $filterChain)
+    public function merge(FilterChain $filterChain): self
     {
         foreach ($filterChain->getFilters() as $filter) {
             $this->attach($filter);
@@ -72,10 +66,8 @@ class FilterChain implements \Countable, FilterInterface
 
     /**
      * Get all the filters.
-     *
-     * @return \SplPriorityQueue
      */
-    public function getFilters()
+    public function getFilters(): \SplPriorityQueue
     {
         return $this->filters;
     }

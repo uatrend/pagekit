@@ -20,7 +20,7 @@ class RSS2 extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function build()
+    protected function build(): \DOMDocument
     {
         $doc = new \DOMDocument('1.0', $this->encoding);
 

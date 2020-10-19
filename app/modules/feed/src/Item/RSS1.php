@@ -2,6 +2,7 @@
 
 namespace Pagekit\Feed\Item;
 
+use Pagekit\Feed\ItemInterface;
 use Pagekit\Feed\Feed;
 use Pagekit\Feed\Item;
 
@@ -10,7 +11,7 @@ class RSS1 extends Item
     /**
      * {@inheritdoc}
      */
-    public function setId($id)
+    public function setId($id): ItemInterface
     {
         return $this;
     }
@@ -18,7 +19,7 @@ class RSS1 extends Item
     /**
      * {@inheritdoc}
      */
-    public function setDescription($description)
+    public function setDescription($description): ItemInterface
     {
         return $this->setElement('description', $description);
     }
@@ -26,7 +27,7 @@ class RSS1 extends Item
     /**
      * {@inheritdoc}
      */
-    public function setDate(\DateTimeInterface $date)
+    public function setDate(\DateTimeInterface $date): ItemInterface
     {
         return $this->setElement('dc:date', date('Y-m-d', $date->getTimestamp()));
     }
@@ -34,7 +35,7 @@ class RSS1 extends Item
     /**
      * {@inheritdoc}
      */
-    public function setAuthor($author, $email = null, $uri = null)
+    public function setAuthor($author, $email = null, $uri = null): ItemInterface
     {
         return $this;
     }
@@ -42,7 +43,7 @@ class RSS1 extends Item
     /**
      * {@inheritdoc}
      */
-    public function setLink($link)
+    public function setLink($link): ItemInterface
     {
         return $this->setElement('link', $link);
     }
@@ -50,7 +51,7 @@ class RSS1 extends Item
     /**
      * {@inheritdoc}
      */
-    public function addEnclosure($url, $length, $type, $multiple = true)
+    public function addEnclosure($url, $length, $type, $multiple = true): ItemInterface
     {
         return $this;
     }

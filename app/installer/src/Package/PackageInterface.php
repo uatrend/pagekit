@@ -23,15 +23,11 @@ interface PackageInterface extends \JsonSerializable
 
     /**
      * Gets the name.
-     *
-     * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Gets the type.
-     *
-     * @return string
      */
-    public function getType();
+    public function getType(): string;
 }

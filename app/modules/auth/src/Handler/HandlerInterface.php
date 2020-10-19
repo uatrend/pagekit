@@ -9,7 +9,7 @@ interface HandlerInterface
      *
      * @return int|null
      */
-    public function read();
+    public function read(): ?int;
 
     /**
      * Sets the current user.

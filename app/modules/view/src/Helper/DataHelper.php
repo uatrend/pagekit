@@ -6,23 +6,18 @@ use Pagekit\View\View;
 
 class DataHelper implements HelperInterface
 {
-    /**
-     * @var array
-     */
-    protected $data = [];
+    protected array $data = [];
 
     /**
      * Encode <, >, ', &, and " for RFC4627-compliant JSON, which may also be embedded into HTML.
      * 15 === JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT
-     *
-     * @var int
      */
-    protected $encodingOptions = 15;
+    protected int $encodingOptions = 15;
 
     /**
      * {@inheritdoc}
      */
-    public function register(View $view)
+    public function register(View $view): void
     {
         $view->on('head', function ($event) use ($view) {
             $view->trigger('data', [$this]);
@@ -60,9 +55,8 @@ class DataHelper implements HelperInterface
      *
      * @param  string $name
      * @param  mixed  $value
-     * @return self
      */
-    public function add($name, $value)
+    public function add($name, $value): void
     {
         if (isset($this->data[$name]) && is_array($this->data[$name])) {
            $value = array_replace_recursive($this->data[$name], $value);
@@ -73,10 +67,8 @@ class DataHelper implements HelperInterface
 
     /**
      * Renders the data tags.
-     *
-     * @return string
      */
-    public function render()
+    public function render(): string
     {
         $output = '';
 
@@ -90,7 +82,7 @@ class DataHelper implements HelperInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'data';
     }

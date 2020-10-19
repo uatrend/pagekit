@@ -10,10 +10,7 @@ use Pagekit\Installer\Package\PackageScripts;
  */
 class MigrationController
 {
-    /**
-     * @var PackageScripts
-     */
-    protected $scripts;
+    protected PackageScripts $scripts;
 
     public function __construct()
     {

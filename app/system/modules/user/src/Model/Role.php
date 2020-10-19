@@ -40,10 +40,9 @@ class Role implements \JsonSerializable
     public $priority = 0;
 
     /** @Column(type="simple_array") */
-    public $permissions = [];
+    public array $permissions = [];
 
-    /** @var array */
-    protected static $properties = [
+    protected static array $properties = [
         'locked' => 'isLocked',
         'anonymous' => 'isAnonymous',
         'authenticated' => 'isAuthenticated',
@@ -53,7 +52,7 @@ class Role implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function hasPermission($permission)
+    public function hasPermission($permission): bool
     {
         return in_array($permission, $this->permissions);
     }
@@ -61,7 +60,7 @@ class Role implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function addPermission($permission)
+    public function addPermission($permission): void
     {
         $this->permissions[] = (string) $permission;
     }
@@ -69,7 +68,7 @@ class Role implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function clearPermissions()
+    public function clearPermissions(): void
     {
         $this->permissions = [];
     }
@@ -77,7 +76,7 @@ class Role implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function isLocked()
+    public function isLocked(): bool
     {
         return in_array($this->id, [self::ROLE_ANONYMOUS, self::ROLE_AUTHENTICATED, self::ROLE_ADMINISTRATOR]);
     }
@@ -85,7 +84,7 @@ class Role implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function isAnonymous()
+    public function isAnonymous(): bool
     {
         return $this->id == self::ROLE_ANONYMOUS;
     }
@@ -93,7 +92,7 @@ class Role implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function isAuthenticated()
+    public function isAuthenticated(): bool
     {
         return $this->id == self::ROLE_AUTHENTICATED;
     }
@@ -101,7 +100,7 @@ class Role implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function isAdministrator()
+    public function isAdministrator(): bool
     {
         return $this->id == self::ROLE_ADMINISTRATOR;
     }

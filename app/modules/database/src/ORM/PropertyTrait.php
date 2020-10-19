@@ -4,10 +4,7 @@ namespace Pagekit\Database\ORM;
 
 trait PropertyTrait
 {
-    /**
-     * @var array
-     */
-    protected static $_properties = [];
+    protected static array $_properties = [];
 
     /**
      * Gets an object property.
@@ -69,7 +66,7 @@ trait PropertyTrait
      * Clones the object properties.
      */
     public function __clone() {
-        foreach (static::$_properties as $name => $value) {
+        foreach (array_keys(static::$_properties) as $name) {
             $this->$name = $this->__get($name);
         }
     }
@@ -89,18 +86,17 @@ trait PropertyTrait
      * Gets all object properties.
      *
      * @param  mixed $object
-     * @return array
      */
-    public static function getProperties($object)
+    public static function getProperties($object): array
     {
         $properties = get_object_vars($object);
 
-        foreach (array_diff_key(static::$_properties, $properties) as $name => $value) {
+        foreach (array_keys(array_diff_key(static::$_properties, $properties)) as $name) {
             $properties[$name] = $object->$name;
         }
 
         if (isset(static::$properties)) {
-            foreach (array_diff_key(static::$properties, $properties) as $name => $value) {
+            foreach (array_keys(array_diff_key(static::$properties, $properties)) as $name) {
                 $properties[$name] = $object->$name;
             }
         }
@@ -114,9 +110,8 @@ trait PropertyTrait
      * @param  string                $name
      * @param  string|callable|array $get
      * @param  string|callable|bool  $set
-     * @return array
      */
-    public static function defineProperty($name, $get, $set = null)
+    public static function defineProperty($name, $get, $set = null): array
     {
         $descriptor = is_array($get) ? $get : compact('get', 'set');
 

@@ -13,7 +13,7 @@ class MailController
     /**
      * @Request({"option": "array"}, csrf=true)
      */
-    public function smtpAction($option = [])
+    public function smtpAction($option = []): array
     {
         try {
 
@@ -32,7 +32,7 @@ class MailController
      *
      * @Request({"option": "array"}, csrf=true)
      */
-    public function emailAction($option = [])
+    public function emailAction($option = []): array
     {
         try {
 

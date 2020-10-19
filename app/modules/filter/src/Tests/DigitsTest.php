@@ -2,11 +2,12 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\DigitsFilter;
 
-class DigitsTest extends \PHPUnit\Framework\TestCase
+class DigitsTest extends TestCase
 {
-    public function testFilter()
+    public function testFilter(): void
     {
         $filter = new DigitsFilter;
 

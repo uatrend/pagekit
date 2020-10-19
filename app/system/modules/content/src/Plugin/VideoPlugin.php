@@ -9,16 +9,16 @@ class VideoPlugin implements EventSubscriberInterface
 {
     const REGEX_YOUTUBE = '/(\/\/.*?youtube\.[a-z]+)\/watch\?v=([^&]+)&?(.*)/';
     const REGEX_YOUTUBE_SHORT = '/youtu\.be\/(.*)/';
-    const REGEX_VIMEO = '/(\/\/.*?)vimeo\.[a-z]+\/([0-9]+).*?/';
+    const REGEX_VIMEO = '/(\/\/.*?)vimeo\.[a-z]+\/(\d+).*?/';
 
     /**
      * Content plugins callback.
      *
      * @param ContentEvent $event
      */
-    public function onContentPlugins(ContentEvent $event)
+    public function onContentPlugins(ContentEvent $event): void
     {
-        $event->addPlugin('video', [$this, 'applyPlugin']);
+        $event->addPlugin('video', fn(array $options) => $this->applyPlugin($options));
     }
 
     /**
@@ -93,7 +93,7 @@ class VideoPlugin implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'content.plugins' => ['onContentPlugins', 15],

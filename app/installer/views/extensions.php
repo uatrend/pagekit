@@ -23,19 +23,20 @@
                     <th class="uk-table-shrink"></th>
                     <th class="uk-table-shrink uk-text-center">{{ 'Status' | trans }}</th>
                     <th class="pk-table-width-100 uk-text-center">{{ 'Version' | trans }}</th>
-                    <th class="pk-table-width-150">{{ 'Folder' | trans }}</th>
-                    <th class="uk-table-shrink"></th>
+                    <th class="pk-table-width-100">{{ 'Folder' | trans }}</th>
+                    <th class="uk-table-shrink uk-preserve-width">
+                        <ul class="uk-iconnav uk-flex-nowrap uk-invisible">
+                            <li v-for="i in [1, 2]"><span uk-icon="info"></span></li>
+                        </ul>
+                    </th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="uk-visible-toggle" v-for="pkg in filterBy(packages, search, 'title')">
-                    <td class="pk-table-width-minimum">
-                        <div class="uk-position-relative">
-                            <div class="uk-background-cover uk-position-cover" :style="{'background-image': 'url('+icon(pkg)+')'}"></div>
-                            <canvas class="uk-display-block uk-img-preserve" width="50" height="50"></canvas>
-                        </div>
+                    <td class="uk-table-shrink uk-preserve-width">
+	                    <img width="40" height="40" :src="icon(pkg)" :alt="pkg.title">
                     </td>
-                    <td class="uk-text-nowrap">
+                    <td class="pk-table-min-width-100 uk-text-nowrap">
                         <a @click="settings(pkg)" v-if="pkg.enabled && pkg.settings">{{ pkg.title }}</a>
                         <span v-else>{{ pkg.title }}</span>
                         <div class="uk-text-muted">{{ pkg.authors[0].name }}</div>
@@ -48,9 +49,9 @@
                         <a class="pk-icon-circle-danger" :title="'Disabled' | trans" v-else @click="enable(pkg)"></a>
                     </td>
                     <td class="uk-text-center">{{ pkg.version }}</td>
-                    <td class="uk-text-truncate">/{{ pkg.name }}</td>
+                    <td class="pk-table-max-width-150 uk-text-truncate">/{{ pkg.name }}</td>
                     <td class="uk-preserve-width">
-                        <ul class="uk-invisible-hover uk-iconnav uk-flex-nowrap">
+                        <ul class="uk-iconnav uk-flex-nowrap uk-invisible-hover">
                             <li><a uk-icon="info" :uk-tooltip="'View Details' | trans" @click.prevent="details(pkg)"></a></li>
                             <li v-show="pkg.enabled && pkg.permissions"><a uk-icon="lock" :uk-tooltip="'View Permissions' | trans" :href="$url.route('admin/user/permissions#{name}', {name:pkg.module})"></a></li>
                             <li v-show="!pkg.enabled"><a uk-icon="trash" :uk-tooltip="'Delete' | trans" @click="uninstall(pkg, packages)" v-confirm="'Uninstall extension?'"></a></li>

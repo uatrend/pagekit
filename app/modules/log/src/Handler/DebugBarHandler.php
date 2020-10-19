@@ -7,10 +7,7 @@ use Monolog\Handler\AbstractHandler;
 
 class DebugBarHandler extends AbstractHandler implements DataCollectorInterface
 {
-    /**
-     * @var array
-     */
-    protected $records = [];
+    protected array $records = [];
 
     /**
      * {@inheritdoc}
@@ -36,7 +33,7 @@ class DebugBarHandler extends AbstractHandler implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         return ['records' => $this->records];
     }
@@ -44,7 +41,7 @@ class DebugBarHandler extends AbstractHandler implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'log';
     }

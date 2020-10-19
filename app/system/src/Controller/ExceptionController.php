@@ -14,9 +14,8 @@ class ExceptionController
      *
      * @param  Request          $request
      * @param  FlattenException $exception
-     * @return Response
      */
-    public function showAction(Request $request, FlattenException $exception)
+    public function showAction(Request $request, FlattenException $exception): Response
     {
         // if (is_subclass_of($exception->getClass(), 'Pagekit\Kernel\Exception\HttpException')) {
         //     $title = $exception->getMessage();

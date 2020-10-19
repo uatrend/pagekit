@@ -6,10 +6,7 @@ use Pagekit\Database\ORM\QueryBuilder;
 
 class HasOne extends Relation
 {
-    /**
-     * @var string
-     */
-    protected $belongsTo;
+    protected string $belongsTo;
 
     /**
      * {@inheritdoc}
@@ -18,7 +15,7 @@ class HasOne extends Relation
     {
         parent::__construct($manager, $metadata, $mapping);
 
-        $this->keyFrom = $mapping['keyFrom'] ? $mapping['keyFrom'] : $metadata->getIdentifier();
+        $this->keyFrom = (isset($mapping['keyFrom']) && $mapping['keyFrom']) ? $mapping['keyFrom'] : $metadata->getIdentifier();
         $this->keyTo   = $mapping['keyTo'];
 
         foreach ($this->targetMetadata->getRelationMappings() as $mapping) {
@@ -32,7 +29,7 @@ class HasOne extends Relation
     /**
      * {@inheritdoc}
      */
-    public function resolve(array $entities, QueryBuilder $query)
+    public function resolve(array $entities, QueryBuilder $query): void
     {
         $this->initRelation($entities);
 
@@ -47,7 +44,7 @@ class HasOne extends Relation
         $this->resolveRelations($query, $targets);
     }
 
-    protected function mapBelongsTo($entities)
+    protected function mapBelongsTo($entities): void
     {
         if ($this->belongsTo) {
             foreach ($entities as $entity) {

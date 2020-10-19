@@ -4,15 +4,9 @@ namespace Pagekit\Filesystem\Adapter;
 
 class FileAdapter implements AdapterInterface
 {
-    /**
-     * @var string
-     */
-    protected $path;
+    protected string $path;
 
-    /**
-     * @var string
-     */
-    protected $url;
+    protected string $url;
 
     /**
      * Constructor.
@@ -29,7 +23,7 @@ class FileAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function getStreamWrapper()
+    public function getStreamWrapper(): ?string
     {
         return null;
     }
@@ -37,7 +31,7 @@ class FileAdapter implements AdapterInterface
     /**
      * {@inheritdoc}
      */
-    public function getPathInfo(array $info)
+    public function getPathInfo(array $info): array
     {
         $info['localpath'] = $info['pathname'];
 
@@ -52,10 +46,8 @@ class FileAdapter implements AdapterInterface
             $info['localpath'] = $path.$info['path'];
         }
 
-        if ($info['localpath'] and file_exists($info['localpath'])) {
-            if (strpos($info['localpath'], $this->path) === 0) {
-                $info['url'] = $this->url.strtr(rawurlencode(substr($info['localpath'], strlen($this->path))), ['%2F' => '/']);
-            }
+        if ($info['localpath'] && file_exists($info['localpath']) && strpos($info['localpath'], $this->path) === 0) {
+            $info['url'] = $this->url.strtr(rawurlencode(substr($info['localpath'], strlen($this->path))), ['%2F' => '/']);
         }
 
         return $info;

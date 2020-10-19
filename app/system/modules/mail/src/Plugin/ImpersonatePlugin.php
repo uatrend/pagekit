@@ -4,8 +4,8 @@ namespace Pagekit\Mail\Plugin;
 
 class ImpersonatePlugin implements \Swift_Events_SendListener
 {
-    protected $address;
-    protected $name;
+    protected string $address;
+    protected string $name;
 
     /**
      * Constructor.
@@ -24,7 +24,7 @@ class ImpersonatePlugin implements \Swift_Events_SendListener
      *
      * @param \Swift_Events_SendEvent $event
      */
-    public function beforeSendPerformed(\Swift_Events_SendEvent $event)
+    public function beforeSendPerformed(\Swift_Events_SendEvent $event): void
     {
         $event->getMessage()->setFrom($this->address, $this->name);
     }
@@ -34,7 +34,7 @@ class ImpersonatePlugin implements \Swift_Events_SendListener
      *
      * @param \Swift_Events_SendEvent $event
      */
-    public function sendPerformed(\Swift_Events_SendEvent $event)
+    public function sendPerformed(\Swift_Events_SendEvent $event): void
     {
     }
 }

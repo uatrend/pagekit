@@ -14,7 +14,7 @@ class PhpFileCache extends BasePhpFileCache
     /**
      * {@inheritdoc}
      */
-    protected function getFilename($id)
+    protected function getFilename($id): string
     {
         return $this->directory . DIRECTORY_SEPARATOR . sha1($id) . $this->extension;
     }
@@ -22,7 +22,7 @@ class PhpFileCache extends BasePhpFileCache
     /**
      * {@inheritdoc}
      */
-    protected function doDelete($id)
+    protected function doDelete($id): bool
     {
         $file = $this->getFilename($id);
 
@@ -32,7 +32,7 @@ class PhpFileCache extends BasePhpFileCache
     /**
      * {@inheritdoc}
      */
-    protected function doFlush()
+    protected function doFlush(): bool
     {
         foreach (glob($this->directory . DIRECTORY_SEPARATOR . '*' . $this->extension) as $file) {
             @unlink($file);

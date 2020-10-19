@@ -2,11 +2,12 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\AddRelNofollowFilter;
 
-class AddRelNofollowTest extends \PHPUnit\Framework\TestCase
+class AddRelNofollowTest extends TestCase
 {
-    public function testFilter()
+    public function testFilter(): void
     {
         $filter = new AddRelNofollowFilter;
 

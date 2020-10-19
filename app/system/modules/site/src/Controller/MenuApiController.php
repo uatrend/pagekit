@@ -12,10 +12,7 @@ use Pagekit\Site\Model\Node;
  */
 class MenuApiController
 {
-    /**
-     * @var Config
-     */
-    protected $config;
+    protected Config $config;
 
     public function __construct()
     {
@@ -25,7 +22,7 @@ class MenuApiController
     /**
      * @Route("/", methods="GET")
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         $menus = App::menu()->all();
 
@@ -46,7 +43,7 @@ class MenuApiController
      * @Route("/", methods="POST")
      * @Request({"menu":"array"}, csrf=true)
      */
-    public function saveAction($menu)
+    public function saveAction($menu): array
     {
         $oldId = isset($menu['id']) ? trim($menu['id']) : null;
         $label = trim($menu['label']);
@@ -77,7 +74,7 @@ class MenuApiController
      * @Route("/{id}", methods="DELETE")
      * @Request({"id"}, csrf=true)
      */
-    public function deleteAction($id)
+    public function deleteAction($id): array
     {
         App::config('system/site')->remove('menus.'.$id);
         Node::where(['menu = :id'], [':id' => $id])->update(['menu' => 'trash', 'status' => 0]);

@@ -6,16 +6,13 @@ interface AdapterInterface
 {
     /**
      * Gets stream wrapper classname.
-     *
-     * @return string
      */
-    public function getStreamWrapper();
+    public function getStreamWrapper(): ?string;
 
     /**
      * Gets file path info.
      *
      * @param  array $info
-     * @return array
      */
-    public function getPathInfo(array $info);
+    public function getPathInfo(array $info): array;
 }

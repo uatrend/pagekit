@@ -9,7 +9,7 @@ abstract class Item implements ItemInterface
     /**
      * {@inheritdoc}
      */
-    public function setTitle($title)
+    public function setTitle($title): ItemInterface
     {
         return $this->setElement('title', $title);
     }
@@ -17,7 +17,7 @@ abstract class Item implements ItemInterface
     /**
      * {@inheritdoc}
      */
-    public function setContent($content)
+    public function setContent($content): ItemInterface
     {
         return $this;
     }

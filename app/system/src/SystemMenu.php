@@ -7,17 +7,12 @@ use Pagekit\Util\ArrObject;
 
 class SystemMenu implements \IteratorAggregate, \JsonSerializable
 {
-    /**
-     * @var array
-     */
-    protected $items = [];
+    protected array $items = [];
 
     /**
      * Gets all menu items.
-     *
-     * @return array
      */
-    public function getItems()
+    public function getItems(): array
     {
         foreach ($this->items as $item) {
 
@@ -49,7 +44,7 @@ class SystemMenu implements \IteratorAggregate, \JsonSerializable
      * @param string $id
      * @param array  $item
      */
-    public function addItem($id, array $item)
+    public function addItem($id, array $item): void
     {
         $meta  = App::user()->get('admin.menu', []);
         $route = App::request()->attributes->get('_route');
@@ -81,20 +76,16 @@ class SystemMenu implements \IteratorAggregate, \JsonSerializable
 
     /**
      * Implements the IteratorAggregate.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->getItems());
     }
 
     /**
      * Implements JsonSerializable interface.
-     *
-     * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->getItems();
     }

@@ -11,7 +11,7 @@ class ExceptionHandler extends DebugExceptionHandler
     /**
      * {@inheritdoc}
      */
-    public function sendPhpResponse($exception)
+    public function sendPhpResponse($exception): void
     {
         if ($exception instanceof HttpException) {
             $exception = FlattenException::create($exception, $exception->getCode());

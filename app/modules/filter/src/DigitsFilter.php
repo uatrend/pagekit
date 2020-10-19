@@ -10,7 +10,7 @@ class DigitsFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filter($value)
+    public function filter($value): string
     {
         return str_replace(['-', '+'], '', filter_var((string) $value, FILTER_SANITIZE_NUMBER_INT));
     }

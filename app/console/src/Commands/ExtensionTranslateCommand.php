@@ -22,12 +22,12 @@ class ExtensionTranslateCommand extends Command
      */
     protected $description = 'Generates extension\'s translation .pot/.po/.php files';
 
-    protected $visitor;
+    protected ?PhpNodeVisitor $visitor = null;
 
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->addArgument('extension', InputArgument::OPTIONAL, 'Extension name');
     }
@@ -35,7 +35,7 @@ class ExtensionTranslateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $extension = $this->argument('extension') ?: 'system';
         $files     = $this->getFiles($path = $this->getPath($extension), $extension);
@@ -65,7 +65,7 @@ class ExtensionTranslateCommand extends Command
                 if(array_key_exists($domain, $result)) {
 
                     // custom merge (array_merge would create duplicates from numeric keys)
-                    foreach ($messages as $key => $value) {
+                    foreach (array_keys($messages) as $key) {
                         $result[$domain][$key] = $key;
                     }
                     // $result[$domain] = array_merge($result[$domain], $messages);
@@ -85,7 +85,7 @@ class ExtensionTranslateCommand extends Command
 
             $messages = require($this->getPath('system').'/languages/en_US/messages.php');
 
-            foreach ($result as $domain => $strings) {
+            foreach (array_keys($result) as $domain) {
 
                 if ('messages' != $domain) {
                     continue;
@@ -110,7 +110,7 @@ class ExtensionTranslateCommand extends Command
      *               Example:
      *               ['messages' = ['Hello' => 'Hello', 'Apple' => 'Apple'], 'customdomain' => ['One' => 'One']]
      */
-    protected function extractStrings($file)
+    protected function extractStrings($file): array
     {
         $content = file_get_contents($file);
 
@@ -148,7 +148,7 @@ class ExtensionTranslateCommand extends Command
         $this->visitor->traverse([$file]);
 
         foreach ($this->visitor->results as $domain => $strings) {
-            foreach ($strings as $string => $attr) {
+            foreach (array_keys($strings) as $string) {
                 $pairs[] = [$domain, $string];
             }
         }
@@ -172,9 +172,8 @@ class ExtensionTranslateCommand extends Command
      * Returns all files of an extension to extract translations.
      *
      * @param  string $path
-     * @return array
      */
-    protected function getFiles($path, $extension)
+    protected function getFiles($path, $extension): Finder
     {
         $files = Finder::create()->files()->in($path);
 
@@ -190,17 +189,10 @@ class ExtensionTranslateCommand extends Command
      * Returns the extension path.
      *
      * @param  string $path
-     * @return array
      */
-    protected function getPath($path)
+    protected function getPath($path): string
     {
-        if ($path == 'system') {
-            // system module
-            $root = $this->container->path().'/app';
-        } else {
-            // extensions
-            $root = $this->container->path().'/packages';
-        }
+        $root = $path == 'system' ? $this->container->path().'/app' : $this->container->path().'/packages';
 
         if (!is_dir($path = "$root/$path")) {
             $this->abort("Can't find extension in '$path'");
@@ -216,7 +208,7 @@ class ExtensionTranslateCommand extends Command
      * @param string $extension
      * @param string $path
      */
-    protected function writeTranslationFile($messages, $extension, $path)
+    protected function writeTranslationFile($messages, $extension, $path): void
     {
         foreach ($messages as $domain => $strings) {
 
@@ -241,9 +233,8 @@ class ExtensionTranslateCommand extends Command
      *
      * @param  string $extension
      * @param  string $domain
-     * @return string
      */
-    protected function getHeader($extension, $domain)
+    protected function getHeader($extension, $domain): string
     {
         $version = $this->getApplication()->getVersion();
         $date    = date("Y-m-d H:iO");

@@ -20,9 +20,8 @@ trait StaticTrait
      * Checks if a parameter or service is defined.
      *
      * @param  string $name
-     * @return bool
      */
-    public static function has($name)
+    public static function has($name): bool
     {
         return static::$instance->offsetExists($name);
     }
@@ -44,7 +43,7 @@ trait StaticTrait
      * @param string $name
      * @param mixed  $value
      */
-    public static function set($name, $value)
+    public static function set($name, $value): void
     {
         static::$instance->offsetSet($name, $value);
     }
@@ -54,7 +53,7 @@ trait StaticTrait
      *
      * @param string $name
      */
-    public static function remove($name)
+    public static function remove($name): void
     {
         static::$instance->offsetUnset($name);
     }

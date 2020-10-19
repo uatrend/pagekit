@@ -6,10 +6,7 @@ use Pagekit\Database\ORM\QueryBuilder;
 
 class HasMany extends HasOne
 {
-    /**
-     * @var array
-     */
-    protected $orderBy;
+    protected array $orderBy;
 
     /**
      * {@inheritdoc}
@@ -24,7 +21,7 @@ class HasMany extends HasOne
     /**
      * {@inheritdoc}
      */
-    public function resolve(array $entities, QueryBuilder $query)
+    public function resolve(array $entities, QueryBuilder $query): void
     {
         $this->initRelation($entities, []);
 
@@ -45,7 +42,7 @@ class HasMany extends HasOne
         $this->resolveRelations($query, $targets);
     }
 
-    protected function mapBelongsTo($entities)
+    protected function mapBelongsTo($entities): void
     {
         if ($this->belongsTo) {
             foreach ($entities as $entity) {

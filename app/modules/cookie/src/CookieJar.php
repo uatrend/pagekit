@@ -8,22 +8,18 @@ class CookieJar
 {
     /**
      * The default path.
-     *
-     * @var string
      */
-    protected $path = '/';
+    protected string $path = '/';
 
     /**
      * The default domain.
-     *
-     * @var string
      */
-    protected $domain;
+    protected ?string $domain = null;
 
     /**
      * @var Cookie[]
      */
-    protected $cookies = [];
+    protected array $cookies = [];
 
     /**
      * Sets the default path and domain.
@@ -31,7 +27,7 @@ class CookieJar
      * @param string $path
      * @param null   $domain
      */
-    public function setDefaultPathAndDomain($path = '/', $domain = null)
+    public function setDefaultPathAndDomain($path = '/', $domain = null): void
     {
         $this->path = $path;
         $this->domain = $domain;
@@ -41,9 +37,8 @@ class CookieJar
      * Determines if a cookie has been queued.
      *
      * @param  string $name
-     * @return bool
      */
-    public function has($name)
+    public function has($name): bool
     {
         return isset($this->cookies[$name]);
     }
@@ -52,9 +47,8 @@ class CookieJar
      * Get a queued cookie instance.
      *
      * @param  string $name
-     * @return Cookie
      */
-    public function get($name)
+    public function get($name): ?Cookie
     {
         return isset($this->cookies[$name]) ? $this->cookies[$name] : null;
     }
@@ -69,9 +63,8 @@ class CookieJar
      * @param  string $domain
      * @param  bool   $secure
      * @param  bool   $httpOnly
-     * @return Cookie
      */
-    public function set($name, $value, $expire = 0, $path = null, $domain = null, $secure = false, $httpOnly = true)
+    public function set($name, $value, $expire = 0, $path = null, $domain = null, $secure = false, $httpOnly = true): Cookie
     {
         if (null === $path) {
             $path = $this->path;
@@ -90,9 +83,8 @@ class CookieJar
      * @param  string $name
      * @param  string $path
      * @param  string $domain
-     * @return Cookie
      */
-    public function remove($name, $path = null, $domain = null)
+    public function remove($name, $path = null, $domain = null): Cookie
     {
         if (null === $path) {
             $path = $this->path;
@@ -110,7 +102,7 @@ class CookieJar
      *
      * @return Cookie[]
      */
-    public function getQueuedCookies()
+    public function getQueuedCookies(): array
     {
         return $this->cookies;
     }

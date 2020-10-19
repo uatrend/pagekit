@@ -2,6 +2,7 @@
 
 namespace Pagekit\Intl\Loader;
 
+use Symfony\Component\Translation\MessageCatalogue;
 use Symfony\Component\Translation\Exception\InvalidResourceException;
 use Symfony\Component\Translation\Exception\NotFoundResourceException;
 
@@ -14,7 +15,7 @@ class PoFileLoader extends ArrayLoader
     /**
      * {@inheritdoc}
      */
-    public function load($resource, $locale, $domain = 'messages')
+    public function load($resource, $locale, $domain = 'messages'): MessageCatalogue
     {
         if (!stream_is_local($resource)) {
             throw new InvalidResourceException(sprintf('This is not a local file "%s".', $resource));
@@ -81,10 +82,8 @@ class PoFileLoader extends ArrayLoader
      * Items with an empty id are ignored.
      *
      * @param resource $resource
-     *
-     * @return array
      */
-    protected function parse($resource)
+    protected function parse($resource): ?array
     {
         $stream = fopen($resource, 'r');
 
@@ -145,7 +144,7 @@ class PoFileLoader extends ArrayLoader
      * @param array $messages
      * @param array $item
      */
-    protected function addMessage(array &$messages, array $item)
+    protected function addMessage(array &$messages, array $item): void
     {
         if (is_array($item['translated'])) {
             $messages[$item['ids']['singular']] = stripslashes($item['translated'][0]);

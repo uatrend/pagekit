@@ -12,28 +12,19 @@ use Composer\Repository\InstalledFilesystemRepository;
 use Composer\Semver\VersionParser;
 use Symfony\Component\Console\Output\OutputInterface;
 
-
 class Composer
 {
-    /**
-     * @var ConsoleIO
-     */
-    protected $io;
+    public array $paths;
 
-    /**
-     * @var OutputInterface
-     */
-    protected $output;
+    public array $blueprint;
 
-    /**
-     * @var array
-     */
-    protected $packages = [];
+    protected ?InstallerIO $io = null;
 
-    /**
-     * @var string
-     */
-    protected $file = 'packages.php';
+    protected ?OutputInterface $output = null;
+
+    protected array $packages = [];
+
+    protected string $file = 'packages.php';
 
     /**
      * @param array $config
@@ -58,9 +49,8 @@ class Composer
      * @param bool $packagist
      * @param bool $writeConfig
      * @param bool $preferSource
-     * @return bool
      */
-    public function install(array $install, $packagist = false, $writeConfig = true, $preferSource = false)
+    public function install(array $install, $packagist = false, $writeConfig = true, $preferSource = false): void
     {
         $this->addPackages($install);
 
@@ -85,7 +75,7 @@ class Composer
      * @param array|string $uninstall [name, name, ...]
      * @param bool $writeConfig
      */
-    public function uninstall($uninstall, $writeConfig = true)
+    public function uninstall($uninstall, $writeConfig = true): void
     {
         $uninstall = (array) $uninstall;
 
@@ -102,18 +92,15 @@ class Composer
      * Checks if a package is installed by composer.
      *
      * @param $name
-     * @return bool
      */
-    public function isInstalled($name)
+    public function isInstalled($name): bool
     {
         $installed = $this->paths['path.packages'] . '/composer/installed.json';
         $installed = file_exists($installed) ? json_decode(file_get_contents($installed), true) : [];
 
-        $installed = array_map(function ($pkg) {
-            return $pkg['name'];
-        }, $installed);
+        $installed = array_map(fn($pkg) => $pkg['name'], $installed);
 
-        return array_search($name, $installed) !== false;
+        return in_array($name, $installed);
     }
 
     /**
@@ -123,10 +110,9 @@ class Composer
      * @param array $refresh
      * @param bool $packagist
      * @param bool $preferSource
-     * @return bool
      * @throws \Exception
      */
-    protected function composerUpdate($updates = false, $refresh = [], $packagist = false, $preferSource = false)
+    protected function composerUpdate($updates = false, $refresh = [], $packagist = false, $preferSource = false): void
     {
         $installed = new JsonFile($this->paths['path.vendor'] . '/composer/installed.json');
         $internal = new CompositeRepository([]);
@@ -164,7 +150,7 @@ class Composer
      * @param bool $packagist
      * @return null
      */
-    protected function getComposer($packagist = false)
+    protected function getComposer($packagist = false): \Composer\Composer
     {
         $config = $this->blueprint;
         $config['config'] = ['vendor-dir' => $this->paths['path.packages'], 'cache-files-ttl' => 0];
@@ -198,38 +184,31 @@ class Composer
     }
 
 
-    /**
-     * @return InstallerIO
-     */
-    protected function getIO()
+    protected function getIO(): InstallerIO
     {
         return $this->io ?: ($this->io = new InstallerIO(null, $this->output));
     }
 
     /**
      * @param $packages
-     * @return array
      */
-    protected function addPackages($packages)
+    protected function addPackages($packages): void
     {
         $this->packages = array_merge($this->readConfig(), $packages);
     }
 
     /**
      * @param $packages
-     * @return array
      */
-    protected function removePackages($packages)
+    protected function removePackages($packages): void
     {
         $this->packages = array_diff_key($this->readConfig(), array_flip($packages));
     }
 
     /**
      * Reads packages from package file.
-     *
-     * @return array
      */
-    protected function readConfig()
+    protected function readConfig(): array
     {
         return file_exists($this->file) ? require $this->file : [];
     }
@@ -237,7 +216,7 @@ class Composer
     /**
      * Writes changes to packages file.
      */
-    protected function writeConfig()
+    protected function writeConfig(): void
     {
         file_put_contents($this->file, '<?php return ' . var_export($this->packages, true) . ';');
     }

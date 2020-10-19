@@ -6,15 +6,9 @@ use Pagekit\Event\Event;
 
 class ViewEvent extends Event
 {
-    /**
-     * @var string
-     */
-    protected $template;
+    protected ?string $template = null;
 
-    /**
-     * @var string
-     */
-    protected $result;
+    protected ?string $result = null;
 
     /**
      * Constructor.
@@ -30,10 +24,7 @@ class ViewEvent extends Event
         $this->template = $template;
     }
 
-    /**
-     * @return string
-     */
-    public function getTemplate()
+    public function getTemplate(): ?string
     {
         return $this->template;
     }
@@ -41,15 +32,12 @@ class ViewEvent extends Event
     /**
      * @param string $template
      */
-    public function setTemplate($template)
+    public function setTemplate($template): void
     {
         $this->template = $template;
     }
 
-    /**
-     * @return string
-     */
-    public function getResult()
+    public function getResult(): ?string
     {
         return $this->result;
     }
@@ -57,7 +45,7 @@ class ViewEvent extends Event
     /**
      * @param string $result
      */
-    public function setResult($result)
+    public function setResult($result): void
     {
         $this->result = $result;
     }
@@ -65,7 +53,7 @@ class ViewEvent extends Event
     /**
      * @param string $result
      */
-    public function addResult($result)
+    public function addResult($result): void
     {
         $this->result .= $result;
     }

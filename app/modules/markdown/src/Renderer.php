@@ -4,9 +4,9 @@ namespace Pagekit\Markdown;
 
 class Renderer
 {
-    protected $options = [];
+    protected array $options = [];
 
-    public function init(array $options = [])
+    public function init(array $options = []): void
     {
         $this->options = $options;
     }
@@ -46,12 +46,12 @@ class Renderer
         return "<h{$level} id=\"{$id}\">{$text}</h{$level}>\n";
     }
 
-    public function hr()
+    public function hr(): string
     {
         return $this->options['xhtml'] ? "<hr/>\n" : "<hr>\n";
     }
 
-    public function lst($body, $ordered = false)
+    public function lst($body, $ordered = false): string
     {
         return $ordered ? "<ol>\n{$body}</ol>\n" : "<ul>\n{$body}</ul>\n";
     }
@@ -71,12 +71,12 @@ class Renderer
         return "<table>\n<thead>\n{$header}</thead>\n<tbody>\n{$body}</tbody>\n</table>\n";
     }
 
-    public function tablerow($content)
+    public function tablerow($content): string
     {
         return "<tr>\n".$content."</tr>\n";
     }
 
-    public function tablecell($content, array $flags = [])
+    public function tablecell($content, array $flags = []): string
     {
         $type = $flags['header'] ? 'th' : 'td';
         $tag = $flags['align']
@@ -102,7 +102,7 @@ class Renderer
         return "<code>{$text}</code>";
     }
 
-    public function br()
+    public function br(): string
     {
         return $this->options['xhtml'] ? '<br/>' : '<br>';
     }

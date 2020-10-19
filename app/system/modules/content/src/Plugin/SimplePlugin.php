@@ -8,7 +8,7 @@ use Pagekit\Event\EventSubscriberInterface;
 class SimplePlugin implements EventSubscriberInterface
 {
     const PLUGIN_CODE = '/
-                        \(([a-zA-Z_][a-zA-Z0-9_]*)\) # the plugin name
+                        \(([a-zA-Z_]\w*)\) # the plugin name
                         (\{                          # the plugin options
                             (?:
                                 ( [^\{\}] )+
@@ -23,7 +23,7 @@ class SimplePlugin implements EventSubscriberInterface
      *
      * @param ContentEvent $event
      */
-    public function onContentPlugins(ContentEvent $event)
+    public function onContentPlugins(ContentEvent $event): void
     {
         $content = preg_replace_callback(self::PLUGIN_CODE, function($matches) use ($event) {
 
@@ -41,7 +41,7 @@ class SimplePlugin implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'content.plugins' => ['onContentPlugins', 10]

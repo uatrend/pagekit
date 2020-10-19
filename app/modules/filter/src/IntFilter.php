@@ -10,7 +10,7 @@ class IntFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filter($value)
+    public function filter($value): int
     {
         return (int) ((string) $value);
     }

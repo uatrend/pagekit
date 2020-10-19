@@ -11,9 +11,7 @@ return [
 
     'main' => function ($app) {
 
-        $app['widget'] = function ($app) {
-            return new WidgetManager($app);
-        };
+        $app['widget'] = fn($app) => new WidgetManager($app);
 
         $app['position'] = function ($app) {
 
@@ -100,9 +98,7 @@ return [
 
         'boot' => function ($event, $app) {
 
-            Widget::defineProperty('position', function () use ($app) {
-                return $app['position']->find($this->id);
-            }, true);
+            Widget::defineProperty('position', fn() => $app['position']->find($this->id), true);
 
             Widget::defineProperty('theme', function () use ($app) {
 

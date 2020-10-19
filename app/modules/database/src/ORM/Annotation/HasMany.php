@@ -8,15 +8,11 @@ namespace Pagekit\Database\ORM\Annotation;
  */
 final class HasMany implements Annotation
 {
-    /** @var string */
-    public $targetEntity;
+    public string $targetEntity;
 
-    /** @var string */
-    public $keyFrom;
+    public string $keyFrom;
 
-    /** @var string */
-    public $keyTo;
+    public string $keyTo;
 
-    /** @var array */
-    public $orderBy = [];
+    public array $orderBy = [];
 }

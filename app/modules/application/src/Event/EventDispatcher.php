@@ -4,20 +4,11 @@ namespace Pagekit\Event;
 
 class EventDispatcher implements EventDispatcherInterface
 {
-    /**
-     * @var string
-     */
-    protected $event;
+    protected string $event;
 
-    /**
-     * @var array
-     */
-    protected $listeners = [];
+    protected array $listeners = [];
 
-    /**
-     * @var array
-     */
-    protected $sorted = [];
+    protected array $sorted = [];
 
     /**
      * Constructor.
@@ -32,7 +23,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function on($event, $listener, $priority = 0)
+    public function on($event, $listener, $priority = 0): void
     {
         $this->listeners[$event][$priority][] = $listener;
         unset($this->sorted[$event]);
@@ -41,7 +32,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function off($event, $listener = null)
+    public function off($event, $listener = null): void
     {
         if (!isset($this->listeners[$event])) {
             return;
@@ -62,7 +53,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe(EventSubscriberInterface $subscriber)
+    public function subscribe(EventSubscriberInterface $subscriber): void
     {
         foreach ($subscriber->subscribe() as $event => $params) {
 
@@ -90,7 +81,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function unsubscribe(EventSubscriberInterface $subscriber)
+    public function unsubscribe(EventSubscriberInterface $subscriber): void
     {
         foreach ($subscriber->subscribe() as $event => $params) {
             if (is_array($params) && is_array($params[0])) {
@@ -106,13 +97,9 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function trigger($event, array $arguments = [])
+    public function trigger($event, array $arguments = []): EventInterface
     {
-        if (is_string($event)) {
-            $e = new $this->event($event);
-        } else {
-            $e = $event;
-        }
+        $e = is_string($event) ? new $this->event($event) : $event;
 
         $e->setDispatcher($this);
 
@@ -133,7 +120,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function hasListeners($event = null)
+    public function hasListeners($event = null): bool
     {
         return (bool) count($this->getListeners($event));
     }
@@ -141,7 +128,7 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getListeners($event = null)
+    public function getListeners($event = null): array
     {
         if ($event !== null) {
             return isset($this->sorted[$event]) ? $this->sorted[$event] : $this->sortListeners($event);
@@ -159,23 +146,25 @@ class EventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getListenerPriority($event, $listener)
+    public function getListenerPriority($event, $listener): ?int
     {
         if (!isset($this->listeners[$event])) {
-            return;
+            return null;
         }
 
         foreach ($this->listeners[$event] as $priority => $listeners) {
-            if (false !== array_search($listener, $listeners, true)) {
+            if (in_array($listener, $listeners, true)) {
                 return $priority;
             }
         }
+
+        return null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getEventClass()
+    public function getEventClass(): string
     {
         return $this->event;
     }
@@ -184,9 +173,8 @@ class EventDispatcher implements EventDispatcherInterface
      * Sorts all listeners of an event by their priority.
      *
      * @param  string $event
-     * @return array
      */
-    protected function sortListeners($event)
+    protected function sortListeners($event): array
     {
         $sorted = [];
 

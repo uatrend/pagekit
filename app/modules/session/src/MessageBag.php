@@ -49,7 +49,7 @@ class MessageBag extends AutoExpireFlashBag
      *
      * @param string $message
      */
-    public function debug($message)
+    public function debug($message): void
     {
         $this->add(self::DEBUG, $message);
     }
@@ -59,7 +59,7 @@ class MessageBag extends AutoExpireFlashBag
      *
      * @param string $message
      */
-    public function info($message)
+    public function info($message): void
     {
         $this->add(self::INFO, $message);
     }
@@ -69,7 +69,7 @@ class MessageBag extends AutoExpireFlashBag
      *
      * @param string $message
      */
-    public function warning($message)
+    public function warning($message): void
     {
         $this->add(self::WARNING, $message);
     }
@@ -79,7 +79,7 @@ class MessageBag extends AutoExpireFlashBag
      *
      * @param string $message
      */
-    public function error($message)
+    public function error($message): void
     {
         $this->add(self::ERROR, $message);
     }
@@ -89,17 +89,15 @@ class MessageBag extends AutoExpireFlashBag
      *
      * @param string $message
      */
-    public function success($message)
+    public function success($message): void
     {
         $this->add(self::SUCCESS, $message);
     }
 
     /**
      * Gets array of message levels
-     *
-     * @return array
      */
-    public static function levels()
+    public static function levels(): array
     {
         return [
             self::DEBUG,

@@ -57,7 +57,7 @@ trait FileUtil
         return !is_dir($dir);
     }
 
-    public function mirror($originDir, $targetDir)
+    public function mirror($originDir, $targetDir): void
     {
         $iterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($originDir, \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::SELF_FIRST);
 

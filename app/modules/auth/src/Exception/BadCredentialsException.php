@@ -7,7 +7,7 @@ class BadCredentialsException extends AuthException
     /**
      * @var string[]
      */
-    protected $credentials;
+    protected array $credentials;
 
     /**
      * Constructor.
@@ -24,7 +24,7 @@ class BadCredentialsException extends AuthException
      *
      * @return string[]
      */
-    public function getCredentials()
+    public function getCredentials(): array
     {
         return $this->credentials;
     }

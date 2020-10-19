@@ -6,10 +6,7 @@ use Pagekit\View\View;
 
 abstract class Helper implements HelperInterface
 {
-    /**
-     * @var View
-     */
-    protected $view;
+    protected ?View $view = null;
 
     /**
      * {@inheritdoc}

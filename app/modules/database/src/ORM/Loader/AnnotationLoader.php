@@ -14,20 +14,14 @@ use Pagekit\Database\ORM\Relation\ManyToMany;
 
 class AnnotationLoader implements LoaderInterface
 {
-    /**
-     * @var SimpleAnnotationReader
-     */
-    protected $reader;
+    protected ?SimpleAnnotationReader $reader = null;
 
-    /**
-     * @var string
-     */
-    protected $namespace = 'Pagekit\Database\ORM\Annotation';
+    protected string $namespace = 'Pagekit\Database\ORM\Annotation';
 
     /**
      * {@inheritdoc}
      */
-    public function load(\ReflectionClass $class, array $config = [])
+    public function load(\ReflectionClass $class, array $config = []): array
     {
         /* @var $annotation Entity */
         if ($annotation = $this->getAnnotation($class, 'Entity')) {
@@ -102,7 +96,7 @@ class AnnotationLoader implements LoaderInterface
 
             $name = $method->getName();
 
-            if (!$method->isPublic() || $method->getDeclaringClass()->getName() != $class->getName()) {
+            if (!$method->isPublic() || $method->getDeclaringClass()->getName() !== $class->getName()) {
                 continue;
             }
 
@@ -120,7 +114,7 @@ class AnnotationLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function isTransient(\ReflectionClass $class)
+    public function isTransient(\ReflectionClass $class): bool
     {
         return !$this->getAnnotation($class, 'Entity') && !$this->getAnnotation($class, 'MappedSuperclass');
     }
@@ -130,9 +124,8 @@ class AnnotationLoader implements LoaderInterface
      *
      * @param  mixed  $from
      * @param  string $name
-     * @return Annotation
      */
-    protected function getAnnotation($from, $name)
+    protected function getAnnotation($from, $name): ?object
     {
         if (!$this->reader) {
             $this->reader = new SimpleAnnotationReader;

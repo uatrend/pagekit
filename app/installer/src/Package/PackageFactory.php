@@ -6,15 +6,9 @@ use Pagekit\Application as App;
 
 class PackageFactory implements \ArrayAccess, \IteratorAggregate
 {
-    /**
-     * @var array
-     */
-    protected $paths = [];
+    protected array $paths = [];
 
-    /**
-     * @var array
-     */
-    protected $packages = [];
+    protected array $packages = [];
 
     /**
      * Get shortcut.
@@ -47,25 +41,16 @@ class PackageFactory implements \ArrayAccess, \IteratorAggregate
      *
      * @param  string $type
      * @param bool    $force
-     * @return array
      */
-    public function all($type = null, $force = false)
+    public function all($type = null, $force = false): array
     {
         if ($force || empty($this->packages)) {
             $this->loadPackages();
         }
 
-        $filter = function ($package) use ($type) {
-            return $package->get('type') == $type;
-        };
+        $filter = fn($package) => $package->get('type') == $type;
 
-        if ($type !== null) {
-            $packages = array_filter($this->packages, $filter);
-        } else {
-            $packages = $this->packages;
-        }
-
-        return $packages;
+        return $type !== null ? array_filter($this->packages, $filter) : $this->packages;
     }
 
     /**
@@ -104,9 +89,8 @@ class PackageFactory implements \ArrayAccess, \IteratorAggregate
      * Adds a package path(s).
      *
      * @param  string|array $paths
-     * @return self
      */
-    public function addPath($paths)
+    public function addPath($paths): self
     {
         $this->paths = array_merge($this->paths, (array) $paths);
 
@@ -117,9 +101,8 @@ class PackageFactory implements \ArrayAccess, \IteratorAggregate
      * Checks if a package exists.
      *
      * @param  string $name
-     * @return bool
      */
-    public function offsetExists($name)
+    public function offsetExists($name): bool
     {
         return isset($this->packages[$name]);
     }
@@ -128,9 +111,8 @@ class PackageFactory implements \ArrayAccess, \IteratorAggregate
      * Gets a package by name.
      *
      * @param  string $name
-     * @return bool
      */
-    public function offsetGet($name)
+    public function offsetGet($name): bool
     {
         return $this->get($name);
     }
@@ -141,7 +123,7 @@ class PackageFactory implements \ArrayAccess, \IteratorAggregate
      * @param string $name
      * @param string $package
      */
-    public function offsetSet($name, $package)
+    public function offsetSet($name, $package): void
     {
         $this->packages[$name] = $package;
     }
@@ -151,17 +133,15 @@ class PackageFactory implements \ArrayAccess, \IteratorAggregate
      *
      * @param string $name
      */
-    public function offsetUnset($name)
+    public function offsetUnset($name): void
     {
         unset($this->packages[$name]);
     }
 
     /**
      * Implements the IteratorAggregate.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->packages);
     }
@@ -169,7 +149,7 @@ class PackageFactory implements \ArrayAccess, \IteratorAggregate
     /**
      * Load packages from paths.
      */
-    protected function loadPackages()
+    protected function loadPackages(): void
     {
         foreach ($this->paths as $path) {
 

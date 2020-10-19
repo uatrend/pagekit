@@ -21,7 +21,7 @@ class TranslationFetchCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function initialize(InputInterface $input, OutputInterface $output)
+    protected function initialize(InputInterface $input, OutputInterface $output): void
     {
         parent::initialize($input, $output);
     }
@@ -29,7 +29,7 @@ class TranslationFetchCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): void
     {
         $tmp  = '/tmp/pagekit-languages';
         $repo = 'git@github.com:pagekit/languages.git';

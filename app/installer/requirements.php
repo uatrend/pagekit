@@ -9,11 +9,11 @@
  */
 class Requirement
 {
-    private $fulfilled;
-    private $testMessage;
-    private $helpText;
-    private $helpHtml;
-    private $optional;
+    private bool $fulfilled;
+    private string $testMessage;
+    private string $helpText;
+    private string $helpHtml;
+    private bool $optional;
 
     /**
      * Constructor that initializes the requirement.
@@ -38,7 +38,7 @@ class Requirement
      *
      * @return Boolean true if fulfilled, otherwise false
      */
-    public function isFulfilled()
+    public function isFulfilled(): bool
     {
         return $this->fulfilled;
     }
@@ -48,7 +48,7 @@ class Requirement
      *
      * @return string The test message
      */
-    public function getTestMessage()
+    public function getTestMessage(): string
     {
         return $this->testMessage;
     }
@@ -58,7 +58,7 @@ class Requirement
      *
      * @return string The help text
      */
-    public function getHelpText()
+    public function getHelpText(): string
     {
         return $this->helpText;
     }
@@ -68,7 +68,7 @@ class Requirement
      *
      * @return string The HTML help
      */
-    public function getHelpHtml()
+    public function getHelpHtml(): string
     {
         return $this->helpHtml;
     }
@@ -78,7 +78,7 @@ class Requirement
      *
      * @return Boolean true if optional, false if mandatory
      */
-    public function isOptional()
+    public function isOptional(): bool
     {
         return $this->optional;
     }
@@ -145,14 +145,14 @@ class PhpIniRequirement extends Requirement
  */
 class RequirementCollection implements IteratorAggregate
 {
-    private $requirements = array();
+    private ?array $requirements = array();
 
     /**
      * Gets the current RequirementCollection as an Iterator.
      *
      * @return Traversable A Traversable interface
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new ArrayIterator($this->requirements);
     }
@@ -162,7 +162,7 @@ class RequirementCollection implements IteratorAggregate
      *
      * @param Requirement $requirement A Requirement instance
      */
-    public function add(Requirement $requirement)
+    public function add(Requirement $requirement): void
     {
         $this->requirements[] = $requirement;
     }
@@ -175,7 +175,7 @@ class RequirementCollection implements IteratorAggregate
      * @param string      $helpHtml    The help text formatted in HTML for resolving the problem
      * @param string|null $helpText    The help text (when null, it will be inferred from $helpHtml, i.e. stripped from HTML tags)
      */
-    public function addRequirement($fulfilled, $testMessage, $helpHtml, $helpText = null)
+    public function addRequirement($fulfilled, $testMessage, $helpHtml, $helpText = null): void
     {
         $this->add(new Requirement($fulfilled, $testMessage, $helpHtml, $helpText, false));
     }
@@ -188,7 +188,7 @@ class RequirementCollection implements IteratorAggregate
      * @param string      $helpHtml    The help text formatted in HTML for resolving the problem
      * @param string|null $helpText    The help text (when null, it will be inferred from $helpHtml, i.e. stripped from HTML tags)
      */
-    public function addRecommendation($fulfilled, $testMessage, $helpHtml, $helpText = null)
+    public function addRecommendation($fulfilled, $testMessage, $helpHtml, $helpText = null): void
     {
         $this->add(new Requirement($fulfilled, $testMessage, $helpHtml, $helpText, true));
     }
@@ -206,7 +206,7 @@ class RequirementCollection implements IteratorAggregate
      * @param string      $helpHtml    The help text formatted in HTML for resolving the problem (when null and $evaluation is a Boolean a default help is derived)
      * @param string|null $helpText    The help text (when null, it will be inferred from $helpHtml, i.e. stripped from HTML tags)
      */
-    public function addPhpIniRequirement($cfgName, $evaluation, $approveCfgAbsence = false, $testMessage = null, $helpHtml = null, $helpText = null)
+    public function addPhpIniRequirement($cfgName, $evaluation, $approveCfgAbsence = false, $testMessage = null, $helpHtml = null, $helpText = null): void
     {
         $this->add(new PhpIniRequirement($cfgName, $evaluation, $approveCfgAbsence, $testMessage, $helpHtml, $helpText, false));
     }
@@ -224,7 +224,7 @@ class RequirementCollection implements IteratorAggregate
      * @param string      $helpHtml    The help text formatted in HTML for resolving the problem (when null and $evaluation is a Boolean a default help is derived)
      * @param string|null $helpText    The help text (when null, it will be inferred from $helpHtml, i.e. stripped from HTML tags)
      */
-    public function addPhpIniRecommendation($cfgName, $evaluation, $approveCfgAbsence = false, $testMessage = null, $helpHtml = null, $helpText = null)
+    public function addPhpIniRecommendation($cfgName, $evaluation, $approveCfgAbsence = false, $testMessage = null, $helpHtml = null, $helpText = null): void
     {
         $this->add(new PhpIniRequirement($cfgName, $evaluation, $approveCfgAbsence, $testMessage, $helpHtml, $helpText, true));
     }
@@ -234,7 +234,7 @@ class RequirementCollection implements IteratorAggregate
      *
      * @param RequirementCollection $collection A RequirementCollection instance
      */
-    public function addCollection(RequirementCollection $collection)
+    public function addCollection(RequirementCollection $collection): void
     {
         $this->requirements = array_merge($this->requirements, $collection->all());
     }
@@ -244,7 +244,7 @@ class RequirementCollection implements IteratorAggregate
      *
      * @return array Array of Requirement instances
      */
-    public function all()
+    public function all(): ?array
     {
         return $this->requirements;
     }
@@ -254,7 +254,7 @@ class RequirementCollection implements IteratorAggregate
      *
      * @return array Array of Requirement instances
      */
-    public function getRequirements()
+    public function getRequirements(): array
     {
         $array = array();
         foreach ($this->requirements as $req) {
@@ -271,7 +271,7 @@ class RequirementCollection implements IteratorAggregate
      *
      * @return array Array of Requirement instances
      */
-    public function getFailedRequirements()
+    public function getFailedRequirements(): array
     {
         $array = array();
         foreach ($this->requirements as $req) {
@@ -288,7 +288,7 @@ class RequirementCollection implements IteratorAggregate
      *
      * @return array Array of Requirement instances
      */
-    public function getRecommendations()
+    public function getRecommendations(): array
     {
         $array = array();
         foreach ($this->requirements as $req) {
@@ -305,7 +305,7 @@ class RequirementCollection implements IteratorAggregate
      *
      * @return array Array of Requirement instances
      */
-    public function getFailedRecommendations()
+    public function getFailedRecommendations(): array
     {
         $array = array();
         foreach ($this->requirements as $req) {
@@ -322,7 +322,7 @@ class RequirementCollection implements IteratorAggregate
      *
      * @return Boolean php.ini configuration problem?
      */
-    public function hasPhpIniConfigIssue()
+    public function hasPhpIniConfigIssue(): bool
     {
         foreach ($this->requirements as $req) {
             if (!$req->isFulfilled() && $req instanceof PhpIniRequirement) {
@@ -352,7 +352,7 @@ class RequirementCollection implements IteratorAggregate
  */
 class PagekitRequirements extends RequirementCollection
 {
-    const REQUIRED_PHP_VERSION = '7.3.0';
+    const REQUIRED_PHP_VERSION = '7.4.0';
 
     /**
      * Constructor that initializes the requirements.

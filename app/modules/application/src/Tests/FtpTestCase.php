@@ -2,15 +2,16 @@
 
 namespace Pagekit\Tests;
 
-abstract class FtpTestCase extends \PHPUnit_Framework_TestCase
+use PHPUnit\Framework\TestCase;
+abstract class FtpTestCase extends TestCase
 {
     use FtpUtil;
 
     protected $workspace = null;
-    protected $mode;
+    protected ?int $mode = null;
     protected $connection;
 
-    public function setUp()
+    public function setUp(): void
     {
         try {
 
@@ -32,12 +33,10 @@ abstract class FtpTestCase extends \PHPUnit_Framework_TestCase
         }
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
-        if (is_resource($this->connection)) {
-            if ($this->workspace) {
-                $this->clean($this->workspace);
-            }
+        if (is_resource($this->connection) && $this->workspace) {
+            $this->clean($this->workspace);
         }
     }
 

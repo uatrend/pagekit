@@ -10,7 +10,7 @@ class FloatFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filter($value)
+    public function filter($value): float
     {
         return floatval((string) $value);
     }

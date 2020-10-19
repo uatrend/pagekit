@@ -14,8 +14,8 @@ use Symfony\Component\Templating\TemplateNameParserInterface;
 class PhpEngine extends BasePhpEngine
 {
     protected $result;
-    protected $template;
-    protected $parameters;
+    protected ?Storage $template = null;
+    protected ?array $parameters = null;
 
     /**
      * {@inheritdoc}

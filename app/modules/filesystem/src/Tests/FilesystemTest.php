@@ -2,15 +2,17 @@
 
 namespace Pagekit\Filesystem\Tests;
 
+use PHPUnit\Framework\TestCase;
+use Pagekit\Tests\FileUtil;
 use Pagekit\Filesystem\Adapter\FileAdapter;
 use Pagekit\Filesystem\Filesystem;
 
-class FileTest extends \PHPUnit\Framework\TestCase
+class FileTest extends TestCase
 {
-    use \Pagekit\Tests\FileUtil;
+    use FileUtil;
 
-    protected $file;
-    protected $fixtures;
+    protected ?Filesystem $file = null;
+    protected ?string $fixtures = null;
     protected $workspace;
 
     public function setUp(): void
@@ -27,14 +29,14 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->removeDir($this->workspace);
     }
 
-    public function testGetUrlLocal()
+    public function testGetUrlLocal(): void
     {
         $this->assertSame('/Fixtures', $this->file->getUrl($this->fixtures));
         $this->assertSame('//localhost/Fixtures', $this->file->getUrl($this->fixtures, 3));
         $this->assertSame('http://localhost/Fixtures', $this->file->getUrl($this->fixtures, true));
     }
 
-    public function testGetUrlExternal()
+    public function testGetUrlExternal(): void
     {
         $ftp  = 'ftp://example.com';
         $http = 'http://username:password@example.com/path?arg=value#anchor';
@@ -48,19 +50,19 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($http, $this->file->getUrl($http, true));
     }
 
-    public function testGetUrlNotFound()
+    public function testGetUrlNotFound(): void
     {
         $dir = __DIR__.'/Directory';
 
         $this->assertFalse($this->file->getUrl($dir));
     }
 
-    public function testGetPath()
+    public function testGetPath(): void
     {
         $this->assertSame('/file1.txt', $this->file->getPath('/file1.txt'));
     }
 
-    public function testExists()
+    public function testExists(): void
     {
         $file1 = $this->fixtures.'/file1.txt';
         $file2 = $this->fixtures.'/file2.txt';
@@ -73,7 +75,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->file->exists([$file1, $file2, $file3]));
     }
 
-    public function testCopyFile()
+    public function testCopyFile(): void
     {
         $file1 = $this->fixtures.'/file1.txt';
 
@@ -81,7 +83,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->file->exists($this->workspace.'/file1.txt'));
     }
 
-    public function testCopyFileNotFound()
+    public function testCopyFileNotFound(): void
     {
         $file3 = $this->fixtures.'/file3.txt';
 
@@ -89,14 +91,14 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->file->copy($file3, $this->workspace.'/file3.txt'));
     }
 
-    public function testCopyDir()
+    public function testCopyDir(): void
     {
         $this->assertTrue($this->file->copyDir($this->fixtures, $this->workspace));
         $this->assertTrue($this->file->exists($this->workspace.'/file1.txt'));
         $this->assertTrue($this->file->exists($this->workspace.'/file2.txt'));
     }
 
-    public function testCopyDirNotFound()
+    public function testCopyDirNotFound(): void
     {
         $dir = __DIR__.'/Directory';
 
@@ -104,7 +106,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->file->copyDir($dir, $this->workspace));
     }
 
-    public function testDeleteFile()
+    public function testDeleteFile(): void
     {
         $file1 = $this->fixtures.'/file1.txt';
 
@@ -113,7 +115,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->file->exists($this->workspace.'/file1.txt'));
     }
 
-    public function testDeleteFileNotFound()
+    public function testDeleteFileNotFound(): void
     {
         $file3 = $this->workspace.'/file3.txt';
 
@@ -121,7 +123,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->file->delete($file3));
     }
 
-    public function testDeleteDir()
+    public function testDeleteDir(): void
     {
         $dir = $this->workspace.'/Directory';
 
@@ -130,7 +132,7 @@ class FileTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->file->exists($dir));
     }
 
-    public function testListDir()
+    public function testListDir(): void
     {
         $this->assertContains('file1.txt', $this->file->listDir($this->fixtures));
         $this->assertContains('file2.txt', $this->file->listDir($this->fixtures));

@@ -6,38 +6,28 @@ interface AssetInterface
 {
     /**
      * Gets the name.
-     *
-     * @return string
      */
-    public function getName();
+    public function getName(): string;
 
     /**
      * Gets the source.
-     *
-     * @return string
      */
-    public function getSource();
+    public function getSource(): ?string;
 
     /**
      * Gets the path.
-     *
-     * @return string
      */
-    public function getPath();
+    public function getPath(): string;
 
     /**
      * Gets the dependencies.
-     *
-     * @return array
      */
-    public function getDependencies();
+    public function getDependencies(): array;
 
     /**
      * Gets the content.
-     *
-     * @return string
      */
-    public function getContent();
+    public function getContent(): string;
 
     /**
      * Sets the content.
@@ -48,10 +38,8 @@ interface AssetInterface
 
     /**
      * Gets all options.
-     *
-     * @return array
      */
-    public function getOptions();
+    public function getOptions(): array;
 
     /**
      * Gets a option.
@@ -73,15 +61,13 @@ interface AssetInterface
      * Gets the unique hash.
      *
      * @param  string $salt
-     * @return string
      */
-    public function hash($salt = '');
+    public function hash($salt = ''): string;
 
     /**
      * Applies filters and returns the asset as a string.
      *
      * @param  array $filters
-     * @return string
      */
-    public function dump(array $filters = []);
+    public function dump(array $filters = []): string;
 }

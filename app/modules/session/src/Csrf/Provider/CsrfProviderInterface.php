@@ -13,9 +13,8 @@ interface CsrfProviderInterface
      * Validates a CSRF token.
      *
      * @param  string $token
-     * @return bool
      */
-    public function validate($token = null);
+    public function validate($token = null): bool;
 
     /**
      * Sets a CSRF token to validate.

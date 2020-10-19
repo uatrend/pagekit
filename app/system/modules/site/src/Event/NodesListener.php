@@ -11,15 +11,13 @@ class NodesListener implements EventSubscriberInterface
     /**
      * Registers node routes
      */
-    public function onRequest()
+    public function onRequest(): void
     {
         $site      = App::module('system/site');
         $frontpage = $site->config('frontpage');
         $nodes     = Node::findAll(true);
 
-        uasort($nodes, function($a, $b) {
-            return strcmp(substr_count($a->path, '/'), substr_count($b->path, '/')) * -1;
-        });
+        uasort($nodes, fn($a, $b) => strcmp(substr_count($a->path, '/'), substr_count($b->path, '/')) * -1);
 
         foreach ($nodes as $node) {
 
@@ -49,20 +47,18 @@ class NodesListener implements EventSubscriberInterface
         if ($frontpage && isset($nodes[$frontpage])) {
             App::routes()->alias('/', $nodes[$frontpage]->link);
         } else {
-            App::routes()->get('/', function () {
-                return __('No Frontpage assigned.');
-            });
+            App::routes()->get('/', fn() => __('No Frontpage assigned.'));
         }
     }
 
-    public function onNodeInit($event, $node)
+    public function onNodeInit($event, $node): void
     {
         if ('link' === $node->type && $node->get('redirect')) {
             $node->link = $node->path;
         }
     }
 
-    public function onRoleDelete($event, $role)
+    public function onRoleDelete($event, $role): void
     {
         Node::removeRole($role);
     }
@@ -70,7 +66,7 @@ class NodesListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'request' => ['onRequest', 110],

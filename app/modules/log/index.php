@@ -20,9 +20,7 @@ return [
             return $logger;
         };
 
-        $app['log.debug'] = function () {
-            return new DebugBarHandler();
-        };
+        $app['log.debug'] = fn() => new DebugBarHandler();
 
     },
 

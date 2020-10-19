@@ -11,7 +11,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ExceptionListener implements EventSubscriberInterface
 {
     protected $controller;
-    protected $logger;
+    protected ?LoggerInterface $logger = null;
 
     public function __construct($controller, LoggerInterface $logger = null)
     {
@@ -67,7 +67,7 @@ class ExceptionListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'exception' => ['onException', -100]
@@ -80,7 +80,7 @@ class ExceptionListener implements EventSubscriberInterface
      * @param \Exception $exception
      * @param string     $message
      */
-    protected function logException(\Exception $exception, $message)
+    protected function logException(\Exception $exception, $message): void
     {
         if ($this->logger !== null) {
             if (!$exception instanceof HttpException || $exception->getCode() >= 500) {
@@ -98,7 +98,7 @@ class ExceptionListener implements EventSubscriberInterface
      * @param  Request   $request
      * @return Request   $request
      */
-    protected function duplicateRequest(\Exception $exception, Request $request)
+    protected function duplicateRequest(\Exception $exception, Request $request): Request
     {
         $attributes = [
             '_controller' => $this->controller,

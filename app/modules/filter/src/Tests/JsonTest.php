@@ -2,11 +2,12 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\JsonFilter;
 
-class JsonTest extends \PHPUnit\Framework\TestCase
+class JsonTest extends TestCase
 {
-    public function testFilter()
+    public function testFilter(): void
     {
         $filter = new JsonFilter;
 

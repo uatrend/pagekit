@@ -4,15 +4,9 @@ namespace Pagekit\Session\Csrf\Provider;
 
 class DefaultCsrfProvider implements CsrfProviderInterface
 {
-    /**
-     * @var string
-     */
-    protected $name;
+    protected string $name;
 
-    /**
-     * @var string
-     */
-    protected $token;
+    protected ?string $token = null;
 
     /**
      * Constructor.
@@ -27,7 +21,7 @@ class DefaultCsrfProvider implements CsrfProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function generate()
+    public function generate(): string
     {
         return sha1($this->getSessionId().$this->getSessionToken());
     }
@@ -35,7 +29,7 @@ class DefaultCsrfProvider implements CsrfProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function validate($token = null)
+    public function validate($token = null): bool
     {
         if ($token === null) {
             $token = $this->token;
@@ -47,17 +41,15 @@ class DefaultCsrfProvider implements CsrfProviderInterface
     /**
      * {@inheritdoc}
      */
-    public function setToken($token)
+    public function setToken($token): void
     {
         $this->token = $token;
     }
 
     /**
      * Returns the session id.
-     *
-     * @return string
      */
-    protected function getSessionId()
+    protected function getSessionId(): string
     {
         if (!session_id()) {
             session_start();
@@ -68,10 +60,8 @@ class DefaultCsrfProvider implements CsrfProviderInterface
 
     /**
      * Returns the session token.
-     *
-     * @return string
      */
-    protected function getSessionToken()
+    protected function getSessionToken(): string
     {
         if (!isset($_SESSION[$this->name])) {
             $_SESSION[$this->name] = sha1(uniqid(rand(), true));

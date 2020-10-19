@@ -9,7 +9,7 @@ class DebugBar extends BaseDebugBar
     /**
      * {@inheritdoc}
      */
-    public function getCurrentRequestId()
+    public function getCurrentRequestId(): ?string
     {
         if ($this->requestId == null) {
             $this->requestId = sha1(parent::getCurrentRequestId());

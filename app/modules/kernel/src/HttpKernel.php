@@ -21,15 +21,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 class HttpKernel implements HttpKernelInterface
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected \Pagekit\Event\EventDispatcherInterface $events;
 
-    /**
-     * @var RequestStack
-     */
-    protected $stack;
+    protected \Symfony\Component\HttpFoundation\RequestStack $stack;
 
     /**
      * Constructor.
@@ -46,7 +40,7 @@ class HttpKernel implements HttpKernelInterface
     /**
      * {@inheritdoc}
      */
-    public function getRequest()
+    public function getRequest(): ?Request
     {
         return $this->stack->getCurrentRequest();
     }
@@ -54,7 +48,7 @@ class HttpKernel implements HttpKernelInterface
     /**
      * {@inheritdoc}
      */
-    public function isMasterRequest()
+    public function isMasterRequest(): bool
     {
         return $this->getRequest() === $this->stack->getMasterRequest();
     }
@@ -62,7 +56,7 @@ class HttpKernel implements HttpKernelInterface
     /**
      * {@inheritdoc}
      */
-    public function handle(Request $request)
+    public function handle(Request $request): Response
     {
         try {
 
@@ -71,11 +65,7 @@ class HttpKernel implements HttpKernelInterface
             $this->stack->push($request);
             $this->events->trigger($event, [$request]);
 
-            if ($event->hasResponse()) {
-                $response = $event->getResponse();
-            } else {
-                $response = $this->handleController();
-            }
+            $response = $event->hasResponse() ? $event->getResponse() : $this->handleController();
 
             return $this->handleResponse($response);
 
@@ -88,7 +78,7 @@ class HttpKernel implements HttpKernelInterface
     /**
      * {@inheritdoc}
      */
-    public function abort($code, $message = null, array $headers = [])
+    public function abort($code, $message = null, array $headers = []): void
     {
         switch ($code) {
 
@@ -131,7 +121,7 @@ class HttpKernel implements HttpKernelInterface
     /**
      * {@inheritdoc}
      */
-    public function terminate(Request $request, Response $response)
+    public function terminate(Request $request, Response $response): void
     {
         $event = new KernelEvent('terminate', $this);
         $this->events->trigger($event, [$request, $response]);
@@ -139,10 +129,8 @@ class HttpKernel implements HttpKernelInterface
 
     /**
      * Handles the controller event.
-     *
-     * @return Response
      */
-    protected function handleController()
+    protected function handleController(): Response
     {
         $event = new ControllerEvent('controller', $this);
         $this->events->trigger($event, [$this->getRequest()]);
@@ -167,9 +155,8 @@ class HttpKernel implements HttpKernelInterface
      * Handles the response event.
      *
      * @param  Response $response
-     * @return Response
      */
-    protected function handleResponse(Response $response)
+    protected function handleResponse(Response $response): Response
     {
         $event = new KernelEvent('response', $this);
         $this->events->trigger($event, [$this->getRequest(), $response]);
@@ -182,10 +169,9 @@ class HttpKernel implements HttpKernelInterface
      * Handles the exception event.
      *
      * @param  \Exception $e
-     * @return Response
      * @throws \Exception
      */
-    protected function handleException(\Exception $e)
+    protected function handleException(\Exception $e): Response
     {
         $event = new ExceptionEvent('exception', $this, $e);
         $this->events->trigger($event, [$this->getRequest()]);

@@ -9,12 +9,12 @@ use Pagekit\User\Model\User;
 
 class UserModule extends Module
 {
-    protected $perms = [];
+    protected array $perms = [];
 
     /**
      * {@inheritdoc}
      */
-    public function main(App $app)
+    public function main(App $app): void
     {
         $app['user'] = function ($app) {
 
@@ -26,10 +26,7 @@ class UserModule extends Module
         };
     }
 
-    /**
-     * @return array
-     */
-    public function getPermissions()
+    public function getPermissions(): array
     {
         if (!$this->perms) {
 
@@ -51,7 +48,7 @@ class UserModule extends Module
      * @param string $extension
      * @param array  $permissions
      */
-    public function registerPermissions($extension, array $permissions = [])
+    public function registerPermissions($extension, array $permissions = []): void
     {
         $this->perms[$extension] = $permissions;
     }

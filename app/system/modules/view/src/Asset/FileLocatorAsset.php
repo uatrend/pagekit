@@ -9,7 +9,7 @@ class FileLocatorAsset extends FileAsset
     /**
      * {@inheritdoc}
      */
-    public function getSource()
+    public function getSource(): string
     {
         if (!($path = $this->getPath())) {
             return parent::getSource();
@@ -27,7 +27,7 @@ class FileLocatorAsset extends FileAsset
     /**
      * {@inheritdoc}
      */
-    public function getPath()
+    public function getPath(): string
     {
         return App::locator()->get($this->source) ?: false;
     }

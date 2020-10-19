@@ -7,8 +7,8 @@ use Pagekit\Config\Config;
 
 class PositionManager implements \JsonSerializable
 {
-    protected $positions = [];
-    protected $config;
+    protected array $positions = [];
+    protected Config $config;
 
     public function __construct(Config $config)
     {
@@ -29,9 +29,8 @@ class PositionManager implements \JsonSerializable
      * Gets position by name.
      *
      * @param  string $name
-     * @return array
      */
-    public function get($name)
+    public function get($name): ?array
     {
         $positions = $this->all();
         return isset($positions[$name]) ? $positions[$name] : null;
@@ -39,10 +38,8 @@ class PositionManager implements \JsonSerializable
 
     /**
      * Gets menus.
-     *
-     * @return array
      */
-    public function all()
+    public function all(): array
     {
         array_walk($this->positions, function(&$position, $name) {
             $position['assigned'] = $this->config->get("_positions.$name", []);
@@ -57,7 +54,7 @@ class PositionManager implements \JsonSerializable
      * @param string $name
      * @param string $label
      */
-    public function register($name, $label)
+    public function register($name, $label): void
     {
         $this->positions[$name] = compact('name', 'label');
     }
@@ -85,7 +82,7 @@ class PositionManager implements \JsonSerializable
      * @param string        $position
      * @param array|integer $id
      */
-    public function assign($position, $id)
+    public function assign($position, $id): void
     {
         $positions = $this->config->get('_positions', []);
 
@@ -109,7 +106,7 @@ class PositionManager implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return $this->all();
     }

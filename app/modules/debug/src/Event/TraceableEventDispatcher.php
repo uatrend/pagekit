@@ -2,6 +2,7 @@
 
 namespace Pagekit\Debug\Event;
 
+use Pagekit\Event\EventInterface;
 use Pagekit\Event\EventDispatcherInterface;
 use Pagekit\Event\EventSubscriberInterface;
 use Symfony\Component\Stopwatch\Stopwatch;
@@ -13,11 +14,11 @@ use Psr\Log\LoggerInterface;
  */
 class TraceableEventDispatcher implements EventDispatcherInterface
 {
-    protected $logger;
-    protected $stopwatch;
-    protected $called;
-    protected $dispatcher;
-    protected $wrappedListeners;
+    protected ?\Psr\Log\LoggerInterface $logger = null;
+    protected \Symfony\Component\Stopwatch\Stopwatch $stopwatch;
+    protected array $called;
+    protected \Pagekit\Event\EventDispatcherInterface $dispatcher;
+    protected array $wrappedListeners;
 
     /**
      * Constructor.
@@ -38,7 +39,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function on($event, $listener, $priority = 0)
+    public function on($event, $listener, $priority = 0): void
     {
         $this->dispatcher->on($event, $listener, $priority);
     }
@@ -64,7 +65,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe(EventSubscriberInterface $subscriber)
+    public function subscribe(EventSubscriberInterface $subscriber): void
     {
         foreach ($subscriber->subscribe() as $event => $params) {
 
@@ -92,7 +93,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function unsubscribe(EventSubscriberInterface $subscriber)
+    public function unsubscribe(EventSubscriberInterface $subscriber): void
     {
         foreach ($subscriber->subscribe() as $event => $params) {
             if (is_array($params) && is_array($params[0])) {
@@ -108,7 +109,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function trigger($event, array $arguments = [])
+    public function trigger($event, array $arguments = []): EventInterface
     {
         if (is_string($event)) {
             $class = $this->dispatcher->getEventClass();
@@ -137,7 +138,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function hasListeners($event = null)
+    public function hasListeners($event = null): bool
     {
         return $this->dispatcher->hasListeners($event);
     }
@@ -145,7 +146,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getListeners($event = null)
+    public function getListeners($event = null): array
     {
         return $this->dispatcher->getListeners($event);
     }
@@ -153,7 +154,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getListenerPriority($event, $listener)
+    public function getListenerPriority($event, $listener): ?int
     {
         return $this->dispatcher->getListenerPriority($event, $listener);
     }
@@ -161,7 +162,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getEventClass()
+    public function getEventClass(): string
     {
         return $this->dispatcher->getEventClass();
     }
@@ -169,7 +170,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getCalledListeners()
+    public function getCalledListeners(): array
     {
         $called = [];
         foreach ($this->called as $eventName => $listeners) {
@@ -185,7 +186,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
     /**
      * {@inheritdoc}
      */
-    public function getNotCalledListeners()
+    public function getNotCalledListeners(): array
     {
         try {
             $allListeners = $this->getListeners();
@@ -219,7 +220,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
             }
         }
 
-        uasort($notCalled, [$this, 'sortListenersByPriority']);
+        uasort($notCalled, fn($a, $b) => $this->sortListenersByPriority($a, $b));
 
         return $notCalled;
     }
@@ -236,7 +237,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
         return call_user_func_array([$this->dispatcher, $method], $arguments);
     }
 
-    protected function preProcess($eventName)
+    protected function preProcess($eventName): void
     {
         foreach ($this->dispatcher->getListeners($eventName) as $listener) {
             $priority = $this->getListenerPriority($eventName, $listener);
@@ -249,7 +250,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
         }
     }
 
-    protected function postProcess($eventName)
+    protected function postProcess($eventName): void
     {
         unset($this->wrappedListeners[$eventName]);
         $skipped = false;
@@ -293,9 +294,8 @@ class TraceableEventDispatcher implements EventDispatcherInterface
      *
      * @param  object $listener
      * @param  string $eventName
-     * @return array
      */
-    protected function getListenerInfo($listener, $eventName)
+    protected function getListenerInfo($listener, $eventName): array
     {
         $info = [
             'event' => $eventName,
@@ -354,7 +354,7 @@ class TraceableEventDispatcher implements EventDispatcherInterface
         return $info;
     }
 
-    protected function sortListenersByPriority($a, $b)
+    protected function sortListenersByPriority($a, $b): int
     {
         if (is_int($a['priority']) && !is_int($b['priority'])) {
             return 1;

@@ -8,10 +8,7 @@ use Pagekit\User\Model\User;
 
 class AuthDataCollector implements DataCollectorInterface
 {
-    /**
-     * @var Auth
-     */
-    protected $auth;
+    protected ?\Pagekit\Auth\Auth $auth = null;
 
     /**
      * Constructor.
@@ -26,7 +23,7 @@ class AuthDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function collect()
+    public function collect(): array
     {
         if (null === $this->auth) {
             return [
@@ -59,9 +56,7 @@ class AuthDataCollector implements DataCollectorInterface
             'authenticated' => $user->isAuthenticated(),
             'user_class' => get_class($user),
             'user' => $user->getUsername(),
-            'roles' => array_map(function ($role) {
-                return $role->name;
-            }, User::findRoles($user)), // TODO interface does not match
+            'roles' => array_map(fn($role) => $role->name, User::findRoles($user)), // TODO interface does not match
         ];
 
     }
@@ -69,7 +64,7 @@ class AuthDataCollector implements DataCollectorInterface
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'auth';
     }

@@ -6,17 +6,12 @@ use Pagekit\Auth\UserInterface;
 
 class AuthException extends \Exception
 {
-    /**
-     * @var UserInterface
-     */
-    protected $user;
+    protected ?\Pagekit\Auth\UserInterface $user = null;
 
     /**
      * Get the user.
-     *
-     * @return UserInterface
      */
-    public function getUser()
+    public function getUser(): ?\Pagekit\Auth\UserInterface
     {
         return $this->user;
     }
@@ -26,7 +21,7 @@ class AuthException extends \Exception
      *
      * @param UserInterface $user
      */
-    public function setUser(UserInterface $user)
+    public function setUser(UserInterface $user): void
     {
         $this->user = $user;
     }

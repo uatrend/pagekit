@@ -2,14 +2,15 @@
 
 namespace Pagekit\Twig;
 
+use Twig\Error\LoaderError;
 use Pagekit\View\Loader\FilesystemLoader;
 use Symfony\Component\Templating\TemplateNameParser;
 use Symfony\Component\Templating\TemplateNameParserInterface;
 
 class TwigLoader extends \Twig\Loader\FilesystemLoader
 {
-    protected $loader;
-    protected $parser;
+    protected \Pagekit\View\Loader\FilesystemLoader $loader;
+    protected \Symfony\Component\Templating\TemplateNameParserInterface $parser;
 
     /**
      * Constructor.
@@ -39,7 +40,7 @@ class TwigLoader extends \Twig\Loader\FilesystemLoader
         $file = $this->loader->load($this->parser->parse($template));
 
         if (false === $file || null === $file) {
-            throw new \Twig\Error\LoaderError(sprintf('Unable to find template "%s".', $key));
+            throw new LoaderError(sprintf('Unable to find template "%s".', $key));
         }
 
         return $this->cache[$key] = $file;

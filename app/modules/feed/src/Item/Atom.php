@@ -2,6 +2,7 @@
 
 namespace Pagekit\Feed\Item;
 
+use Pagekit\Feed\ItemInterface;
 use Pagekit\Feed\Feed;
 use Pagekit\Feed\Item;
 
@@ -10,7 +11,7 @@ class Atom extends Item
     /**
      * {@inheritdoc}
      */
-    public function setId($id)
+    public function setId($id): ItemInterface
     {
         return $this->setElement('id', Feed\Atom::uuid($id, 'urn:uuid:'));
     }
@@ -18,16 +19,15 @@ class Atom extends Item
     /**
      * {@inheritdoc}
      */
-    public function setElement($name, $value, $attributes = null)
+    public function setElement($name, $value, $attributes = null): ItemInterface
     {
         return parent::setElement($this->removeNamespace($name), $value, $attributes);
     }
 
     /**
      * @param  string $name
-     * @return string
      */
-    protected function removeNamespace($name)
+    protected function removeNamespace($name): string
     {
         return 0 === strpos($name, 'atom:') ? substr($name, 5) : $name;
     }
@@ -35,7 +35,7 @@ class Atom extends Item
     /**
      * {@inheritdoc}
      */
-    public function setDescription($description)
+    public function setDescription($description): ItemInterface
     {
         return $this->setElement('summary', $description);
     }
@@ -43,7 +43,7 @@ class Atom extends Item
     /**
      * {@inheritdoc}
      */
-    public function setContent($content)
+    public function setContent($content): ItemInterface
     {
         return $this->setElement('content', $content, ['type' => 'html']);
     }
@@ -51,7 +51,7 @@ class Atom extends Item
     /**
      * {@inheritdoc}
      */
-    public function setDate(\DateTimeInterface $date)
+    public function setDate(\DateTimeInterface $date): ItemInterface
     {
         return $this->setElement('updated', date(\DATE_ATOM, $date->getTimestamp()));
     }
@@ -59,7 +59,7 @@ class Atom extends Item
     /**
      * {@inheritdoc}
      */
-    public function setAuthor($name, $email = null, $uri = null)
+    public function setAuthor($name, $email = null, $uri = null): ItemInterface
     {
         return $this->setElement('author', array_filter(compact('name', 'email', 'uri')));
     }
@@ -67,7 +67,7 @@ class Atom extends Item
     /**
      * {@inheritdoc}
      */
-    public function setLink($link)
+    public function setLink($link): ItemInterface
     {
         return $this
             ->setElement('link', '', ['href' => $link])
@@ -77,20 +77,20 @@ class Atom extends Item
     /**
      * {@inheritdoc}
      */
-    public function addEnclosure($url, $length, $type, $multiple = true)
+    public function addEnclosure($url, $length, $type, $multiple = true): ItemInterface
     {
         return $this->addElement('atom:link', '', [
             'length' => $length,
             'type'   => $type,
             'href'   => $url,
             'rel'    => 'enclosure'
-        ], false, $multiple);
+        ]);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addElement($name, $value, $attributes = null)
+    public function addElement($name, $value, $attributes = null): ItemInterface
     {
         return parent::addElement($this->removeNamespace($name), $value, $attributes);
     }

@@ -1,8 +1,8 @@
 <?php
 
+use Twig\TwigFilter;
 use Pagekit\Util\ArrObject;
 use Pagekit\View\Event\ResponseListener;
-
 return [
 
     'name' => 'system/view',
@@ -11,8 +11,8 @@ return [
 
         $app->extend('twig', function ($twig) use ($app) {
 
-            $twig->addFilter(new \Twig\TwigFilter('trans', '__'));
-            $twig->addFilter(new \Twig\TwigFilter('transChoice', '_c'));
+            $twig->addFilter(new TwigFilter('trans', '__'));
+            $twig->addFilter(new TwigFilter('transChoice', '_c'));
 
             return $twig;
 

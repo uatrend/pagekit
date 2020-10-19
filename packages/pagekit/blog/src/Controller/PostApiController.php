@@ -15,7 +15,7 @@ class PostApiController
      * @Route("/", methods="GET")
      * @Request({"filter": "array", "page":"int"})
      */
-    public function indexAction($filter = [], $page = 0)
+    public function indexAction($filter = [], $page = 0): array
     {
         $query  = Post::query();
         $filter = array_merge(array_fill_keys(['status', 'search', 'author', 'order', 'limit'], ''), $filter);
@@ -69,7 +69,7 @@ class PostApiController
      * @Route("/{id}", methods="POST", requirements={"id"="\d+"})
      * @Request({"post": "array", "id": "int"}, csrf=true)
      */
-    public function saveAction($data, $id = 0)
+    public function saveAction($data, $id = 0): array
     {
         if (!$id || !$post = Post::find($id)) {
 
@@ -103,7 +103,7 @@ class PostApiController
      * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
      * @Request({"id": "int"}, csrf=true)
      */
-    public function deleteAction($id)
+    public function deleteAction($id): array
     {
         if ($post = Post::find($id)) {
 
@@ -121,7 +121,7 @@ class PostApiController
      * @Route(methods="POST")
      * @Request({"ids": "int[]"}, csrf=true)
      */
-    public function copyAction($ids = [])
+    public function copyAction($ids = []): array
     {
         foreach ($ids as $id) {
             if ($post = Post::find((int) $id)) {
@@ -146,7 +146,7 @@ class PostApiController
      * @Route("/bulk", methods="POST")
      * @Request({"posts": "array"}, csrf=true)
      */
-    public function bulkSaveAction($posts = [])
+    public function bulkSaveAction($posts = []): array
     {
         foreach ($posts as $data) {
             $this->saveAction($data, isset($data['id']) ? $data['id'] : 0);
@@ -159,7 +159,7 @@ class PostApiController
      * @Route("/bulk", methods="DELETE")
      * @Request({"ids": "array"}, csrf=true)
      */
-    public function bulkDeleteAction($ids = [])
+    public function bulkDeleteAction($ids = []): array
     {
         foreach (array_filter($ids) as $id) {
             $this->deleteAction($id);

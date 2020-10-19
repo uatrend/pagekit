@@ -13,7 +13,7 @@ class CacheModule extends Module
     /**
      * {@inheritdoc}
      */
-    public function main(App $app)
+    public function main(App $app): void
     {
         foreach ($this->config['caches'] as $name => $config)  {
             $app[$name] = function() use ($config) {
@@ -26,7 +26,7 @@ class CacheModule extends Module
 
                 if ($this->config['nocache']) {
                     $config['storage'] = 'array';
-                } else if ($config['storage'] == 'auto' || !in_array($config['storage'], $supports)) {
+                } elseif ($config['storage'] == 'auto' || !in_array($config['storage'], $supports)) {
                     $config['storage'] = end($supports);
                 }
 
@@ -76,10 +76,8 @@ class CacheModule extends Module
     {
         $supports = ['phpfile', 'array', 'file'];
 
-        if (extension_loaded('apc') && class_exists('\APCIterator')) {
-            if (!extension_loaded('apcu') || version_compare(phpversion('apcu'), '4.0.2', '>=')) {
-                $supports[] = 'apc';
-            }
+        if (extension_loaded('apc') && class_exists('\APCIterator') && (!extension_loaded('apcu') || version_compare(phpversion('apcu'), '4.0.2', '>='))) {
+            $supports[] = 'apc';
         }
 
         if (extension_loaded('xcache') && ini_get('xcache.var_size')) {
@@ -92,7 +90,7 @@ class CacheModule extends Module
     /**
      * Clear cache on terminate event.
      */
-    public function clearCache(array $options = [])
+    public function clearCache(array $options = []): void
     {
         App::on('terminate', function() use ($options) {
             $this->doClearCache($options);
@@ -102,7 +100,7 @@ class CacheModule extends Module
     /**
      * TODO: clear opcache
      */
-    public function doClearCache(array $options = [])
+    public function doClearCache(array $options = []): void
     {
         // clear cache
         if (empty($options) || @$options['cache']) {

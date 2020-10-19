@@ -7,15 +7,9 @@ use Symfony\Component\Stopwatch\Stopwatch;
 
 class DebugStack extends BaseDebugStack
 {
-    /**
-     * @var string
-     */
-    protected $callstack;
+    protected ?string $callstack = null;
 
-    /**
-    * @var Stopwatch
-    */
-    protected $stopwatch;
+    protected ?Stopwatch $stopwatch = null;
 
     public function __construct(Stopwatch $stopwatch = null)
     {
@@ -25,7 +19,7 @@ class DebugStack extends BaseDebugStack
     /**
      * {@inheritdoc}
      */
-    public function startQuery($sql, array $params = null, array $types = null)
+    public function startQuery($sql, array $params = null, array $types = null): void
     {
         if ($this->enabled) {
             $e = new \Exception;
@@ -42,7 +36,7 @@ class DebugStack extends BaseDebugStack
     /**
      * {@inheritdoc}
      */
-    public function stopQuery()
+    public function stopQuery(): void
     {
         parent::stopQuery();
 

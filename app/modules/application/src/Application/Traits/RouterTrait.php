@@ -11,7 +11,7 @@ trait RouterTrait
     /**
      * @see HttpKernel::abort()
      */
-    public static function abort($code, $message = null, array $headers = [])
+    public static function abort($code, $message = null, array $headers = []): void
     {
         static::kernel()->abort($code, $message, $headers);
     }
@@ -22,7 +22,7 @@ trait RouterTrait
      * @param mixed   $callback
      * @param integer $priority
      */
-    public static function error($callback, $priority = -8)
+    public static function error($callback, $priority = -8): void
     {
         static::events()->on('exception', new ExceptionListenerWrapper($callback), $priority);
     }
@@ -41,9 +41,8 @@ trait RouterTrait
      * @param  string $name
      * @param  array  $parameters
      * @throws \RuntimeException
-     * @return Response
      */
-    public static function forward($name, $parameters = [])
+    public static function forward($name, $parameters = []): Response
     {
         if (!$request = static::request()) {
             throw new \RuntimeException('No Request set.');

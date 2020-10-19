@@ -10,10 +10,8 @@ trait ModelTrait
 
     /**
      * Gets the related EntityManager.
-     *
-     * @return EntityManager
      */
-    public static function getManager()
+    public static function getManager(): EntityManager
     {
         static $manager;
 
@@ -24,20 +22,15 @@ trait ModelTrait
         return $manager;
     }
 
-    /**
-     * @return Connection
-     */
-    public static function getConnection()
+    public static function getConnection(): Connection
     {
         return static::getManager()->getConnection();
     }
 
     /**
      * Gets the related Metadata object with mapping information of the class.
-     *
-     * @return Metadata
      */
-    public static function getMetadata()
+    public static function getMetadata(): Metadata
     {
         return static::getManager()->getMetadata(get_called_class());
     }
@@ -55,10 +48,8 @@ trait ModelTrait
 
     /**
      * Creates a new QueryBuilder instance.
-     *
-     * @return QueryBuilder
      */
-    public static function query()
+    public static function query(): QueryBuilder
     {
         return new QueryBuilder(static::getManager(), static::getMetadata());
     }
@@ -68,9 +59,8 @@ trait ModelTrait
      *
      * @param  mixed $condition
      * @param  array $params
-     * @return QueryBuilder
      */
-    public static function where($condition, array $params = [])
+    public static function where($condition, array $params = []): QueryBuilder
     {
         return static::query()->where($condition, $params);
     }
@@ -91,7 +81,7 @@ trait ModelTrait
      *
      * @return static[]
      */
-    public static function findAll()
+    public static function findAll(): array
     {
         return static::query()->get();
     }
@@ -101,7 +91,7 @@ trait ModelTrait
      *
      * @param array $data
      */
-    public function save(array $data = [])
+    public function save(array $data = []): void
     {
         static::getManager()->save($this, $data);
     }
@@ -109,7 +99,7 @@ trait ModelTrait
     /**
      * Deletes the entity.
      */
-    public function delete()
+    public function delete(): void
     {
         static::getManager()->delete($this);
     }

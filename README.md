@@ -118,7 +118,7 @@ Marketplace functionality like install, update and remove works the same like in
 
 ## Major changes:
 
-- Required PHP Version - 7.3 or higher (7.4+)
+- Required PHP Version - 7.4
 - Used UIkit 3 and Vue 2 frameworks
 - Updated Symfony and Composer frameworks
 - [Updated Composer dependencies](https://github.com/uatrend/pagekit/blob/develop/composer.json)

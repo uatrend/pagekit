@@ -20,9 +20,7 @@ return [
             return $session;
         };
 
-        $app['message'] = function () {
-            return new MessageBag();
-        };
+        $app['message'] = fn() => new MessageBag();
 
         $app['session.storage'] = function ($app) {
 
@@ -66,9 +64,7 @@ return [
             return $options;
         };
 
-        $app['csrf'] = function ($app) {
-            return new SessionCsrfProvider($app['session']);
-        };
+        $app['csrf'] = fn($app) => new SessionCsrfProvider($app['session']);
 
     },
 

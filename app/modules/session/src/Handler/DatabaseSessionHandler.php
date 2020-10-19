@@ -9,15 +9,9 @@ use Pagekit\Database\Connection;
 
 class DatabaseSessionHandler implements \SessionHandlerInterface
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected \Pagekit\Database\Connection $connection;
 
-    /**
-     * @var string
-     */
-    protected $table;
+    protected string $table;
 
     /**
      * Constructor.
@@ -34,7 +28,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function open($path = null, $name = null)
+    public function open($path = null, $name = null): bool
     {
         return true;
     }
@@ -42,7 +36,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function close()
+    public function close(): bool
     {
         return true;
     }
@@ -50,7 +44,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function destroy($id)
+    public function destroy($id): bool
     {
         try {
             $this->connection->delete($this->table, ['id' => $id]);
@@ -64,7 +58,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function gc($lifetime)
+    public function gc($lifetime): bool
     {
         try {
             $this->connection->executeQuery("DELETE FROM {$this->table} WHERE time < :time", ['time' => date('Y-m-d H:i:s', time() - $lifetime)]);
@@ -98,7 +92,7 @@ class DatabaseSessionHandler implements \SessionHandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function write($id, $data)
+    public function write($id, $data): bool
     {
         try {
 

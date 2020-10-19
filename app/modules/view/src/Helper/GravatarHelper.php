@@ -36,9 +36,7 @@ class GravatarHelper extends Helper
                 'height' => $params['size']
             ], $params['attrs']);
 
-            $attrs = array_map(function($name, $value) {
-                return sprintf('%s="%s"', $name, htmlspecialchars($value));
-            }, array_keys($attrs), $attrs);
+            $attrs = array_map(fn($name, $value) => sprintf('%s="%s"', $name, htmlspecialchars($value)), array_keys($attrs), $attrs);
 
             return '<img '.implode(' ', $attrs).'/>';
         }
@@ -49,7 +47,7 @@ class GravatarHelper extends Helper
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'gravatar';
     }

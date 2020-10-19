@@ -9,15 +9,9 @@ class RSS1 extends Feed
     protected $mime = 'application/rdf+xml';
     protected $item = 'Pagekit\Feed\Item\RSS1';
 
-    /**
-     * @var string
-     */
-    protected $about;
+    protected ?string $about = null;
 
-    /**
-     * @return string
-     */
-    public function getAbout()
+    public function getAbout(): ?string
     {
         return $this->about;
     }
@@ -25,7 +19,7 @@ class RSS1 extends Feed
     /**
      * @param string $about
      */
-    public function setAbout($about)
+    public function setAbout($about): void
     {
         $this->about = $about;
     }
@@ -33,7 +27,7 @@ class RSS1 extends Feed
     /**
      * {@inheritdoc}
      */
-    public function setDate(\DateTimeInterface $date)
+    public function setDate(\DateTimeInterface $date): self
     {
         return $this;
     }
@@ -41,7 +35,7 @@ class RSS1 extends Feed
     /**
      * {@inheritdoc}
      */
-    protected function build()
+    protected function build(): \DOMDocument
     {
         $doc = new \DOMDocument('1.0', $this->encoding);
 

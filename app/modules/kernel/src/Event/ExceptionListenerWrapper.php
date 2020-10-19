@@ -36,7 +36,7 @@ class ExceptionListenerWrapper
         }
     }
 
-    protected function shouldRun(\Exception $exception)
+    protected function shouldRun(\Exception $exception): bool
     {
         if (is_array($this->callback)) {
             $callbackReflection = new \ReflectionMethod($this->callback[0], $this->callback[1]);

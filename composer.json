@@ -14,8 +14,8 @@
         }
     ],
     "require": {
-        "php": ">=7.3",
-        "composer/composer": "~1.10.13",
+        "php": ">=7.4",
+        "composer/composer": "~1.10.15",
         "doctrine/annotations": "~1.10.4",
         "doctrine/dbal": "~2.10.4",
         "paragonie/random-lib": "~2.0.1",

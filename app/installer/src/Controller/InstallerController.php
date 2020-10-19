@@ -7,10 +7,7 @@ use Pagekit\Installer\Installer;
 
 class InstallerController
 {
-    /**
-     * @var object
-     */
-    protected $installer;
+    protected Installer $installer;
 
     /**
      * Constructor.
@@ -21,7 +18,7 @@ class InstallerController
         $this->installer = new Installer($app);
     }
 
-    public function indexAction()
+    public function indexAction(): array
     {
         $intl = App::module('system/intl');
 
@@ -41,7 +38,7 @@ class InstallerController
     /**
      * @Request({"config": "array"})
      */
-    public function checkAction($config = [])
+    public function checkAction($config = []): array
     {
         return $this->installer->check($config);
     }
@@ -49,7 +46,7 @@ class InstallerController
     /**
      * @Request({"config": "array", "option": "array", "user": "array"})
      */
-    public function installAction($config = [], $option = [], $user = [])
+    public function installAction($config = [], $option = [], $user = []): array
     {
         return $this->installer->install($config, $option, $user);
     }

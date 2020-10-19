@@ -9,7 +9,7 @@ use Pagekit\Application as App;
  */
 class StorageController
 {
-    public function indexAction()
+    public function indexAction(): array
     {
         return [
             '$view' => [

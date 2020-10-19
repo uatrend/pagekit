@@ -9,5 +9,5 @@ namespace Pagekit\Database\ORM\Annotation;
 final class OrderBy implements Annotation
 {
     /** @var array<string> */
-    public $value;
+    public array $value;
 }

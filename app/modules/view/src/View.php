@@ -13,30 +13,21 @@ use Symfony\Component\Templating\EngineInterface;
 
 class View
 {
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected \Pagekit\Event\EventDispatcherInterface $events;
 
-    /**
-     * @var EngineInterface
-     */
-    protected $engine;
+    protected \Symfony\Component\Templating\EngineInterface $engine;
 
-    /**
-     * @var array
-     */
-    protected $globals = [];
+    protected array $globals = [];
 
     /**
      * @var HelperInterface[]
      */
-    protected $helpers = [];
+    protected array $helpers = [];
 
     /**
      * @var array[]
      */
-    protected $parameters = [];
+    protected array $parameters = [];
 
     /**
      * Constructor.
@@ -90,10 +81,8 @@ class View
 
     /**
      * Gets the templating engine.
-     *
-     * @return array
      */
-    public function getEngine()
+    public function getEngine(): EngineInterface
     {
         return $this->engine;
     }
@@ -102,9 +91,8 @@ class View
      * Adds a templating engine.
      *
      * @param  EngineInterface $engine
-     * @return self
      */
-    public function addEngine(EngineInterface $engine)
+    public function addEngine(EngineInterface $engine): self
     {
         $this->engine->addEngine($engine);
 
@@ -113,10 +101,8 @@ class View
 
     /**
      * Gets the global parameters.
-     *
-     * @return array
      */
-    public function getGlobals()
+    public function getGlobals(): array
     {
         return $this->globals;
     }
@@ -126,9 +112,8 @@ class View
      *
      * @param  string $name
      * @param  mixed  $value
-     * @return self
      */
-    public function addGlobal($name, $value)
+    public function addGlobal($name, $value): self
     {
         $this->globals[$name] = $value;
 
@@ -139,9 +124,8 @@ class View
      * Adds a view helper.
      *
      * @param  HelperInterface $helper
-     * @return self
      */
-    public function addHelper(HelperInterface $helper)
+    public function addHelper(HelperInterface $helper): self
     {
         $this->helpers[$helper->getName()] = $helper;
 
@@ -154,9 +138,8 @@ class View
      * Adds multiple view helpers.
      *
      * @param  HelperInterface[] $helpers
-     * @return self
      */
-    public function addHelpers(array $helpers)
+    public function addHelpers(array $helpers): self
     {
         foreach ($helpers as $helper) {
             $this->addHelper($helper);
@@ -172,7 +155,7 @@ class View
      * @param  callable $listener
      * @param  int      $priority
      */
-    public function on($event, $listener, $priority = 0)
+    public function on($event, $listener, $priority = 0): void
     {
         $this->events->on($event, $listener, $priority);
     }
@@ -182,9 +165,8 @@ class View
      *
      * @param  string $event
      * @param  array  $arguments
-     * @return EventInterface
      */
-    public function trigger($event, array $arguments = [])
+    public function trigger($event, array $arguments = []): EventInterface
     {
         return $this->events->trigger($event, $arguments);
     }
@@ -192,7 +174,7 @@ class View
     /**
      * {@inheritdoc}
      */
-    public function render($name, array $parameters = [])
+    public function render($name, array $parameters = []): ?string
     {
         $event = new ViewEvent('render', $name);
         $event->setParameters(array_replace($this->globals, end($this->parameters) ?: [], $parameters));

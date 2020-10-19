@@ -6,17 +6,12 @@ use Symfony\Component\Routing\Route as BaseRoute;
 
 class Route extends BaseRoute
 {
-    /**
-     * @var string
-     */
-    protected $name = '';
+    protected string $name = '';
 
     /**
      * Returns the routes name.
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -25,9 +20,8 @@ class Route extends BaseRoute
      * Sets the routes name
      *
      * @param  string $name
-     * @return Route
      */
-    public function setName($name)
+    public function setName($name): self
     {
         $this->name = trim((string) $name, '/');
 

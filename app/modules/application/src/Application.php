@@ -13,10 +13,7 @@ class Application extends Container
 {
     use StaticTrait, EventTrait, RouterTrait;
 
-    /**
-     * @var bool
-     */
-    protected $booted = false;
+    protected bool $booted = false;
 
     /**
      * Constructor.
@@ -27,19 +24,15 @@ class Application extends Container
     {
         parent::__construct($values);
 
-        $this['events'] = function () {
-            return new EventDispatcher();
-        };
+        $this['events'] = fn() => new EventDispatcher();
 
-        $this['module'] = function () {
-            return new ModuleManager($this);
-         };
+        $this['module'] = fn() => new ModuleManager($this);
     }
 
     /**
      * Boots all modules.
      */
-    public function boot()
+    public function boot(): void
     {
         if (!$this->booted) {
 
@@ -54,7 +47,7 @@ class Application extends Container
      *
      * @param Request $request
      */
-    public function run(Request $request = null)
+    public function run(Request $request = null): void
     {
         if ($request === null) {
             $request = Request::createFromGlobals();
@@ -72,10 +65,8 @@ class Application extends Container
 
     /**
      * Checks if running in the console.
-     *
-     * @return bool
      */
-    public function inConsole()
+    public function inConsole(): bool
     {
         return PHP_SAPI == 'cli';
     }

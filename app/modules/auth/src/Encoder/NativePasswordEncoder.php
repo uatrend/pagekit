@@ -4,13 +4,13 @@ namespace Pagekit\Auth\Encoder;
 
 class NativePasswordEncoder implements PasswordEncoderInterface
 {
-    protected $cost = 10;
-    protected $algorithm = PASSWORD_BCRYPT;
+    protected int $cost = 10;
+    protected string $algorithm = PASSWORD_BCRYPT;
 
     /**
      * {@inheritdoc}
      */
-    public function hash($raw)
+    public function hash($raw): string
     {
         $options = ['cost' => $this->cost];
 
@@ -20,7 +20,7 @@ class NativePasswordEncoder implements PasswordEncoderInterface
     /**
      * {@inheritdoc}
      */
-    public function verify($hash, $raw, $salt = null)
+    public function verify($hash, $raw, $salt = null): bool
     {
         if (null !== $salt) {
             throw new \InvalidArgumentException('The salt needs to be included with the hash.');

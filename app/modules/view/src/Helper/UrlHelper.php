@@ -7,10 +7,7 @@ use Pagekit\Routing\Generator\UrlGenerator;
 
 class UrlHelper extends Helper
 {
-    /**
-     * @var UrlProvider
-     */
-    protected $provider;
+    protected \Pagekit\Application\UrlProvider $provider;
 
     /**
      * Constructor.
@@ -51,7 +48,7 @@ class UrlHelper extends Helper
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'url';
     }

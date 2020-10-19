@@ -13,7 +13,7 @@ class InfoHelper
      *
      * @return string[]
      */
-    public function get()
+    public function get(): array
     {
         $server = new ServerBag($GLOBALS['_SERVER']);
 
@@ -42,7 +42,7 @@ class InfoHelper
      *
      * @return string[]
      */
-    protected function getDirectories()
+    protected function getDirectories(): array
     {
         // -TODO-
 
@@ -76,9 +76,8 @@ class InfoHelper
      * Returns the path relative to the root.
      *
      * @param  string $path
-     * @return string
      */
-    protected function getRelativePath($path)
+    protected function getRelativePath($path): string
     {
         if (0 === strpos($path, App::path())) {
             $path = ltrim(str_replace('\\', '/', substr($path, strlen(App::path()))), '/');

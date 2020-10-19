@@ -10,7 +10,7 @@ class Filesystem
     /**
      * @var AdapterInterface[]
      */
-    protected $adapters = [];
+    protected array $adapters = [];
 
     /**
      * Gets file path URL.
@@ -76,9 +76,8 @@ class Filesystem
      * Checks whether a file or directory exists.
      *
      * @param  string|array $files
-     * @return bool
      */
-    public function exists($files)
+    public function exists($files): bool
     {
         $files = (array) $files;
 
@@ -99,9 +98,8 @@ class Filesystem
      *
      * @param  string $source
      * @param  string $target
-     * @return bool
      */
-    public function copy($source, $target)
+    public function copy($source, $target): bool
     {
         $source = $this->getPathInfo($source, 'pathname');
         $target = $this->getPathInfo($target);
@@ -117,9 +115,8 @@ class Filesystem
      * Deletes a file.
      *
      * @param  string|array $files
-     * @return bool
      */
-    public function delete($files)
+    public function delete($files): bool
     {
         $files = (array) $files;
 
@@ -155,9 +152,8 @@ class Filesystem
      * List files and directories inside the specified path.
      *
      * @param  string $dir
-     * @return array
      */
-    public function listDir($dir)
+    public function listDir($dir): array
     {
         $dir = $this->getPathInfo($dir, 'pathname');
 
@@ -170,9 +166,8 @@ class Filesystem
      * @param  string $dir
      * @param  int    $mode
      * @param  bool   $recursive
-     * @return bool
      */
-    public function makeDir($dir, $mode = 0777, $recursive = true)
+    public function makeDir($dir, $mode = 0777, $recursive = true): bool
     {
         $dir = $this->getPathInfo($dir, 'pathname');
 
@@ -184,9 +179,8 @@ class Filesystem
      *
      * @param  string $source
      * @param  string $target
-     * @return bool
      */
-    public function copyDir($source, $target)
+    public function copyDir($source, $target): bool
     {
         $source = $this->getPathInfo($source, 'pathname');
         $target = $this->getPathInfo($target, 'pathname');
@@ -224,7 +218,7 @@ class Filesystem
      * @param  string $protocol
      * @return AdapterInterface|null
      */
-    public function getAdapter($protocol)
+    public function getAdapter($protocol): ?AdapterInterface
     {
         return isset($this->adapters[$protocol]) ? $this->adapters[$protocol] : null;
     }
@@ -235,7 +229,7 @@ class Filesystem
      * @param string           $protocol
      * @param AdapterInterface $adapter
      */
-    public function registerAdapter($protocol, AdapterInterface $adapter)
+    public function registerAdapter($protocol, AdapterInterface $adapter): void
     {
         $this->adapters[$protocol] = $adapter;
 

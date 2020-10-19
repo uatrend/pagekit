@@ -8,7 +8,7 @@ use Pagekit\Site\Model\Page;
 
 class PageListener implements EventSubscriberInterface
 {
-    public function onNodeSave($event, $request)
+    public function onNodeSave($event, $request): void
     {
         if (null === $node = $request->get('node')
             or null === $data = $request->get('page')
@@ -26,7 +26,7 @@ class PageListener implements EventSubscriberInterface
         $request->request->set('node', $node);
     }
 
-    public function onNodeDeleted($event, $node)
+    public function onNodeDeleted($event, $node): void
     {
         if ('page' !== $node->type) {
             return;
@@ -39,7 +39,7 @@ class PageListener implements EventSubscriberInterface
         }
     }
 
-    public function onRouteConfigure($event, $route, $routes)
+    public function onRouteConfigure($event, $route, $routes): void
     {
         if ($route->getName() === '@page') {
             $routes->remove('@page');
@@ -53,7 +53,7 @@ class PageListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'before@site/api/node/save' => 'onNodeSave',
@@ -67,9 +67,8 @@ class PageListener implements EventSubscriberInterface
      * Find page entity by node.
      *
      * @param  int $id
-     * @return Page
      */
-    protected function getPage($id)
+    protected function getPage($id): Page
     {
         if (!$id or !$page = Page::find($id)) {
             $page = Page::create();

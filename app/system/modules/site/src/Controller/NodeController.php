@@ -44,7 +44,7 @@ class NodeController
      * @Access("site: manage site", admin=true)
      * @Request({"id", "menu"})
      */
-    public function editAction($id = '', $menu = '')
+    public function editAction($id = '', $menu = ''): array
     {
         if (is_numeric($id)) {
 
@@ -83,7 +83,7 @@ class NodeController
      * @Route("site/settings")
      * @Access("system: access settings", admin=true)
      */
-    public function settingsAction()
+    public function settingsAction(): array
     {
         return [
             '$view' => [
@@ -101,7 +101,7 @@ class NodeController
      * @Request({"link"})
      * @Access("site: manage site")
      */
-    public function linkAction($link)
+    public function linkAction($link): array
     {
         return ['message' => 'success', 'url' => App::url($link, [], 'base') ?: $link];
     }

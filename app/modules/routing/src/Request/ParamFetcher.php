@@ -7,20 +7,11 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ParamFetcher implements ParamFetcherInterface
 {
-    /**
-     * @var Request
-     */
-    protected $request;
+    protected ?Request $request = null;
 
-    /**
-     * @var array
-     */
-    protected $params;
+    protected ?array $params = null;
 
-    /**
-     * @var FilterManager
-     */
-    protected $filterManager;
+    protected \Pagekit\Filter\FilterManager $filterManager;
 
     /**
      * Constructor.
@@ -35,7 +26,7 @@ class ParamFetcher implements ParamFetcherInterface
     /**
      * {@inheritdoc}
      */
-    public function setRequest(Request $request)
+    public function setRequest(Request $request): void
     {
         $this->request = $request;
     }
@@ -43,14 +34,15 @@ class ParamFetcher implements ParamFetcherInterface
     /**
      * {@inheritdoc}
      */
-    public function setParameters(array $params, array $options)
+    public function setParameters(array $params, array $options): void
     {
         $this->params = [];
 
         foreach ($params as $name => $type) {
 
             if (is_numeric($name)) {
-                list($name, $type) = [$type, ''];
+                $name = $type;
+                $type = '';
             }
 
             $this->params[] = ['name' => $name, 'type' => $type, 'options' => isset($options[$name]) ? $options[$name] : []];
@@ -60,7 +52,7 @@ class ParamFetcher implements ParamFetcherInterface
     /**
      * {@inheritdoc}
      */
-    public function setFilterManager(FilterManager $filterManager)
+    public function setFilterManager(FilterManager $filterManager): void
     {
         $this->filterManager = $filterManager;
     }

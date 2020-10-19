@@ -4,42 +4,29 @@ namespace Pagekit\Database\ORM;
 
 use Doctrine\Common\Cache\Cache;
 use Pagekit\Database\Connection;
+use Pagekit\Database\ORM\Metadata;
 use Pagekit\Database\ORM\Loader\LoaderInterface;
 use Pagekit\Event\EventDispatcherInterface;
 
 class MetadataManager
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected Connection $connection;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected EventDispatcherInterface $events;
 
-    /**
-     * @var LoaderInterface
-     */
-    protected $loader;
+    protected ?LoaderInterface $loader = null;
 
-    /**
-     * @var Cache
-     */
-    protected $cache;
+    protected ?Cache $cache = null;
 
     /**
      * @var Metadata[]
      */
-    protected $metadata = [];
+    protected array $metadata = [];
 
     /**
      * The cache prefix
-     *
-     * @var string $prefix
      */
-    protected $prefix = 'Metadata.';
+    protected string $prefix = 'Metadata.';
 
     /**
      * Constructor.
@@ -54,10 +41,8 @@ class MetadataManager
 
     /**
      * Gets the database connection.
-     *
-     * @return Connection
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
         return $this->connection;
     }
@@ -67,17 +52,15 @@ class MetadataManager
      *
      * @param LoaderInterface $loader
      */
-    public function setLoader(LoaderInterface $loader)
+    public function setLoader(LoaderInterface $loader): void
     {
         $this->loader = $loader;
     }
 
     /**
      * Gets the cache used for caching Metadata objects.
-     *
-     * @return Cache
      */
-    public function getCache()
+    public function getCache(): ?Cache
     {
         return $this->cache;
     }
@@ -87,7 +70,7 @@ class MetadataManager
      *
      * @param Cache $cache
      */
-    public function setCache(Cache $cache)
+    public function setCache(Cache $cache): void
     {
         $this->cache = $cache;
     }
@@ -96,9 +79,8 @@ class MetadataManager
      * Checks if the metadata for a class is already loaded.
      *
      * @param  string $class
-     * @return bool
      */
-    public function has($class)
+    public function has($class): bool
     {
         return isset($this->metadata[$class]);
     }
@@ -107,9 +89,8 @@ class MetadataManager
      * Gets the metadata for the given class.
      *
      * @param  object|string $class
-     * @return Metadata
      */
-    public function get($class)
+    public function get($class): Metadata
     {
         $class = new \ReflectionClass($class);
         $name  = $class->getName();
@@ -151,9 +132,8 @@ class MetadataManager
      * Loads the metadata of the given class.
      *
      * @param \ReflectionClass $class
-     * @return Metadata
      */
-    protected function load(\ReflectionClass $class)
+    protected function load(\ReflectionClass $class): ?Metadata
     {
         $parent = null;
 
@@ -205,9 +185,8 @@ class MetadataManager
      * Get array of parent classes for the given class.
      *
      * @param  \ReflectionClass $class
-     * @return array
      */
-    protected function getParentClasses(\ReflectionClass $class)
+    protected function getParentClasses(\ReflectionClass $class): array
     {
         $parents = [$class];
 
@@ -228,7 +207,7 @@ class MetadataManager
      *
      * @param Metadata $metadata
      */
-    protected function subscribe(Metadata $metadata)
+    protected function subscribe(Metadata $metadata): void
     {
         foreach ($metadata->getEvents() as $event => $methods) {
             foreach ($methods as $method) {

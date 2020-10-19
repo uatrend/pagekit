@@ -7,7 +7,7 @@ class FileAsset extends Asset
     /**
      * {@inheritdoc}
      */
-    public function getContent()
+    public function getContent(): string
     {
         if ($this->content === null and $path = $this->getPath()) {
             $this->content = file_get_contents($path);
@@ -19,7 +19,7 @@ class FileAsset extends Asset
     /**
      * {@inheritdoc}
      */
-    public function hash($salt = '')
+    public function hash($salt = ''): string
     {
         $time = '';
 
@@ -33,7 +33,7 @@ class FileAsset extends Asset
     /**
      * {@inheritdoc}
      */
-    public function getPath()
+    public function getPath(): string
     {
         return file_exists($this->source) ? $this->source : false;
     }

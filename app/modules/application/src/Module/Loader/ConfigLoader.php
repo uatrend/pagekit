@@ -4,10 +4,7 @@ namespace Pagekit\Module\Loader;
 
 class ConfigLoader implements LoaderInterface
 {
-    /**
-     * @var array
-     */
-    protected $values = [];
+    protected array $values = [];
 
     /**
      * Constructor.

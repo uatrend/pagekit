@@ -13,10 +13,8 @@ class Application extends BaseApplication
 {
     /**
      * The Pagekit application instance.
-     *
-     * @var Container
      */
-    protected $container;
+    protected Container $container;
 
     /**
      * Constructor.
@@ -37,7 +35,7 @@ class Application extends BaseApplication
         }
     }
 
-    public function run(InputInterface $input = null, OutputInterface $output = null)
+    public function run(InputInterface $input = null, OutputInterface $output = null): int
     {
         $code = parent::run($input, $output);
 
@@ -54,7 +52,7 @@ class Application extends BaseApplication
      * @param  BaseCommand $command
      * @return BaseCommand
      */
-    public function add(BaseCommand $command)
+    public function add(BaseCommand $command): ?\Symfony\Component\Console\Command\Command
     {
         if ($command instanceof Command) {
             $command->setContainer($this->container);

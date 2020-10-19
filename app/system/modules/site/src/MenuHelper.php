@@ -8,10 +8,7 @@ use Pagekit\View\Helper\Helper;
 
 class MenuHelper extends Helper
 {
-    /**
-     * @var MenuManager
-     */
-    protected $menus;
+    protected \Pagekit\Site\MenuManager $menus;
 
     /**
      * @param MenuManager $menus
@@ -39,9 +36,8 @@ class MenuHelper extends Helper
      * Checks if the menu exists.
      *
      * @param  string $name
-     * @return bool
      */
-    public function exists($name)
+    public function exists($name): bool
     {
         return (bool) $this->menus->find($name);
     }
@@ -52,9 +48,8 @@ class MenuHelper extends Helper
      * @param  string       $name
      * @param  array|string $view
      * @param  array        $parameters
-     * @return string
      */
-    public function render($name, $view = null, array $parameters = [])
+    public function render($name, $view = null, array $parameters = []): ?string
     {
         if (is_array($view)) {
             $parameters = $view;
@@ -71,7 +66,7 @@ class MenuHelper extends Helper
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'menu';
     }
@@ -81,7 +76,7 @@ class MenuHelper extends Helper
      * @param  array  $parameters
      * @return Node|null
      */
-    public function getRoot($menu, $parameters = [])
+    public function getRoot($menu, $parameters = []): ?Node
     {
         $parameters = array_replace([
             'start_level' => 1,
@@ -129,7 +124,7 @@ class MenuHelper extends Helper
                 || !($parameters['mode'] == 'all'
                     || $node->get('active')
                     || 0 === strpos($node->path.'/', $rootPath)
-                    || $depth == $startLevel)
+                    || $depth === $startLevel)
             ) {
                 $node->setParent();
                 continue;
@@ -137,7 +132,7 @@ class MenuHelper extends Helper
 
             $node->setParent($parent);
 
-            if ($node->get('active') && $depth == $startLevel - 1) {
+            if ($node->get('active') && $depth === $startLevel - 1) {
                 $root = $node;
             }
 

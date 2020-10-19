@@ -26,17 +26,11 @@ return [
             return new HttpKernel($app['events'], $app['request.stack']);
         };
 
-        $app['resolver'] = function () {
-            return new ControllerResolver();
-        };
+        $app['resolver'] = fn() => new ControllerResolver();
 
-        $app->factory('request', function ($app) {
-            return $app['request.stack']->getCurrentRequest();
-        });
+        $app->factory('request', fn($app) => $app['request.stack']->getCurrentRequest());
 
-        $app['request.stack'] = function () {
-            return new RequestStack();
-        };
+        $app['request.stack'] = fn() => new RequestStack();
 
     },
 

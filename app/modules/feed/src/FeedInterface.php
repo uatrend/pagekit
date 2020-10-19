@@ -2,12 +2,11 @@
 
 namespace Pagekit\Feed;
 
+use Pagekit\Feed\ItemInterface;
+
 interface FeedInterface
 {
-    /**
-     * @return string
-     */
-    public function getMimeType();
+    public function getMimeType(): string;
 
     /**
      * @param string $mime
@@ -19,69 +18,60 @@ interface FeedInterface
      *
      * @param  string $prefix
      * @param  string $uri
-     * @return self
      */
-    public function addNamespace($prefix, $uri);
+    public function addNamespace($prefix, $uri): self;
 
     /**
      * Gets the encoding.
-     *
-     * @return string
      */
-    public function getEncoding();
+    public function getEncoding(): string;
 
     /**
      * Sets the encoding.
      *
      * @param  string $encoding
-     * @return self
      */
-    public function setEncoding($encoding);
+    public function setEncoding($encoding): self;
 
     /**
      * Gets properties to be enclosed in CDATA.
      *
      * @return string[]
      */
-    public function getCDATA();
+    public function getCDATA(): array;
 
     /**
      * Adds properties to enclose in CDATA.
      *
      * @param   string[] $properties
-     * @return  self
      */
-    public function addCDATA(array $properties);
+    public function addCDATA(array $properties): self;
 
     /**
      * @param  array $elements
-     * @return ItemInterface
      */
-    public function createItem(array $elements = []);
+    public function createItem(array $elements = []): ItemInterface;
 
     /**
      * Adds an item.
      *
      * @param  ItemInterface $item
-     * @return self
      */
-    public function addItem(ItemInterface $item);
+    public function addItem(ItemInterface $item): self;
 
     /**
      * Sets the title.
      *
      * @param  string $title
-     * @return self
      */
-    public function setTitle($title);
+    public function setTitle($title): self;
 
     /**
      * Sets the link.
      *
      * @param  string $link
-     * @return self
      */
-    public function setLink($link);
+    public function setLink($link): self;
 
     /**
      * Sets the image.
@@ -89,25 +79,22 @@ interface FeedInterface
      * @param  string $title
      * @param  string $link
      * @param  string $url
-     * @return self
      */
-    public function setImage($title, $link, $url);
+    public function setImage($title, $link, $url): self;
 
     /**
      * Sets the description.
      *
      * @param  string $description
-     * @return self
      */
-    public function setDescription($description);
+    public function setDescription($description): self;
 
     /**
      * Sets a link with rel="self".
      *
      * @param  string $href
-     * @return self
      */
-    public function setSelfLink($href);
+    public function setSelfLink($href): self;
 
     /**
      * Sets a custom link.
@@ -118,16 +105,13 @@ interface FeedInterface
      * @param  string $hreflang
      * @param  string $title
      * @param  int    $length
-     * @return self
      */
-    public function setAtomLink($href, $rel = '', $type = '', $hreflang = '', $title = '', $length = 0);
+    public function setAtomLink($href, $rel = '', $type = '', $hreflang = '', $title = '', $length = 0): self;
 
     /**
      * Generates the feed.
-     *
-     * @return string
      */
-    public function generate();
+    public function generate(): string;
 
     /**
      * Outputs the feed.

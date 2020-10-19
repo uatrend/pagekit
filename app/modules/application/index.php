@@ -11,21 +11,13 @@ return [
 
     'main' => function ($app) {
 
-        $app['version'] = function () {
-            return $this->config['version'];
-        };
+        $app['version'] = fn() => $this->config['version'];
 
-        $app['debug'] = function () {
-            return (bool) $this->config['debug'];
-        };
+        $app['debug'] = fn() => (bool) $this->config['debug'];
 
-        $app['url'] = function ($app) {
-            return new UrlProvider($app['router'], $app['file'], $app['locator']);
-        };
+        $app['url'] = fn($app) => new UrlProvider($app['router'], $app['file'], $app['locator']);
 
-        $app['response'] = function ($app) {
-            return new Response($app['url']);
-        };
+        $app['response'] = fn($app) => new Response($app['url']);
 
         $app['exception'] = ExceptionHandler::register($app['debug']);
 

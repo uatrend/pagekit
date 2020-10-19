@@ -2,6 +2,9 @@
 
 namespace Pagekit\Database;
 
+use Pagekit\Database\Table;
+
+use Doctrine\DBAL\Schema\SchemaException;
 use Doctrine\DBAL\Schema\AbstractSchemaManager;
 use Doctrine\DBAL\Schema\Comparator;
 use Doctrine\DBAL\Schema\Constraint;
@@ -11,20 +14,11 @@ use Doctrine\DBAL\Schema\Schema;
 
 class Utility
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected \Pagekit\Database\Connection $connection;
 
-    /**
-     * @var AbstractSchemaManager
-     */
-    protected $manager;
+    protected AbstractSchemaManager $manager;
 
-    /**
-     * @var Schema
-     */
-    protected $schema;
+    protected Schema $schema;
 
     /**
      * Constructor.
@@ -40,10 +34,8 @@ class Utility
 
     /**
      * Return the DBAL schema manager.
-     *
-     * @return Doctrine\DBAL\Schema\AbstractSchemaManager
      */
-    public function getSchemaManager()
+    public function getSchemaManager(): AbstractSchemaManager
     {
         return $this->manager;
     }
@@ -52,9 +44,8 @@ class Utility
      * Returns true if the given table exists.
      *
      * @param  string $table
-     * @return bool
      */
-    public function tableExists($table)
+    public function tableExists($table): bool
     {
         return $this->tablesExist($table);
     }
@@ -64,11 +55,10 @@ class Utility
      *
      * @param string $table
      *
-     * @return Table
      *
-     * @throws \Doctrine\DBAL\Schema\SchemaException
+     * @throws SchemaException
      */
-    public function getTable($table)
+    public function getTable($table): Table
     {
         return new Table($this->schema->getTable($this->replacePrefix($table)), $this->connection);
     }
@@ -77,11 +67,10 @@ class Utility
      * Returns true if all the given tables exist.
      *
      * @param  array $tables
-     * @return bool
      */
-    public function tablesExist($tables)
+    public function tablesExist($tables): bool
     {
-        $tables = array_map([$this, 'replacePrefix'], (array) $tables);
+        $tables = array_map(fn($query) => $this->replacePrefix($query), (array) $tables);
 
         return $this->manager->tablesExist($tables);
     }
@@ -92,7 +81,7 @@ class Utility
      * @param string $table
      * @param \Closure $callback
      */
-    public function createTable($table, \Closure $callback)
+    public function createTable($table, \Closure $callback): void
     {
         $table = $this->schema->createTable($this->replacePrefix($table));
 
@@ -104,7 +93,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::createConstraint}
      */
-    public function createConstraint(Constraint $constraint, $table)
+    public function createConstraint(Constraint $constraint, $table): void
     {
         $this->manager->createConstraint($constraint, $this->replacePrefix($table));
     }
@@ -112,7 +101,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::createIndex}
      */
-    public function createIndex(Index $index, $table)
+    public function createIndex(Index $index, $table): void
     {
         $this->manager->createIndex($index, $this->replacePrefix($table));
     }
@@ -120,7 +109,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::createForeignKey}
      */
-    public function createForeignKey(ForeignKeyConstraint $foreignKey, $table)
+    public function createForeignKey(ForeignKeyConstraint $foreignKey, $table): void
     {
         $this->manager->createForeignKey($foreignKey, $this->replacePrefix($table));
     }
@@ -128,7 +117,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::dropAndCreateConstraint}
      */
-    public function dropAndCreateConstraint(Constraint $constraint, $table)
+    public function dropAndCreateConstraint(Constraint $constraint, $table): void
     {
         $this->manager->dropAndCreateConstraint($constraint, $this->replacePrefix($table));
     }
@@ -136,7 +125,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::dropAndCreateIndex}
      */
-    public function dropAndCreateIndex(Index $index, $table)
+    public function dropAndCreateIndex(Index $index, $table): void
     {
         $this->manager->dropAndCreateIndex($index, $this->replacePrefix($table));
     }
@@ -144,7 +133,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::dropAndCreateForeignKey}
      */
-    public function dropAndCreateForeignKey(ForeignKeyConstraint $foreignKey, $table)
+    public function dropAndCreateForeignKey(ForeignKeyConstraint $foreignKey, $table): void
     {
         $this->manager->dropAndCreateForeignKey($foreignKey, $this->replacePrefix($table));
     }
@@ -152,7 +141,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::dropAndCreateTable}
      */
-    public function dropAndCreateTable($table)
+    public function dropAndCreateTable($table): void
     {
         $this->manager->dropAndCreateTable($table);
     }
@@ -160,7 +149,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::renameTable}
      */
-    public function renameTable($name, $newName)
+    public function renameTable($name, $newName): void
     {
         $this->manager->renameTable($this->replacePrefix($name), $this->replacePrefix($newName));
     }
@@ -168,7 +157,7 @@ class Utility
     /**
      * @see AbstractSchemaManager::dropTable
      */
-    public function dropTable($table)
+    public function dropTable($table): void
     {
         $this->manager->dropTable($this->replacePrefix($table));
     }
@@ -176,7 +165,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::dropIndex}
      */
-    public function dropIndex($index, $table)
+    public function dropIndex($index, $table): void
     {
         $this->manager->dropIndex($index, $this->replacePrefix($table));
     }
@@ -184,7 +173,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::dropConstraint}
      */
-    public function dropConstraint(Constraint $constraint, $table)
+    public function dropConstraint(Constraint $constraint, $table): void
     {
         $this->manager->dropConstraint($constraint, $this->replacePrefix($table));
     }
@@ -192,7 +181,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::dropForeignKey}
      */
-    public function dropForeignKey($foreignKey, $table)
+    public function dropForeignKey($foreignKey, $table): void
     {
         $this->manager->dropForeignKey($foreignKey, $this->replacePrefix($table));
     }
@@ -200,7 +189,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::listTableColumns}
      */
-    public function listTableColumns($table, $database = null)
+    public function listTableColumns($table, $database = null): array
     {
         return $this->manager->listTableColumns($this->replacePrefix($table), $database);
     }
@@ -208,7 +197,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::listTableIndexes}
      */
-    public function listTableIndexes($table)
+    public function listTableIndexes($table): array
     {
         return $this->manager->listTableIndexes($this->replacePrefix($table));
     }
@@ -216,7 +205,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::listTableDetails}
      */
-    public function listTableDetails($tableName)
+    public function listTableDetails($tableName): \Doctrine\DBAL\Schema\Table
     {
         return $this->manager->listTableDetails($this->replacePrefix($tableName));
     }
@@ -224,7 +213,7 @@ class Utility
     /**
      * {@see AbstractSchemaManager::listTableForeignKeys}
      */
-    public function listTableForeignKeys($table, $database = null)
+    public function listTableForeignKeys($table, $database = null): array
     {
         return $this->manager->listTableForeignKeys($this->replacePrefix($table), $database);
     }
@@ -248,10 +237,8 @@ class Utility
 
     /**
      * Migrates the database.
-     *
-     * @return Schema
      */
-    public function migrate() {
+    public function migrate(): void {
         $diff = Comparator::compareSchemas($this->manager->createSchema(), $this->schema);
 
         foreach ($diff->toSaveSql($this->connection->getDatabasePlatform()) as $query) {
@@ -263,9 +250,8 @@ class Utility
      * Replaces the table prefix placeholder with actual one.
      *
      * @param  string $query
-     * @return string
      */
-    protected function replacePrefix($query)
+    protected function replacePrefix($query): string
     {
         return $this->connection->replacePrefix($query);
     }

@@ -26,7 +26,7 @@ class ArchiveCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->addArgument('name', InputArgument::REQUIRED, 'Package name');
         $this->addOption('dir', false, InputOption::VALUE_OPTIONAL, 'Write the archive to this directory');
@@ -35,7 +35,7 @@ class ArchiveCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $filesystem = new Filesystem();
         $packageName = $this->getPackageFilename($name = $this->argument('name'));

@@ -7,7 +7,7 @@ namespace Pagekit\Routing\Annotation;
  */
 class Request
 {
-    public $data;
+    public array $data;
 
     /**
      * Constructor.
@@ -21,10 +21,8 @@ class Request
 
     /**
      * Returns the data.
-     *
-     * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return $this->data;
     }

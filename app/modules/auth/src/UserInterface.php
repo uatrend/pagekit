@@ -9,19 +9,19 @@ interface UserInterface
      *
      * @return string Id
      */
-    public function getId();
+    public function getId(): string;
 
     /**
      * Retrieves the username
      *
      * @return string Username
      */
-    public function getUsername();
+    public function getUsername(): string;
 
     /**
      * Retrieves the password
      *
      * @return string Password
      */
-    public function getPassword();
+    public function getPassword(): string;
 }

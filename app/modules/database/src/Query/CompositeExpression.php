@@ -16,17 +16,13 @@ class CompositeExpression implements \Countable
 
     /**
      * The instance type of composite expression.
-     *
-     * @var string
      */
-    protected $type;
+    protected string $type;
 
     /**
      * Each expression part of the composite expression.
-     *
-     * @var array
      */
-    protected $parts = [];
+    protected array $parts = [];
 
     /**
      * Constructor.
@@ -42,10 +38,8 @@ class CompositeExpression implements \Countable
 
     /**
      * Returns the type of this composite expression (AND/OR).
-     *
-     * @return string
      */
-    public function getType()
+    public function getType(): string
     {
         return $this->type;
     }
@@ -54,9 +48,8 @@ class CompositeExpression implements \Countable
      * Adds an expression to composite expression.
      *
      * @param  mixed $part
-     * @return self
      */
-    public function add($part)
+    public function add($part): self
     {
         if (!empty($part) || ($part instanceof self && $part->count() > 0)) {
             $this->parts[] = $part;
@@ -69,9 +62,8 @@ class CompositeExpression implements \Countable
      * Adds multiple parts to composite expression.
      *
      * @param  array $parts
-     * @return self
      */
-    public function addMultiple(array $parts = [])
+    public function addMultiple(array $parts = []): self
     {
         foreach ((array) $parts as $part) {
             $this->add($part);
@@ -82,10 +74,8 @@ class CompositeExpression implements \Countable
 
     /**
      * Retrieves the amount of expressions on composite expression.
-     *
-     * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->parts);
     }

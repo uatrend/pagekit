@@ -2,6 +2,9 @@
 
 namespace Pagekit\Twig;
 
+use Twig\Environment;
+use Twig\TemplateWrapper;
+use Twig\Error\LoaderError;
 use Symfony\Component\Templating\EngineInterface;
 use Symfony\Component\Templating\StreamingEngineInterface;
 use Symfony\Component\Templating\TemplateNameParserInterface;
@@ -9,16 +12,16 @@ use Symfony\Component\Templating\TemplateReferenceInterface;
 
 class TwigEngine implements EngineInterface, StreamingEngineInterface
 {
-    protected $environment;
-    protected $parser;
+    protected \Twig\Environment $environment;
+    protected \Symfony\Component\Templating\TemplateNameParserInterface $parser;
 
     /**
      * Constructor.
      *
-     * @param \Twig\Environment           $environment
+     * @param Environment           $environment
      * @param TemplateNameParserInterface $parser
      */
-    public function __construct(\Twig\Environment $environment, TemplateNameParserInterface $parser)
+    public function __construct(Environment $environment, TemplateNameParserInterface $parser)
     {
         $this->environment = $environment;
         $this->parser = $parser;
@@ -27,7 +30,7 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     /**
      * {@inheritdoc}
      */
-    public function render($name, array $parameters = [])
+    public function render($name, array $parameters = []): string
     {
         return $this->load($name)->render($parameters);
     }
@@ -35,7 +38,7 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     /**
      * {@inheritdoc}
      */
-    public function stream($name, array $parameters = [])
+    public function stream($name, array $parameters = []): void
     {
         $this->load($name)->display($parameters);
     }
@@ -43,11 +46,11 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     /**
      * {@inheritdoc}
      */
-    public function exists($name)
+    public function exists($name): bool
     {
         try {
             $this->environment->getLoader()->getSource((string) $name);
-        } catch (\Twig\Error\LoaderError $e) {
+        } catch (LoaderError $e) {
             return false;
         }
 
@@ -57,7 +60,7 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     /**
      * {@inheritdoc}
      */
-    public function supports($name)
+    public function supports($name): bool
     {
         $template = $this->parser->parse($name);
 
@@ -67,15 +70,15 @@ class TwigEngine implements EngineInterface, StreamingEngineInterface
     /**
      * Loads the given template.
      *
-     * @param  string|TemplateReferenceInterface|\Twig_Template $name
-     * @return \Twig_TemplateInterface
+     * @param  string|TemplateWrapper $name
+     * @return TemplateWrapper
      * @throws \InvalidArgumentException
      */
-    protected function load($name)
+    protected function load($name): TemplateWrapper
     {
         try {
-            return $this->environment->loadTemplate((string) $name);
-        } catch (\Twig\Error\LoaderError $e) {
+            return $this->environment->load((string) $name);
+        } catch (LoaderError $e) {
             throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
         }
     }

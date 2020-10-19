@@ -48,7 +48,7 @@
                     <label><input v-model="presets.tinymce_uikit" type="checkbox" class="uk-checkbox"> {{ 'Preload UIkit framework scripts' | trans }}</label>
                 </div>
                 <div class="uk-margin-small">
-                    <label><input v-model="presets.tinymce_body_class" type="checkbox" class="uk-checkbox"> {{ 'Add container class \'uk-container\' to body' | trans }}</label>
+                    <label><input v-model="presets.tinymce_body_class" type="checkbox" class="uk-checkbox"> {{ 'Add UIkit container class' | trans }}</label>
                 </div>
             </div>
         </div>

@@ -13,7 +13,7 @@ class MarkdownPlugin implements EventSubscriberInterface
      *
      * @param ContentEvent $event
      */
-    public function onContentPlugins(ContentEvent $event)
+    public function onContentPlugins(ContentEvent $event): void
     {
         if (!$event['markdown']) {
             return;
@@ -28,7 +28,7 @@ class MarkdownPlugin implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'content.plugins' => ['onContentPlugins', 5]

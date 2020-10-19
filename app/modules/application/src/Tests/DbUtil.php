@@ -2,6 +2,8 @@
 
 namespace Pagekit\Tests;
 
+use Doctrine\DBAL\Connection;
+use Doctrine\DBAL\DriverManager;
 trait DbUtil
 {
     /**
@@ -23,9 +25,9 @@ trait DbUtil
      * 1) Each invocation of this method returns a NEW database connection.
      * 2) The database is dropped and recreated to ensure it's clean.
      *
-     * @return Doctrine\DBAL\Connection The database connection instance.
+     * @return Connection The database connection instance.
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
         if (isset($GLOBALS['db_type'], $GLOBALS['db_username'], $GLOBALS['db_password'],
                 $GLOBALS['db_host'], $GLOBALS['db_name'], $GLOBALS['db_port'],
@@ -48,7 +50,7 @@ trait DbUtil
                 'port' => $GLOBALS['tmpdb_port']
             ];
 
-            $realConn = \Doctrine\DBAL\DriverManager::getConnection($realDbParams);
+            $realConn = DriverManager::getConnection($realDbParams);
 
             $platform = $realConn->getDatabasePlatform();
 
@@ -56,7 +58,7 @@ trait DbUtil
 
                 $dbname = $realConn->getDatabase();
                 // Connect to tmpdb in order to drop and create the real test db.
-                $tmpConn = \Doctrine\DBAL\DriverManager::getConnection($tmpDbParams);
+                $tmpConn = DriverManager::getConnection($tmpDbParams);
                 $realConn->close();
 
                 $tmpConn->getSchemaManager()->dropDatabase($dbname);
@@ -80,7 +82,7 @@ trait DbUtil
                 }
             }
 
-            $conn = \Doctrine\DBAL\DriverManager::getConnection(array_merge(['wrapperClass' => 'Pagekit\Database\Connection'], $realDbParams), null, null);
+            $conn = DriverManager::getConnection(array_merge(['wrapperClass' => 'Pagekit\Database\Connection'], $realDbParams), null, null);
         } else {
             $params = [
                 'driver' => 'pdo_sqlite',
@@ -90,16 +92,13 @@ trait DbUtil
                 $params['path'] = $GLOBALS['db_path'];
                 unlink($GLOBALS['db_path']);
             }
-            $conn = \Doctrine\DBAL\DriverManager::getConnection(array_merge(['wrapperClass' => 'Pagekit\Database\Connection'], $params));
+            $conn = DriverManager::getConnection(array_merge(['wrapperClass' => 'Pagekit\Database\Connection'], $params));
         }
 
         return $conn;
     }
 
-    /**
-     * @return \Doctrine\DBAL\Connection
-     */
-    public function getTempConnection()
+    public function getTempConnection(): Connection
     {
         $tmpDbParams = [
             'driver' => $GLOBALS['tmpdb_type'],
@@ -111,7 +110,7 @@ trait DbUtil
         ];
 
         // Connect to tmpdb in order to drop and create the real test db.
-        return \Doctrine\DBAL\DriverManager::getConnection($tmpDbParams);
+        return DriverManager::getConnection($tmpDbParams);
     }
 
     public function getSharedConnection()

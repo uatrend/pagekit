@@ -7,10 +7,7 @@ use Pagekit\View\View;
 
 class ScriptHelper implements HelperInterface, \IteratorAggregate
 {
-    /**
-     * @var AssetManager
-     */
-    protected $scripts;
+    protected \Pagekit\View\Asset\AssetManager $scripts;
 
     /**
      * Constructor.
@@ -25,7 +22,7 @@ class ScriptHelper implements HelperInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function register(View $view)
+    public function register(View $view): void
     {
         $view->on('head', function ($event) use ($view) {
             $view->trigger('scripts', [$this->scripts]);
@@ -61,10 +58,8 @@ class ScriptHelper implements HelperInterface, \IteratorAggregate
 
     /**
      * Renders the script tags.
-     *
-     * @return string
      */
-    public function render()
+    public function render(): string
     {
         $output = '';
 
@@ -87,10 +82,8 @@ class ScriptHelper implements HelperInterface, \IteratorAggregate
 
     /**
      * Returns an iterator for script tags.
-     *
-     * @return \ArrayIterator
      */
-    public function getIterator()
+    public function getIterator(): \Traversable
     {
         return $this->scripts->getIterator();
     }
@@ -98,7 +91,7 @@ class ScriptHelper implements HelperInterface, \IteratorAggregate
     /**
      * {@inheritdoc}
      */
-    public function getName()
+    public function getName(): string
     {
         return 'script';
     }

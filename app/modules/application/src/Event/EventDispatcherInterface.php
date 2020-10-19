@@ -40,25 +40,22 @@ interface EventDispatcherInterface
      *
      * @param  string|EventInterface $event
      * @param  array                 $arguments
-     * @return EventInterface
      */
-    public function trigger($event, array $arguments = []);
+    public function trigger($event, array $arguments = []): EventInterface;
 
     /**
      * Checks if a event has listeners.
      *
      * @param  string $event
-     * @return bool
      */
-    public function hasListeners($event = null);
+    public function hasListeners($event = null): bool;
 
     /**
      * Gets all listeners of an event.
      *
      * @param  string $event
-     * @return array
      */
-    public function getListeners($event = null);
+    public function getListeners($event = null): array;
 
     /**
      * Gets the listener priority for a specific event.
@@ -67,12 +64,10 @@ interface EventDispatcherInterface
      * @param  callable $listener
      * @return int|null The event listener priority
      */
-    public function getListenerPriority($event, $listener);
+    public function getListenerPriority($event, $listener): ?int;
 
     /**
      * Gets the default Event class.
-     *
-     * @return string
      */
-    public function getEventClass();
+    public function getEventClass(): string;
 }

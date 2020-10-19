@@ -10,7 +10,7 @@ class StripNewlinesFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filter($value)
+    public function filter($value): string
     {
         return str_replace(["\n", "\r"], '', (string) $value);
     }

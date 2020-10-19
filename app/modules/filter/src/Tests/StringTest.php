@@ -2,11 +2,12 @@
 
 namespace Pagekit\Filter\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filter\StringFilter;
 
-class StringTest extends \PHPUnit\Framework\TestCase
+class StringTest extends TestCase
 {
-    public function testFilter()
+    public function testFilter(): void
     {
         $filter = new StringFilter;
 

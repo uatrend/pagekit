@@ -56,9 +56,8 @@ class Path
      * Returns whether a path is absolute.
      *
      * @param  string $path
-     * @return bool
      */
-    public static function isAbsolute($path)
+    public static function isAbsolute($path): bool
     {
         return self::parse($path, 'root') !== '';
     }
@@ -67,9 +66,8 @@ class Path
      * Returns whether a path is relative.
      *
      * @param  string $path
-     * @return bool
      */
-    public static function isRelative($path)
+    public static function isRelative($path): bool
     {
         return self::parse($path, 'root') === '';
     }

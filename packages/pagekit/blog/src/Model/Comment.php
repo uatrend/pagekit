@@ -10,7 +10,7 @@ use Pagekit\Comment\Model\Comment as BaseComment;
 class Comment extends BaseComment implements \JsonSerializable
 {
     /** @Column(type="integer") */
-    public $post_id;
+    public int $post_id;
 
     /** @Column(type="string") */
     public $user_id;
@@ -30,7 +30,7 @@ class Comment extends BaseComment implements \JsonSerializable
     /** @BelongsTo(targetEntity="Pagekit\User\Model\User", keyFrom="user_id") */
     public $user;
 
-    public function setPost($post)
+    public function setPost($post): void
     {
         $this->post = $post;
 
@@ -46,7 +46,7 @@ class Comment extends BaseComment implements \JsonSerializable
         return isset($statuses[$this->status]) ? $statuses[$this->status] : __('Unknown');
     }
 
-    public static function getStatuses()
+    public static function getStatuses(): array
     {
         return [
             self::STATUS_APPROVED => __('Approved'),

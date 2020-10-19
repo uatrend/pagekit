@@ -23,7 +23,7 @@ abstract class Comment
     public $author;
 
     /** @Column(type="datetime") */
-    public $created;
+    public \DateTime $created;
 
     /** @Column(type="smallint") */
     public $status = 0;
@@ -33,10 +33,8 @@ abstract class Comment
 
     /**
      * Should be mapped by the end developer.
-     *
-     * @var \Pagekit\Comment\Model\Comment
      */
-    public $parent;
+    public \Pagekit\Comment\Model\Comment $parent;
 
     /**
      * Constructor.

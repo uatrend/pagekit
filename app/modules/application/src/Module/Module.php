@@ -8,25 +8,13 @@ use Pagekit\Util\Arr;
 
 class Module implements ModuleInterface, EventSubscriberInterface
 {
-    /**
-     * @var string
-     */
-    public $name;
+    public string $name;
 
-    /**
-     * @var string
-     */
-    public $path;
+    public string $path;
 
-    /**
-     * @var array
-     */
-    public $config;
+    public array $config;
 
-    /**
-     * @var array
-     */
-    public $options;
+    public array $options;
 
     /**
      * Constructor.
@@ -84,7 +72,7 @@ class Module implements ModuleInterface, EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return isset($this->options['events']) ? $this->options['events'] : [];
     }

@@ -4,25 +4,19 @@ namespace Pagekit\Routing;
 
 class Routes implements \IteratorAggregate, ResourceInterface
 {
-    /**
-     * @var array
-     */
-    protected $routes = [];
+    protected array $routes = [];
 
     /**
      * @var callable[]
      */
-    protected $callbacks = [];
+    protected array $callbacks = [];
 
     /**
      * @var array[]
      */
-    protected $aliases = [];
+    protected array $aliases = [];
 
-    /**
-     * @var string
-     */
-    protected $prefix = '@';
+    protected string $prefix = '@';
 
     /**
      * @var int
@@ -33,9 +27,8 @@ class Routes implements \IteratorAggregate, ResourceInterface
      * Adds a route.
      *
      * @param  mixed $route
-     * @return Route
      */
-    public function add($route)
+    public function add($route): Route
     {
         if (is_array($route)) {
             $route = $this->createRoute($route);
@@ -49,9 +42,8 @@ class Routes implements \IteratorAggregate, ResourceInterface
      *
      * @param  string   $path
      * @param  callable $callback
-     * @return Route
      */
-    public function get($path, $callback)
+    public function get($path, $callback): Route
     {
         return $this->match($path, $callback)->setMethods('GET');
     }
@@ -61,9 +53,8 @@ class Routes implements \IteratorAggregate, ResourceInterface
      *
      * @param  string   $path
      * @param  callable $callback
-     * @return Route
      */
-    public function post($path, $callback)
+    public function post($path, $callback): Route
     {
         return $this->match($path, $callback)->setMethods('POST');
     }
@@ -73,9 +64,8 @@ class Routes implements \IteratorAggregate, ResourceInterface
      *
      * @param  string   $path
      * @param  callable $callback
-     * @return Route
      */
-    public function match($path, $callback)
+    public function match($path, $callback): Route
     {
         return $this->add(['path' => $path, 'controller' => $callback]);
     }
@@ -86,7 +76,7 @@ class Routes implements \IteratorAggregate, ResourceInterface
      * @param  string $name
      * @return callable|null
      */
-    public function getCallback($name)
+    public function getCallback($name): ?callable
     {
         return isset($this->callbacks[$name]) ? $this->callbacks[$name] : null;
     }
@@ -97,9 +87,8 @@ class Routes implements \IteratorAggregate, ResourceInterface
      * @param  string $path
      * @param  string $name
      * @param  array  $defaults
-     * @return Route
      */
-    public function alias($path, $name, array $defaults = [])
+    public function alias($path, $name, array $defaults = []): Route
     {
         $path = preg_replace('/^[^\/]/', '/$0', $path);
 
@@ -112,9 +101,8 @@ class Routes implements \IteratorAggregate, ResourceInterface
      * @param  string $path
      * @param  string $redirect
      * @param  array  $defaults
-     * @return Route
      */
-    public function redirect($path, $redirect, array $defaults = [])
+    public function redirect($path, $redirect, array $defaults = []): Route
     {
         $defaults['_redirect'] = $redirect;
 
@@ -126,7 +114,7 @@ class Routes implements \IteratorAggregate, ResourceInterface
      *
      * @return array[]
      */
-    public function getAliases()
+    public function getAliases(): array
     {
         return $this->aliases;
     }
@@ -134,7 +122,7 @@ class Routes implements \IteratorAggregate, ResourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getIterator()
+    public function getIterator(): \ArrayIterator
     {
         return new \ArrayIterator($this->routes);
     }
@@ -142,7 +130,7 @@ class Routes implements \IteratorAggregate, ResourceInterface
     /**
      * {@inheritdoc}
      */
-    public function getModified()
+    public function getModified(): int
     {
         return $this->modified;
     }
@@ -150,7 +138,7 @@ class Routes implements \IteratorAggregate, ResourceInterface
     /**
      * {@inheritdoc}
      */
-    public function serialize()
+    public function serialize(): string
     {
         return serialize([$this->routes, $this->aliases]);
     }
@@ -158,7 +146,7 @@ class Routes implements \IteratorAggregate, ResourceInterface
     /**
      * {@inheritdoc}
      */
-    public function unserialize($serialized)
+    public function unserialize($serialized): void
     {
         list($this->routes, $this->aliases) = unserialize($serialized);
     }
@@ -167,9 +155,8 @@ class Routes implements \IteratorAggregate, ResourceInterface
      * Creates a route from array definition.
      *
      * @param  array $config
-     * @return Route
      */
-    protected function createRoute(array $config)
+    protected function createRoute(array $config): Route
     {
         $name = isset($config['name']) ? $config['name'] : $this->generateRouteName($config);
         $defaults = isset($config['defaults']) ? $config['defaults'] : [];
@@ -206,9 +193,8 @@ class Routes implements \IteratorAggregate, ResourceInterface
      * Creates a route name from the routes path.
      *
      * @param  array $config
-     * @return string
      */
-    protected function generateRouteName(array $config)
+    protected function generateRouteName(array $config): string
     {
         $name = ltrim($config['path'], '/');
         $name = trim(str_replace(array(':', '|', '-'), '_', $name), '_');

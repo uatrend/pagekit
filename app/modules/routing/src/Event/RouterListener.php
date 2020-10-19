@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Matcher\UrlMatcherInterface;
 class RouterListener implements EventSubscriberInterface
 {
     protected $matcher;
-    protected $logger;
+    protected ?LoggerInterface $logger = null;
 
     /**
      * Constructor.
@@ -33,7 +33,7 @@ class RouterListener implements EventSubscriberInterface
         $this->logger  = $logger;
     }
 
-    public function onRequest($event, $request)
+    public function onRequest($event, $request): void
     {
         if ($request->attributes->has('_controller')) {
             return;
@@ -73,7 +73,7 @@ class RouterListener implements EventSubscriberInterface
         }
     }
 
-    public function parametersToString(array $parameters)
+    public function parametersToString(array $parameters): string
     {
         $pieces = [];
 
@@ -84,7 +84,7 @@ class RouterListener implements EventSubscriberInterface
         return implode(', ', $pieces);
     }
 
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'request' => ['onRequest', 100]

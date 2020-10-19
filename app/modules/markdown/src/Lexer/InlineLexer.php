@@ -6,13 +6,13 @@ use Pagekit\Markdown\Markdown;
 
 class InlineLexer
 {
-    protected $links;
-    protected $inLink;
-    protected $rules;
+    protected array $links;
+    protected ?bool $inLink = null;
+    protected array $rules;
     protected $renderer;
-    protected $options;
+    protected array $options;
 
-    protected static $inlines;
+    protected static ?array $inlines = null;
 
     /**
      * Constructor.
@@ -33,9 +33,8 @@ class InlineLexer
      *
      * @param  string $src
      * @throws \Exception
-     * @return string
      */
-    public function output($src)
+    public function output($src): string
     {
         $out = '';
 
@@ -197,9 +196,8 @@ class InlineLexer
      *
      * @param  array $cap
      * @param  array $link
-     * @return string
      */
-    protected function outputLink($cap, $link)
+    protected function outputLink($cap, $link): string
     {
         $href  = Markdown::escape($link['href']);
         $title = $link['title'] ? Markdown::escape($link['title']) : null;
@@ -211,9 +209,8 @@ class InlineLexer
      * Smartypants transformations.
      *
      * @param  string $text
-     * @return string
      */
-    protected function smartypants($text)
+    protected function smartypants($text): ?string
     {
         if (!$this->options['smartypants']) {
             return $text;
@@ -244,9 +241,8 @@ class InlineLexer
      * Mangle links.
      *
      * @param  string $text
-     * @return string
      */
-    protected function mangle($text)
+    protected function mangle($text): string
     {
         $out = '';
 
@@ -268,9 +264,8 @@ class InlineLexer
      * Get inline grammar rules for given options.
      *
      * @param  array $options
-     * @return array
      */
-    protected static function rules(array $options)
+    protected static function rules(array $options): array
     {
         if (!static::$inlines) {
 
@@ -321,11 +316,7 @@ class InlineLexer
         $rules = static::$inlines['normal'];
 
         if ($options['gfm']) {
-            if ($options['breaks']) {
-                $rules = static::$inlines['breaks'];
-            } else {
-                $rules = static::$inlines['gfm'];
-            }
+            $rules = $options['breaks'] ? static::$inlines['breaks'] : static::$inlines['gfm'];
         } elseif ($options['pedantic']) {
             $rules = static::$inlines['pedantic'];
         }

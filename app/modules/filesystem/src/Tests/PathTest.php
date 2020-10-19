@@ -2,14 +2,15 @@
 
 namespace Pagekit\Filesystem\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Pagekit\Filesystem\Path;
 
-class PathTest extends \PHPUnit\Framework\TestCase
+class PathTest extends TestCase
 {
     /**
      * @dataProvider dataPaths
      */
-    public function testParse($path, $result)
+    public function testParse($path, $result): void
     {
         $this->assertSame($result, Path::parse($path));
     }
@@ -17,7 +18,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider dataPaths
      */
-    public function testIsAbsolute($path, $result)
+    public function testIsAbsolute($path, $result): void
     {
         if ($result['root'] !== '') {
             $this->assertTrue(Path::isAbsolute($path));
@@ -29,7 +30,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
     /**
      * @dataProvider dataPaths
      */
-    public function testIsRelative($path, $result)
+    public function testIsRelative($path, $result): void
     {
         if ($result['root'] === '') {
             $this->assertTrue(Path::isRelative($path));
@@ -38,7 +39,7 @@ class PathTest extends \PHPUnit\Framework\TestCase
         }
     }
 
-    public function dataPaths()
+    public function dataPaths(): array
     {
         return [
             ['dir/file.txt', ['root' => '', 'path' => 'dir/file.txt', 'dirname' => 'dir', 'pathname' => 'dir/file.txt', 'protocol' => 'file']],

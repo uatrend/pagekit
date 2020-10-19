@@ -12,12 +12,12 @@ class UserListener implements EventSubscriberInterface
     /**
      * Updates user's last login time
      */
-    public function onUserLogin(LoginEvent $event)
+    public function onUserLogin(LoginEvent $event): void
     {
         User::updateLogin($event->getUser());
     }
 
-    public function onRoleDelete($event, $role)
+    public function onRoleDelete($event, $role): void
     {
         User::removeRole($role);
     }
@@ -25,7 +25,7 @@ class UserListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'auth.login' => 'onUserLogin',

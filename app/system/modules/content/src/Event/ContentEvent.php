@@ -6,15 +6,9 @@ use Pagekit\Event\Event;
 
 class ContentEvent extends Event
 {
-    /**
-     * @var string
-     */
-    protected $content;
+    protected string $content;
 
-    /**
-     * @var array
-     */
-    protected $plugins = [];
+    protected array $plugins = [];
 
     /**
      * Constructor.
@@ -30,10 +24,7 @@ class ContentEvent extends Event
         $this->content = $content;
     }
 
-    /**
-     * @return string
-     */
-    public function getContent()
+    public function getContent(): string
     {
         return $this->content;
     }
@@ -41,15 +32,12 @@ class ContentEvent extends Event
     /**
      * @param string $content
      */
-    public function setContent($content)
+    public function setContent($content): void
     {
         $this->content = $content;
     }
 
-    /**
-     * @return array
-     */
-    public function getPlugins()
+    public function getPlugins(): array
     {
         return $this->plugins;
     }
@@ -67,7 +55,7 @@ class ContentEvent extends Event
      * @param string $name
      * @param mixed  $callback
      */
-    public function addPlugin($name, $callback)
+    public function addPlugin($name, $callback): void
     {
         $this->plugins[$name] = $callback;
     }

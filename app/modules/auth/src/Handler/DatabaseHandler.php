@@ -14,30 +14,15 @@ class DatabaseHandler implements HandlerInterface
     const STATUS_ACTIVE     = 1;
     const STATUS_REMEMBERED = 2;
 
-    /**
-     * @var array
-     */
-    protected $config;
+    protected ?array $config = null;
 
-    /**
-     * @var CookieJar
-     */
-    protected $cookie;
+    protected \Pagekit\Cookie\CookieJar $cookie;
 
-    /**
-     * @var RequestStack
-     */
-    protected $requests;
+    protected \Symfony\Component\HttpFoundation\RequestStack $requests;
 
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected \Pagekit\Database\Connection $connection;
 
-    /**
-     * @var Generator
-     */
-    protected $random;
+    protected \RandomLib\Generator $random;
 
     /**
      * Constructor.
@@ -60,7 +45,7 @@ class DatabaseHandler implements HandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function read()
+    public function read(): ?int
     {
         if ($token = $this->getToken() and $data = $this->connection->executeQuery("SELECT user_id, status, access FROM {$this->config['table']} WHERE id = :id AND status > :status", [
                 'id' => sha1($token),
@@ -88,7 +73,7 @@ class DatabaseHandler implements HandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function write($user, $remember = false)
+    public function write($user, $remember = false): void
     {
         if ($token = $this->getToken()) {
             $this->connection->delete($this->config['table'], ['id' => sha1($token)]);
@@ -115,7 +100,7 @@ class DatabaseHandler implements HandlerInterface
     /**
      * {@inheritdoc}
      */
-    public function destroy()
+    public function destroy(): void
     {
         if ($token = $this->getToken()) {
             $this->connection->update($this->config['table'], ['status' => self::STATUS_INACTIVE], ['id' => sha1($token)]);
@@ -137,7 +122,7 @@ class DatabaseHandler implements HandlerInterface
     /**
      * @return null|Request
      */
-    protected function getRequest()
+    protected function getRequest(): ?Request
     {
         return $this->requests->getCurrentRequest();
     }
@@ -145,10 +130,10 @@ class DatabaseHandler implements HandlerInterface
     /**
      * @deprecated to be removed in Pagekit 1.0
      */
-    protected function createTable()
+    protected function createTable(): void
     {
         $util = $this->connection->getUtility();
-        if ($util->tableExists($this->config['table']) === false) {
+        if (!$util->tableExists($this->config['table'])) {
             $util->createTable($this->config['table'], function ($table) {
                 $table->addColumn('id', 'string', ['length' => 255]);
                 $table->addColumn('user_id', 'integer', ['unsigned' => true, 'length' => 10, 'default' => 0]);

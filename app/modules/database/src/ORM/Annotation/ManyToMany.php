@@ -8,24 +8,17 @@ namespace Pagekit\Database\ORM\Annotation;
  */
 final class ManyToMany implements Annotation
 {
-    /** @var string */
-    public $targetEntity;
+    public string $targetEntity;
 
-    /** @var string */
-    public $keyFrom;
+    public string $keyFrom;
 
-    /** @var string */
-    public $keyTo;
+    public string $keyTo;
 
-    /** @var string */
-    public $keyThroughFrom;
+    public string $keyThroughFrom;
 
-    /** @var string */
-    public $tableThrough;
+    public string $tableThrough;
 
-    /** @var string */
-    public $keyThroughTo;
+    public string $keyThroughTo;
 
-    /** @var array */
-    public $orderBy = [];
+    public array $orderBy = [];
 }

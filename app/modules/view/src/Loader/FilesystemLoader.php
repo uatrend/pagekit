@@ -9,7 +9,7 @@ use Symfony\Component\Templating\TemplateReferenceInterface;
 
 class FilesystemLoader implements LoaderInterface
 {
-    protected $locator;
+    protected \Pagekit\Filesystem\Locator $locator;
 
     /**
      * Constructor.
@@ -38,7 +38,7 @@ class FilesystemLoader implements LoaderInterface
     /**
      * {@inheritdoc}
      */
-    public function isFresh(TemplateReferenceInterface $template, $time)
+    public function isFresh(TemplateReferenceInterface $template, $time): bool
     {
         if (false === $storage = $this->load($template)) {
             return false;

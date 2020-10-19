@@ -24,7 +24,7 @@ class SelfupdateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure(): void
     {
         $this->addOption('url', 'u', InputOption::VALUE_REQUIRED, '');
         $this->addOption('shasum', 's', InputOption::VALUE_REQUIRED, '');
@@ -33,7 +33,7 @@ class SelfupdateCommand extends Command
     /**
      * {@inheritdoc}
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         // TODO
         return (int) $this->error("The feature is disabled during development.");
@@ -99,7 +99,7 @@ class SelfupdateCommand extends Command
      * @param $file
      * @throws \Exception
      */
-    public function download($url, $file)
+    public function download($url, $file): void
     {
         if (!$url) {
             throw new \RuntimeException('Package url is missing.');

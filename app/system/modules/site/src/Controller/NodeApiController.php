@@ -14,7 +14,7 @@ class NodeApiController
      * @Route("/", methods="GET")
      * @Request({"menu"})
      */
-    public function indexAction($menu = false)
+    public function indexAction($menu = false): array
     {
         $query = Node::query();
 
@@ -28,7 +28,7 @@ class NodeApiController
     /**
      * @Route("/{id}", methods="GET", requirements={"id"="\d+"})
      */
-    public function getAction($id)
+    public function getAction($id): Node
     {
         if (!$node = Node::find($id)) {
             App::abort(404, __('Node not found.'));
@@ -42,7 +42,7 @@ class NodeApiController
      * @Route("/{id}", methods="POST", requirements={"id"="\d+"})
      * @Request({"node": "array", "id": "int"}, csrf=true)
      */
-    public function saveAction($data, $id = 0)
+    public function saveAction($data, $id = 0): array
     {
         if (!$node = Node::find($id)) {
             $node = Node::create();
@@ -62,7 +62,7 @@ class NodeApiController
      * @Route("/{id}", methods="DELETE", requirements={"id"="\d+"})
      * @Request({"id": "int"}, csrf=true)
      */
-    public function deleteAction($id)
+    public function deleteAction($id): array
     {
         if ($node = Node::find($id)) {
 
@@ -80,7 +80,7 @@ class NodeApiController
      * @Route("/bulk", methods="POST")
      * @Request({"nodes": "array"}, csrf=true)
      */
-    public function bulkSaveAction($nodes = [])
+    public function bulkSaveAction($nodes = []): array
     {
         foreach ($nodes as $data) {
             $this->saveAction($data, isset($data['id']) ? $data['id'] : 0);
@@ -93,7 +93,7 @@ class NodeApiController
      * @Route("/bulk", methods="DELETE")
      * @Request({"ids": "array"}, csrf=true)
      */
-    public function bulkDeleteAction($ids = [])
+    public function bulkDeleteAction($ids = []): array
     {
         foreach (array_filter($ids) as $id) {
             $this->deleteAction($id);
@@ -106,7 +106,7 @@ class NodeApiController
      * @Route("/updateOrder", methods="POST")
      * @Request({"menu", "nodes": "array"}, csrf=true)
      */
-    public function updateOrderAction($menu, $nodes = [])
+    public function updateOrderAction($menu, $nodes = []): array
     {
         foreach ($nodes as $data) {
 
@@ -127,7 +127,7 @@ class NodeApiController
      * @Route("/frontpage", methods="POST")
      * @Request({"id": "int"}, csrf=true)
      */
-    public function frontpageAction($id)
+    public function frontpageAction($id): array
     {
         if (!$node = Node::find($id) or !$type = App::module('system/site')->getType($node->type)) {
             App::abort(404, __('Node not found.'));

@@ -2,15 +2,16 @@
 
 namespace Pagekit\Config\Tests;
 
+use PHPUnit\Framework\TestCase;
 use Doctrine\Common\Cache\ArrayCache;
 use Pagekit\Config\ConfigManager;
 
-class ConfigManagerTest extends \PHPUnit\Framework\TestCase
+class ConfigManagerTest extends TestCase
 {
     /**
      * @doesNotPerformAssertions
      */
-    public function testGet()
+    public function testGet(): void
     {
     }
 
@@ -177,12 +178,12 @@ class ConfigManagerTest extends \PHPUnit\Framework\TestCase
         return $mock;
     }
 
-    protected function getCache()
+    protected function getCache(): ArrayCache
     {
         return new ArrayCache();
     }
 
-    protected function getConfig($connection = null, $cache = null)
+    protected function getConfig($connection = null, $cache = null): ConfigManager
     {
         $connection = $connection ?: $this->getConnection();
         $cache = $cache ?: $this->getCache();

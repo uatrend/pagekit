@@ -19,7 +19,7 @@ class LoginAttemptListener implements EventSubscriberInterface
      * @param  AuthenticateEvent $event
      * @throws AuthException
      */
-    public function onPreAuthenticate(AuthenticateEvent $event)
+    public function onPreAuthenticate(AuthenticateEvent $event): void
     {
         if (!$credentials = $event->getCredentials() or !isset($credentials['username'])) {
             return;
@@ -37,7 +37,7 @@ class LoginAttemptListener implements EventSubscriberInterface
      *
      * @param AuthenticateEvent $event
      */
-    public function onAuthFailure(AuthenticateEvent $event)
+    public function onAuthFailure(AuthenticateEvent $event): void
     {
         if (!$credentials = $event->getCredentials() or !isset($credentials['username'])) {
             return;
@@ -56,7 +56,7 @@ class LoginAttemptListener implements EventSubscriberInterface
      *
      * @param AuthenticateEvent $event
      */
-    public function onAuthSuccess(AuthenticateEvent $event)
+    public function onAuthSuccess(AuthenticateEvent $event): void
     {
         if (!$credentials = $event->getCredentials() or !isset($credentials['username'])) {
             return;
@@ -68,7 +68,7 @@ class LoginAttemptListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'auth.pre_authenticate' => 'onPreAuthenticate',
@@ -77,7 +77,7 @@ class LoginAttemptListener implements EventSubscriberInterface
         ];
     }
 
-    protected function getCacheKey($username) {
+    protected function getCacheKey($username): string {
         return self::CACHE_KEY.'_'.$username;
     }
 }

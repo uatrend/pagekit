@@ -10,7 +10,7 @@ class AlphaFilter extends AbstractFilter
     /**
      * {@inheritdoc}
      */
-    public function filter($value)
+    public function filter($value): ?string
     {
         return preg_replace('/[^[:alpha:]]/u', '', (string) $value);
     }

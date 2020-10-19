@@ -9,7 +9,7 @@ class AuthenticateEvent extends Event
     /**
      * @var string[]
      */
-    protected $credentials;
+    protected array $credentials;
 
     /**
      * Constructor.
@@ -30,7 +30,7 @@ class AuthenticateEvent extends Event
      *
      * @return string[]
      */
-    public function getCredentials()
+    public function getCredentials(): array
     {
         return $this->credentials;
     }

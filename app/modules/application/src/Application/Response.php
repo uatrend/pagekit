@@ -10,10 +10,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 
 class Response
 {
-    /**
-     * @var UrlProvider
-     */
-    protected $url;
+    protected \Pagekit\Application\UrlProvider $url;
 
     /**
      * Constructor.
@@ -43,7 +40,7 @@ class Response
 	 * @param  array $headers
 	 * @return HttpResponse
 	 */
-	public function create($content = '', $status = 200, $headers = [])
+	public function create($content = '', $status = 200, $headers = []): HttpResponse
 	{
 		return new HttpResponse($content, $status, $headers);
 	}
@@ -55,9 +52,8 @@ class Response
 	 * @param  array   $parameters
 	 * @param  int     $status
 	 * @param  array   $headers
-	 * @return RedirectResponse
 	 */
-	public function redirect($url, $parameters = [], $status = 302, $headers = [])
+	public function redirect($url, $parameters = [], $status = 302, $headers = []): RedirectResponse
 	{
 		return new RedirectResponse($this->url->get($url, $parameters), $status, $headers);
 	}
@@ -68,9 +64,8 @@ class Response
 	 * @param  string|array $data
 	 * @param  int          $status
 	 * @param  array        $headers
-	 * @return JsonResponse
 	 */
-	public function json($data = [], $status = 200, $headers = [])
+	public function json($data = [], $status = 200, $headers = []): JsonResponse
 	{
 		return new JsonResponse($data, $status, $headers);
 	}
@@ -81,9 +76,8 @@ class Response
 	 * @param  callable $callback
 	 * @param  int      $status
 	 * @param  array    $headers
-	 * @return StreamedResponse
 	 */
-	public function stream(callable $callback, $status = 200, $headers = [])
+	public function stream(callable $callback, $status = 200, $headers = []): StreamedResponse
 	{
 		return new StreamedResponse($callback, $status, $headers);
 	}
@@ -94,9 +88,8 @@ class Response
 	 * @param  string $file
 	 * @param  string $name
 	 * @param  array  $headers
-	 * @return BinaryFileResponse
 	 */
-	public function download($file, $name = null, $headers = [])
+	public function download($file, $name = null, $headers = []): BinaryFileResponse
 	{
 		$response = new BinaryFileResponse($file, 200, $headers, true, 'attachment');
 

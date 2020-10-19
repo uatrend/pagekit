@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9898f08c598aeca61f10874b9754b8af",
+    "content-hash": "4e9ffc36d414bcfc9947b5970ef1c3fb",
     "packages": [
         {
             "name": "composer/ca-bundle",
@@ -78,16 +78,16 @@
         },
         {
             "name": "composer/composer",
-            "version": "1.10.13",
+            "version": "1.10.15",
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/composer.git",
-                "reference": "47c841ba3b2d3fc0b4b13282cf029ea18b66d78b"
+                "reference": "547c9ee73fe26c77af09a0ea16419176b1cdbd12"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/composer/zipball/47c841ba3b2d3fc0b4b13282cf029ea18b66d78b",
-                "reference": "47c841ba3b2d3fc0b4b13282cf029ea18b66d78b",
+                "url": "https://api.github.com/repos/composer/composer/zipball/547c9ee73fe26c77af09a0ea16419176b1cdbd12",
+                "reference": "547c9ee73fe26c77af09a0ea16419176b1cdbd12",
                 "shasum": ""
             },
             "require": {
@@ -168,7 +168,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-09T09:46:34+00:00"
+            "time": "2020-10-13T13:59:09+00:00"
         },
         {
             "name": "composer/semver",
@@ -1256,16 +1256,16 @@
         },
         {
             "name": "paragonie/random_compat",
-            "version": "v2.0.18",
+            "version": "v2.0.19",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "0a58ef6e3146256cc3dc7cc393927bcc7d1b72db"
+                "reference": "446fc9faa5c2a9ddf65eb7121c0af7e857295241"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/0a58ef6e3146256cc3dc7cc393927bcc7d1b72db",
-                "reference": "0a58ef6e3146256cc3dc7cc393927bcc7d1b72db",
+                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/446fc9faa5c2a9ddf65eb7121c0af7e857295241",
+                "reference": "446fc9faa5c2a9ddf65eb7121c0af7e857295241",
                 "shasum": ""
             },
             "require": {
@@ -1301,7 +1301,7 @@
                 "pseudorandom",
                 "random"
             ],
-            "time": "2019-01-03T20:59:08+00:00"
+            "time": "2020-10-15T10:06:57+00:00"
         },
         {
             "name": "paragonie/sodium_compat",
@@ -1652,12 +1652,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/console.git",
-                "reference": "04c3a31fe8ea94b42c9e2d1acc93d19782133b00"
+                "reference": "ae789a8a2ad189ce7e8216942cdb9b77319f5eb8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/console/zipball/04c3a31fe8ea94b42c9e2d1acc93d19782133b00",
-                "reference": "04c3a31fe8ea94b42c9e2d1acc93d19782133b00",
+                "url": "https://api.github.com/repos/symfony/console/zipball/ae789a8a2ad189ce7e8216942cdb9b77319f5eb8",
+                "reference": "ae789a8a2ad189ce7e8216942cdb9b77319f5eb8",
                 "shasum": ""
             },
             "require": {
@@ -1737,7 +1737,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-09-18T14:27:32+00:00"
+            "time": "2020-10-07T15:23:00+00:00"
         },
         {
             "name": "symfony/debug",
@@ -5159,16 +5159,16 @@
         },
         {
             "name": "sebastian/type",
-            "version": "2.2.2",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/sebastianbergmann/type.git",
-                "reference": "e494dcaeb89d1458c9ccd8c819745245a1669aea"
+                "reference": "fa592377f3923946cb90bf1f6a71ba2e5f229909"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/e494dcaeb89d1458c9ccd8c819745245a1669aea",
-                "reference": "e494dcaeb89d1458c9ccd8c819745245a1669aea",
+                "url": "https://api.github.com/repos/sebastianbergmann/type/zipball/fa592377f3923946cb90bf1f6a71ba2e5f229909",
+                "reference": "fa592377f3923946cb90bf1f6a71ba2e5f229909",
                 "shasum": ""
             },
             "require": {
@@ -5180,7 +5180,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.2-dev"
+                    "dev-master": "2.3-dev"
                 }
             },
             "autoload": {
@@ -5207,7 +5207,7 @@
                     "type": "github"
                 }
             ],
-            "time": "2020-09-28T06:01:38+00:00"
+            "time": "2020-10-06T08:41:03+00:00"
         },
         {
             "name": "sebastian/version",
@@ -5360,7 +5360,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=7.3"
+        "php": ">=7.4"
     },
     "platform-dev": {
         "ext-dom": "*",

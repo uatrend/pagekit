@@ -6,11 +6,11 @@ use Pagekit\Markdown\Lexer\BlockLexer;
 
 class Markdown
 {
-    protected $lexer;
-    protected $parser;
-    protected $options;
+    protected ?BlockLexer $lexer = null;
+    protected ?Parser $parser = null;
+    protected array $options;
 
-    protected static $defaults = [
+    protected static array $defaults = [
         'gfm'          => true,
         'tables'       => true,
         'breaks'       => false,
@@ -44,9 +44,8 @@ class Markdown
      *
      * @param  string $text
      * @param  array  $options
-     * @return string
      */
-    public function parse($text, array $options = [])
+    public function parse($text, array $options = []): string
     {
         $options = array_merge($this->options, $options);
         $options['renderer']->init($options);
@@ -62,13 +61,11 @@ class Markdown
      *
      * @param  string  $text
      * @param  boolean $encode
-     * @return string
      */
-    public static function escape($text, $encode = false)
+    public static function escape($text, $encode = false): string
     {
         $text = preg_replace(!$encode ? '/&(?!#?\w+;)/':'/&/', '&amp;', $text);
-        $text = str_replace(['<', '>', '"', '\''], ['&lt;', '&gt;', '&quot;', '&#39;'], $text);
 
-        return $text;
+        return str_replace(['<', '>', '"', '\''], ['&lt;', '&gt;', '&quot;', '&#39;'], $text);
     }
 }

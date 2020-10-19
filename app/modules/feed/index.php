@@ -8,9 +8,7 @@ return [
 
     'main' => function ($app) {
 
-        $app['feed'] = function () {
-            return new FeedFactory;
-        };
+        $app['feed'] = fn() => new FeedFactory;
 
     },
 

@@ -12,7 +12,7 @@ class StringResponseListener implements EventSubscriberInterface
      *
      * @param $event
      */
-    public function onController($event)
+    public function onController($event): void
     {
         $result = $event->getControllerResult();
 
@@ -24,7 +24,7 @@ class StringResponseListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'controller' => ['onController', 10],

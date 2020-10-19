@@ -6,9 +6,7 @@ return [
 
     'label' => 'Text',
 
-    'render' => function ($widget) use ($app) {
-        return $app['view']->render('system/site/widget-text.php', compact('widget'));
-    },
+    'render' => fn($widget) => $app['view']->render('system/site/widget-text.php', compact('widget')),
 
     'events' => [
 

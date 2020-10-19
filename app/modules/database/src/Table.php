@@ -2,22 +2,19 @@
 
 namespace Pagekit\Database;
 
+use Doctrine\DBAL\Schema\Table as BaseTable;
+use Pagekit\Database\Connection;
+
 class Table
 {
-    /**
-     * @var Table
-     */
-    protected $table;
+    protected BaseTable $table;
 
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected Connection $connection;
 
     /**
      * Constructor.
      *
-     * @param Table $table
+     * @param BaseTable $table
      * @param Connection $connection
      */
     public function __construct($table, $connection)
@@ -31,10 +28,8 @@ class Table
      * @param string|null $indexName
      * @param array $flags
      * @param array $options
-     *
-     * @return self
      */
-    public function addIndex(array $columnNames, $indexName = null, array $flags = array(), array $options = array())
+    public function addIndex(array $columnNames, $indexName = null, array $flags = array(), array $options = array()): self
     {
         if ($indexName) {
             $indexName = $this->connection->replacePrefix($indexName);
@@ -49,10 +44,8 @@ class Table
      * @param array $columnNames
      * @param string|null $indexName
      * @param array $options
-     *
-     * @return self
      */
-    public function addUniqueIndex(array $columnNames, $indexName = null, array $options = array())
+    public function addUniqueIndex(array $columnNames, $indexName = null, array $options = array()): self
     {
         if ($indexName) {
             $indexName = $this->connection->replacePrefix($indexName);
@@ -70,7 +63,7 @@ class Table
      *
      * @return Column
      */
-    public function addColumn($columnName, $typeName, array $options = array())
+    public function addColumn($columnName, $typeName, array $options = array()): \Doctrine\DBAL\Schema\Column
     {
         if ($this->connection->getDatabasePlatform()->getName() === 'sqlite' && in_array($typeName, ['string', 'text'])) {
             $options['customSchemaOptions']['collation'] = 'NOCASE';

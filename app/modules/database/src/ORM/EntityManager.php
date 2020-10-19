@@ -3,31 +3,21 @@
 namespace Pagekit\Database\ORM;
 
 use Pagekit\Database\Connection;
+use Pagekit\Database\ORM\Metadata;
+use Pagekit\Database\ORM\MetadataManager;
 use Pagekit\Database\Events;
 use Pagekit\Event\EventDispatcherInterface;
 use Pagekit\Event\PrefixEventDispatcher;
 
 class EntityManager
 {
-    /**
-     * @var Connection
-     */
-    protected $connection;
+    protected Connection $connection;
 
-    /**
-     * @var MetadataManager
-     */
-    protected $metadata;
+    protected MetadataManager $metadata;
 
-    /**
-     * @var EventDispatcherInterface
-     */
-    protected $events;
+    protected EventDispatcherInterface $events;
 
-    /**
-     * @var EntityManager
-     */
-    protected static $instance;
+    protected static self $instance;
 
     /**
      * Creates a new Manager instance
@@ -47,10 +37,8 @@ class EntityManager
 
     /**
      * Gets the database connection.
-     *
-     * @return Connection
      */
-    public function getConnection()
+    public function getConnection(): Connection
     {
         return $this->connection;
     }
@@ -59,19 +47,16 @@ class EntityManager
      * Gets the metadata object of an entity class.
      *
      * @param  mixed $class
-     * @return Metadata
      */
-    public function getMetadata($class)
+    public function getMetadata($class): Metadata
     {
         return $this->metadata->get($class);
     }
 
     /**
      * Gets the metadata manager.
-     *
-     * @return MetadataManager
      */
-    public function getMetadataManager()
+    public function getMetadataManager(): MetadataManager
     {
         return $this->metadata;
     }
@@ -95,9 +80,8 @@ class EntityManager
      * Checks whether the given managed entity exists in the database.
      *
      * @param  object $entity
-     * @return bool
      */
-    public function exists($entity)
+    public function exists($entity): bool
     {
         $metadata   = $this->getMetadata($entity);
         $identifier = $metadata->getIdentifier(true);
@@ -117,7 +101,7 @@ class EntityManager
      * @param  QueryBuilder $query
      * @throws \LogicException
      */
-    public function related($entities, $name, QueryBuilder $query)
+    public function related($entities, $name, QueryBuilder $query): void
     {
         if (!is_array($entities)) {
             $entities = [$entities];
@@ -140,7 +124,7 @@ class EntityManager
      * @param object $entity
      * @param array  $data
      */
-    public function save($entity, array $data = [])
+    public function save($entity, array $data = []): void
     {
         $metadata   = $this->getMetadata($entity);
         $identifier = $metadata->getIdentifier(true);
@@ -177,7 +161,7 @@ class EntityManager
      * @param  object $entity
      * @throws \InvalidArgumentException
      */
-    public function delete($entity)
+    public function delete($entity): void
     {
         $metadata   = $this->getMetadata($entity);
         $identifier = $metadata->getIdentifier(true);
@@ -220,7 +204,7 @@ class EntityManager
      * @param  Metadata $metadata
      * @return mixed
      */
-    public function hydrateAll($statement, Metadata $metadata)
+    public function hydrateAll($statement, Metadata $metadata): array
     {
         $result     = [];
         $identifier = $metadata->getIdentifier();
@@ -240,9 +224,8 @@ class EntityManager
      * @param  array    $data
      * @param  bool     $column
      * @param  bool     $convert
-     * @return object
      */
-    public function load(Metadata $metadata, array $data, $column = false, $convert = false)
+    public function load(Metadata $metadata, array $data, $column = false, $convert = false): object
     {
         $entity = $metadata->newInstance();
         $metadata->setValues($entity, $data, $column, $convert);
@@ -258,19 +241,16 @@ class EntityManager
      * @param  string   $name
      * @param  Metadata $metadata
      * @param  array    $arguments
-     * @return bool
      */
-    public function trigger($name, Metadata $metadata, array $arguments)
+    public function trigger($name, Metadata $metadata, array $arguments): void
     {
         $this->events->trigger("{$metadata->getEventPrefix()}.{$name}", $arguments);
     }
 
     /**
      * Gets the instance.
-     *
-     * @return EntityManager
      */
-    public static function getInstance()
+    public static function getInstance(): self
     {
         return static::$instance;
     }

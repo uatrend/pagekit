@@ -13,52 +13,38 @@ abstract class Relation
 {
     /**
      * The entity manager
-     *
-     * @var  EntityManager
      */
-    protected $manager;
+    protected EntityManager $manager;
 
     /**
      * The parent entity metadata
-     *
-     * @var  Metadata
      */
-    protected $metadata;
+    protected Metadata $metadata;
 
     /**
      * The name of the relationship in the parent entity
-     *
-     * @var  string
      */
-    protected $name;
+    protected string $name;
 
     /**
      * The classname of the target entity
-     *
-     * @var  string
      */
-    protected $targetEntity;
+    protected string $targetEntity;
 
     /**
      * The primary key of source entity
-     *
-     * @var  string
      */
-    protected $keyFrom;
+    protected string $keyFrom;
 
     /**
      * The foreign key of target entity
-     *
-     * @var  string
      */
-    protected $keyTo;
+    protected string $keyTo;
 
     /**
      * The target metadata
-     *
-     * @var  Metadata
      */
-    protected $targetMetadata;
+    protected Metadata $targetMetadata;
 
     /**
      * Constructor.
@@ -105,9 +91,8 @@ abstract class Relation
      *
      * @param  array    $entities
      * @param  string   $key
-     * @return array
      */
-    protected function getKeys(array $entities, $key = null) {
+    protected function getKeys(array $entities, $key = null): array {
 
         $key  = $key ?: $this->keyFrom;
         $keys = [];
@@ -157,7 +142,7 @@ abstract class Relation
      * @param QueryBuilder $query
      * @param array        $targets
      */
-    protected function resolveRelations(QueryBuilder $query, $targets)
+    protected function resolveRelations(QueryBuilder $query, $targets): void
     {
         if (!$targets) {
             return;

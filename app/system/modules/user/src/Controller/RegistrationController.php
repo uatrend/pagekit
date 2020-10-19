@@ -9,10 +9,7 @@ use Pagekit\User\Model\User;
 
 class RegistrationController
 {
-    /**
-     * @var Module
-     */
-    protected $module;
+    protected Module $module;
 
     public function __construct()
     {
@@ -137,7 +134,7 @@ class RegistrationController
         return App::redirect('@user/login');
     }
 
-    protected function sendWelcomeEmail($user)
+    protected function sendWelcomeEmail($user): void
     {
         try {
 
@@ -151,7 +148,7 @@ class RegistrationController
         }
     }
 
-    protected function sendVerificationMail($user)
+    protected function sendVerificationMail($user): void
     {
         try {
 
@@ -166,7 +163,7 @@ class RegistrationController
         }
     }
 
-    protected function sendApproveMail($user)
+    protected function sendApproveMail($user): void
     {
         try {
 

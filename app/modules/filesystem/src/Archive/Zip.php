@@ -28,9 +28,8 @@ class Zip implements ArchiveInterface
      * Give a meaningful error message to the user.
      *
      * @param  int $error
-     * @return string
      */
-    protected static function getErrorMessage($error)
+    protected static function getErrorMessage($error): string
     {
         switch ($error) {
             case \ZipArchive::ER_EXISTS:

@@ -35,21 +35,13 @@ return [
 
     'main' => function ($app) {
 
-        $app['view'] = function ($app) {
-            return new View(new PrefixEventDispatcher('view.', $app['events']));
-        };
+        $app['view'] = fn($app) => new View(new PrefixEventDispatcher('view.', $app['events']));
 
-        $app['assets'] = function () {
-            return new AssetFactory();
-        };
+        $app['assets'] = fn() => new AssetFactory();
 
-        $app['styles'] = function ($app) {
-            return new AssetManager($app['assets']);
-        };
+        $app['styles'] = fn($app) => new AssetManager($app['assets']);
 
-        $app['scripts'] = function ($app) {
-            return new AssetManager($app['assets']);
-        };
+        $app['scripts'] = fn($app) => new AssetManager($app['assets']);
 
         $app['module']->addLoader(function ($module) use ($app) {
 

@@ -8,12 +8,12 @@ use Pagekit\Site\Model\Node;
 
 class SiteModule extends Module
 {
-    protected $types;
+    protected ?array $types = null;
 
     /**
      * {@inheritdoc}
      */
-    public function main(App $app)
+    public function main(App $app): void
     {
         $app['node'] = function ($app) {
 
@@ -39,19 +39,15 @@ class SiteModule extends Module
 
     /**
      * @param  string $type
-     * @return array
      */
-    public function getType($type)
+    public function getType($type): ?array
     {
         $types = $this->getTypes();
 
         return isset($types[$type]) ? $types[$type] : null;
     }
 
-    /**
-     * @return array
-     */
-    public function getTypes()
+    public function getTypes(): ?array
     {
         if (!$this->types) {
 
@@ -75,9 +71,9 @@ class SiteModule extends Module
      * @param string $type
      * @param array  $route
      */
-    public function registerType($type, array $route)
+    public function registerType($type, array $route): void
     {
-        if (isset($route['protected']) and $route['protected'] and !array_filter(Node::findAll(true), function ($node) use ($type) { return $type === $node->type; })) {
+        if (isset($route['protected']) and $route['protected'] and !array_filter(Node::findAll(true), fn($node) => $type === $node->type)) {
             Node::create([
                 'title' => $route['label'],
                 'slug' => App::filter($route['label'], 'slugify'),

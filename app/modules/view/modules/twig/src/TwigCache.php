@@ -2,7 +2,9 @@
 
 namespace Pagekit\Twig;
 
-class TwigCache extends \Twig\Cache\FilesystemCache
+use Twig\Cache\FilesystemCache;
+
+class TwigCache extends FilesystemCache
 {
     protected $dir;
 

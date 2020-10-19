@@ -10,20 +10,11 @@ use Pagekit\Module\Module;
  */
 class DashboardController
 {
-    /**
-     * @var Module
-     */
-    protected $dashboard;
+    protected Module $dashboard;
 
-    /**
-     * @var string
-     */
-    protected $api = 'http://api.openweathermap.org/data/2.5';
+    protected string $api = 'http://api.openweathermap.org/data/2.5';
 
-    /**
-     * @var string
-     */
-    protected $apiKey = '08c012f513db564bd6d4bae94b73cc94';
+    protected string $apiKey = '08c012f513db564bd6d4bae94b73cc94';
 
     /**
      * Constructor.
@@ -36,7 +27,7 @@ class DashboardController
     /**
      * @Route("/", methods="GET")
      */
-    public function indexAction()
+    public function indexAction(): array
     {
         return [
             '$view' => [
@@ -55,7 +46,7 @@ class DashboardController
     /**
      * @Request({"widgets": "array"}, csrf=true)
      */
-    public function saveWidgetsAction($widgets = [])
+    public function saveWidgetsAction($widgets = []): array
     {
 
         $widgets = array_replace($this->dashboard->getWidgets(), $widgets);
@@ -88,7 +79,7 @@ class DashboardController
      * @Route("/{id}", methods="DELETE", requirements={"id"="\w+"})
      * @Request({"id"}, csrf=true)
      */
-    public function deleteAction($id)
+    public function deleteAction($id): array
     {
         $widgets = $this->dashboard->getWidgets();
 
@@ -102,7 +93,7 @@ class DashboardController
     /**
      * @Request({"order": "array"}, csrf=true)
      */
-    public function reorderAction($order = [])
+    public function reorderAction($order = []): array
     {
         $widgets = $this->dashboard->getWidgets();
         $reordered = [];
@@ -113,7 +104,7 @@ class DashboardController
             }
         }
 
-        if (count($widgets) == count($reordered)) {
+        if (count($widgets) === count($reordered)) {
             $this->dashboard->saveWidgets($reordered);
         }
 

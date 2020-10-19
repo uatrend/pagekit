@@ -9,7 +9,7 @@ use Pagekit\Event\EventSubscriberInterface;
 class ConfigureRouteListener implements EventSubscriberInterface
 {
     protected $reader;
-    protected $namespace;
+    protected string $namespace;
 
     /**
      * Constructor.
@@ -25,7 +25,7 @@ class ConfigureRouteListener implements EventSubscriberInterface
     /**
      * Reads the @Request annotations.
      */
-    public function onConfigureRoute($event, $route)
+    public function onConfigureRoute($event, $route): void
     {
         if (!$route->getControllerClass()) {
             return;
@@ -48,7 +48,7 @@ class ConfigureRouteListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'route.configure' => 'onConfigureRoute'

@@ -70,14 +70,13 @@ class Post implements \JsonSerializable
      */
     public $comments;
 
-    /** @var array */
-    protected static $properties = [
+    protected static array $properties = [
         'author' => 'getAuthor',
         'published' => 'isPublished',
         'accessible' => 'isAccessible'
     ];
 
-    public static function getStatuses()
+    public static function getStatuses(): array
     {
         return [
             self::STATUS_PUBLISHED => __('Published'),
@@ -94,7 +93,7 @@ class Post implements \JsonSerializable
         return isset($statuses[$this->status]) ? $statuses[$this->status] : __('Unknown');
     }
 
-    public function isCommentable()
+    public function isCommentable(): bool
     {
         $blog      = App::module('blog');
         $autoclose = $blog->config('comments.autoclose') ? $blog->config('comments.autoclose_days') : 0;
@@ -107,12 +106,12 @@ class Post implements \JsonSerializable
         return $this->user ? $this->user->username : null;
     }
 
-    public function isPublished()
+    public function isPublished(): bool
     {
         return $this->status === self::STATUS_PUBLISHED && $this->date < new \DateTime;
     }
 
-    public function isAccessible(User $user = null)
+    public function isAccessible(User $user = null): bool
     {
         return $this->isPublished() && $this->hasAccess($user ?: App::user());
     }
@@ -120,16 +119,14 @@ class Post implements \JsonSerializable
     /**
      * {@inheritdoc}
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         $data = [
             'url' => App::url('@blog/id', ['id' => $this->id ?: 0], 'base')
         ];
 
         if ($this->comments) {
-            $data['comments_pending'] = count(array_filter($this->comments, function ($comment) {
-                return $comment->status == Comment::STATUS_PENDING;
-            }));
+            $data['comments_pending'] = count(array_filter($this->comments, fn($comment) => $comment->status == Comment::STATUS_PENDING));
         }
 
         return $this->toArray($data);

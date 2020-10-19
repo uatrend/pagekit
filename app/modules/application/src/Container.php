@@ -4,20 +4,11 @@ namespace Pagekit;
 
 class Container implements \ArrayAccess
 {
-    /**
-     * @var array
-     */
-    protected $values = [];
+    protected array $values = [];
 
-    /**
-     * @var array
-     */
-    protected $raw = [];
+    protected array $raw = [];
 
-    /**
-     * @var array
-     */
-    protected $factories = [];
+    protected array $factories = [];
 
     /**
      * Constructor.
@@ -53,7 +44,7 @@ class Container implements \ArrayAccess
      * @param string   $name
      * @param \Closure $closure
      */
-    public function factory($name, \Closure $closure)
+    public function factory($name, \Closure $closure): void
     {
         $this->offsetSet($name, $closure);
         $this->factories[$name] = true;
@@ -67,7 +58,7 @@ class Container implements \ArrayAccess
      *
      * @throws \InvalidArgumentException
      */
-    public function extend($name, \Closure $closure)
+    public function extend($name, \Closure $closure): void
     {
         if (!array_key_exists($name, $this->values)) {
             throw new \InvalidArgumentException(sprintf('"%s" is not defined.', $name));
@@ -79,9 +70,7 @@ class Container implements \ArrayAccess
 
         $factory = $this->values[$name];
 
-        $this->offsetSet($name, function ($c) use ($closure, $factory) {
-            return $closure($factory($c), $c);
-        });
+        $this->offsetSet($name, fn($c) => $closure($factory($c), $c));
     }
 
     /**
@@ -103,10 +92,8 @@ class Container implements \ArrayAccess
 
     /**
      * Returns all defined names.
-     *
-     * @return array
      */
-    public function keys()
+    public function keys(): array
     {
         return array_keys($this->values);
     }
@@ -115,9 +102,8 @@ class Container implements \ArrayAccess
      * Checks if a parameter/service is defined.
      *
      * @param  string $name
-     * @return bool
      */
-    public function offsetExists($name)
+    public function offsetExists($name): bool
     {
         return array_key_exists($name, $this->values);
     }
@@ -157,7 +143,7 @@ class Container implements \ArrayAccess
      *
      * @throws \RuntimeException
      */
-    public function offsetSet($name, $value)
+    public function offsetSet($name, $value): void
     {
         if (array_key_exists($name, $this->raw)) {
             throw new \RuntimeException(sprintf('Cannot override service definition "%s".', $name));
@@ -171,7 +157,7 @@ class Container implements \ArrayAccess
      *
      * @param string $name
      */
-    public function offsetUnset($name)
+    public function offsetUnset($name): void
     {
         if (array_key_exists($name, $this->values)) {
             unset($this->values[$name], $this->raw[$name], $this->factories[$name]);

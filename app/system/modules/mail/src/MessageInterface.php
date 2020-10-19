@@ -6,31 +6,25 @@ interface MessageInterface
 {
     /**
      * Gets the mailer instance.
-     *
-     * @return MailerInterface
      */
-    public function getMailer();
+    public function getMailer(): ?MailerInterface;
 
     /**
      * Sets the mailer instance.
-     *
-     * @return self
      */
-    public function setMailer(MailerInterface $mailer);
+    public function setMailer(MailerInterface $mailer): self;
 
     /**
      * Sends the message.
      *
      * @param  array $errors
-     * @return int
      */
-    public function send(&$errors = null);
+    public function send(&$errors = null): int;
 
     /**
      * Queues the message for later sending.
      *
      * @param  array $errors
-     * @return int
      */
-    public function queue(&$errors = null);
+    public function queue(&$errors = null): int;
 }

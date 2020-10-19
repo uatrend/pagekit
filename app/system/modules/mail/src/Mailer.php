@@ -12,17 +12,13 @@ class Mailer implements MailerInterface
 {
     /**
      * The Swift Transport instance.
-     *
-     * @var Swift_Transport
      */
-    protected $trans;
+    protected \Swift_Transport $trans;
 
     /**
      * The Swift Spool Transport instance.
-     *
-     * @var Swift_SpoolTransport
      */
-    protected $queue;
+    protected \Swift_SpoolTransport $queue;
 
     /**
      * Create a new Mailer instance.
@@ -39,7 +35,7 @@ class Mailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function create($subject = null, $body = null, $to = null, $from = null)
+    public function create($subject = null, $body = null, $to = null, $from = null): object
     {
         $message = new Message($subject, $body);
 
@@ -57,7 +53,7 @@ class Mailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function send($message, &$errors = null)
+    public function send($message, &$errors = null): int
     {
         $errors = (array) $errors;
 
@@ -70,7 +66,7 @@ class Mailer implements MailerInterface
         try {
             $sent = $this->trans->send($message, $errors);
         } catch (Swift_RfcComplianceException $e) {
-            foreach ($message->getTo() as $address => $name) {
+            foreach (array_keys($message->getTo()) as $address) {
                 $errors[] = $address;
             }
         }
@@ -81,7 +77,7 @@ class Mailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function queue($message, &$errors = null)
+    public function queue($message, &$errors = null): int
     {
         return $this->queue->send($message, $errors);
     }
@@ -89,7 +85,7 @@ class Mailer implements MailerInterface
     /**
      * {@inheritdoc}
      */
-    public function registerPlugin($plugin)
+    public function registerPlugin($plugin): void
     {
         $this->trans->registerPlugin($plugin);
     }
@@ -104,7 +100,7 @@ class Mailer implements MailerInterface
      * @param  string  $encryption
      * @throws Swift_TransportException
      */
-    public function testSmtpConnection($host = 'localhost', $port = 25, $username = '', $password = '', $encryption = null)
+    public function testSmtpConnection($host = 'localhost', $port = 25, $username = '', $password = '', $encryption = null): void
     {
         (new Swift_SmtpTransport($host, $port))
             ->setUsername($username)

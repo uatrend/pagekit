@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\StreamOutput;
  */
 class UpdateController
 {
-    public function indexAction()
+    public function indexAction(): array
     {
         return [
             '$view' => [
@@ -29,7 +29,7 @@ class UpdateController
     /**
      * @Request({"url": "string"}, csrf=true)
      */
-    public function downloadAction($url)
+    public function downloadAction($url): array
     {
         $file = tempnam(App::get('path.temp'), 'update_');
         App::session()->set('system.update', $file);

@@ -12,7 +12,7 @@ use Pagekit\Widget\Model\Widget;
  */
 class WidgetController
 {
-    public function indexAction()
+    public function indexAction(): array
     {
         return [
             '$view' => [
@@ -33,11 +33,11 @@ class WidgetController
     /**
      * @Request({"id": "int", "type": "string"})
      */
-    public function editAction($id = 0, $type = null)
+    public function editAction($id = 0, $type = null): array
     {
         if (!$id) {
             $widget = Widget::create(['type' => $type]);
-        } else if (!$widget = Widget::find($id)) {
+        } elseif (!$widget = Widget::find($id)) {
             App::abort(404, 'Widget not found.');
         }
 

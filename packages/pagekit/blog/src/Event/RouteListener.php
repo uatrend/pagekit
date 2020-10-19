@@ -11,7 +11,7 @@ class RouteListener implements EventSubscriberInterface
     /**
      * Adds cache breaker to router.
      */
-    public function onAppRequest()
+    public function onAppRequest(): void
     {
         App::router()->setOption('blog.permalink', UrlResolver::getPermalink());
     }
@@ -19,7 +19,7 @@ class RouteListener implements EventSubscriberInterface
     /**
      * Registers permalink route alias.
      */
-    public function onConfigureRoute($event, $route)
+    public function onConfigureRoute($event, $route): void
     {
         if ($route->getName() == '@blog/id' && UrlResolver::getPermalink()) {
             App::routes()->alias(dirname($route->getPath()).'/'.ltrim(UrlResolver::getPermalink(), '/'), '@blog/id', ['_resolver' => 'Pagekit\Blog\UrlResolver']);
@@ -29,7 +29,7 @@ class RouteListener implements EventSubscriberInterface
     /**
      * Clears resolver cache.
      */
-    public function clearCache()
+    public function clearCache(): void
     {
         App::cache()->delete(UrlResolver::CACHE_KEY);
     }
@@ -37,7 +37,7 @@ class RouteListener implements EventSubscriberInterface
     /**
      * {@inheritdoc}
      */
-    public function subscribe()
+    public function subscribe(): array
     {
         return [
             'request' => ['onAppRequest', 130],

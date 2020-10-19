@@ -8,10 +8,7 @@ class ExceptionEvent extends KernelEvent
 {
     use ResponseTrait;
 
-    /**
-     * @var \Exception
-     */
-    protected $exception;
+    protected ?\Exception $exception = null;
 
     /**
      * Construct.
@@ -29,10 +26,8 @@ class ExceptionEvent extends KernelEvent
 
     /**
      * Gets the thrown exception.
-     *
-     * @return \Exception
      */
-    public function getException()
+    public function getException(): ?\Exception
     {
         return $this->exception;
     }
@@ -42,7 +37,7 @@ class ExceptionEvent extends KernelEvent
      *
      * @param \Exception $exception
      */
-    public function setException(\Exception $exception)
+    public function setException(\Exception $exception): void
     {
         $this->exception = $exception;
     }
