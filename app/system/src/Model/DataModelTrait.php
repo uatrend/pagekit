@@ -7,7 +7,7 @@ use Pagekit\Util\Arr;
 trait DataModelTrait
 {
     /** @Column(type="json_array") */
-    public ?array $data = null;
+    public $data;
 
     /**
      * Gets a data value.
