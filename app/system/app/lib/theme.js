@@ -757,13 +757,15 @@ const UITab = function (name, ele, option) {
         option.connect = this.$theme.getDomElement(option.connect);
 
         element.tab = UIkit.switcher(ele, option);
+
         on(element.tab.connects, 'show', (e, tab) => {
             if (tab !== element.tab) return false;
             let baseComponent = self;
             if (_.has(self.$children[0], '$_veeObserver')) {
                 baseComponent = self.$children[0];
             }
-            baseComponent.$children.forEach((component, idx) => {
+            for (let idx = 0; idx < Object.keys(baseComponent.$children).length; idx++) {
+                let component = baseComponent.$children[idx];
                 if (component.$el === e.target.firstChild) {
                     const tabName = component.$options.name || component.$options._componentTag;
                     self.$set(element, 'activeIndex', idx);
@@ -771,15 +773,18 @@ const UITab = function (name, ele, option) {
                     if (option.state) {
                         self.$session.set(stateName, idx);
                     }
+                    break;
                 }
-            });
+            };
         });
 
-        element.tab.toggles.forEach((item, idx) => {
+        for (let idx = 0; idx < Object.keys(element.tab.toggles).length; idx++) {
+            let item = element.tab.toggles[idx];
             if (item.parentNode.classList.contains('uk-active')) {
                 element.activeIndex = idx;
+                break;
             }
-        });
+        };
 
         element.tab.show(element.activeIndex);
     });
