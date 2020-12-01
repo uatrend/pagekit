@@ -41,7 +41,7 @@
         "babel-loader": "^8.1.0",
         "cldr-core": "^36.0.0",
         "cldr-localenames-modern": "^36.0.0",
-        "css-loader": "^4.3.0",
+        "css-loader": "^5.0.1",
         "eslint": "^7.10.0",
         "eslint-config-airbnb-base": "^14.2.0",
         "eslint-config-prettier": "^6.13.0",
