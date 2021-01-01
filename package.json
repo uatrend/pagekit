@@ -24,7 +24,7 @@
         "lodash": "^4.17.20",
         "marked": "^1.2.0",
         "tinymce": "~5.5.1",
-        "uikit": "~3.5.8",
+        "uikit": "~3.6.5",
         "vee-validate": "~3.3.11",
         "vue": "~2.6.12",
         "vue-event-manager": "~2.1.3",
