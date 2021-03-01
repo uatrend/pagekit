@@ -31,7 +31,7 @@
         "symfony/stopwatch": "~5.1.7",
         "symfony/templating": "~5.1.7",
         "symfony/translation": "~5.1.7",
-        "twig/twig": "~3.0.5"
+        "twig/twig": "~3.3.0"
     },
     "require-dev": {
         "ext-dom": "*",
