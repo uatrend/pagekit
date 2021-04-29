@@ -1,0 +1,70 @@
+version: 2
+updates:
+- package-ecosystem: composer
+  directory: "/"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: symfony/translation
+    versions:
+    - 5.2.1
+    - 5.2.2
+  - dependency-name: symfony/templating
+    versions:
+    - 5.2.1
+    - 5.2.2
+  - dependency-name: symfony/stopwatch
+    versions:
+    - 5.2.1
+    - 5.2.2
+  - dependency-name: symfony/routing
+    versions:
+    - 5.2.1
+    - 5.2.2
+  - dependency-name: phpunit/phpunit
+    versions:
+    - 9.5.0
+    - 9.5.1
+  - dependency-name: twig/twig
+    versions:
+    - 3.1.1
+    - 3.2.1
+  - dependency-name: symfony/http-foundation
+    versions:
+    - 5.2.1
+    - 5.2.2
+  - dependency-name: symfony/finder
+    versions:
+    - 5.2.1
+    - 5.2.2
+  - dependency-name: doctrine/annotations
+    versions:
+    - 1.11.1
+- package-ecosystem: npm
+  directory: "/"
+  schedule:
+    interval: monthly
+  open-pull-requests-limit: 10
+  ignore:
+  - dependency-name: eslint-config-prettier
+    versions:
+    - 7.1.0
+    - 7.2.0
+  - dependency-name: uikit
+    versions:
+    - 3.6.15
+    - 3.6.5
+  - dependency-name: webpack-cli
+    versions:
+    - 4.3.1
+    - 4.4.0
+  - dependency-name: tinymce
+    versions:
+    - 5.6.2
+  - dependency-name: less
+    versions:
+    - 4.0.0
+  - dependency-name: css-loader
+    versions:
+    - 5.0.1
