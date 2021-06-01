@@ -23,7 +23,7 @@
         "ismobilejs": "~1.1.1",
         "lodash": "^4.17.20",
         "marked": "^1.2.0",
-        "tinymce": "~5.5.1",
+        "tinymce": "~5.8.1",
         "uikit": "~3.5.8",
         "vee-validate": "~3.3.11",
         "vue": "~2.6.12",
