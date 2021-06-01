@@ -25,7 +25,7 @@
         "marked": "^1.2.0",
         "tinymce": "~5.5.1",
         "uikit": "~3.5.8",
-        "vee-validate": "~3.3.11",
+        "vee-validate": "~3.4.8",
         "vue": "~2.6.12",
         "vue-event-manager": "~2.1.3",
         "vue-intl": "github:uatrend/vue-intl#master",
