@@ -40,7 +40,7 @@
         "ext-mbstring": "*",
         "ext-xml": "*",
         "ext-xmlwriter": "*",
-        "phpunit/phpunit": "~9.2.6"
+        "phpunit/phpunit": "~9.5.8"
     },
     "autoload": {
         "psr-4": {
